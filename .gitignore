@@ -1,3 +1,7 @@
 # Editor / OS cruft
 .vscode/
 .DS_Store
+
+# Tooling
+__pycache__/
+.pytest_cache/

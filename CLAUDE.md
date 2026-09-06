@@ -51,6 +51,8 @@ Records live under `work/`, so they are off the site but still in a public repo:
 BASE_SHA=HEAD~1 ./.github/scripts/check-adrs.sh   # ...plus: no accepted record was edited
 python3 -m http.server -d site     # preview the site locally at :8000
 gh run list --workflow=pages.yml   # deploy status
+
+python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/   # prose check: AI language, reading level
 ```
 
 `check-links.sh` enforces two separate rules. Inside `site/` it is the **publication gate**: every
@@ -213,6 +215,16 @@ Bump the version and add a logbook entry together.
 
 Prose is British-leaning English with em dashes. The handbook positions itself as *educational,
 not consultancy* — a framing that recurs in the content and is worth preserving.
+
+**Prose that reads as machine-written is a defect on a student-facing page.** The
+[`strip-ai-language`](.claude/skills/strip-ai-language/SKILL.md) skill holds the method and
+`scripts/aiprose.py` runs the check. The form to watch here is not vocabulary — a scan of the
+five published pages for the usual AI words returns four hits in 24,000 words, all four fair —
+it is the **antithesis**: *X, not Y* / *is not X — it is Y* / *rather than*, which appears 173
+times, once every eight sentences on the landing page. Keep the ones where the contrast is the
+content, as the two gates' *questions back, never a verdict* does; the rest are rhythm pretending
+to be thought. The same measurement flags one repeated intensifier per page — *actually*,
+*honest*, *quietly* — and the em-dash density, which is house style here and stays.
 
 Commit messages here explain **why**, in full sentences, and reference the commits they respond
 to (see 827f32a). Match that.
