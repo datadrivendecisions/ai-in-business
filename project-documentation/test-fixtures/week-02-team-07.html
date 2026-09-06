@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme 2 — What a vendor choice locks you into, and for how long</title>
+<style>
+  body { max-width: 46rem; margin: 0 auto; padding: 2rem 1.25rem 4rem;
+         font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         color: #1a1a1a; }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin-bottom: .35rem; }
+  h2 { font-size: 1.15rem; margin-top: 2.25rem; border-bottom: 1px solid #ddd; padding-bottom: .3rem; }
+  .standfirst { font-size: 1.05rem; color: #444; margin-top: 0; }
+  .meta { font-size: .82rem; color: #666; border-left: 3px solid #ccc; padding-left: .75rem; margin: 1.5rem 0 2rem; }
+  .checked { background: #f6f6f2; border-left: 3px solid #999; padding: .9rem 1rem; margin: 1.5rem 0; font-size: .93rem; }
+  ol, ul { padding-left: 1.25rem; }
+  li { margin-bottom: .4rem; }
+  .sources li { font-size: .9rem; margin-bottom: .7rem; }
+</style>
+</head>
+<body>
+
+<h1>Theme 2 — What a vendor choice locks you into, and for how long</h1>
+<p class="standfirst">This chapter helps an owner work out what they are committing to when AI arrives inside software they already buy, and how long that commitment lasts.</p>
+
+<p class="meta">
+Team 7 · cohort 2026 · version 1.0 · SME: persona — a 30-person precision metalworking shop in the Achterhoek, family-owned, one office manager who handles all IT alongside the invoicing · sources last appraised: 4 September 2026
+</p>
+
+<h2>Why we chose this question</h2>
+
+<p>The week's theme is geopolitics and vendor business models, and most of that debate is about states and hyperscalers. An owner with thirty staff cannot act on any of it. We looked for the one place where the geopolitical argument touches a decision this shop will actually make in the next year, and it is the renewal date on software they already pay for.</p>
+
+<p>We passed over two angles that were tempting. <strong>Sovereignty as a principle</strong> — whether a Dutch firm should prefer European software — turns into a values discussion the owner cannot cost, and we could not find a way to make it decidable. <strong>The open-versus-closed weights comparison</strong> is genuinely interesting, and chapter 5 of this handbook will need it, but for a shop with one part-time IT person the choice between model licences is not live: nobody there is going to run a model. What is live is that Microsoft raised what this shop pays and added AI features it did not ask for. That is the door in.</p>
+
+<h2>The question, for this kind of SME</h2>
+
+<p>When an AI feature appears inside software you already rent, three things change at once and none of them is announced: what your data is used for, what you pay, and how hard it becomes to leave. The question is not whether to adopt AI. It is what you have already agreed to, and what it would cost to undo.</p>
+
+<h2>The translation</h2>
+
+<p>Draghi's report on European competitiveness argues that Europe's productivity gap with the United States is concentrated in technology, and that the problem is diffusion rather than invention: the continent produces research and buys back the products (Draghi 2024, chapter on the innovation gap). We read the report itself rather than the press coverage, and it is worth saying that the report is about the EU economy, not about metalworking shops. The link to this firm is one we are making, not one Draghi makes.</p>
+
+<p>What that argument looks like from the Achterhoek is mundane. The shop rents its office software, its accounting package and its CAD licences, all from American vendors, all on annual renewal. Each renewal is a small decision that nobody experiences as a strategic one. Over five years they add up to a position: the firm's documents, its quotations and its drawings sit in formats and services it does not control.</p>
+
+<p>Two things follow that an owner can act on. <strong>Switching cost is the real measure of dependency</strong>, not who owns the vendor — a European vendor you cannot leave is not sovereignty. And <strong>the renewal is the moment of leverage</strong>, because it is the only point at which the firm has a decision to make at all.</p>
+
+<div class="checked">
+<p><strong>What we checked, and what changed.</strong> Our platform's first draft said the EU AI Act "requires SMEs to complete a conformity assessment before deploying AI". We checked Article 6 and that is wrong: the Act classifies systems by risk, and conformity assessment attaches to high-risk systems, not to firms by size. Drafting a quotation from past quotations is not in Annex III. We cut the sentence and replaced it with the paragraph below.</p>
+<p>The same draft gave a figure for Dutch SME adoption — "around 70% by 2027" — with no source. We could not find where it came from and could not confirm it anywhere, so it is not on this page. We would rather say we do not know the number.</p>
+<p>We also dropped a source. A 2025 survey on Dutch manufacturing AI adoption turned up in our first search and we could not find the journal it was supposedly published in. Until one of us can put the actual article in front of the others, it stays out.</p>
+</div>
+
+<h2>Where the AI Act actually lands on this firm</h2>
+
+<p>Article 6 sets out how a system is classified as high-risk: either it is a safety component of a product in Annex I, or it appears in Annex III (AI Act, Article 6). Quotation drafting is neither. What does apply is the transparency obligation — staff should know when they are reading machine-generated text — and that is a house rule, not a compliance project. An owner who has been told the AI Act is a barrier has been told something that is true for some firms and not for this one.</p>
+
+<p>We are not lawyers and this is our reading of one article. An owner making a decision with money attached should get it confirmed.</p>
+
+<h2>Illustrative use case (CRISP-DM)</h2>
+
+<p><strong>Business understanding.</strong> The office manager spends roughly a day a week turning drawings and emails into quotations, and it is the task that delays everything else. <strong>Data understanding.</strong> Three years of quotations as PDFs, plus the emails around them; the older ones are scans, and we could not tell from the persona how many. <strong>Data preparation.</strong> Extracting the scans is the step most likely to sink this, and any estimate that skips it is dishonest. <strong>Modelling.</strong> A draft quotation from a new drawing and comparable past jobs. <strong>Evaluation.</strong> How many drafts go out with no edit, measured over a month — not whether the output "looks good". <strong>Deployment.</strong> Whatever runs it, the drawings stay where the customer's contract says they may be.</p>
+
+<h2>Recommended tooling</h2>
+
+<p>We matched these to one office manager with no technical support, which rules out most of what is written for SMEs elsewhere.</p>
+
+<ul>
+  <li><strong>What is already in the subscription.</strong> Microsoft's AI features are in the licences this shop already renews. Microsoft's own documentation on the EU Data Boundary sets out where data is stored and processed. We use it for that and only that: a vendor can tell you where its servers are, and cannot tell you whether its terms are good for you.</li>
+  <li><strong>A specialist quotation tool from the sector.</strong> Sold by suppliers who know metalworking. We could not appraise these — we found vendor pages and no independent evaluation — so we name the category and not a product.</li>
+  <li><strong>A local model.</strong> Cheap in licence terms and expensive in the one resource this firm does not have. We list it to say why we are not recommending it, which is not the same as saying it is bad.</li>
+</ul>
+
+<h2>Responsible AI &amp; trust</h2>
+
+<p>The customer's drawing is the hard case. It is often the customer's intellectual property, and where it may be processed is set by the contract between the shop and its customer, not by the shop's own preferences. That contract is the thing to read first, before any tool is chosen. The emails around a drawing carry names and contact details and are personal data under GDPR whatever the drawing is. A human stays in the loop for a plain reason: the office manager signs the quotation, and a signature is a liability.</p>
+
+<h2>First five steps for an owner</h2>
+
+<ol>
+  <li>Find your renewal dates. Put the three biggest on a calendar; that is when you have leverage.</li>
+  <li>Pull one customer contract and read what it says about where drawings may be processed. If it says nothing, that is your answer for now.</li>
+  <li>Ask your office manager which single task, if it took half the time, would free the most of their week. Do not guess it.</li>
+  <li>Before you buy anything, time that task for two weeks. Without a baseline you cannot tell later whether it worked.</li>
+  <li>Agree in writing what staff may put into AI tools, one side of A4, and put a date on reviewing it.</li>
+</ol>
+
+<h2>What this chapter does not cover</h2>
+
+<p>We have not spoken to an owner yet — our field visit is in week 3, and until then the persona is a construct and the renewal argument is untested against anyone who has actually made that decision. We also have one claim resting on a single source: that switching cost matters more than vendor nationality is our reading of Draghi plus reasoning, and we have not found anyone who has measured it for firms of this size.</p>
+
+<h2 class="sources">Sources</h2>
+
+<ul class="sources">
+  <li>Draghi, M. (2024). <em>The future of European competitiveness</em>. European Commission. <a href="https://commission.europa.eu/topics/eu-competitiveness/draghi-report_en">commission.europa.eu</a> — the report itself, not the press coverage of it. Commissioned by the Commission and written by a former ECB president, so it is authoritative on the EU economy and openly political about what Europe should do next; we use it for the diffusion argument and not for prescriptions.</li>
+  <li><em>EU AI Act, Article 6 — classification rules for high-risk AI systems</em>. <a href="https://artificialintelligenceact.eu/article/6/">artificialintelligenceact.eu/article/6</a> — the legislative text. We use the article rather than a summary of it because the summaries we found disagreed with each other about what applies to small firms.</li>
+  <li>Microsoft. <em>What is the EU Data Boundary?</em> <a href="https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn">learn.microsoft.com</a> — the vendor's own documentation. Used only for where Microsoft stores and processes data, which is a fact the vendor is the right source for, and not for whether the arrangement is adequate.</li>
+  <li>Stanford HAI. <em>AI Index Report</em>. <a href="https://hai.stanford.edu/ai-index">hai.stanford.edu/ai-index</a> — university-based, publishes its methodology, and has no model to sell, which is why we prefer it to a vendor benchmark. Its data is about the industry rather than about Dutch SMEs, so we use it for direction and not for numbers about firms like this one.</li>
+</ul>
+
+</body>
+</html>
