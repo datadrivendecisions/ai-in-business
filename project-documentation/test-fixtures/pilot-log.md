@@ -634,3 +634,51 @@ is what run 6 said would trigger a structural answer rather than a third sentenc
 ### Next run
 
 Team 07, **in a fresh session**. The discrimination test has still not been run.
+
+---
+
+## Run 8 — 6 September 2026 — the discrimination test, passed
+
+Team 07 in a fresh session. The question open since run 3 has an answer.
+
+| | Team 03 | Team 07 |
+|---|---|---|
+| Sourcing | 0 | **3** |
+| Vetting | 0 | **3** |
+| Reasoning | 2 | **3** |
+| Ledger | two NOT-FOUND | **four CONFIRMED** |
+
+Exactly what the answer key predicted, on two pages that differ only in the quality of the work.
+**The rubric reads a page rather than producing a number**, which is what six runs of tuning were
+worth finding out and what no further tuning on the weak fixture could have established.
+
+**The no-verdict invariant held where it was under most pressure.** This was the first page with
+something kind to say, and nothing kind is said: no praise, no encouragement, not a word of
+assessment anywhere in the team's half. The appraisal is in the owners' half, where judging is the
+job.
+
+**Two of the three planted gaps were found** — the single-source claim and the unappraised tool
+category — and the missing field research was not, on a report of three questions. Three is inside
+the specified range, and asking fewer of a stronger page is defensible behaviour rather than a miss.
+
+**It found a fourth weakness nobody planted.** The fixture calls the AI Act's transparency
+obligation "a house rule, not a compliance project", which softens a legal obligation into an
+internal practice. That is a genuine fault in the page, written without noticing, and the agent's
+first question is about it. It is now in the answer key: a key that lists only what its author
+intended has stopped being a check on the author.
+
+### What is now established
+
+The gate reads the page, verifies its sources, separates its two audiences, holds its invariants
+under pressure, and tells competent work from weak work. That is the mechanism working.
+
+### What is still untested
+
+- **Movement, and the growth requirement.** Every run has been a cold start. Nothing has yet tested
+  whether a second report builds on a first, refuses to repeat a question, or returns to one the
+  team ducked — which is LRD §6.4's central demand and AC-05's 90% bar. This needs a second week's
+  page for one of these teams plus its first report as history, and it is the largest remaining gap.
+- **The split in a real workflow.** The two headings have been produced reliably; nothing has yet
+  parsed them and delivered one half to a channel and the other to an instructor.
+- **Consistency.** Eight runs on two pages says the mechanism can work, not that it works every
+  week on ten pages written by people who are not trying to test it.

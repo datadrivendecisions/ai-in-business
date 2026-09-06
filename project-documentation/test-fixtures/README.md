@@ -156,6 +156,11 @@ manufacturing something:
 3. **A whole category is named without appraisal.** Sector-specific quotation tools are recommended
    as a category because the team found only vendor pages; naming a category you cannot appraise is
    defensible, and worth being asked about.
+4. **A legal obligation described as a house rule.** The transparency obligation is called "a house
+   rule, not a compliance project". Found by the agent in run 8, not planted: it is a real weakness,
+   and softening an obligation into an internal practice is exactly the move a chapter for owners
+   should not make. Recorded here because a key that only lists what its author intended stops being
+   a check on the author.
 
 ## What would show the gate is failing
 
