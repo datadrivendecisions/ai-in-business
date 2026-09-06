@@ -410,7 +410,8 @@ tr.wk-now { background: var(--bg-yellow); }
 /* Status strip: what is live and what is next, directly under the nav */
 .status-strip {
   background: var(--supporting); color: var(--bg-page);
-  padding: var(--space-2) var(--space-8); font-size: var(--text-sm);
+  padding: var(--space-3) var(--space-8);
+  font-size: var(--text-sm); line-height: 1.5;
 }
 .status-strip-inner {
   max-width: 1180px; margin: 0 auto;
@@ -425,7 +426,25 @@ tr.wk-now { background: var(--bg-yellow); }
 }
 .status-strip strong { color: var(--primary); }
 .status-quiet { color: var(--border-strong); }
-.status-last { margin-left: auto; color: var(--border-strong); }
+/* The standing note is not a "now" fact, so it sits a step down in size and
+   weight. It is never pushed right: an auto margin survives the wrap, and the
+   moment the strip breaks — it clears its container by 8px, so it breaks
+   often — that strands the note alone on a right-aligned second line. */
+.status-note {
+  color: var(--cream); font-size: var(--text-xs);
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-3);
+}
+/* A lime dot rather than a lime fill: the note should catch the eye without
+   competing with the live badge, which is the one thing on the bar that is
+   allowed to shout. */
+.status-note::before {
+  content: ""; display: inline-block;
+  width: 6px; height: 6px; border-radius: var(--radius-full);
+  background: var(--primary); margin-right: var(--space-2);
+  vertical-align: 1px;
+}
 
 /* Two-column layout: the page, and a rail that stays with it */
 .bds-layout {
@@ -575,8 +594,7 @@ ol.steps.steps-quiet > li::before {
   .rail-toc { position: static; max-height: none; overflow: visible; }
 }
 @media (max-width: 640px) {
-  .status-strip { padding: var(--space-2) var(--space-4); }
-  .status-last { margin-left: 0; }
+  .status-strip { padding: var(--space-3) var(--space-4); }
   .bds-layout { padding: var(--space-8) var(--space-4) var(--space-12); }
   .do-now-head { padding: var(--space-3) var(--space-4); }
   .do-now li { padding: var(--space-3) var(--space-4); }
@@ -628,7 +646,7 @@ ol.steps.steps-quiet > li::before {
     <span class="status-now">Week 1 &middot; live</span>
     <span>Next session <strong>Mon 7 Sep</strong>, about four hours</span>
     <span class="status-quiet">Next hand-in: week 1's drafts, Monday 14 September</span>
-    <span class="status-last">Each week's page appears about a week before its session</span>
+    <span class="status-note">Each week's page appears about a week before its session</span>
   </div>
 </div>
 
