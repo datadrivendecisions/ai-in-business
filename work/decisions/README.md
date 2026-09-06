@@ -45,6 +45,7 @@ decision — the point is to force a yes or a no, not to host an open question.
 | 0011 | [Continuous assessment — an individual portfolio alongside the final interview](0011-continuous-assessment.md) | Proposed |
 | 0012 | [A sector per team, and what stays invariant when the sectors differ](0012-sector-allocation.md) | Proposed |
 | 0013 | [Where work is handed in — HANDIN, Teams, or one route per artefact](0013-hand-in-routes.md) | Proposed |
+| 0014 | [How the Socratic gate runs — the platform, and what carries the traffic](0014-socratic-gate-architecture.md) | Proposed |
 
 ADR-0001 is the keystone. ADR-0002, ADR-0003 and ADR-0006 follow from it and
 should not be accepted before it is.
