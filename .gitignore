@@ -10,3 +10,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Local Python environment for the Socratic gate
+.venv/

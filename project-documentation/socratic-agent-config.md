@@ -44,8 +44,8 @@ week, weeks 2–6. Never given transcripts or personal data. Pilot instance.
 
 ## Instructions
 
-The system prompt lives in [`socratic-agent/instructions.txt`](socratic-agent/instructions.txt),
-which is the single copy: [`socratic-agent/agent.py`](socratic-agent/agent.py) reads it at import,
+The system prompt lives in [`socratic_agent/instructions.txt`](socratic_agent/instructions.txt),
+which is the single copy: [`socratic_agent/agent.py`](socratic_agent/agent.py) reads it at import,
 and the console field is pasted from it. Do not keep a second copy here — there is no generator to
 hold two in step, and a prompt that has drifted from what runs is worse than no record of it.
 

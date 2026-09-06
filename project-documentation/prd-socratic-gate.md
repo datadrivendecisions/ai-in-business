@@ -131,9 +131,20 @@ to write against §6.2 — the gate is judged the way we teach them to judge.
 - **Pull only.** The single input is the team's published page. No text box, no upload, no
   student authentication, nothing student-supplied beyond what is already public.
 - **The workflow fetches, not the agent.** Gemini Enterprise's URL Context tool returns a summary
-  rather than the page, and a summary drops the source list and rewrites the team's sentences —
-  see run 4 in `test-fixtures/pilot-log.md`. The agent must receive full text, or the questions
-  quote words no student wrote.
+  rather than the page, with no toggle for raw retrieval — confirmed by the platform's own
+  assistant — and a summary drops the source list and rewrites the team's sentences (run 4). The
+  agent must receive full text, or the questions quote words no student wrote.
+- **Tool invocation cannot be guaranteed.** Whether the agent calls Google Search is a model
+  heuristic; instructions raise the odds and settle nothing, and Agent Designer does not expose the
+  thinking budget that would give the model room to plan. Source verification is therefore not
+  something this agent can be relied on to do — it belongs in the workflow, or it is not in the
+  design.
+- **The runtime returns one response and routes nothing.** Splitting the two audiences is the
+  caller's job, by parsing the headings or by using two agents. Nothing in the platform keeps the
+  rubric away from a student; only the surrounding design does.
+- **There is no per-agent spend cap**, and Cloud Billing budgets alert rather than stop. ADR-0009
+  promises a hard cap, and a billing alert is not one. Either the promise softens to a monitored
+  cap, or someone builds the budget-alert-to-Cloud-Function path that actually disables billing.
 - **That boundary is what keeps NFR-11.** Interview material cannot reach the model service
   through this gate, because the gate cannot be handed anything. Do not add an input that breaks it.
 - **One scheduled run a week**, weeks 2–6. The schedule is the protocol (§6.4).

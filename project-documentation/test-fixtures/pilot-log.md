@@ -412,3 +412,56 @@ Workflow fetches, agent gets full text, URL Context off. Then look at the ledger
 carry five lines naming the page's own sources, and if they are all UNCHECKED the search problem is
 confirmed as the remaining one. Raise `thinking_budget` above 0 before concluding anything about
 Google Search — a model with no planning budget was never going to call a tool it was not forced to.
+
+---
+
+## Platform answers — 6 September 2026
+
+Five configuration questions put to the console's own assistant. Four of the answers change
+something, and two of them change the design rather than the settings.
+
+**Thinking budget is not exposed in Agent Designer.** Low-level generation parameters are managed
+by the runtime. So `thinking_budget: 0` stands unless the agent moves off the low-code canvas to
+the SDK. Accept it for the pilot.
+
+**URL Context always summarises**, with no toggle for raw retrieval. Run 4's diagnosis is now a
+vendor-confirmed property rather than an inference, and the workflow-fetches constraint is settled.
+
+**Tool invocation is a model heuristic.** Whether Google Search fires is the model's decision every
+run; instructions improve the odds and guarantee nothing, and the one setting that would give it
+room to plan is the one Agent Designer does not expose. **Source verification cannot be made
+reliable at the agent level.** It moves to the workflow — a step that resolves each citation before
+the model sees the page — or it leaves the design. What the agent can still do, and should, is ask
+where a claim came from.
+
+**The runtime returns one response and routes nothing.** Two supported ways to reach two audiences:
+parse the headings in the caller, or split into two agents.
+
+**There is no per-agent spend cap.** Cloud Billing budgets alert; they do not stop. Hard-stopping
+needs budget alerts wired through Pub/Sub to a function that disables billing. ADR-0009 promises "a
+hard spend cap with a course-owned key", and today that promise is an alert. Either the record
+softens to a monitored cap, or someone builds the shut-off — and it is worth deciding which before
+a runaway loop rather than after one.
+
+### The recommendation this produces: two agents, not one
+
+The parsing route keeps the rubric inside a payload that must never be forwarded whole. One
+misconfigured step and a team reads its own scores, and that leak cannot be taken back.
+
+Splitting the work removes the possibility instead of guarding against it. A questioner agent whose
+instructions contain no rubric, no thresholds and no scoring language **cannot** emit a score, and
+nothing in its context could leak because the confidential material was never there. A separate
+rubric agent, called with the same page, writes only for the owners and is never addressed to a
+student.
+
+The second gain is the one run 3 diagnosed. The source check has been failing partly because it is
+one bullet competing with everything else in a 2,000-word instruction; each half of a split agent
+carries roughly half the load, and the checking has somewhere to be the main task rather than a
+preliminary.
+
+The costs are real and worth stating: two calls instead of one, two configurations to keep in step,
+the rubric agent reading the page a second time, and the possibility that the questions and the
+score drift apart because nothing guarantees they were formed from the same reading.
+
+This is a design decision rather than a setting, so it belongs in a record before it belongs in the
+console.
