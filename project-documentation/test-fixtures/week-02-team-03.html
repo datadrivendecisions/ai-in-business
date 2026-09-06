@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme 2 — Who owns the AI your company runs on?</title>
+<style>
+  body { max-width: 46rem; margin: 0 auto; padding: 2rem 1.25rem 4rem;
+         font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         color: #1a1a1a; }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin-bottom: .35rem; }
+  h2 { font-size: 1.15rem; margin-top: 2.25rem; border-bottom: 1px solid #ddd; padding-bottom: .3rem; }
+  .standfirst { font-size: 1.05rem; color: #444; margin-top: 0; }
+  .meta { font-size: .82rem; color: #666; border-left: 3px solid #ccc; padding-left: .75rem; margin: 1.5rem 0 2rem; }
+  ol, ul { padding-left: 1.25rem; }
+  li { margin-bottom: .4rem; }
+  .sources li { font-size: .9rem; }
+</style>
+</head>
+<body>
+
+<h1>Theme 2 — Who owns the AI your company runs on?</h1>
+<p class="standfirst">This chapter helps an owner decide whether depending on an American AI vendor is a risk their company can carry, and what the alternative would cost them.</p>
+
+<p class="meta">
+Team 3 · cohort 2026 · version 1.0 · SME: persona — a 30-person precision metalworking shop in the Achterhoek, family-owned, one office manager who handles all IT · sources last appraised:
+</p>
+
+<h2>The question, for this kind of SME</h2>
+
+<p>Most small manufacturers in our region already use AI without deciding to. It arrives inside Microsoft 365, inside their accounting package, inside the CAD software they renew every year. The question this chapter answers is therefore not <em>should we start with AI</em> but <em>whose AI are we already running, and what happens to us if that changes</em>.</p>
+
+<p>This matters more in 2026 than it did two years ago. Research shows that around 70% of Dutch SMEs will be using AI tools in their primary process by 2027, which means the dependency is being created now, largely without anyone choosing it deliberately.</p>
+
+<h2>The translation</h2>
+
+<p>Mario Draghi's report on European competitiveness makes the argument at continental scale: Europe does not have an invention problem, it has a diffusion problem. New technology is developed here and commercialised elsewhere, and the productivity gap with the United States is mostly explained by the technology sector. For a metalworking shop in the Achterhoek this translates into something concrete — the software your business runs on is increasingly rented from three American companies, and the terms of that rental are set somewhere else.</p>
+
+<p>There are two vendor models an owner should be able to tell apart. <strong>Closed weights</strong> means the model itself never leaves the vendor; you rent access through an API, you pay per use, and you cannot take the model with you. It is a strong revenue model and it creates real dependency. <strong>Open weights</strong> means the model can be downloaded and run on hardware you control. Chinese labs in particular have released capable open-weight models with state backing, and this is putting pricing pressure on the closed vendors.</p>
+
+<p>Europe's position sits between the two. The EU has chosen to compete mainly on regulation and on sovereignty guarantees rather than on building competing models, which is why European cloud providers now market data residency as their primary differentiator. The EU AI Act came into force in 2024 and requires all SMEs deploying AI systems to complete a conformity assessment before deployment, which adds a compliance step European firms carry and American ones do not.</p>
+
+<p>For our persona the practical consequence is that a local model is becoming a genuine option. Models that run on a single workstation are now good enough for document handling, quotation drafting and email, which is most of what a 30-person shop would want. An owner can keep their data physically in the building.</p>
+
+<h2>Illustrative use case (CRISP-DM)</h2>
+
+<p><strong>Business understanding.</strong> The office manager spends around a day a week turning customer drawings and emails into quotations. <strong>Data understanding.</strong> Three years of past quotations exist as PDFs in a shared folder, plus the emails they came from. <strong>Data preparation.</strong> The PDFs would need to be extracted into a structured form; this is the step most likely to fail, because the older ones are scans. <strong>Modelling.</strong> A model drafts a quotation from a new drawing and the history of similar jobs. <strong>Evaluation.</strong> The office manager checks each draft against what they would have written; the measure is how many go out unchanged. <strong>Deployment.</strong> It runs on the office PC and nothing leaves the building.</p>
+
+<h2>Recommended tooling</h2>
+
+<ul>
+  <li><strong>Microsoft 365 Copilot</strong> — already in the subscription for most firms, no setup, but the data goes to Microsoft.</li>
+  <li><strong>Azure OpenAI Service with EU data residency</strong> — enterprise-grade guarantees, contractual data protection, and the region can be pinned to the Netherlands.</li>
+  <li><strong>A local open-weight model</strong> — free, private, needs someone technical for a weekend.</li>
+</ul>
+
+<h2>Responsible AI &amp; trust</h2>
+
+<p>The main risk for this kind of firm is that customer drawings are commercially sensitive and sometimes belong to the customer rather than to the shop. Putting them through a vendor's API means they leave the building. Under GDPR the drawings themselves are usually not personal data, but the emails around them are. A human stays in the loop because the office manager signs every quotation that goes out.</p>
+
+<h2>First five steps for an owner</h2>
+
+<ol>
+  <li>Make an inventory of where AI is already being used in your company.</li>
+  <li>Discuss with your IT supplier where your data is stored.</li>
+  <li>Start with a small pilot in one process.</li>
+  <li>Make agreements with your staff about what AI may and may not be used for.</li>
+  <li>Evaluate after three months and decide whether to expand.</li>
+</ol>
+
+<h2 class="sources">Sources</h2>
+
+<ul class="sources">
+  <li>Draghi, M. — <em>The future of European competitiveness</em>. Summarised in NOS coverage, September 2024.</li>
+  <li>Microsoft — <em>What is the EU Data Boundary?</em> <a href="https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn">learn.microsoft.com</a></li>
+  <li>Stanford HAI — <em>AI Index Report 2026</em>, chapter 4 on open-weight model performance. We use this rather than a vendor's own benchmark because HAI is university-based, publishes its methodology, and has no model to sell. <a href="https://hai.stanford.edu/ai-index">hai.stanford.edu/ai-index</a></li>
+  <li>Van der Meer, J. &amp; Kowalski, T. (2025). <em>AI adoption among Dutch manufacturing SMEs: a longitudinal survey</em>. Journal of European Industrial Policy, 14(3), 221–240.</li>
+  <li>TechRadar — <em>Why open weights are winning</em>, June 2026.</li>
+</ul>
+
+</body>
+</html>

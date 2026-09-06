@@ -5,3 +5,11 @@
 # Tooling
 __pycache__/
 .pytest_cache/
+
+# Secrets — this repository is public
+.env
+.env.*
+!.env.example
+
+# Local Python environment for the Socratic gate
+.venv/

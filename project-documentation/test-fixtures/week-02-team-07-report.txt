@@ -1,0 +1,27 @@
+Socratic gate — team 07 — week 2 report
+(The report the team received. Supply this as the team's prior history when
+running the week 3 page, and nothing else: the owners' half is never part of a
+team's history, because the agent must not carry a score into the next week's
+questions.)
+
+## FOR THE TEAM
+
+Regarding the "transparency obligation" of the EU AI Act, the page states that
+"staff should know when they are reading machine-generated text — and that is a
+house rule, not a compliance project." What is the distinction for the team
+between a legal obligation arising from an Article of the AI Act and a "house
+rule"?
+
+The section "What this chapter does not cover" mentions, "We also have one claim
+resting on a single source: that switching cost matters more than vendor
+nationality is our reading of Draghi plus reasoning, and we have not found anyone
+who has measured it for firms of this size." What further evidence would the team
+look for to strengthen the confidence in this specific claim for the target
+persona?
+
+The page suggests "A specialist quotation tool from the sector" as a recommended
+tooling option, noting, "We could not appraise these — we found vendor pages and
+no independent evaluation — so we name the category and not a product." What
+specific challenges did the team encounter in finding independent evaluations for
+sector-specific tools, and what might an SME owner do given this lack of
+independent information?

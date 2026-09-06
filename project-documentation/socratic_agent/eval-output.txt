@@ -1,0 +1,33 @@
+======================================================================
+team_07_wk3
+======================================================================
+## FOR THE TEAM
+
+The page states, "On switching cost mattering more than vendor nationality. We still think this is right and it holds up in the reading we have done since." What new reading specifically informed the team's continued confidence in this claim, and where is it reflected on the page?
+
+The page offers advice in the section "How to buy something nobody has reviewed," yet acknowledges, "we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence." For an owner of the 30-person precision metalworking shop, how would they determine the potential impact or efficacy of this advice before implementing it?
+
+The section "The people: named here, researched in week 5" mentions that the field visit is "this week" and that the team would "rather ask them than guess." What specific questions does the team plan to ask during this field visit to address the "gap in the literature" regarding the impact on the person operating the tool?
+
+## FOR THE OWNERS
+
+Source ledger:
+EU AI Act, Article 50 — transparency obligations for providers and deployers of certain AI systems. [https://artificialintelligenceact.eu/article/50/]
+Cited at: "Article 50 of the AI Act sets transparency obligations"
+CONFIRMED
+EU AI Act, Article 6 — classification rules for high-risk AI systems. [https://artificialintelligenceact.eu/article/6/]
+Cited at: "Article 6 — carried over from last week\'s chapter, and still the article that determines whether any of the heavier obligations apply to this firm."
+CONFIRMED
+Microsoft. What is the EU Data Boundary? [https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn]
+Cited at: "Microsoft\'s own documentation sets out where its enterprise services store and process data"
+CONFIRMED
+Stanford HAI. AI Index Report. [https://hai.stanford.edu/ai-index]
+Cited at: "Stanford\'s AI Index is useful for the direction of travel on model capability"
+CONFIRMED
+
+Sourcing: 2 — The team demonstrates good appraisal of most sources and explicitly details their rationale for using vendor documentation and a university report. However, the re-stated claim about "switching cost mattering more than vendor nationality" is said to be supported by "reading we have done since" without any new or existing citation.
+Vetting: 3 — The team explicitly corrected their understanding of the EU AI Act based on previous feedback and revised their approach to specialist quotation tools. They also transparently acknowledge that their "buying advice" is "reasoning from what we could not find, which is weaker than evidence."
+Reasoning: 3 — The team provides clear justifications for breaking down the trust question, deferring the "people" question, and explaining the specific uses and limitations of their chosen sources. They also clearly distinguish between legal obligations and internal management rules.
+Movement: 3 — The team directly addressed all three points of feedback from the previous week's gate, leading to significant revisions in their understanding of legal obligations, the creation of new advice for buying unreviewed tools, and a re-affirmation of a prior claim based on additional reading.
+
+Gate A opens because Movement is 3 and the total score is 8.

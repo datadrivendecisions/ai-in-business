@@ -1,0 +1,6 @@
+# One line per team: team<TAB>url<TAB>[prior report]. These three point at the
+# test fixtures, so the file runs as a demo; replace them with the cohort roster.
+# team	url	[prior report]
+team-03	https://raw.githubusercontent.com/datadrivendecisions/ai-in-business/now-board-landing/project-documentation/test-fixtures/week-02-team-03.html
+team-07	https://raw.githubusercontent.com/datadrivendecisions/ai-in-business/now-board-landing/project-documentation/test-fixtures/week-02-team-07.html
+team-07b	https://raw.githubusercontent.com/datadrivendecisions/ai-in-business/now-board-landing/project-documentation/test-fixtures/week-03-team-07.html	../test-fixtures/week-02-team-07-report.txt
