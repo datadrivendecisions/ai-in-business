@@ -5,6 +5,9 @@ description: Use when English text may read as machine-written and has to sound 
 
 # Recognising English AI language and writing it out
 
+*The Dutch original is [`schrap-ai-taal`](../schrap-ai-taal/SKILL.md); codes A1 to A15 are the same in both,
+so a finding in one is a finding in the other.*
+
 ## The core rule
 
 **A smooth sentence that tells you nothing new is an empty sentence.** AI language

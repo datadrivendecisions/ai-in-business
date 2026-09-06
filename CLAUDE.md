@@ -52,7 +52,8 @@ BASE_SHA=HEAD~1 ./.github/scripts/check-adrs.sh   # ...plus: no accepted record 
 python3 -m http.server -d site     # preview the site locally at :8000
 gh run list --workflow=pages.yml   # deploy status
 
-python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/   # prose check: AI language, reading level
+python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/ --codes A1,A16,A17          # prose: AI language, every page
+python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/index.html site/week-01.html site/handbook.html --codes D1,D3   # reading level, student pages only
 ```
 
 `check-links.sh` enforces two separate rules. Inside `site/` it is the **publication gate**: every
@@ -225,6 +226,14 @@ times, once every eight sentences on the landing page. Keep the ones where the c
 content, as the two gates' *questions back, never a verdict* does; the rest are rhythm pretending
 to be thought. The same measurement flags one repeated intensifier per page — *actually*,
 *honest*, *quietly* — and the em-dash density, which is house style here and stays.
+
+**The D-codes are for the pages students read, and nowhere else.** D1 (sentence over 25 words) and D3
+(unexplained jargon) encode one reader: a student meeting the subject for the first time, often in a second
+language. `integrated-lrd.html` has a different reader — the two module owners — and running a student
+threshold over a specification written for them is a category error, not a backlog: it reports 232 sentences
+and 36 terms (*deliverable*, *sprint*, *governance*) that are the audience's own working vocabulary. Run the
+D-codes over the student pages, the A-codes over everything. The tool page is excluded from both, being
+maintained in the AI Wiki rather than here.
 
 Commit messages here explain **why**, in full sentences, and reference the commits they respond
 to (see 827f32a). Match that.
