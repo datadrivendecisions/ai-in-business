@@ -118,10 +118,32 @@ The page is organised as the sections a reader of the finished handbook would se
 
 `site/integrated-lrd.html` is a separate document for the module owners (the
 learning-requirements document covering AIBS and its AEL sister module). It is published at
-`/integrated-lrd.html` so it can be shared with colleagues by link. The landing page links it under
-a "for the module owners" heading; the handbook does **not** link it — students are not its audience. Everything it refers to outside
+`/integrated-lrd.html` so it can be shared with colleagues by link. The landing page links it from
+its "For the module owners" section, which is **instructor-only** (`?instructor`); the handbook does
+**not** link it — students are not its audience. The document itself is still open at its URL and
+still carries material that should not be in front of students — the Socratic tutor's hidden rubric
+above all — which is issue #3. Everything it refers to outside
 `site/` (the sketches, the proposal PDF, the decision records) is linked by its GitHub URL, because
 a relative link to `project-documentation/` or `work/` would fail the publication gate.
+
+**Instructor material never sits in a student's path.** A page in `site/` is read by students by
+default, so anything written for the teaching team is out of place on it. Two rules, and they are
+not the same rule:
+
+- **Some instructor material must not be in `site/` at all.** Anything whose worth depends on a
+  student not having read it — the reveal at the end of an exercise, a manipulation that is
+  deliberately withheld, the Socratic tutor's hidden rubric and scores, question banks, answer
+  keys, the lecturer's *ask, never comment* prompts — stays in `project-documentation/` or `work/`.
+  `site/` is uploaded to a public URL from a public repo. There is no such thing as a secret in it.
+- **The rest may be published behind the instructor view**, marked
+  `data-audience="instructor"` and revealed only when the URL carries `?instructor`: run sheets,
+  prep checklists, the design in its ideal form — material that is merely *not for students* rather
+  than damaging in their hands. The teaching team reaches it by link; a student never meets it
+  walking through the page.
+
+The query parameter is **signposting, not access control**. The content is in the HTML either way,
+and view-source defeats it in one click — it keeps instructor material out of a student's way, not
+out of their reach. The first rule is the one that protects anything.
 
 **Brand system.** Every HTML file carries its own inlined copy of the Business Data Solutions
 palette — identical `:root` custom-property blocks, ~24 tokens for colour, type scale, spacing,
@@ -171,7 +193,11 @@ to that is not in `site/` becomes an absolute URL, or the publication gate fails
 font loads: the site is system-stack only.
 
 No page of the course itself has any JavaScript — not `index.html`, not a week page, not the
-handbook template, not the LRD. Keep it that way unless there is a reason not to.
+handbook template, not the LRD. Keep it that way unless there is a reason not to. The **instructor
+view** is the one agreed reason, and it lives at the foot of `index.html`: twenty lines that unhide
+the sections marked `data-audience="instructor"` when the URL carries `?instructor`, remember the
+choice in `sessionStorage` for the rest of the visit, and let `?student` turn it off again. Copy
+that block verbatim into a page when it gains an instructor section, and add nothing to it.
 
 ## Conventions
 

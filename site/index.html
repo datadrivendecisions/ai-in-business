@@ -728,8 +728,9 @@ tr.wk-now { background: var(--bg-yellow); }
     </div>
   </section>
 
-  <section id="owners">
+  <section id="owners" data-audience="instructor" hidden>
     <h2 class="bds-part">For the module owners</h2>
+    <p class="aside"><strong>Instructor view.</strong> This section is hidden on the ordinary page and is showing because the address carries <code>?instructor</code>. <a href="index.html?student">Leave the instructor view</a>.</p>
     <p>The <a href="integrated-lrd.html">integrated learning-requirements document</a> specifies both modules — outcomes, calendar, the gated learning path and the assessment. It describes the design in its ideal form and is written for the course team, not for students. Where it and this site differ, this site is what we are actually running.</p>
   </section>
 
@@ -748,6 +749,26 @@ tr.wk-now { background: var(--bg-yellow); }
     <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
   </div>
 </footer>
+
+<!-- Instructor view. ?instructor reveals every [data-audience="instructor"] section and
+     sticks for the rest of the visit; ?student turns it off again. This is signposting, not
+     access control: the markup is public either way, so nothing whose worth depends on a
+     student not having read it belongs in site/ at all. See CLAUDE.md. -->
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
 
 </body>
 </html>
