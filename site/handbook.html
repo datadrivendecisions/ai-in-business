@@ -69,12 +69,13 @@ a:hover { background: var(--bg-yellow); }
   gap: var(--space-6); flex-wrap: wrap;
 }
 .bds-wordmark {
-  display: inline-flex; align-items: center; gap: var(--space-2);
-  font-weight: 700; font-size: var(--text-xl);
+  display: inline-flex; align-items: center; gap: var(--space-3);
   text-decoration: none; color: var(--text-primary);
 }
 .bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
 .bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
 .bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
 .bds-nav-links a { color: var(--text-secondary); }
 .bds-nav-links a:hover { color: var(--text-primary); }
@@ -199,7 +200,9 @@ code {
   text-align: center; color: var(--text-muted); font-size: var(--text-sm);
 }
 .bds-footer-inner { max-width: 1024px; margin: 0 auto; }
-.bds-footer .bds-wordmark { font-size: var(--text-base); margin-bottom: var(--space-2); }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
 
 /* Template placeholders */
 .tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
@@ -221,7 +224,7 @@ p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-
 
 <nav class="bds-nav" aria-label="Site">
   <div class="bds-nav-inner">
-    <a href="index.html" class="bds-wordmark">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
       <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
         <g fill="#1a1a1a">
           <polygon points="9,29 11,10 17,10 19,29"/>
@@ -236,7 +239,10 @@ p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-
           <path d="M26 4 L31 7 L26 10"/>
         </g>
       </svg>
-      <span>Business Data Solutions</span>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
     </a>
     <span class="bds-nav-links">
       <a href="index.html">Course</a>
@@ -322,24 +328,8 @@ p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-
 
 <footer class="bds-footer">
   <div class="bds-footer-inner">
-    <a href="index.html" class="bds-wordmark">
-      <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
-        <g fill="#1a1a1a">
-          <polygon points="9,29 11,10 17,10 19,29"/>
-          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
-          <rect x="11" y="5" width="6" height="3.5"/>
-          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
-          <rect x="13.5" y="0" width="1" height="1.8"/>
-        </g>
-        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
-        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
-          <path d="M21 4 L26 7 L21 10"/>
-          <path d="M26 4 L31 7 L26 10"/>
-        </g>
-      </svg>
-      <span>Business Data Solutions</span>
-    </a>
-    <p>AI for SMEs — Handbook · <em>educational, not consultancy</em></p>
+    <p>AI in Business — the handbook template · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by Business Data Solutions, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
   </div>
 </footer>
 

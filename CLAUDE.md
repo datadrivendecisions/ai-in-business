@@ -134,6 +134,16 @@ One palette combination fails WCAG AA: `--text-muted` on `--bg-cream` is 4.26:1.
 text on a cream ground — the `.handin` block overrides `.tpl` to `--text-secondary` for exactly
 this reason.
 
+**The masthead belongs to the course, not to the supplier.** Every page's `bds-wordmark` reads
+*AI in Business* over the HAN minor, links to `index.html`, and carries the BDS lighthouse as a
+small unlabelled mark. The company name appears in exactly two places: a one-line `bds-credit` in
+every footer, and the colophon at `index.html#colophon` that every one of those lines points at.
+The site's own footer says *educational, not consultancy*, and a commercial wordmark above that
+sentence undercuts it — the credit is fair, the prominence was not, and prose does the job a logo
+cannot. Do not put the company back in the masthead. The SVG keeps `aria-label="Business Data
+Solutions"` because that is what the mark depicts; the link's own `aria-label` names the course,
+so the accessible name is the course and not the company.
+
 **`site/tool-*.html` are course tools**, listed in the *Course tools* section of the landing page —
 things used in a session or needed for an assignment. They are the one deliberate exception to two
 rules below, because a tool is not a page of prose:
