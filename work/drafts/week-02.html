@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Week 2 — AI in Business</title>
+<meta name="description" content="Week 2 of AI in Business: geopolitics and vendor models — what to bring, what happens in the session, and both week-2 assignments: the first published handbook page and the platform's context layer." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-weight: 700; font-size: var(--text-xl);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+/* The page header and the first part heading both drew a rule; keep only the
+   part's, so the page opens on one divider instead of two. */
+.bds-page-header { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+main > section:first-of-type > h2.bds-part { margin-top: var(--space-12); }
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+h4 {
+  font-size: var(--text-lg); font-weight: 700;
+  margin: var(--space-6) 0 var(--space-2); line-height: 1.35;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer .bds-wordmark { font-size: var(--text-base); margin-bottom: var(--space-2); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Nav links */
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+
+/* Lead paragraph under the H1 */
+.lead { font-size: var(--text-lg); color: var(--text-secondary); }
+
+/* On-page contents */
+.toc { margin: 0 0 var(--space-4); padding: 0; list-style: none;
+  display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.toc a { color: var(--text-secondary); }
+
+/* Callout — a framed aside that is not a placeholder */
+.callout {
+  border: 1px solid var(--border); border-left: 4px solid var(--primary);
+  background: var(--bg-off-white); border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6); margin: var(--space-6) 0;
+}
+.callout > :last-child { margin-bottom: 0; }
+.callout h3 { margin-top: 0; font-size: var(--text-lg); }
+
+/* Table caption */
+table caption {
+  caption-side: bottom; text-align: left;
+  font-size: var(--text-sm); color: var(--text-muted);
+  padding: var(--space-2) 0 0;
+}
+
+/* Two-column card grid */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin: var(--space-6) 0; }
+.card {
+  border: 1px solid var(--border); border-top: 5px solid var(--primary);
+  border-radius: var(--radius-md); padding: var(--space-6);
+  background: var(--bg-page); box-shadow: var(--shadow-sm);
+}
+.card h3, .card h4 { margin-top: 0; }
+.card > :last-child { margin-bottom: 0; }
+.card-kicker { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-muted); font-weight: 600; margin-bottom: var(--space-1); }
+
+/* Fixed / provisional badges */
+.badge {
+  display: inline-block; font-size: var(--text-xs); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 0.15em 0.6em; border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong); color: var(--text-secondary);
+  background: var(--bg-section); vertical-align: 0.15em;
+}
+.badge-fixed { background: var(--primary); border-color: var(--primary); color: var(--supporting); }
+.badge-open { background: var(--bg-cream-2); border-color: var(--border-strong); }
+
+/* Numbered step list */
+ol.steps { list-style: none; padding-left: 0; counter-reset: step; }
+ol.steps > li {
+  counter-increment: step; position: relative;
+  padding: 0 0 var(--space-4) var(--space-12); margin: 0;
+}
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0;
+  width: 2rem; height: 2rem; border-radius: var(--radius-full);
+  background: var(--primary); color: var(--supporting);
+  font-weight: 700; font-size: var(--text-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Agenda (time-stamped run of a session) */
+.agenda { list-style: none; padding-left: 0; margin: var(--space-6) 0; }
+.agenda > li { border-top: 1px solid var(--border); padding: var(--space-4) 0; }
+.agenda > li:first-child { border-top: none; }
+.agenda .clock {
+  display: inline-block; min-width: 6.5rem;
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+.agenda h3 { display: inline; font-size: var(--text-lg); margin: 0; }
+.agenda .agenda-body { margin-top: var(--space-2); }
+.agenda .agenda-body ul { list-style: disc; }
+.agenda .agenda-body > :last-child { margin-bottom: 0; }
+
+/* Native disclosure — no JavaScript */
+details {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4); margin: var(--space-4) 0;
+  background: var(--bg-off-white);
+}
+details[open] { background: var(--bg-page); }
+summary { cursor: pointer; font-weight: 700; }
+details > :last-child { margin-bottom: 0; }
+
+/* Week table */
+td .badge { white-space: nowrap; }
+tbody th { text-align: left; font-weight: 700; background: var(--bg-off-white); }
+
+/* Deadline / hand-in strip */
+.handin {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-6); margin: var(--space-6) 0;
+}
+.handin > :last-child { margin-bottom: 0; }
+.handin .tpl { color: var(--text-secondary); }
+.handin dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-6); }
+.handin dt { font-weight: 700; }
+.handin dd { margin: 0; }
+
+/* Prev/next week strip */
+.pager { display: flex; justify-content: space-between; gap: var(--space-4);
+  margin-top: var(--space-16); padding-top: var(--space-6); border-top: 1px solid var(--border);
+  font-size: var(--text-sm); flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: var(--space-4); }
+  .callout { padding: var(--space-4); }
+  .agenda .clock { display: block; min-width: 0; margin-bottom: var(--space-1); }
+  .agenda h3 { display: block; }
+  .handin { padding: var(--space-4); }
+  .handin dl { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .handin dd { margin-bottom: var(--space-3); }
+  ol.steps > li { padding-left: var(--space-8); }
+  ol.steps > li::before { width: 1.6rem; height: 1.6rem; font-size: var(--text-xs); }
+}
+/* --- cycle 1: dates, orientation facts, week-map state --- */
+.hero-facts {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-cream);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.hero-facts strong { color: var(--text-primary); }
+.wk-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.wk-now { background: var(--bg-yellow); }
+.wk-badge {
+  display: inline-block; margin-left: var(--space-2);
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; vertical-align: middle;
+  background: var(--supporting); color: #fff;
+  padding: 1px 6px; border-radius: var(--radius-sm);
+}
+.wk-pager {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  justify-content: space-between; align-items: baseline;
+  margin-top: var(--space-6); padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.wk-pager .tpl { font-style: normal; }
+.worked-eg {
+  margin: var(--space-3) 0 var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-off-white);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.worked-eg p { margin: 0 0 var(--space-2); font-size: var(--text-sm); }
+.worked-eg p:last-child { margin-bottom: 0; }
+.worked-eg-kicker {
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-secondary);
+}
+.aside {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-section);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.aside strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span>Business Data Solutions</span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="handbook.html">Handbook</a>
+      <a href="#assignments">Assignments</a>
+      <a href="index.html#assessment">Assessment</a>
+      <a href="index.html#practical">Dates</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top" tabindex="-1">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · week 2</div>
+    <h1 class="bds-h1">Week 2 — who owns the intern</h1>
+    <blockquote class="lead-quote"><em>The week the machinery starts. Your team publishes its first handbook page, both gates run on it for the first time, and you find out what the tools you rely on will confidently tell you about their own industry.</em></blockquote>
+    <p class="lead">Everything you need for the second session is on this page: what to bring, what happens in the room, and both week-2 assignments in full.</p>
+    <ul class="toc" aria-label="On this page">
+      <li><a href="#prepare">Before you come</a></li>
+      <li><a href="#session">What happens in the session</a></li>
+      <li><a href="#assignments">The two assignments</a></li>
+      <li><a href="#handin">Hand-in</a></li>
+      <li><a href="#after">After week 2</a></li>
+    </ul>
+  </header>
+
+  <section id="prepare">
+    <h2 class="bds-part">Before you come</h2>
+
+    <div class="handin">
+      <dl>
+        <dt>When and where</dt>
+        <dd><strong>Monday 14 September 2026.</strong> Room and start time are in your timetable — the same as <a href="week-01.html">week 1</a>. This is the second of <a href="index.html#practical">six Mondays</a>.</dd>
+        <dt>Read</dt>
+        <dd><span class="tpl">Pre-reading is set after the week-1 session and appears here — it depends on what week 1 showed us.</span></dd>
+        <dt>Bring</dt>
+        <dd>A laptop, and <strong>an AI tool you can actually sign into</strong>. Any tool, any vendor. You will use it in the room for about twenty minutes, so this is the one thing not to leave until Monday morning. It does not have to be the same tool as your teammates — it is better if it is not.</dd>
+        <dt>Also bring</dt>
+        <dd>Your team's two week-1 drafts, the research proposal and the PRD. You will be working from both, particularly the target SME you named.</dd>
+        <dt>Do</dt>
+        <dd>Make sure your <a href="week-01.html#handin">first portfolio entry</a> is written. This week's entry builds on it, and an entry assembled from memory at the end of the run reads like one.</dd>
+      </dl>
+    </div>
+
+    <p>Week 2's theme is <strong>geopolitics and vendor models</strong>: who builds the AI systems a regional SME would actually use, who owns those firms, where they sit, and what changes for that SME if the arrangement shifts. It follows directly from the <a href="week-01.html#session">Draghi discussion in week 1</a> — that conversation was about Europe's position; this one is about what depends on it.</p>
+  </section>
+
+  <section id="session">
+    <h2 class="bds-part">What happens in the session</h2>
+
+    <p>About four hours with one break, in one room, with both lecturers. <span class="tpl">Exact timings are confirmed after week 1.</span> The session has three jobs: pair the teams up for peer review, put the week's theme in front of you as something you produce rather than read, and get the first published page started.</p>
+
+    <ul class="agenda">
+      <li>
+        <span class="clock">0:00–0:20</span>
+        <h3>Partner teams, and what the peer gate is</h3>
+        <div class="agenda-body">
+          <p>Every team is paired with one other team. <strong>That pairing holds for the rest of the run</strong>: they read everything you publish and you read everything they publish. This is the peer gate — one of <a href="index.html#gates">the two gates</a>, and like the other one it is not scored and never will be. Its only job is to make you revise.</p>
+          <p>Then, briefly, what changed since last Monday: what we saw in week 1 and what we are doing about it.</p>
+        </div>
+      </li>
+      <li>
+        <span class="clock">0:20–0:55</span>
+        <h3>Exercise — who dominates AI?</h3>
+        <div class="agenda-body">
+          <p>Each of the four people in your team takes one region — <strong>the United States, China, Europe, and your own home country</strong> — and asks an AI tool for a one-page article about it. You get a card with the exact wording to type. Type it, take what it gives you, and do not edit it.</p>
+          <p>Then you compare: the four pages against each other inside your team, and your own page against the one your region twin in the partner team produced. You will also record, on the card, which tool wrote your page, who owns that tool, and where they are based.</p>
+          <p>Two things worth knowing in advance, because they change what you get out of it. First, the page about <em>your own country</em> is the only one of the four you can personally check — pay attention to it. Second, this is not a demonstration that AI is bad at facts; it is where the week's research question comes from.</p>
+        </div>
+      </li>
+      <li>
+        <span class="clock">0:55–1:35</span>
+        <h3>Discussion — vendor models and dependency</h3>
+        <div class="agenda-body">
+          <p>Working from what the room just produced, and from the vendors named on your cards:</p>
+          <ul>
+            <li>Who actually builds the systems on your cards — the firm, the country, who funds it, who could buy it?</li>
+            <li>Open weights, closed weights, hosted API, on-premise: what does each of those mean for a 40-person firm that has no IT department?</li>
+            <li>What would your target SME lose, concretely, if the tool it depended on changed its price, its terms, or its availability in Europe?</li>
+            <li>Draghi's answer to that is European capability. What is <em>an SME owner's</em> answer, next quarter, with the tools that exist?</li>
+          </ul>
+          <p>That last question is what your handbook page has to answer.</p>
+        </div>
+      </li>
+      <li>
+        <span class="clock">1:35–1:45</span>
+        <h3>Break</h3>
+      </li>
+      <li>
+        <span class="clock">1:45–2:15</span>
+        <h3>AEL — the context layer</h3>
+        <div class="agenda-body">
+          <p>The exercise gave every team the same complaint: the tool produced a confident page that knew nothing about who it was for. The context layer is the answer to that. You write down, <strong>once</strong>, what your platform must always know — your target SME, your quality criteria, your scope — so that every later request starts from it instead of from nothing.</p>
+          <p>What that looks like in practice, and what counts as done, is worked through here before you build it.</p>
+        </div>
+      </li>
+      <li>
+        <span class="clock">2:15–3:40</span>
+        <h3>Team work time</h3>
+        <div class="agenda-body">
+          <p>Your team starts its first handbook page and its context layer. Both lecturers circulate. Expect to be pushed on one thing above all: <strong>every claim on a published page needs a source you would defend</strong>, and "the model said so" is not one. The four pages you produced this morning are raw material to be checked, not content to be pasted.</p>
+        </div>
+      </li>
+      <li>
+        <span class="clock">3:40–4:00</span>
+        <h3>Share-out and close</h3>
+        <div class="agenda-body">
+          <p>Each team says one sentence — <em>what our page will tell an owner to do differently</em> — and one open question. Then: how the two gates run this week in practice, and what goes in your second portfolio entry.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section id="assignments">
+    <h2 class="bds-part">The two assignments</h2>
+
+    <p>From this week on, the shape is the same every week: <strong>one published handbook page per team</strong> on the week's theme, and <strong>one layer added to the platform</strong>. The page is never an edit to a previous page — it is a new one.</p>
+
+    <div class="callout">
+      <h3>AIBS — handbook page: geopolitics and vendor models</h3>
+      <p>One page of your team's handbook, written for the SME you named in your research proposal, answering the question that owner would actually ask: <em>who owns this thing, and what happens to me if that changes?</em></p>
+      <p>It follows the <a href="handbook.html#chapter">chapter template</a> and meets the four criteria on it — clear, accurate, responsible-AI covered, useful to an owner. Beyond that:</p>
+      <ol>
+        <li><strong>Every claim carries an appraised source.</strong> Not just a link: who says it, and one line on why they are worth believing. This is the bar for every page from now on, and it is the thing the Socratic gate will ask about first.</li>
+        <li><strong>The four pages from the session are evidence, not content.</strong> If you use anything from them, you have checked it against a source you would defend, and you say which claims turned out to be true, false, or unverifiable.</li>
+        <li><strong>It ends in something the owner can do.</strong> A page that explains the vendor landscape and leaves the owner exactly where they started has not done its job.</li>
+      </ol>
+      <p class="tpl">Scope and depth are set after the week-1 debrief and confirmed here.</p>
+      <p><strong>The bar:</strong> an owner reading it knows what they are depending on and what they would do if it changed.</p>
+    </div>
+
+    <div class="callout">
+      <h3>AEL — the context layer</h3>
+      <p>Add the first layer to your platform: the thing it always knows before it does anything else.</p>
+      <ol>
+        <li><strong>Write the context down as a file the platform reads</strong>, not as something a person remembers to type. Who the handbook is for, what the quality criteria are, what is out of scope.</li>
+        <li><strong>Make a checklist out of your quality criteria</strong> — the ones from your research proposal — so that "is this page any good" starts becoming a question with a repeatable answer.</li>
+        <li><strong>Show it working</strong> on this week's page: the same request, with and without the context, and what the difference was.</li>
+        <li><strong>Update the PRD.</strong> Week 1's PRD was a first draft written before you had built anything. Say what you now know that it got wrong.</li>
+      </ol>
+      <p class="tpl">The exact form this takes depends on the tooling settled in week 1 and is confirmed here.</p>
+      <p><strong>The bar:</strong> someone else on your team can run it and get a page that already knows who it is for.</p>
+    </div>
+
+    <details open>
+      <summary>How the two fit together, this week</summary>
+      <p>The context layer is only as good as the research proposal it encodes. If writing the context file is hard because your team cannot agree what the criteria actually are, that is not a platform problem — it is the proposal telling you it is still vague. Fix it there.</p>
+      <p>The same holds in reverse: a criterion your platform cannot check is a criterion you will not apply consistently for six weeks. That is worth knowing in week 2 rather than in week 5.</p>
+    </details>
+  </section>
+
+  <section id="handin">
+    <h2 class="bds-part">Hand-in</h2>
+    <div class="handin">
+      <dl>
+        <dt>What</dt>
+        <dd><strong>One published handbook page per team</strong>, <strong>the context layer</strong> committed and working, and <strong>one portfolio entry per person</strong>.</dd>
+        <dt>Who</dt>
+        <dd>The page and the layer are the team's. The portfolio is <strong>yours alone</strong>, and nobody else writes in it.</dd>
+        <dt>Where and when</dt>
+        <dd><strong>Due by the start of the next session — Monday 21 September.</strong> <span class="tpl">Exact location to be filled in here.</span></dd>
+        <dt>The gates</dt>
+        <dd>Your page goes to your partner team, and to the Socratic tutor. <span class="tpl">The submission route for both is confirmed here before the session.</span> Neither gate is scored. What you <em>changed</em> because of them goes in your portfolio, and that is assessable.</dd>
+      </dl>
+    </div>
+    <p>The page itself is not marked. It is evidence for your final interview — see <a href="index.html#assessment">how you are assessed</a>. Your portfolio is the part that carries a mark: <strong>30 % of both your marks</strong>, and this is the second of six entries.</p>
+
+    <h3>Your second portfolio entry</h3>
+    <p>This is the first entry using <a href="index.html#assessment">the four standard questions</a>, because for the first time there is a published page and both gates have run on it. About a page:</p>
+    <ul>
+      <li><strong>What did your team publish?</strong> One or two sentences on the page and what it argues.</li>
+      <li><strong>What did you contribute to it?</strong> Named and specific. An honest small contribution is worth more here than an unsupportable large one — the portfolio makes the claim and the interview tests it.</li>
+      <li><strong>What did the gates ask, and what did you change?</strong> Not whether the gate was satisfied. What moved, and what you decided not to change and why.</li>
+      <li><strong>What did your build role produce?</strong> The PRD revision, the context file, the checklist, the commit — whatever your role actually put out this week.</li>
+    </ul>
+  </section>
+
+  <section id="after">
+    <h2 class="bds-part">After week 2</h2>
+    <p><strong>Field research opens.</strong> One regional SME partner per team, planned across weeks 2 to 4 — so this is the point to start arranging a visit rather than the point to start thinking about one. <strong>Nobody approaches a company before the consent and anonymisation text is signed off</strong>; that is a hard rule, and interview material never goes through a free-tier AI tool.</p>
+    <p>The <a href="index.html#programme">week map</a> has week 3 as trust and AI safety, with the knowledge-architecture decision on the platform side. As always, that page appears here about a week before its session, and what it contains depends partly on what this week shows us.</p>
+  </section>
+
+  <nav class="pager" aria-label="Weeks">
+    <span><a href="week-01.html">← Week 1</a></span>
+    <span>Week 3 — Mon 21 September, <span class="tpl">published about a week before its session</span></span>
+  </nav>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <a href="index.html" class="bds-wordmark">
+      <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span>Business Data Solutions</span>
+    </a>
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Week 2 card pack — Who dominates AI?</title>
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#111827;font-size:12pt;line-height:1.4;background:#fff}
+.sheet{width:210mm;height:297mm;page-break-after:always;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.sheet.full{padding:14mm 16mm}
+.half{height:148.5mm;padding:12mm 16mm;border-bottom:1px dashed #cfcbbf;position:relative;overflow:hidden}
+.half:last-child{border-bottom:none}
+.tag{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#6b7280;font-weight:700;margin:0 0 3mm}
+h1{font-size:22pt;line-height:1.1;margin:0 0 4mm;font-weight:900}
+h2{font-size:16pt;line-height:1.15;margin:0 0 3mm;font-weight:900}
+h3{font-size:11pt;margin:5mm 0 2mm;text-transform:uppercase;letter-spacing:.08em}
+p{margin:0 0 3mm}
+.band{background:#d4db3e;color:#1a1a1a;padding:3mm 5mm;margin:0 0 5mm;font-weight:900;font-size:10pt;letter-spacing:.1em;text-transform:uppercase;display:inline-block}
+.band.red{background:#1a1a1a;color:#fff}
+.prompt{font-size:19pt;line-height:1.25;font-weight:600;margin:5mm 0;padding:5mm 6mm;border-left:5mm solid #d4db3e;background:#f9f8f4}
+.prompt.lead{border-left-color:#1a1a1a}
+.blank{display:inline-block;min-width:60mm;border-bottom:1.5px solid #111827}
+.lines{margin:2mm 0 0}
+.lines div{border-bottom:1px solid #cfcbbf;height:8.5mm}
+ol.q{margin:0;padding-left:7mm}
+ol.q li{margin:0 0 2.5mm;padding-left:1mm}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.box{border:1.5px solid #111827;padding:3mm 4mm;min-height:24mm}
+.box .l{font-size:8pt;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;font-weight:700;margin:0 0 2mm}
+.box.red{border-color:#b3261e}
+.box.red .l{color:#b3261e}
+.foot{position:absolute;bottom:8mm;left:16mm;right:16mm;font-size:8pt;color:#6b7280;display:flex;justify-content:space-between}
+.small{font-size:9.5pt;color:#4b5563}
+.rule{border:1.5px solid #b3261e;padding:3mm 4mm;margin:3mm 0;font-size:10.5pt}
+.rule b{color:#b3261e}
+table{width:100%;border-collapse:collapse;font-size:10.5pt}
+th,td{border-bottom:1px solid #cfcbbf;padding:2mm 2mm;text-align:left;vertical-align:top}
+th{font-size:8pt;text-transform:uppercase;letter-spacing:.08em;color:#6b7280}
+.fill{border-bottom:1.5px solid #5f6410;color:#5f6410;font-weight:600;padding:0 1mm}
+ul.tick{list-style:none;padding:0;margin:0}
+ul.tick li{padding-left:8mm;position:relative;margin:0 0 2.5mm}
+ul.tick li::before{content:"";position:absolute;left:0;top:1mm;width:4.5mm;height:4.5mm;border:1.5px solid #111827}
+.src{margin:4mm 0 0;font-size:10.5pt}
+.src td{border-bottom:1.5px solid #111827;height:9mm}
+.src td.k{border-bottom:none;width:42mm;font-weight:700;font-size:9.5pt;color:#4b5563}
+</style></head><body>
+
+<!-- SHEET 0: print guide / prep -->
+<div class="sheet full">
+  <p class="tag">Who dominates AI? · week 2 card pack</p>
+  <h1>Print guide</h1>
+  <p>Print <b>double-sided, flipped on the long edge</b>, A4, 100 % scale. Half-page cards are cut along the dashed line; the back of each half lines up with its front. Quantities for T teams:</p>
+  <table>
+    <tr><th>Sheet</th><th>Card</th><th>Front / back</th><th>Copies</th></tr>
+    <tr><td>1</td><td>Trust cards, <b>leading</b></td><td>US + China / the seven questions</td><td>1 per <b>odd</b> team</td></tr>
+    <tr><td>2</td><td>Trust cards, <b>leading</b></td><td>Europe + home country / the seven questions</td><td>1 per <b>odd</b> team</td></tr>
+    <tr><td>3</td><td>Trust cards, <b>neutral</b></td><td>US + China / the seven questions</td><td>1 per <b>even</b> team</td></tr>
+    <tr><td>4</td><td>Trust cards, <b>neutral</b></td><td>Europe + home country / the seven questions</td><td>1 per <b>even</b> team</td></tr>
+    <tr><td>5</td><td>Team card · lecturer card</td><td>Single-sided: team, partner and the four regions on the top half; the reveal, the bank and the data rule on the bottom</td><td>T · 2</td></tr>
+  </table>
+  <p class="small" style="margin-top:5mm">Each team of four takes one region each. <b>Odd-numbered teams get the leading wording; even-numbered teams get the neutral one, and nobody is told there are two.</b> A team of five gives the fifth student a second home-country card from the <i>other</i> set. A ring of three (odd cohort) gets two leading sets and one neutral. Every <span class="fill">[bracket]</span> is filled in before printing.</p>
+  <div class="foot"><span>AIBS × AEL · session 2</span><span>sheet 0 · front</span></div>
+</div>
+<div class="sheet full">
+  <p class="tag">Before Monday</p>
+  <h1>Preparation</h1>
+  <ul class="tick">
+    <li>Team numbers fixed and written on the team cards, so odd and even are decided before the room fills — the whole exercise rests on it.</li>
+    <li><b>Partner pairings.</b> Not yet assigned. Pair by wall position: 1↔2, 3↔4, 5↔6. An odd count makes a ring of three, A→B→C→A. Say once that the pairing holds for the rest of the run: this is the peer gate.</li>
+    <li>Every student on a working AI tool, on their own account. Mixed vendors across the room are a feature, not a problem — the debrief needs them.</li>
+    <li>Somewhere to put the four pages per team: <span class="fill">[team repository or shared folder]</span>.</li>
+    <li>A timer the whole room can see. Wall space for T team cards.</li>
+    <li>Rehearse the reveal on sheet 5. The one line that must be said out loud is that the two wordings were withheld.</li>
+    <li>Consent text status, since field visits open this week: <span class="fill">[signed off / not yet]</span>.</li>
+  </ul>
+  <div class="foot"><span>AIBS × AEL · session 2</span><span>sheet 0 · back</span></div>
+</div>
+
+<!-- SHEET 1: leading, US + China -->
+<div class="sheet">
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · the United States</p><p class="prompt lead">Write a one-page article on the dominance of the United States in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · US · leading</span><span>sheet 1 · top · front</span></div></div>
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · China</p><p class="prompt lead">Write a one-page article on the dominance of China in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · China · leading</span><span>sheet 1 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 1 · top · back</span></div></div>
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 1 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 2: leading, Europe + home -->
+<div class="sheet">
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · Europe</p><p class="prompt lead">Write a one-page article on the dominance of Europe in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · Europe · leading</span><span>sheet 2 · top · front</span></div></div>
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · your home country</p><p class="prompt lead">Write a one-page article on the dominance of <span class="blank" style="min-width:46mm"></span> in the field of AI.</p><p class="small">Fill in your home country. Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · home · leading</span><span>sheet 2 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 2 · top · back</span></div></div>
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 2 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 3: neutral, US + China -->
+<div class="sheet">
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · the United States</p><p class="prompt">Assess, in one page, whether the United States dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · US · neutral</span><span>sheet 3 · top · front</span></div></div>
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · China</p><p class="prompt">Assess, in one page, whether China dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · China · neutral</span><span>sheet 3 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 3 · top · back</span></div></div>
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 3 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 4: neutral, Europe + home -->
+<div class="sheet">
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · Europe</p><p class="prompt">Assess, in one page, whether Europe dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · Europe · neutral</span><span>sheet 4 · top · front</span></div></div>
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · your home country</p><p class="prompt">Assess, in one page, whether <span class="blank" style="min-width:46mm"></span> dominates the field of AI.</p><p class="small">Fill in your home country. Type exactly this, nothing else. Ten minutes. Do not edit it. Do not read it yet.</p>
+    <table class="src"><tr><td class="k">Tool</td><td></td></tr><tr><td class="k">Model</td><td></td></tr><tr><td class="k">Vendor</td><td></td></tr><tr><td class="k">Vendor's home country</td><td></td></tr></table>
+    <div class="foot"><span>Trust · home · neutral</span><span>sheet 4 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 4 · top · back</span></div></div>
+  <div class="half"><span class="band">The seven questions</span><h3>In pairs, inside your team</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card, front and back. What did the wording do to the conclusion? What did the vendor?</li></ol><h3>Back in your team, for AEL</h3><ol class="q" start="7"><li>What would your platform have to know, always, so that it never hands you a page like this again?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 4 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 5: team card / lecturer card -->
+<div class="sheet">
+  <div class="half"><span class="band">Team card</span>
+    <h2>Team <span class="blank" style="min-width:26mm"></span> &nbsp; Partner team <span class="blank" style="min-width:26mm"></span></h2>
+    <p class="small">Your partner team reads everything you make from here on, and you read theirs. This pairing holds for the rest of the run.</p>
+    <table style="margin-top:3mm"><tr><th style="width:44mm">Region</th><th>Who took it</th><th style="width:46mm">Tool and vendor</th></tr>
+      <tr><td>The United States</td><td>&nbsp;</td><td></td></tr>
+      <tr><td>China</td><td>&nbsp;</td><td></td></tr>
+      <tr><td>Europe</td><td>&nbsp;</td><td></td></tr>
+      <tr><td>Home country</td><td>&nbsp;</td><td></td></tr></table>
+    <p class="small" style="margin-top:3mm">Four pages, saved as <code>trust-[region].md</code>. They are the source material for this week's handbook page, not the page itself.</p>
+    <div class="rule"><b>The data rule.</b> Public sources and your own writing may go through the tool. Interview material — transcripts, quotes, names — may <b>not, ever</b>: a free tier may train on it. Field visits open this week, and nobody approaches a company before the consent text is signed off.</div>
+    <div class="foot"><span>Team card</span><span>sheet 5 · top · front</span></div></div>
+  <div class="half"><span class="band red">Lecturers only</span>
+    <h3 style="margin-top:0">The reveal, standing, two minutes</h3>
+    <p class="small">Say the withholding plainly, first: <b>"Half of you were given a different wording, and we did not tell you. That was the experiment, and this is the result."</b> Then:</p>
+    <p class="small">Same question, four confident answers. Same region, two wordings, two conclusions. And on the one page each of you could actually check — your own country — it was wrong somewhere. Now look at the back of your card. Every one of these pages was written by a tool owned by somebody, somewhere. That is the intern you are proposing to your SME: it can assert everything about AI and check nothing about them. You are in exactly the reverse position, and this week's page is what you do with that.</p>
+    <h3>The bank, during the pair work — ask, never comment</h3>
+    <ol class="q"><li>Point at one sentence nobody read before accepting it.</li><li>Which number here could you verify right now? Which could you not?</li><li>Whose tool wrote this, and what changes if its home country changes its mind?</li><li>Which of these four pages would you put in front of your SME, and why not the others?</li></ol>
+    <p class="small">Never "good", never "yes", never "you might". If asked "is this right?", ask question 2.</p>
+    <p class="small">Say <b>the data rule</b> once, from the team card, before the tools come out.</p>
+    <div class="foot"><span>Lecturers</span><span>sheet 5 · bottom · front</span></div></div>
+</div>
+</body></html>

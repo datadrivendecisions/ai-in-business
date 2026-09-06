@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Kickoff card pack — The Owner's Monday</title>
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;color:#111827;font-size:12pt;line-height:1.4;background:#fff}
+.sheet{width:210mm;height:297mm;page-break-after:always;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.sheet.full{padding:14mm 16mm}
+.half{height:148.5mm;padding:12mm 16mm;border-bottom:1px dashed #cfcbbf;position:relative;overflow:hidden}
+.half:last-child{border-bottom:none}
+.tag{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#6b7280;font-weight:700;margin:0 0 3mm}
+h1{font-size:22pt;line-height:1.1;margin:0 0 4mm;font-weight:900}
+h2{font-size:16pt;line-height:1.15;margin:0 0 3mm;font-weight:900}
+h3{font-size:11pt;margin:5mm 0 2mm;text-transform:uppercase;letter-spacing:.08em}
+p{margin:0 0 3mm}
+.band{background:#d4db3e;color:#1a1a1a;padding:3mm 5mm;margin:0 0 5mm;font-weight:900;font-size:10pt;letter-spacing:.1em;text-transform:uppercase;display:inline-block}
+.band.red{background:#1a1a1a;color:#fff}
+.prompt{font-size:20pt;line-height:1.25;font-weight:600;margin:6mm 0;padding:5mm 6mm;border-left:5mm solid #d4db3e;background:#f9f8f4}
+.prompt.lead{border-left-color:#1a1a1a}
+.blank{display:inline-block;min-width:60mm;border-bottom:1.5px solid #111827}
+.lines{margin:2mm 0 0}
+.lines div{border-bottom:1px solid #cfcbbf;height:8.5mm}
+.lines.tall div{height:11mm}
+ol.q{margin:0;padding-left:7mm}
+ol.q li{margin:0 0 3mm;padding-left:1mm}
+ol.q.big li{font-size:13pt;margin:0 0 5mm}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.box{border:1.5px solid #111827;padding:3mm 4mm;min-height:24mm}
+.box .l{font-size:8pt;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;font-weight:700;margin:0 0 2mm}
+.box.red{border-color:#b3261e}
+.box.red .l{color:#b3261e}
+.foot{position:absolute;bottom:8mm;left:16mm;right:16mm;font-size:8pt;color:#6b7280;display:flex;justify-content:space-between}
+.small{font-size:9.5pt;color:#4b5563}
+.rule{border:1.5px solid #b3261e;padding:3mm 4mm;margin:3mm 0;font-size:10.5pt}
+.rule b{color:#b3261e}
+table{width:100%;border-collapse:collapse;font-size:10.5pt}
+th,td{border-bottom:1px solid #cfcbbf;padding:2mm 2mm;text-align:left;vertical-align:top}
+th{font-size:8pt;text-transform:uppercase;letter-spacing:.08em;color:#6b7280}
+td.w{font-weight:900;color:#5f6410;width:8mm}
+.fill{border-bottom:1.5px solid #5f6410;color:#5f6410;font-weight:600;padding:0 1mm}
+.roles dt{font-weight:900;margin-top:3mm}
+.roles dd{margin:0 0 1mm 0}
+ul.tick{list-style:none;padding:0;margin:0}
+ul.tick li{padding-left:8mm;position:relative;margin:0 0 2.5mm}
+ul.tick li::before{content:"";position:absolute;left:0;top:1mm;width:4.5mm;height:4.5mm;border:1.5px solid #111827}
+.dots span{display:inline-block;width:7mm;height:7mm;border-radius:50%;margin-right:2mm;vertical-align:middle;border:1px solid #999}
+.frame{font-size:12pt;line-height:2.1}
+.frame .f{display:inline-block;min-width:38mm;border-bottom:1.5px solid #111827}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;border-bottom:1px solid #cfcbbf;height:13mm;padding-left:9mm;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:0;top:2mm;font-weight:900;color:#5f6410;font-size:14pt}
+</style></head><body>
+
+<!-- SHEET 0: print guide / prep -->
+<div class="sheet full">
+  <p class="tag">The Owner's Monday · card pack</p>
+  <h1>Print guide</h1>
+  <p>Print <b>double-sided, flipped on the long edge</b>, A4, 100 % scale. Half-page cards are cut along the dashed line; the back of each half lines up with its front. Quantities for T teams and N students:</p>
+  <table>
+    <tr><th>Sheet</th><th>Card</th><th>Front / back</th><th>Copies</th></tr>
+    <tr><td>1</td><td>Team card</td><td>Crew and roles / the frame and the five Monday steps</td><td>T</td></tr>
+    <tr><td>2</td><td>Roles · Setup</td><td>Four roles / setup jobs and the data rule</td><td>T</td></tr>
+    <tr><td>3</td><td>Interview · Audit</td><td>Six questions O/D · four audit questions / what she said · refine</td><td>T</td></tr>
+    <tr><td>4–5</td><td>Prompt cards, leading</td><td>US + China · Europe + home / the six trust questions</td><td>1 set per <b>odd</b> team</td></tr>
+    <tr><td>6–7</td><td>Prompt cards, neutral</td><td>US + China · Europe + home / the six trust questions</td><td>1 set per <b>even</b> team</td></tr>
+    <tr><td>8</td><td>Gallery roles: planner · bookkeeper</td><td>Who you are / the questions you ask</td><td>T</td></tr>
+    <tr><td>9</td><td>Gallery role: best customer · Owner's lanyard card</td><td>Who you are / questions · the owner's bank and the Socratic bank (lecturers)</td><td>T (customer) · 1 (owner)</td></tr>
+    <tr><td>10</td><td>Seven-questions sheet</td><td>The term and this week / administration</td><td>N</td></tr>
+  </table>
+  <p class="small" style="margin-top:5mm">A ring of three (odd cohort) gets two leading sets and one neutral. Teams of five get a fifth prompt card from the other set. Every <span class="fill">[bracket]</span> on a card is to be filled in before printing.</p>
+  <div class="foot"><span>AIBS × AEL · session 1</span><span>sheet 0 · front</span></div>
+</div>
+<div class="sheet full">
+  <p class="tag">Before Monday</p>
+  <h1>Preparation</h1>
+  <ul class="tick">
+    <li>Baseline CLI, cloud environment, classroom organisation and team-chat tool named on the setup card.</li>
+    <li>Number of teams, the partner pairing for the real count, the threshold for too few greens.</li>
+    <li>The owner rehearsed: the three-minute monologue, the three pains, what she knows (quotes per week, hit rate) and what she does not (hours per quote, defect rate).</li>
+    <li>Repository template with <code>prd.md</code>, <code>failure-log.md</code>, <code>decision-log.md</code>, <code>article-template.md</code>, <code>trust/</code>.</li>
+    <li>Dots (green, amber, red) and letters (B, T) at the door. Sticky notes, black and red pens per table.</li>
+    <li>A timer the whole room can see. Wall space for T team cards.</li>
+    <li>Consent text: owner and date. Week-1 gate: hand-graded or logged only — say which on sheet 10.</li>
+    <li>The other module owner has scored the programme independently.</li>
+  </ul>
+  <div class="foot"><span>AIBS × AEL · session 1</span><span>sheet 0 · back</span></div>
+</div>
+
+<!-- SHEET 1: team card -->
+<div class="sheet full">
+  <span class="band">Team card</span>
+  <h1>Team <span class="blank" style="min-width:30mm"></span> &nbsp; Table <span class="blank" style="min-width:16mm"></span></h1>
+  <p class="small">Partner team: <span class="blank" style="min-width:40mm"></span></p>
+  <table style="margin-top:4mm">
+    <tr><th style="width:38mm">Role</th><th>Name</th><th style="width:22mm">Dot</th><th style="width:14mm">B / T</th></tr>
+    <tr><td><b>Developer</b><br><span class="small">holds the tool · a green</span></td><td>&nbsp;<br>&nbsp;</td><td class="dots"><span></span></td><td></td></tr>
+    <tr><td><b>Product manager</b><br><span class="small">holds the brief</span></td><td>&nbsp;<br>&nbsp;</td><td class="dots"><span></span></td><td></td></tr>
+    <tr><td><b>Tester</b><br><span class="small">holds the bar</span></td><td>&nbsp;<br>&nbsp;</td><td class="dots"><span></span></td><td></td></tr>
+    <tr><td><b>Deployer</b><br><span class="small">holds the repository</span></td><td>&nbsp;<br>&nbsp;</td><td class="dots"><span></span></td><td></td></tr>
+    <tr><td><b>Fifth</b> <span class="small">(if five)</span></td><td>&nbsp;<br>&nbsp;</td><td class="dots"><span></span></td><td></td></tr>
+  </table>
+  <h2 style="margin-top:8mm">Everyone is a researcher.</h2>
+  <p class="small">The build role is for AEL. The researcher role is for AIBS and nobody is exempt from it.</p>
+  <h3>Reflection stickies go here</h3>
+  <div class="box" style="min-height:70mm"><p class="l">I accepted … without reading it. Next time I will …</p></div>
+  <div class="foot"><span>Team card</span><span>sheet 1 · front</span></div>
+</div>
+<div class="sheet full">
+  <span class="band">The frame · black pen · 0:55</span>
+  <p class="frame">We are looking at <span class="f"></span> for <span class="f"></span> (by role) because <span class="f" style="min-width:70mm"></span> (in her words).<br>
+  She told us <span class="f" style="min-width:110mm"></span>.<br>
+  She could not tell us <span class="f" style="min-width:95mm"></span>.<br>
+  We would have to find out <span class="f" style="min-width:85mm"></span>.</p>
+  <span class="band red" style="margin-top:6mm">Five things to do on Monday morning · v1 black · v2 red, strike-through kept</span>
+  <ol class="steps"><li></li><li></li><li></li><li></li><li></li></ol>
+  <p class="small" style="margin-top:3mm">One must cost her nothing. One must be something nobody in this room expects. Then one line in the failure log: <i>what changed and why</i>.</p>
+  <div class="foot"><span>Team card</span><span>sheet 1 · back</span></div>
+</div>
+
+<!-- SHEET 2: roles / setup -->
+<div class="sheet full">
+  <span class="band">Roles</span>
+  <h1>Four roles, one each</h1>
+  <dl class="roles">
+    <dt>Developer — holds the tool</dt><dd>A green. Installs the baseline CLI on a personal account and makes it write. Types when the intern writes; everyone else instructs. Owns the failure log's technical lines.</dd>
+    <dt>Product manager — holds the brief</dt><dd>Whoever would enjoy talking to her most. Briefs the intern with who it is for and why. Types the last section. Owns PRD v0 this week.</dd>
+    <dt>Tester — holds the bar</dt><dd>Turns the four criteria into <code>criteria.md</code>, each with the question the owner would ask to check it. Keeps the failure log during the chapter. Runs the audit of the partner's chapter.</dd>
+    <dt>Deployer — holds the repository</dt><dd>Creates the team repository from the template, adds the team, commits the trust pages, <code>article-v0.md</code>, <code>failure-log.md</code>, <code>criteria.md</code>, and the card photos. At least amber.</dd>
+  </dl>
+  <h2 style="margin-top:6mm">Everyone is a researcher.</h2>
+  <p class="small">Teams of five double the tester or the developer, never a role that holds a single file.</p>
+  <div class="foot"><span>Roles</span><span>sheet 2 · front</span></div>
+</div>
+<div class="sheet full">
+  <span class="band">Setup</span>
+  <h1>Four jobs, one per role</h1>
+  <ul class="tick">
+    <li><b>Developer</b> — install <span class="fill">[baseline CLI]</span>, sign in on a personal account, make it list an empty folder, then write your trust page to a file. If your machine refuses: <span class="fill">[cloud development environment]</span>. If that refuses: the chat interface on the same account, today only. Log whatever failed — first line of the failure log, and it counts.</li>
+    <li><b>Deployer</b> — accept the invitation to <span class="fill">[classroom organisation]</span>, create the team repository from the template, add the team. Do not fill the PRD or the decision log yet.</li>
+    <li><b>Tester</b> — the four criteria (clear · accurate · responsible AI covered · useful to an owner) into <code>criteria.md</code>, in your words, each with the question she would ask.</li>
+    <li><b>Product manager</b> — set up <span class="fill">[team chat]</span> with the partner team as guests; hold the persona and the frame.</li>
+  </ul>
+  <div class="rule"><b>The data rule.</b> Public sources and your own writing may go through the tool. Interview material — transcripts, quotes, names — may <b>not, ever</b>: a free tier may train on it. Today's owner is fictional. Next week's is not. Nobody approaches a real company until the consent text is signed off by the research lecturer.</div>
+  <p class="small">Any other agentic CLI with hooks, project files and MCP is allowed at your own cost. It gives no advantage in assessment; the criteria are written so it cannot.</p>
+  <div class="foot"><span>Setup</span><span>sheet 2 · back</span></div>
+</div>
+
+<!-- SHEET 3: interview (top) / audit (bottom) -->
+<div class="sheet">
+  <div class="half">
+    <span class="band">Interview the owner · 0:42</span>
+    <h2>Our pain: &nbsp;☐ quoting &nbsp;☐ Ron's head &nbsp;☐ the photos</h2>
+    <p class="small">Six questions. Mark each <b>O</b> — only she can answer — or <b>D</b> — we could find it at our desk. Only O questions go to her. One per round, three rounds.</p>
+    <div class="lines"><div>O / D &nbsp;1.</div><div>O / D &nbsp;2.</div><div>O / D &nbsp;3.</div><div>O / D &nbsp;4.</div><div>O / D &nbsp;5.</div><div>O / D &nbsp;6.</div></div>
+    <div class="foot"><span>Interview</span><span>sheet 3 · top · front</span></div>
+  </div>
+  <div class="half">
+    <span class="band">The audit · 1:18</span>
+    <p class="small">You are auditing your partner's chapter, not marking it. Find each of these and write it in their file <b>as a question</b>, never a verdict.</p>
+    <ol class="q">
+      <li>One claim you cannot verify, or that is invented.</li>
+      <li>One thing she told them today that the chapter does not use.</li>
+      <li>One responsible-AI gap — where do her customer's drawings go?</li>
+      <li>One Monday step she could not actually do — who does it, when Ron is on the machine till four?</li>
+    </ol>
+    <p class="small">Eight minutes. Four questions, back to them. Open <code>criteria.md</code> while you do it.</p>
+    <div class="foot"><span>Audit</span><span>sheet 3 · bottom · front</span></div>
+  </div>
+</div>
+<div class="sheet">
+  <div class="half">
+    <span class="band">What she said</span>
+    <div class="grid">
+      <div class="box"><p class="l">She told us</p></div>
+      <div class="box"><p class="l">She could not tell us</p></div>
+    </div>
+    <div class="box" style="margin-top:4mm;min-height:30mm"><p class="l">We would have to find out</p></div>
+    <p class="small" style="margin-top:3mm">Write the frame on the team card at 0:55, in black.</p>
+    <div class="foot"><span>Interview</span><span>sheet 3 · top · back</span></div>
+  </div>
+  <div class="half">
+    <span class="band red">Refine · 1:26</span>
+    <p>Files back. Read the four questions and the stickies. Rewrite your five Monday-morning steps on the team card <b>in red</b>, keeping the strike-through. Six minutes.</p>
+    <p>Then one line in <code>failure-log.md</code>:</p>
+    <div class="box red" style="min-height:22mm"><p class="l">What changed and why</p></div>
+    <p class="small">Card on the wall at 1:32. She walks it at 1:32.</p>
+    <div class="foot"><span>Refine</span><span>sheet 3 · bottom · back</span></div>
+  </div>
+</div>
+
+<!-- SHEETS 4–7: prompt cards -->
+<!-- helper markup repeated; leading = odd teams, neutral = even teams -->
+<div class="sheet">
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · the United States</p><p class="prompt lead">Write a one-page article on the dominance of the United States in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · US · leading</span><span>sheet 4 · top · front</span></div></div>
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · China</p><p class="prompt lead">Write a one-page article on the dominance of China in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · China · leading</span><span>sheet 4 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 4 · top · back</span></div></div>
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 4 · bottom · back</span></div></div>
+</div>
+
+<div class="sheet">
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · Europe</p><p class="prompt lead">Write a one-page article on the dominance of Europe in the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · Europe · leading</span><span>sheet 5 · top · front</span></div></div>
+  <div class="half"><span class="band red">Trust card · odd teams</span><p class="tag">Region · your home country</p><p class="prompt lead">Write a one-page article on the dominance of <span class="blank" style="min-width:50mm"></span> in the field of AI.</p><p class="small">Fill in your home country. Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · home · leading</span><span>sheet 5 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 5 · top · back</span></div></div>
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 5 · bottom · back</span></div></div>
+</div>
+
+<div class="sheet">
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · the United States</p><p class="prompt">Assess, in one page, whether the United States dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · US · neutral</span><span>sheet 6 · top · front</span></div></div>
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · China</p><p class="prompt">Assess, in one page, whether China dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · China · neutral</span><span>sheet 6 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 6 · top · back</span></div></div>
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 6 · bottom · back</span></div></div>
+</div>
+
+<div class="sheet">
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · Europe</p><p class="prompt">Assess, in one page, whether Europe dominates the field of AI.</p><p class="small">Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · Europe · neutral</span><span>sheet 7 · top · front</span></div></div>
+  <div class="half"><span class="band">Trust card · even teams</span><p class="tag">Region · your home country</p><p class="prompt">Assess, in one page, whether <span class="blank" style="min-width:50mm"></span> dominates the field of AI.</p><p class="small">Fill in your home country. Type exactly this, nothing else. Ten minutes. Do not edit. Do not read it yet.</p><p>Tool and model: <span class="blank"></span></p><div class="foot"><span>Trust · home · neutral</span><span>sheet 7 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 7 · top · back</span></div></div>
+  <div class="half"><span class="band">The six questions</span><h3>In pairs, inside your team · 0:30</h3><ol class="q"><li>Which claims appear in both pages?</li><li>Which claims contradict each other while sounding equally sure?</li><li>Which numbers could you verify in two minutes? Which not at all?</li><li>On the home-country page: what did it get wrong that only you in this room can see?</li></ol><h3>With your region twin in the partner team · 0:38</h3><ol class="q" start="5"><li>Same region — where do the two pages disagree?</li><li>Read each other's card. What did the wording do to the conclusion?</li></ol><div class="foot"><span>Trust · questions</span><span>sheet 7 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 8: planner / bookkeeper -->
+<div class="sheet">
+  <div class="half"><span class="band">Gallery role · 1:32</span><h1>You are Ron, the planner.</h1><p>Sixty-one. Everything about how the shop is planned is in your head. You are on the machine till four. You have seen three "systems" come and go.</p><p class="small">Walk the wall with the owner. On every team's card except your own, leave <b>one sticky question</b> in this role. Questions only — no praise, no verdicts.</p><div class="foot"><span>Planner</span><span>sheet 8 · top · front</span></div></div>
+  <div class="half"><span class="band">Gallery role · 1:32</span><h1>You are the bookkeeper.</h1><p>Part-time, three days a week. You know what a lost quote costs and what a wrong quote costs. You have never seen a software invoice that ended where it started.</p><p class="small">Walk the wall with the owner. On every team's card except your own, leave <b>one sticky question</b> in this role. Questions only — no praise, no verdicts.</p><div class="foot"><span>Bookkeeper</span><span>sheet 8 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">Ron asks</span><ol class="q big"><li>Who does that on Monday while I'm on the machine?</li><li>Where does it get what I know from — and what happens when it's wrong about a job?</li><li>Which of these five would I have to do myself?</li><li>What did the last system that promised this actually change?</li></ol><div class="foot"><span>Planner</span><span>sheet 8 · top · back</span></div></div>
+  <div class="half"><span class="band">The bookkeeper asks</span><ol class="q big"><li>What does this cost in month one, and in month twelve?</li><li>What does it cost the first time it is wrong on a quote?</li><li>Which of these five costs nothing — and is that one actually first?</li><li>Who is paid to check it, and is that in the five steps?</li></ol><div class="foot"><span>Bookkeeper</span><span>sheet 8 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 9: best customer / owner lanyard -->
+<div class="sheet">
+  <div class="half"><span class="band">Gallery role · 1:32</span><h1>You are her best customer.</h1><p>A machine builder. Your drawings are your business. You send her a hundred parts a year and you would send more if quotes came faster — and none if a drawing ever leaked.</p><p class="small">Walk the wall with the owner. On every team's card except your own, leave <b>one sticky question</b> in this role. Questions only — no praise, no verdicts.</p><div class="foot"><span>Best customer</span><span>sheet 9 · top · front</span></div></div>
+  <div class="half"><span class="band red">Lanyard · lecturer</span><h1>Owner</h1><h2>30-person CNC machining shop · Achterhoek</h2><p><b>Three pains.</b> A quote takes two days; the competitor in Poland answers in an hour. Everything about planning is in Ron's head, and Ron is sixty-one. Every part is photographed before it ships and nobody looks until a customer complains.</p><p class="small"><b>She knows:</b> quotes per week, hit rate, who her customers are. <b>She does not know:</b> hours per quote, defect rate, what "AI" means. She answers only what an owner would; "ask Ron", "we don't measure that" and "why would I tell you that?" are answers.</p><div class="foot"><span>Owner</span><span>sheet 9 · bottom · front</span></div></div>
+</div>
+<div class="sheet">
+  <div class="half"><span class="band">The customer asks</span><ol class="q big"><li>Where does my drawing go when you upload it — which country, which company?</li><li>If your quote comes in an hour, is it still right?</li><li>What do you do when the tool is wrong and I have already ordered?</li><li>Would you put your name on step three?</li></ol><div class="foot"><span>Best customer</span><span>sheet 9 · top · back</span></div></div>
+  <div class="half"><span class="band red">Lecturers only</span><h3 style="margin-top:0">The owner asks, in character · 1:32</h3><ol class="q"><li>Who does that on Monday? Ron's on the machine till four.</li><li>What does it cost me the first time it's wrong on a quote?</li><li>Where does my customer's drawing go when you upload it? He'd sue.</li><li>What do I tell the bank on Monday — one sentence?</li><li>Which of these five would you do first if it were your money?</li><li>And if the tool disappears next year?</li></ol><h3>Socratic bank, out of character · 1:18</h3><ol class="q"><li>Point at one sentence nobody read before you accepted it.</li><li>Which number could you verify right now? Which not?</li><li>What did you ask the intern that it could not have known?</li><li>Which failure-log line would be in the chapter if nobody had caught it?</li><li>Why this pain and not the other two?</li></ol><p class="small">Never "good", never "yes", never "you might". "Is this right?" → question 2.</p><div class="foot"><span>Lecturers</span><span>sheet 9 · bottom · back</span></div></div>
+</div>
+
+<!-- SHEET 10: seven questions / admin -->
+<div class="sheet full">
+  <span class="band">Her seven questions</span>
+  <table style="margin:3mm 0 5mm">
+    <tr><th>Wk</th><th>She asks</th><th>You produce</th></tr>
+    <tr><td class="w">1</td><td>Which of my problems are you actually looking at, and why?</td><td>The problem analysis</td></tr>
+    <tr><td class="w">2</td><td>Who owns this intern, and what happens if its country changes its mind?</td><td>Vendors, weights, geopolitics — your trust pages, reread against the wiki</td></tr>
+    <tr><td class="w">3</td><td>Can I trust it with my drawings and my customers?</td><td>Data, contracts, dependency</td></tr>
+    <tr><td class="w">4</td><td>What do the shops around me actually know?</td><td>What regional SMEs know and need to know</td></tr>
+    <tr><td class="w">5</td><td>Where is my first win?</td><td>The first opportunities</td></tr>
+    <tr><td class="w">6</td><td>Who has already done it, and did it work?</td><td>Use cases · contributions frozen</td></tr>
+    <tr><td class="w">7</td><td>Show me the book.</td><td>The handbook, consolidated</td></tr>
+  </table>
+  <p class="small">Each week, one contribution. Two readers — your partner team and a Socratic tutor that only asks questions. Both must see your thinking move, or the work carries into next week. No scores until one interview at the end: both lecturers, one mark per module, questions to you.</p>
+  <h3>By next Monday</h3>
+  <ul class="tick">
+    <li><b>AIBS.</b> Problem analysis, one page, from the frame: pain · for whom by role · why in her words · every claim sourced with one line on why to trust it. Field-interview design: a guide and draft consent and anonymisation text. <b>No real company is approached until that text is signed off.</b> To your partner by Thursday; three questions back by Saturday; your revision, changes visible, on Monday.</li>
+    <li><b>AEL.</b> PRD v0, one page: who (your own team as researchers) · why · what good looks like, from the frame and the failure log. One spike: a cited source list for your pain into a file; the tester checks every citation exists; every failure logged. Setup finished and committed for all four.</li>
+    <li><b>You.</b> Bring your trust page and card to week 2. Check three of its claims against a source you would defend: true, false, or unverifiable.</li>
+  </ul>
+  <p class="small">This week the tutor is the two lecturers, by hand. The Socratic tutor and the wiki pages arrive in week 2. Week-1 gate: <span class="fill">[graded by hand / logged only]</span>.</p>
+  <div class="foot"><span>Seven questions</span><span>sheet 10 · front</span></div>
+</div>
+<div class="sheet full">
+  <span class="band">Administration</span>
+  <p class="small">None of this is interesting and all of it is required.</p>
+  <table style="margin-top:3mm">
+    <tr><td><b>Modules</b></td><td>AIBS — AI in Business &amp; Society (research). AEL — Agent Engineering Lab (technical). Both mandatory; one team; separate marks in one joint interview. If you enrolled under earlier names, these are the same modules.</td></tr>
+    <tr><td><b>Contact block</b></td><td><span class="fill">[day, time, room]</span> · 120 minutes · attendance <span class="fill">[≥ 80 %]</span> of blocks; the peer exchange needs both teams present.</td></tr>
+    <tr><td><b>Tools</b></td><td>Baseline CLI: <span class="fill">[name and sign-up link]</span>, free on a personal account. Any equivalent CLI at your own cost; no advantage in assessment. Cloud environment: <span class="fill">[link]</span>. Classroom organisation: <span class="fill">[link]</span>.</td></tr>
+    <tr><td><b>Data</b></td><td>Public sources and your own writing may go through any tool. Interview material never goes through a free tier. Consent text signed off by the research lecturer before any company is approached.</td></tr>
+    <tr><td><b>Where things live</b></td><td>Course site: <span class="fill">[URL]</span> — the handbook template, the criteria, the programme. Team repository: your work. <span class="fill">[LMS]</span>: announcements only.</td></tr>
+    <tr><td><b>Assessment</b></td><td>Weekly gates are formative and binary; no scores are visible to students at any time. One criterion-based interview after week 7, both lecturers present, individual questions on team evidence. Criteria published before week 1 and unchanged during the cohort.</td></tr>
+    <tr><td><b>Contact</b></td><td>Research lecturer: <span class="fill">[ ]</span> · Technical lecturer: <span class="fill">[ ]</span></td></tr>
+  </table>
+  <div class="foot"><span>Administration</span><span>sheet 10 · back</span></div>
+</div>
+</body></html>

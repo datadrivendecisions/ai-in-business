@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student journeys — AI in Business course site</title>
+<!--
+  One-page visual for work/drafts/course-site-journeys.md.
+  Business Data Solutions brand tokens, inlined per repo convention. No JavaScript.
+  Series palette: validated categorical slots 1-4 (light, surface #f9f8f4) —
+  all checks pass; the sub-3:1 contrast warning on aqua and yellow is relieved by
+  direct labels on every line plus the full score table on the page.
+  Score chips use the fixed status palette and always carry their numeral, so a
+  state is never colour alone.
+-->
+<style>
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --bg-cream: #f5f0e6;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+
+  /* categorical series — validated slots 1-4 */
+  --s-fenna:  #2a78d6;
+  --s-rohan:  #eb6834;
+  --s-joris:  #1baf7a;
+  --s-giulia: #eda100;
+
+  /* status palette — fixed, never themed */
+  --sc-3: #0ca30c;   /* carried  */
+  --sc-2: #fab219;   /* partial  */
+  --sc-1: #ec835a;   /* asserted */
+  --sc-0: #d03b3b;   /* absent   */
+
+  /* chart chrome */
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --ink-muted: #898781;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--bg-off-white);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.sheet {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-12);
+}
+
+/* ---------- masthead ---------- */
+.masthead {
+  display: flex; flex-wrap: wrap; gap: var(--space-8);
+  align-items: flex-end; justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: 3px solid var(--supporting);
+}
+.eyebrow {
+  font-size: var(--text-xs); letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-muted); margin: 0 0 var(--space-2);
+}
+h1 { font-size: var(--text-4xl); line-height: 1.1; margin: 0 0 var(--space-2); letter-spacing: -.02em; }
+.standfirst { margin: 0; max-width: 62ch; color: var(--text-secondary); font-size: var(--text-sm); }
+.tiles { display: flex; gap: var(--space-3); }
+.tile {
+  background: var(--bg-page); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-3) var(--space-4);
+  min-width: 132px; box-shadow: var(--shadow-sm);
+}
+.tile .k { font-size: var(--text-xs); color: var(--text-muted); margin: 0 0 2px; }
+.tile .v { font-size: var(--text-2xl); font-weight: 700; line-height: 1; margin: 0; letter-spacing: -.02em; }
+.tile .n { font-size: var(--text-xs); color: var(--text-muted); margin: 4px 0 0; }
+.tile.floor { border-color: var(--supporting); border-width: 2px; }
+
+h2 {
+  font-size: var(--text-xs); letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-muted); margin: var(--space-8) 0 var(--space-3);
+  font-weight: 700;
+}
+h2 .h2-note { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--text-muted); }
+
+/* ---------- persona rail ---------- */
+.rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.persona {
+  background: var(--bg-page); border: 1px solid var(--border);
+  border-top: 4px solid var(--pc); border-radius: var(--radius-md);
+  padding: var(--space-4); box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column;
+}
+.persona .who { display: flex; align-items: baseline; gap: var(--space-2); }
+.persona .name { font-size: var(--text-xl); font-weight: 700; letter-spacing: -.01em; }
+.persona .origin { font-size: var(--text-xs); color: var(--text-muted); }
+.persona .quote {
+  margin: var(--space-2) 0 var(--space-3); font-style: italic;
+  color: var(--text-secondary); font-size: var(--text-sm);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-3); }
+.chip {
+  font-size: 11px; padding: 2px 7px; border-radius: var(--radius-full);
+  background: var(--bg-cream); color: var(--text-secondary); white-space: nowrap;
+}
+.persona .asks { font-size: var(--text-sm); margin: 0 0 var(--space-3); }
+.persona .asks b { font-weight: 600; }
+.persona .risk {
+  font-size: var(--text-xs); color: var(--text-secondary);
+  border-left: 2px solid var(--border-strong); padding-left: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+.persona .foot { margin-top: auto; }
+.score-line { display: flex; align-items: baseline; justify-content: space-between; font-size: var(--text-xs); color: var(--text-muted); }
+.score-line b { font-size: var(--text-lg); color: var(--text-primary); letter-spacing: -.01em; }
+.meter { height: 6px; background: var(--bg-cream); border-radius: var(--radius-full); margin-top: 5px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--pc); border-radius: var(--radius-full); }
+.floor-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; background: var(--supporting); color: #fff;
+  padding: 2px 6px; border-radius: var(--radius-sm);
+}
+
+/* ---------- journey grid ---------- */
+.grid-wrap { overflow-x: auto; }
+.jgrid {
+  display: grid;
+  grid-template-columns: 160px repeat(5, minmax(190px, 1fr));
+  gap: 2px; min-width: 1100px;
+  background: var(--border); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.jgrid > * { background: var(--bg-page); padding: var(--space-3); }
+.stage-head { background: var(--supporting); color: #fff; }
+.stage-head .num {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  color: var(--primary); display: block;
+}
+.stage-head .nm { font-size: var(--text-base); font-weight: 700; display: block; margin: 2px 0 3px; }
+.stage-head .sub { font-size: 11px; color: #c9c9c9; display: block; line-height: 1.3; }
+.corner { background: var(--bg-section); }
+.corner .lg { font-size: 10px; color: var(--text-muted); line-height: 1.38; margin: 0; }
+.corner .rule { border: 0; border-top: 1px solid var(--border-strong); margin: 6px 0; }
+.corner .lg b { color: var(--text-secondary); }
+.rowhead { background: var(--bg-section); border-left: 4px solid var(--pc); }
+.rowhead .name { font-weight: 700; font-size: var(--text-base); }
+.rowhead .meta { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
+.rowhead .tot { font-size: 11px; color: var(--text-secondary); display: block; margin-top: var(--space-2); }
+.rowhead .tot b { font-size: var(--text-base); color: var(--text-primary); }
+.cell { display: flex; flex-direction: column; gap: var(--space-2); }
+.scores { display: flex; gap: 3px; }
+.sc {
+  width: 21px; height: 21px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  cursor: help;
+}
+.sc-3 { background: var(--sc-3); color: #fff; }
+.sc-2 { background: var(--sc-2); color: #1a1a1a; }
+.sc-1 { background: var(--sc-1); color: #1a1a1a; }
+.sc-0 { background: var(--sc-0); color: #fff; }
+.note { font-size: var(--text-xs); color: var(--text-secondary); margin: 0; line-height: 1.45; }
+.note .star { color: var(--text-primary); font-weight: 700; }
+.note b { color: var(--text-primary); font-weight: 600; }
+
+/* ---------- chart ---------- */
+.chart-card {
+  background: var(--bg-page); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4) var(--space-6) var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+.legend { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-2); }
+.legend span { display: flex; align-items: center; gap: 6px; font-size: var(--text-xs); color: var(--text-secondary); }
+.legend i { width: 16px; height: 3px; border-radius: 2px; display: block; }
+.chart-card svg { width: 100%; height: auto; display: block; }
+.chart-foot { font-size: var(--text-xs); color: var(--text-muted); margin: var(--space-2) 0 0; }
+
+/* ---------- silences + edits ---------- */
+.four { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.silence {
+  background: var(--bg-cream); border-radius: var(--radius-md);
+  padding: var(--space-4); border-left: 4px solid var(--supporting);
+}
+.silence h3 { font-size: var(--text-sm); margin: 0 0 var(--space-2); }
+.silence p { font-size: var(--text-xs); color: var(--text-secondary); margin: 0; }
+.edits { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+.edit {
+  display: flex; gap: var(--space-3); background: var(--bg-page);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.edit .r {
+  flex: 0 0 26px; height: 26px; border-radius: var(--radius-full);
+  background: var(--primary); color: var(--supporting);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: var(--text-sm);
+}
+.edit .r.done { background: var(--sc-3); color: #fff; }
+.edit p { margin: 0; font-size: var(--text-xs); color: var(--text-secondary); }
+.edit p b::after { content: " ✓ shipped"; font-size: 10px; font-weight: 700; color: var(--sc-3); letter-spacing: .04em; }
+.edit p b { color: var(--text-primary); font-size: var(--text-sm); display: block; margin-bottom: 2px; }
+
+footer {
+  margin-top: var(--space-8); padding-top: var(--space-4);
+  border-top: 1px solid var(--border); font-size: var(--text-xs); color: var(--text-muted);
+  display: flex; flex-wrap: wrap; gap: var(--space-6); justify-content: space-between;
+}
+footer p { margin: 0; max-width: 78ch; }
+
+@media (max-width: 1100px) {
+  .rail, .four { grid-template-columns: repeat(2, 1fr); }
+  .edits { grid-template-columns: 1fr; }
+}
+@media print {
+  @page { size: A3 landscape; margin: 10mm; }
+  body { background: #fff; }
+  .sheet { padding: 0; max-width: none; }
+  .grid-wrap { overflow: visible; }
+  .persona, .tile, .chart-card, .edit { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="masthead">
+  <div>
+    <p class="eyebrow">AI in Business · HAN, minor Data Driven Decision Making in Business</p>
+    <h1>Student journeys through the course site</h1>
+    <p class="standfirst">
+      Four students, five stages, twenty scored items each. The page-level scorecard rated the site
+      96 % against its own specification; walking four different students through it scored
+      <strong>63 %</strong>. The grid below is that baseline diagnosis. Two rounds of edits have
+      since taken the floor to <strong>93 %</strong> — what changed is at the foot of the page.
+    </p>
+  </div>
+  <div class="tiles">
+    <div class="tile">
+      <p class="k">Baseline floor</p>
+      <p class="v">38<span style="font-size:var(--text-base);color:var(--text-muted)">/60</span></p>
+      <p class="n">63 % · Joris and Giulia</p>
+    </div>
+    <div class="tile floor">
+      <p class="k">Floor after cycle 3</p>
+      <p class="v">56<span style="font-size:var(--text-base);color:var(--text-muted)">/60</span></p>
+      <p class="n">93 % · Rohan</p>
+    </div>
+    <div class="tile">
+      <p class="k">Target, every persona</p>
+      <p class="v">54<span style="font-size:var(--text-base);color:var(--text-muted)">/60</span></p>
+      <p class="n">90 %</p>
+    </div>
+  </div>
+</header>
+
+<h2>The cohort <span class="h2-note">— two Dutch, two international, as the room is. The course is taught and assessed in English; the field research is not.</span></h2>
+<section class="rail">
+
+  <article class="persona" style="--pc: var(--s-fenna)">
+    <div class="who"><span class="name">Fenna</span> <span class="origin">21 · Dutch, from the region</span></div>
+    <p class="quote">“I am going to be the one holding the team back.”</p>
+    <div class="chips"><span class="chip">Tech: low</span><span class="chip">Time: full</span><span class="chip">Local context: strong</span><span class="chip">Came for the research</span></div>
+    <p class="asks"><b>Arrives asking:</b> can I survive the technical half, and what happens to my team if I can’t?</p>
+    <p class="risk"><b>The risk the site does not see:</b> relief. She is the only one who can ring a Dutch firm — and can trade the technical work away for it, unnamed.</p>
+    <div class="foot">
+      <div class="score-line"><span><b>40</b> / 60 <span style="color:var(--text-muted);font-size:var(--text-xs)">baseline</span></span><span>67 %</span></div>
+      <div class="meter"><i style="width:67%"></i></div>
+    </div>
+  </article>
+
+  <article class="persona" style="--pc: var(--s-rohan)">
+    <div class="who"><span class="name">Rohan</span> <span class="origin">22 · international, degree-seeking</span></div>
+    <p class="quote">“Is there anything here I don’t already know?”</p>
+    <div class="chips"><span class="chip">Tech: high</span><span class="chip">Time: full</span><span class="chip">Local context: partial</span><span class="chip">Came for the build</span></div>
+    <p class="asks"><b>Arrives asking:</b> is the build half real engineering — and is the research half a tax I pay for the credits?</p>
+    <p class="risk"><b>The risk the site does not see:</b> the Dutch source base and the field visit give the strongest builder in the room a respectable reason to withdraw into the tool.</p>
+    <div class="foot">
+      <div class="score-line"><span><b>42</b> / 60 <span style="color:var(--text-muted);font-size:var(--text-xs)">baseline</span></span><span>70 %</span></div>
+      <div class="meter"><i style="width:70%"></i></div>
+    </div>
+  </article>
+
+  <article class="persona" style="--pc: var(--s-joris)">
+    <div class="who"><span class="name">Joris</span> <span class="origin">23 · Dutch, from the Randstad</span></div>
+    <p class="quote">“What will this cost me, and when?”</p>
+    <div class="chips"><span class="chip">Tech: middling</span><span class="chip">Time: 16–20 h paid work</span><span class="chip">Local context: weak</span><span class="chip">Came for the credits</span></div>
+    <p class="asks"><b>Arrives asking:</b> which dates are immovable, what carries the mark, and what happens if I miss something.</p>
+    <p class="risk"><b>The risk the site does not see:</b> Dutch is not local. He cannot name a regional manufacturer either — and the site has no dates at all.</p>
+    <div class="foot">
+      <div class="score-line"><span><b>38</b> / 60 <span style="color:var(--text-muted);font-size:var(--text-xs)">baseline</span> <span class="floor-tag">floor</span></span><span>63 %</span></div>
+      <div class="meter"><i style="width:63%"></i></div>
+    </div>
+  </article>
+
+  <article class="persona" style="--pc: var(--s-giulia)">
+    <div class="who"><span class="name">Giulia</span> <span class="origin">24 · international, Erasmus, one semester</span></div>
+    <p class="quote">“Who is this actually for?”</p>
+    <div class="chips"><span class="chip">Tech: low–middling</span><span class="chip">Leaves in January</span><span class="chip">Local context: none</span><span class="chip">Came for the research</span></div>
+    <p class="asks"><b>Arrives asking:</b> what is a regional manufacturer, how do I get into a team when I know nobody — and will I still be here for the assessment?</p>
+    <p class="risk"><b>The risk the site does not see:</b> the best writer of the four reads a missing example as a personal deficiency.</p>
+    <div class="foot">
+      <div class="score-line"><span><b>38</b> / 60 <span style="color:var(--text-muted);font-size:var(--text-xs)">baseline</span> <span class="floor-tag">floor</span></span><span>63 %</span></div>
+      <div class="meter"><i style="width:63%"></i></div>
+    </div>
+  </article>
+
+</section>
+
+<h2>The journey, as found at baseline <span class="h2-note">— awareness is assumed: they are already enrolled. Each cell scores Answered · Navigable · Reassured · Moved, and names what decides it. ★ marks a moment of truth.</span></h2>
+<div class="grid-wrap">
+<div class="jgrid">
+
+  <div class="corner">
+    <p class="lg">
+      <b>A</b> Answered — where they look<br>
+      <b>N</b> Navigable — there, and back<br>
+      <b>R</b> Reassured — the doubt met<br>
+      <b>M</b> Moved — knows what is next
+    </p>
+    <hr class="rule">
+    <p class="lg"><b>3</b> carried · <b>2</b> partial<br><b>1</b> asserted · <b>0</b> absent</p>
+  </div>
+  <div class="stage-head"><span class="num">01</span><span class="nm">Orientation</span><span class="sub">First visit, from the LMS link, days before the kick-off</span></div>
+  <div class="stage-head"><span class="num">02</span><span class="nm">Preparation</span><span class="sub">The week before session 1</span></div>
+  <div class="stage-head"><span class="num">03</span><span class="nm">Commitment</span><span class="sub">The four-hour session and the first hand-in</span></div>
+  <div class="stage-head"><span class="num">04</span><span class="nm">Return</span><span class="sub">Weeks 2–6, once a week</span></div>
+  <div class="stage-head"><span class="num">05</span><span class="nm">Consolidation</span><span class="sub">The assessment period and the interview</span></div>
+
+  <!-- FENNA -->
+  <div class="rowhead" style="--pc: var(--s-fenna)">
+    <span class="name">Fenna</span><span class="meta">Dutch, from the region · tech-anxious</span>
+    <span class="tot"><b>40</b> / 60 · 67 %</span>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-2" title="Reassured: 2 — partial">2</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> <b>“It does not assume that you can program”</b> — with the manual-fallback design rule under it. But it is the last paragraph of section 1, three screens down, below a card headed <i>Direct an agentic system to do real work</i>.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-3" title="Reassured: 3 — carried">3</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> <b>“A laptop. No installation, no account and no preparation beyond the one page.”</b> Aimed exactly at this fear. The site’s best moment for any persona.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> The team discovers her Dutch and her network are its scarcest resource — <b>before she has chosen a build role.</b> Four build roles are named; the fieldwork load is not.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-1" title="Navigable: 1 — asserted">1</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">The visit lands on her by default, and <b>there is no route on the site to a person</b> if she is falling behind.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">She carries a technical mark for the module she feared — and <b>its criteria are honestly declared not to exist yet.</b></p>
+  </div>
+
+  <!-- ROHAN -->
+  <div class="rowhead" style="--pc: var(--s-rohan)">
+    <span class="name">Rohan</span><span class="meta">International, degree-seeking · the strongest builder</span>
+    <span class="tot"><b>42</b> / 60 · 70 %</span>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> The <b>layer ladder</b> reads as engineering, not tooling — but it is five cells of five words with no page behind any of them, and <i>“a week ahead”</i> five times.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-3" title="Reassured: 3 — carried">3</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> <b>“A non-coder must be able to run it, and every automated step needs a manual fallback.”</b> A genuine constraint, not a slogan.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-1" title="Navigable: 1 — asserted">1</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><b>The handbook template is a dead end</b> — no nav bar, and its wordmark links <code>#top</code>, so the gesture the other two pages teach fails on the one page they send you to.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-1" title="Navigable: 1 — asserted">1</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> The sources are Dutch and he cannot read them — while <b>the platform he is building is exactly the thing that could translate and appraise them.</b> The site names neither.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">Two marks, scored separately — and he carries the research one too, <b>on work he was structurally at the edge of.</b></p>
+  </div>
+
+  <!-- JORIS -->
+  <div class="rowhead" style="--pc: var(--s-joris)">
+    <span class="name">Joris</span><span class="meta">Dutch, Randstad · 16–20 h paid work</span>
+    <span class="tot"><b>38</b> / 60 · 63 %</span>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> <b>Assessment is a top-level nav item</b> and the table is complete — the site’s best navigation moment. Then: <b>no dates anywhere on the site.</b></p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><i>“As in your timetable — added here as soon as the room is confirmed”</i> is honest, and still leaves him unable to schedule a shift.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">He must attend the session to learn the deadline of the thing the session starts. <span class="star">★</span> And he finds that <b>being Dutch has not made him local.</b></p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-2" title="Reassured: 2 — partial">2</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> The <b>Fixed</b> card is real certainty he can plan against. But one week of visibility is one week of shift planning, for a run of six.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-2" title="Reassured: 2 — partial">2</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">He knows exactly what to bring — the frozen submissions and the gate history. <b>The assessment period has no date.</b></p>
+  </div>
+
+  <!-- GIULIA -->
+  <div class="rowhead" style="--pc: var(--s-giulia)">
+    <span class="name">Giulia</span><span class="meta">International, Erasmus · leaves in January</span>
+    <span class="tot"><b>38</b> / 60 · 63 %</span>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> <b>“Most of those firms are within an hour’s drive of this building”</b> — the abstraction becomes a place. But <i>regional manufacturer</i> is never defined, and the course language is never stated.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-3" title="Answered: 3 — carried">3</span><span class="sc sc-3" title="Navigable: 3 — carried">3</span><span class="sc sc-3" title="Reassured: 3 — carried">3</span><span class="sc sc-3" title="Moved: 3 — carried">3</span></div>
+    <p class="note"><span class="star">★</span> <b>“Do not form a team in advance. Teams are formed in the session.”</b> Precisely her fear, answered before she could worry about it.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> Asked for sector, size and region with <b>no example anywhere on either page</b> — and teams self-select in 25 minutes with no composition rule.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-1" title="Answered: 1 — asserted">1</span><span class="sc sc-1" title="Navigable: 1 — asserted">1</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note"><span class="star">★</span> Interviewing is her best skill; <b>the visit runs in a language she does not have</b> — and the site never says who finds the firm or how she takes part.</p>
+  </div>
+  <div class="cell">
+    <div class="scores"><span class="sc sc-2" title="Answered: 2 — partial">2</span><span class="sc sc-2" title="Navigable: 2 — partial">2</span><span class="sc sc-1" title="Reassured: 1 — asserted">1</span><span class="sc sc-2" title="Moved: 2 — partial">2</span></div>
+    <p class="note">For a one-semester exchange the missing assessment date is not an inconvenience — it is <b>whether she can complete the module at all.</b></p>
+  </div>
+
+</div>
+</div>
+
+<h2>Satisfaction across the journey <span class="h2-note">— mean of the four dimensions per stage, out of 3. At baseline only one point reached the 2.7 target; the post-edit line clears it at four of five stages.</span></h2>
+<div class="chart-card">
+  <div class="legend">
+    <span><i style="background:var(--s-fenna)"></i> Fenna</span>
+    <span><i style="background:var(--s-rohan)"></i> Rohan</span>
+    <span><i style="background:var(--s-joris)"></i> Joris</span>
+    <span><i style="background:var(--s-giulia)"></i> Giulia</span>
+    <span><i style="background:var(--supporting);height:3px"></i> <strong>Cohort mean after cycle 3</strong></span>
+    <span style="margin-left:auto"><i style="background:var(--axis);height:0;border-top:2px dashed var(--axis)"></i> Target 2.7</span>
+  </div>
+  <svg viewBox="0 0 1010 262" role="img" aria-label="Line chart: mean satisfaction per stage for four personas. All four peak at stage 02 Preparation and trough at stage 04 Return.">
+    <!-- gridlines -->
+    <g stroke="var(--grid)" stroke-width="1">
+      <line x1="90" y1="30" x2="880" y2="30"/>
+      <line x1="90" y1="90" x2="880" y2="90"/>
+      <line x1="90" y1="150" x2="880" y2="150"/>
+    </g>
+    <line x1="90" y1="210" x2="880" y2="210" stroke="var(--axis)" stroke-width="1"/>
+    <!-- target -->
+    <line x1="90" y1="48" x2="880" y2="48" stroke="var(--axis)" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="884" y="44" font-size="10" fill="var(--ink-muted)">2.7 target</text>
+    <!-- y ticks -->
+    <g font-size="11" fill="var(--ink-muted)" text-anchor="end" font-family="inherit">
+      <text x="78" y="34">3</text><text x="78" y="94">2</text>
+      <text x="78" y="154">1</text><text x="78" y="214">0</text>
+    </g>
+    <!-- x labels -->
+    <g font-size="11" fill="var(--ink-muted)" text-anchor="middle" font-family="inherit">
+      <text x="100" y="232">01 Orientation</text>
+      <text x="290" y="232">02 Preparation</text>
+      <text x="480" y="232">03 Commitment</text>
+      <text x="670" y="232">04 Return</text>
+      <text x="860" y="232">05 Consolidation</text>
+    </g>
+    <text x="485" y="254" font-size="11" fill="var(--ink-muted)" text-anchor="middle" font-weight="600" font-family="inherit">Baseline: the site peaked where a week was published and troughed in the loop the run spends five of its six weeks in. The dark line is the same journey after the edits.</text>
+
+    <g fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <polyline stroke="var(--s-fenna)"  points="100,75 290,30 480,105 670,135 860,105"/>
+      <polyline stroke="var(--s-rohan)"  points="100,75 290,30 480,90 670,135 860,90"/>
+      <polyline stroke="var(--s-joris)"  points="100,75 290,105 480,105 670,105 860,90"/>
+      <polyline stroke="var(--s-giulia)" points="100,90 290,30 480,120 670,135 860,105"/>
+    </g>
+    <polyline fill="none" stroke="var(--supporting)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+      points="100,37 290,30 480,30 670,41 860,48"/>
+    <g stroke="var(--bg-page)" stroke-width="2">
+      <g fill="var(--supporting)">
+        <circle cx="100" cy="37" r="5"><title>After cycle 3 · 01 Orientation · 2.88</title></circle>
+        <circle cx="290" cy="30" r="5"><title>After cycle 3 · 02 Preparation · 3.00</title></circle>
+        <circle cx="480" cy="30" r="5"><title>After cycle 3 · 03 Commitment · 3.00</title></circle>
+        <circle cx="670" cy="41" r="5"><title>After cycle 3 · 04 Return · 2.81</title></circle>
+        <circle cx="860" cy="48" r="5"><title>After cycle 3 · 05 Consolidation · 2.69</title></circle>
+      </g>
+      <g fill="var(--s-fenna)">
+        <circle cx="100" cy="75" r="5"><title>Fenna · 01 Orientation · 2.25</title></circle>
+        <circle cx="290" cy="30" r="5"><title>Fenna · 02 Preparation · 3.00</title></circle>
+        <circle cx="480" cy="105" r="5"><title>Fenna · 03 Commitment · 1.75</title></circle>
+        <circle cx="670" cy="135" r="5"><title>Fenna · 04 Return · 1.25</title></circle>
+        <circle cx="860" cy="105" r="5"><title>Fenna · 05 Consolidation · 1.75</title></circle>
+      </g>
+      <g fill="var(--s-rohan)">
+        <circle cx="100" cy="75" r="5"><title>Rohan · 01 Orientation · 2.25</title></circle>
+        <circle cx="290" cy="30" r="5"><title>Rohan · 02 Preparation · 3.00</title></circle>
+        <circle cx="480" cy="90" r="5"><title>Rohan · 03 Commitment · 2.00</title></circle>
+        <circle cx="670" cy="135" r="5"><title>Rohan · 04 Return · 1.25</title></circle>
+        <circle cx="860" cy="90" r="5"><title>Rohan · 05 Consolidation · 2.00</title></circle>
+      </g>
+      <g fill="var(--s-joris)">
+        <circle cx="100" cy="75" r="5"><title>Joris · 01 Orientation · 2.25</title></circle>
+        <circle cx="290" cy="105" r="5"><title>Joris · 02 Preparation · 1.75</title></circle>
+        <circle cx="480" cy="105" r="5"><title>Joris · 03 Commitment · 1.75</title></circle>
+        <circle cx="670" cy="105" r="5"><title>Joris · 04 Return · 1.75</title></circle>
+        <circle cx="860" cy="90" r="5"><title>Joris · 05 Consolidation · 2.00</title></circle>
+      </g>
+      <g fill="var(--s-giulia)">
+        <circle cx="100" cy="90" r="5"><title>Giulia · 01 Orientation · 2.00</title></circle>
+        <circle cx="290" cy="30" r="5"><title>Giulia · 02 Preparation · 3.00</title></circle>
+        <circle cx="480" cy="120" r="5"><title>Giulia · 03 Commitment · 1.50</title></circle>
+        <circle cx="670" cy="135" r="5"><title>Giulia · 04 Return · 1.25</title></circle>
+        <circle cx="860" cy="105" r="5"><title>Giulia · 05 Consolidation · 1.75</title></circle>
+      </g>
+    </g>
+    <!-- direct labels, with leaders where endpoints coincide -->
+    <g stroke="var(--axis)" stroke-width="1" fill="none">
+      <path d="M866,90 L888,78"/><path d="M866,90 L888,96"/>
+      <path d="M866,105 L888,110"/><path d="M866,105 L888,126"/>
+    </g>
+    <g font-size="11" font-weight="600" font-family="inherit">
+      <text x="892" y="81" fill="var(--s-rohan)">Rohan 2.00</text>
+      <text x="892" y="99" fill="var(--s-joris)">Joris 2.00</text>
+      <text x="892" y="113" fill="var(--s-fenna)">Fenna 1.75</text>
+      <text x="892" y="129" fill="var(--s-giulia)">Giulia 1.75</text>
+    </g>
+  </svg>
+  <p class="chart-foot">
+    Three baseline lines coincide at stage 01 (2.25) and three at stage 02 (3.00); the markers are
+    ringed so the stack is visible, and every value is in the grid above. Cohort means at baseline:
+    2.19 · 2.69 · 1.75 · 1.38 · 1.88. After cycle 3: 2.88 · 3.00 · 3.00 · 2.81 · 2.69 — the
+    stage-04 trough is gone and the weakest stage is now 05, for a reason no site edit can fix.
+  </p>
+</div>
+
+<h2>What the mix does to a team of four <span class="h2-note">— four things the site is silent on. None belongs to a single student, which is why none appears in a single journey.</span></h2>
+<section class="four">
+  <div class="silence">
+    <h3>1 · The course is in English; the field research is not</h3>
+    <p>Unstated, it resolves the obvious way: the Dutch members interview, the international members wait outside. Two of four then have no field data of their own.</p>
+  </div>
+  <div class="silence">
+    <h3>2 · The source base is Dutch</h3>
+    <p>CBS, the Chamber of Commerce, sector bodies, the regional press. The platform the team builds in AEL is exactly what could retrieve and translate them — the site names neither problem nor route.</p>
+  </div>
+  <div class="silence">
+    <h3>3 · Nobody says who finds the partner firm</h3>
+    <p>If it is the team’s job, the search runs on personal networks and the students who have one carry it. If it is the school’s job, one sentence removes the problem.</p>
+  </div>
+  <div class="silence">
+    <h3>4 · Teams form themselves, with no rule</h3>
+    <p>Twenty-five minutes of self-selection sorts by who can already talk to whom. <i>“Do not form a team in advance”</i> stops pre-formed friend groups and does nothing about sorting in the room.</p>
+  </div>
+</section>
+
+<h2>What changed <span class="h2-note">— all ten shipped across two cycles; the floor moved 38 → 56 / 60</span></h2>
+<section class="edits">
+  <div class="edit"><span class="r done">1</span><p><b>Publish every date the module already knows</b>Six sessions, the hand-in rule, the assessment window. Lifts both floor personas for unrelated reasons. One paragraph.</p></div>
+  <div class="edit"><span class="r done">2</span><p><b>Say who finds the partner — and how a non-Dutch speaker takes part</b>Interpreter, recording plus platform transcription, or an English-speaking firm. Two sentences at the trough.</p></div>
+  <div class="edit"><span class="r done">3</span><p><b>One worked example of a target SME</b>Sector, headcount, region, and the question it is actually asking. It would raise every team’s first proposal.</p></div>
+  <div class="edit"><span class="r done">4</span><p><b>Fix the handbook template’s dead end</b>Give it the same nav bar and point its wordmark home. The smallest edit here, and the only outright inconsistency.</p></div>
+  <div class="edit"><span class="r done">5</span><p><b>Make Dutch-language retrieval an explicit AEL requirement</b>The one edit that turns a diversity problem into the platform’s clearest use case rather than an accommodation for it.</p></div>
+  <div class="edit"><span class="r done">6</span><p><b>State the course language, and add one team-composition rule</b>So that twenty-five minutes of self-selection does not sort the room by who can already talk to whom.</p></div>
+</section>
+
+<footer>
+  <p>
+    <b>Read down the columns, not only across the rows.</b> The two Dutch personas average 39 and the
+    two international personas 40 — indistinguishable. What the totals hide is that the reasons
+    differ: at the stage-04 trough Fenna and Joris are short of dates and a contact route, while
+    Rohan and Giulia are short of a language and a network. Score the totals and the mix looks
+    handled; read the cells and two of the four gaps belong specifically to the international half
+    of the room, and are named nowhere on the site.
+  </p>
+  <p>
+    Full instrument, evidence and caveats: <code>work/drafts/course-site-journeys.md</code>.
+    <strong>Two residuals are not site edits:</strong> the two criterion sets are still unwritten,
+    and the six session dates are derived from the recorded kickoff rather than confirmed.
+    These four students do not exist and were written by the person who built the site —
+    the score that counts is the one a real student gives when they cannot find something.
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
