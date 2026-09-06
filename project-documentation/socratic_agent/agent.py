@@ -14,6 +14,7 @@ Run locally with `adk web` from the parent directory.
 """
 
 import urllib.request
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -22,7 +23,12 @@ from google.adk.tools import agent_tool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.genai import types
 
-INSTRUCTIONS = (Path(__file__).parent / "instructions.txt").read_text(encoding="utf-8")
+# The model's knowledge ends long before the course runs, so without being told
+# the date it reads a 2026 source as dated in the future and reports real work as
+# fabricated — run 5 did exactly that to the fixture's control source.
+INSTRUCTIONS = (Path(__file__).parent / "instructions.txt").read_text(
+    encoding="utf-8"
+).replace("{{TODAY}}", date.today().strftime("%-d %B %Y"))
 
 MAX_BYTES = 2_000_000
 BLOCK_TAGS = {"p", "li", "tr", "br", "div", "h1", "h2", "h3", "h4", "h5", "h6",

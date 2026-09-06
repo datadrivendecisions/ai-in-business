@@ -465,3 +465,63 @@ score drift apart because nothing guarantees they were formed from the same read
 
 This is a design decision rather than a setting, so it belongs in a record before it belongs in the
 console.
+
+---
+
+## Run 5 — 6 September 2026 — verification finally happens
+
+**Model:** `gemini-2.5-flash` on Vertex, `thinking_budget: -1` · **Fetch:** `fetch_page`, a plain
+function · **Input:** the fixture's live raw URL
+
+### What the real fetch bought
+
+The ledger came back with five lines carrying the page's own source names, which is the first time
+the agent has demonstrably read what the team wrote. And the words are real verdicts rather than a
+formality: Microsoft CONFIRMED (it opened the link), **Van der Meer NOT-FOUND**. Google Search
+fired. Four runs of asking whether it would, answered by moving the fetch out of an LlmAgent.
+
+**Both long-standing misses fell in the same run.** The vendor-source rule, missed three times,
+produced question 3 — the team cites Microsoft's own documentation for a claim about Microsoft's
+guarantees, and the question asks what independent source they consulted. The fabricated citation,
+missed three times, is NOT-FOUND in the ledger and is the evidence behind Vetting: 0. Question 4
+also caught the persona mismatch: one office manager who handles all IT, against a recommendation
+needing "someone technical for a weekend".
+
+Three of five tier-1 defects, and a different three than before — the 70% claim and Draghi both
+dropped out this run. With three to five questions and eight defects, coverage varies run to run.
+That is the design working as specified rather than a fault, but it means no single report should be
+read as a complete account of a page.
+
+### The defect this run introduced is worse than the two it fixed
+
+The agent told the team their sources "appear to be dated in the future", marked Stanford HAI
+MISMATCHED and TechRadar NOT-FOUND on that basis, and told the owners that neither "exists at the
+current date". The Stanford HAI AI Index is real; its URL was verified by hand before it went into
+the fixture. It is the control source — the one that proves the agent reads rather than
+carpet-bombs — and the agent shot at it.
+
+The cause is that the model's knowledge ends well before the course runs, so it reads 2026 as the
+future. On real student pages, which will cite current material constantly, this would fire almost
+every week, and a gate that routinely implies teams invented their sources loses the cohort the
+first time it is wrong. The never-accuse guard held in the wording of the question and not in the
+reasoning underneath it.
+
+### Changes made
+
+11. **The agent is told the date.** `agent.py` substitutes `{{TODAY}}` at import, so the
+    instruction now opens by saying what day it is, that the model's knowledge ends before it, and
+    that on what exists the search result decides and memory does not. Being in code rather than in
+    a console field is what makes this possible at all.
+12. **Recency is never grounds for doubt.** A work dated after the model's knowledge ends is a fact
+    about the model. Never tell a team a source is dated in the future; never mark one down for
+    being unfamiliar.
+13. **NOT-FOUND and MISMATCHED are claims about a search that was run**, never about what the model
+    recognises. Not knowing a work is not finding it absent.
+
+### Next run
+
+Same fixture. The ledger should now read Stanford HAI CONFIRMED and TechRadar CONFIRMED or
+UNCHECKED, with Van der Meer still NOT-FOUND — that combination is the one that shows it can tell a
+real recent source from an invented one, which is the discrimination the whole ledger exists for.
+Then, at last, the good-page fixture: every score so far has been 0 or 1, and the rubric has still
+never seen competent work.
