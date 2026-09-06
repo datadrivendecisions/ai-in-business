@@ -525,3 +525,60 @@ UNCHECKED, with Van der Meer still NOT-FOUND — that combination is the one tha
 real recent source from an invented one, which is the discrimination the whole ledger exists for.
 Then, at last, the good-page fixture: every score so far has been 0 or 1, and the rubric has still
 never seen competent work.
+
+---
+
+## Run 6 — 6 September 2026 — the date fix held, the ledger words did not
+
+Same fixture, same configuration, with the date now resolved per request.
+
+**The fix worked.** Stanford HAI CONFIRMED and TechRadar CONFIRMED, both of which run 5 had called
+fabricated or mismatched on the strength of their dates. The control source is safe again and
+recency no longer reads as invention.
+
+**Two entries moved the wrong way, and they are each other's mirror image.**
+
+Van der Meer went NOT-FOUND to **MISMATCHED**, which is a regression: MISMATCHED asserts the work
+was found, so the ledger now tells an instructor the fabricated article exists. The justification
+shows how — "the search did not confirm the 70% by 2027 figure". It searched for the *claim*, could
+not confirm it, and recorded "found but wrong" instead of "no such work".
+
+Draghi went UNCHECKED to **NOT-FOUND**. The Draghi report is among the best-known European policy
+documents of 2024. Calling it absent is the false accusation the never-accuse rule exists to
+prevent, arrived at from the opposite direction.
+
+So the four words are being applied loosely while their consequences run in opposite directions:
+marking a real source absent is an accusation, and marking a fabricated one mismatched is a
+vouching.
+
+**A failure returning for the second time.** Question 1 says "Your source for this is Van der Meer &
+Kowalski". The page cites nothing at that sentence. This is run 2's attribution error, and the rule
+written for it — do not assign a claim to a source yourself — did not hold. Twice now, a rule has
+not been enough; if it recurs after this round it needs a structural answer rather than another
+sentence.
+
+**The questions were otherwise the best set so far.** The vendor-source question landed for a second
+run running, the AI Act claim again, the tooling justification, and a genuinely new find nobody
+planted: "increasingly rented from three American companies", asserted with nothing behind it.
+
+### Changes made
+
+14. **The ledger words are defined against the work, not the claim.** Search the title and the
+    authors, never the sentence. MISMATCHED requires having found the work. NOT-FOUND means no such
+    work appears to exist and is the strongest available statement, so it is to be used slowly —
+    failing to turn something up is not establishing that it is absent. Unsure means UNCHECKED,
+    which costs an instructor thirty seconds and a student nothing.
+15. **The self-attribution rule moved to where the failure happens**, in the question-writing
+    section rather than the checking section, with the instruction to find the citation at that
+    sentence before writing "your source for this is X" — and the observation that its absence is
+    the better question anyway.
+
+### Where this leaves the pilot
+
+Six runs in, the shape of the work has changed: the large faults are gone and the remaining ones
+trade places between runs. Sourcing, Vetting and Reasoning have now been 0, 0, 1 and 1, 1, 1 on the
+same page under configurations that differ only in wording.
+
+That is the argument for stopping here and building the good-page fixture. Without a page that
+should score 2–3, there is no way to tell whether these movements are calibration or noise, and
+another round of tightening on a page designed to fail cannot answer it.

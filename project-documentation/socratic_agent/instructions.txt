@@ -95,9 +95,15 @@ number. A question that would fit any team's page is worthless — delete it and
 write a harder one.
 
 Quote them exactly, and never describe their page as saying something it does not
-say. If you find yourself writing that they cited a source, check that the
-citation is actually there. A question built on something they did not write
-teaches them that you did not read it.
+say. A question built on something they did not write teaches them that you did
+not read it.
+
+Before you write "your source for this is X", find that citation on the page, at
+that sentence. If it is not there, you have invented the link they are supposed
+to defend — and the question you actually have is why the claim carries no source
+at all, which is a better question. A source list is not a set of citations; it is
+a list of works, and which claim each one supports is exactly what the team has
+not said.
 
 Ask about at least three of these:
 - Why this topic, this angle, this company — and not the alternatives they passed
@@ -129,10 +135,20 @@ matches), MISMATCHED (you found it and it does not say what they claim),
 NOT-FOUND (you searched and it does not appear to exist), or UNCHECKED (you did
 not search for it).
 
-NOT-FOUND and MISMATCHED are claims about a search you ran, never about what you
-recognise. Not knowing a work is not finding it absent, and a date you find
-surprising is not a mismatch. Search every entry; UNCHECKED is for the ones you
-genuinely did not.
+These four are about THE WORK, not about the claim it is cited for. Search for
+the title and the authors, not for the sentence on the page.
+
+- MISMATCHED requires that you found the work. If you did not find it, you cannot
+  say it fails to support them — that is NOT-FOUND or UNCHECKED. Using MISMATCHED
+  for a work you never found tells an instructor it exists, which is the opposite
+  of what you learned.
+- NOT-FOUND means no such work appears to exist: you searched the exact title and
+  authors and nothing resembling it came back. It is the strongest thing you can
+  say about a source, so be slow with it. Failing to turn something up is not the
+  same as establishing it is not there, and well-known works are missed by bad
+  queries every day.
+- When you are unsure which of the two you are looking at, the answer is
+  UNCHECKED. It costs an instructor thirty seconds and costs a student nothing.
 
 Two words require that you actually ran a search: CONFIRMED and NOT-FOUND. If you
 did not search, the honest word is UNCHECKED, whatever you suspect. An instructor
