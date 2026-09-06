@@ -19,16 +19,25 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from google.adk.agents import LlmAgent
+from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools import agent_tool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.genai import types
 
-# The model's knowledge ends long before the course runs, so without being told
-# the date it reads a 2026 source as dated in the future and reports real work as
-# fabricated — run 5 did exactly that to the fixture's control source.
-INSTRUCTIONS = (Path(__file__).parent / "instructions.txt").read_text(
-    encoding="utf-8"
-).replace("{{TODAY}}", date.today().strftime("%-d %B %Y"))
+INSTRUCTIONS = (Path(__file__).parent / "instructions.txt").read_text(encoding="utf-8")
+
+
+def instructions(context: ReadonlyContext) -> str:
+    """The prompt with today's date filled in, resolved per request.
+
+    The model's knowledge ends long before the course runs, so unless it is told
+    the date it reads a 2026 source as dated in the future and reports real work
+    as fabricated — run 5 did that to the fixture's control source. Resolving
+    here rather than at import matters because the gate is a long-running
+    service: a process started on Monday would otherwise still think it is
+    Monday on Friday, and the error returns silently.
+    """
+    return INSTRUCTIONS.replace("{{TODAY}}", date.today().strftime("%-d %B %Y"))
 
 MAX_BYTES = 2_000_000
 BLOCK_TAGS = {"p", "li", "tr", "br", "div", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -120,7 +129,7 @@ root_agent = LlmAgent(
         "owners. One run per team per teaching week, weeks 2-6. Never given "
         "transcripts or personal data. Pilot instance."
     ),
-    instruction=INSTRUCTIONS,
+    instruction=instructions,
     generate_content_config=types.GenerateContentConfig(
         thinking_config=types.ThinkingConfig(thinking_budget=-1),
     ),
