@@ -3,95 +3,76 @@ team_03
 ======================================================================
 ## FOR THE TEAM
 
-1.  The page states, "Research shows that around 70% of Dutch SMEs will be using AI tools in their primary process by 2027," citing Van der Meer, J. & Kowalski, T. (2025). AI adoption among Dutch manufacturing SMEs: a longitudinal survey. Our search did not find this specific work in the Journal of European Industrial Policy, Volume 14, Issue 3. Could you clarify where this work is published or provide an alternative reference?
-2.  Your page recommends "Microsoft 365 Copilot — already in the subscription for most firms, no setup, but the data goes to Microsoft." What evidence on the page supports the claim that Microsoft 365 Copilot is "already in the subscription for most firms" and requires "no setup"?
-3.  The page confidently states, "The EU AI Act came into force in 2024" and later makes claims regarding GDPR about customer drawings and emails. What specific sources on the page support these legal claims at the point they are made?
-4.  The page suggests "TechRadar — Why open weights are winning, June 2026" as a source. Our search did not find this article. Could you confirm the exact title and publication details, or point to an alternative source for the claims about open weights driving pricing pressure from Chinese labs?
+*   You state that "Research shows that around 70% of Dutch SMEs will be using AI tools in their primary process by 2027", but the sentence carries no citation at the point where this numerical claim is made. What source would you point to for this figure?
+*   You list "Microsoft — What is the EU Data Boundary?" and "Stanford HAI — AI Index Report 2026" and "TechRadar — Why open weights are winning, June 2026" in your sources. Where in your text would you expect a reader to find these works cited?
+*   You recommend three tooling options: "Microsoft 365 Copilot", "Azure OpenAI Service with EU data residency", and "A local open-weight model". Given your persona of "one office manager who handles all IT", how would that office manager evaluate the "enterprise-grade guarantees" and "contractual data protection" of Azure, or the need for "someone technical for a weekend" for a local open-weight model?
+*   You mention that "The EU AI Act came into force in 2024", but the page does not provide a source for this legal claim. What source would confirm the date this act came into force?
 
 ## FOR THE OWNERS
-Source ledger:
-*   Draghi, M. — The future of European competitiveness. Summarised in NOS coverage, September 2024.
-    *   Cited at: "Mario Draghi's report on European competitiveness makes the argument at continental scale: Europe does not have an invention problem, it has a diffusion problem. New technology is developed here and commercialised elsewhere, and the productivity gap with the United States is mostly explained by the technology sector."
-    *   What your search found: CONFIRMED
-*   Microsoft — What is the EU Data Boundary? [https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn] learn.microsoft.com
-    *   Cited at: Related to "Azure OpenAI Service with EU data residency — enterprise-grade guarantees, contractual data protection, and the region can be pinned to the Netherlands." and general discussion of European cloud providers marketing data residency.
-    *   What your search found: UNCHECKED
-*   Stanford HAI — AI Index Report 2026, chapter 4 on open-weight model performance. We use this rather than a vendor's own benchmark because HAI is university-based, publishes its methodology, and has no model to sell. [https://hai.stanford.edu/ai-index] hai.stanford.edu/ai-index
-    *   Cited at: "Chinese labs in particular have released capable open-weight models with state backing, and this is putting pricing pressure on the closed vendors." and "For our persona the practical consequence is that a local model is becoming a genuine option. Models that run on a single workstation are now good enough for document handling, quotation drafting and email".
-    *   What your search found: UNCHECKED
-*   Van der Meer, J. & Kowalski, T. (2025). AI adoption among Dutch manufacturing SMEs: a longitudinal survey. Journal of European Industrial Policy, 14(3), 221–240.
-    *   Cited at: "Research shows that around 70% of Dutch SMEs will be using AI tools in their primary process by 2027"
-    *   What your search found: NOT-FOUND
-*   TechRadar — Why open weights are winning, June 2026.
-    *   Cited at: Supports the claim "Chinese labs in particular have released capable open-weight models with state backing, and this is putting pricing pressure on the closed vendors."
-    *   What your search found: NOT-FOUND
 
-Sourcing: 1/3. Two cited academic/industry sources (Van der Meer & Kowalski, TechRadar) are NOT-FOUND.
-Vetting: 1/3. The claim "The EU AI Act came into force in 2024" is a confident legal statement made without any citation on the page.
-Reasoning: 2/3. The problem for the SME persona, the two vendor models, and the recommendations are clearly set out.
-Movement: n/a — first report for this team.
+Source ledger:
+Draghi, M. — The future of European competitiveness. Summarised in NOS coverage, September 2024. Cited at: "Mario Draghi's report on European competitiveness makes the argument at continental scale: Europe does not have an invention problem, it has a diffusion problem." UNCHECKED
+Microsoft — What is the EU Data Boundary? [https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn] learn.microsoft.com Cited at: NOWHERE UNCHECKED
+Stanford HAI — AI Index Report 2026, chapter 4 on open-weight model performance. We use this rather than a vendor\'s own benchmark because HAI is university-based, publishes its methodology, and has no model to sell. [https://hai.stanford.edu/ai-index] hai.stanford.edu/ai-index Cited at: NOWHERE UNCHECKED
+Van der Meer, J. & Kowalski, T. (2025). AI adoption among Dutch manufacturing SMEs: a longitudinal survey. Journal of European Industrial Policy, 14(3), 221–240. Cited at: NOWHERE UNCHECKED
+TechRadar — Why open weights are winning, June 2026. Cited at: NOWHERE UNCHECKED
+
+Sourcing: 0 — Several sources are listed but not cited at the point where related claims are made, and key numerical and legal claims lack any citation.
+Vetting: 0 — A numerical claim ("70% of Dutch SMEs") and a legal claim ("EU AI Act came into force in 2024") are stated confidently without inline citations.
+Reasoning: 1 — The team states "The question this chapter answers is therefore not should we start with AI but whose AI are we already running, and what happens to us if that changes," which justifies their focus on vendor dependency and ownership. However, there is no explicit justification for selecting these specific tooling options beyond general statements about their features.
+Movement: n/a — first report for this team
 
 Gate A opens on the first-report rule.
 
 ======================================================================
 team_07_wk2
 ======================================================================
-## FOR THE TEAM
 
-1.  The page states, "We have not spoken to an owner yet — our field visit is in week 3, and until then the persona is a construct and the renewal argument is untested against anyone who has actually made that decision." Given this, how are specific claims such as the office manager spending "roughly a day a week turning drawings and emails into quotations," the availability of Microsoft AI features in "this shop's" licenses, and the assertion that "Microsoft raised what this shop pays and added AI features it did not ask for" grounded in verified information about the persona's actual situation?
-2.  The page proposes that "Switching cost is the real measure of dependency, not who owns the vendor — a European vendor you cannot leave is not sovereignty." Where in the cited Draghi report, or other sources, is this specific definition of dependency, particularly as it relates to SMEs and their sovereignty considerations, directly supported and measured?
-3.  The text claims that when an AI feature appears in existing software, "three things change at once and none of them is announced: what your data is used for, what you pay, and how hard it becomes to leave." What evidence from the software vendors or user agreements specific to regional manufacturing SMEs supports the assertion that these three changes are consistently unannounced?
-4.  You recommend that an SME owner "Put the three biggest on a calendar; that is when you have leverage." How would an owner of a 30-person precision metalworking shop reliably identify which three annual software renewals are the "biggest" in terms of providing maximum leverage, given that the page also describes each renewal as "a small decision that nobody experiences as a strategic one"?
-
-## FOR THE OWNERS
-
-Source ledger:
-Draghi, M. (2024). The future of European competitiveness. European Commission. [https://commission.europa.eu/topics/eu-competitiveness/draghi-report_en] commission.europa.eu — the report itself, not the press coverage of it. Commissioned by the Commission and written by a former ECB president, so it is authoritative on the EU economy and openly political about what Europe should do next; we use it for the diffusion argument and not for prescriptions.: Cited at: "Draghi's report on European competitiveness argues that Europe's productivity gap with the United States is concentrated in technology, and that the problem is diffusion rather than invention: the continent produces research and buys back the products (Draghi 2024, chapter on the innovation gap)." CONFIRMED
-EU AI Act, Article 6 — classification rules for high-risk AI systems. [https://artificialintelligenceact.eu/article/6/] artificialintelligenceact.eu/article/6 — the legislative text. We use the article rather than a summary of it because the summaries we found disagreed with each other about what applies to small firms.: Cited at: "Article 6 sets out how a system is classified as high-risk: either it is a safety component of a product in Annex I, or it appears in Annex III (AI Act, Article 6)." CONFIRMED
-Microsoft. What is the EU Data Boundary? [https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn] learn.microsoft.com — the vendor's own documentation. Used only for where Microsoft stores and processes data, which is a fact the vendor is the right source for, and not for whether the arrangement is adequate.: Cited at: "Microsoft's own documentation on the EU Data Boundary sets out where data is stored and processed." CONFIRMED
-Stanford HAI. AI Index Report. [https://hai.stanford.edu/ai-index] hai.stanford.edu/ai-index — university-based, publishes its methodology, and has no model to sell, which is why we prefer it to a vendor benchmark. Its data is about the industry rather than about Dutch SMEs, so we use it for direction and not for numbers about firms like this one.: Cited at: NOWHERE CONFIRMED
-
-Sourcing: 1 - The Stanford HAI report is listed in the source list but not cited at any specific point in the body. A core argument about "switching cost" is explicitly stated to be "our reading of Draghi plus reasoning" and that the team has "not found anyone who has measured it for firms of this size."
-Vetting: 3 - The team explicitly details three instances where they corrected their platform's initial draft by checking sources and removing unsourced claims ("Our platform's first draft said the EU AI Act 'requires SMEs to complete a conformity assessment before deploying AI'. We checked Article 6 and that is wrong"; "The same draft gave a figure for Dutch SME adoption — 'around 70% by 2027' — with no source"; "We also dropped a source. A 2025 survey on Dutch manufacturing AI adoption turned up in our first search and we could not find the journal it was supposedly published in.").
-Reasoning: 2 - The team clearly states their rationale for choosing the topic and angle, and for passing over others. However, some fundamental claims about the SME's actual situation and the impact of unannounced changes lack external validation, and the team admits that "the persona is a construct and the renewal argument is untested against anyone who has actually made that decision."
-Movement: n/a — first report for this team
-
-Gate A opens because this is the first report for this team.
 
 ======================================================================
 team_07_wk3
 ======================================================================
 ## FOR THE TEAM
 
-Regarding the claim from last week that "switching cost matters more than vendor nationality is our reading of Draghi plus reasoning, and we have not found anyone who has measured it for firms of this size", the page states, "We still think this is right and it holds up in the reading we have done since." What specific reading or evidence would the team point to on this page to support this claim now, given it was previously noted as resting on a single source and reasoning without measurement for this firm size?
+The page states, "On switching cost mattering more than vendor nationality. We still think this is right and it holds up in the reading we have done since." What specific research or evidence would be required to establish this claim as a finding, rather than a reading, for the 30-person precision metalworking shop?
 
-The section "How to buy something nobody has reviewed" offers advice, and then the "What this chapter does not cover" section states, "we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence." What steps would the team take to strengthen the evidence for the buying advice presented, moving it beyond reasoning from what could not be found?
+The page notes, "staff should know when they are reading a machine-generated draft, because a quotation that goes out with a signature on it is a liability whoever drafted it." What specific kinds of liability is the team considering here, and where would an SME owner find more information about these liabilities in the context of machine-generated content?
 
-The page suggests "For this shop the sensitive material is the customer's drawing, and where it may be processed is set by the shop's contract with that customer. That is not a preference the owner can weigh against convenience; it is an obligation they have already signed." What specific part of a typical precision metalworking shop's customer contract would typically establish such a processing clause, and how would an SME owner without legal training identify this obligation?
+In the section "What this chapter does not cover," the team writes, "we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence." How might an SME owner distinguish between advice based on "reasoning from what we could not find" and advice based on evidence, when making a purchasing decision, and what criteria might they apply to trust such reasoning?
 
-In response to last week's feedback, the page clarifies the "transparency obligation" of the EU AI Act, stating: "one is law and one is management, and an owner who confuses them will either over-comply or assume the whole Act is somebody else's problem." What specific, distinct actions would an SME owner take differently knowing this distinction, compared to if they mistakenly viewed both as a single "house rule"?
-
-## FOR THE OWNERS
-## FOR THE TEAM
-
-Regarding the claim from last week that "switching cost matters more than vendor nationality is our reading of Draghi plus reasoning, and we have not found anyone who has measured it for firms of this size", the page states, "We still think this is right and it holds up in the reading we have done since." What specific reading or evidence would the team point to on this page to support this claim now, given it was previously noted as resting on a single source and reasoning without measurement for this firm size?
-
-The section "How to buy something nobody has reviewed" offers advice, and then the "What this chapter does not cover" section states, "we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence." What steps would the team take to strengthen the evidence for the buying advice presented, moving it beyond reasoning from what could not be found?
-
-The page suggests "For this shop the sensitive material is the customer's drawing, and where it may be processed is set by the shop's contract with that customer. That is not a preference the owner can weigh against convenience; it is an obligation they have already signed." What specific part of a typical precision metalworking shop's customer contract would typically establish such a processing clause, and how would an SME owner without legal training identify this obligation?
-
-In response to last week's feedback, the page clarifies the "transparency obligation" of the EU AI Act, stating: "one is law and one is management, and an owner who confuses them will either over-comply or assume the whole Act is somebody else's problem." What specific, distinct actions would an SME owner take differently knowing this distinction, compared to if they mistakenly viewed both as a single "house rule"?
+The page states that "Article 50 is new enough that how it is enforced for small deployers is not yet visible." Given this visibility gap, what specific steps might a 30-person precision metalworking shop take to prepare for potential enforcement or to understand their evolving obligations under Article 50?
 
 ## FOR THE OWNERS
 
-EU AI Act, Article 50: Cited at "Article 50 of the AI Act sets transparency obligations, including that providers of systems generating synthetic text must mark their output as artificially generated in a machine-readable form (AI Act, Article 50)." and "The obligation is Article 50, it is law rather than practice, and it came into force on 2 August 2026 — last month." CONFIRMED
-EU AI Act, Article 6: Cited at "EU AI Act, Article 6 — classification rules for high-risk AI systems...still the article that determines whether any of the heavier obligations apply to this firm." CONFIRMED
-Microsoft. What is the EU Data Boundary?: Cited at "Microsoft's own documentation sets out where its enterprise services store and process data, and for a firm inside the EU Data Boundary the answer is: within it, with stated exceptions the documentation lists. We use the vendor for that because a vendor is the right source for where its own servers are." CONFIRMED
-Stanford HAI. AI Index Report.: Cited at "Stanford's AI Index is useful for the direction of travel on model capability and is not about firms like this one, so we use it for orientation rather than for any number an owner would act on." CONFIRMED
+**Source Ledger**
 
-Sourcing: 2 - The statement "On switching cost mattering more than vendor nationality. We still think this is right and it holds up in the reading we have done since." appears without any specific citation on the page.
-Vetting: 2 - "What this chapter does not cover...we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence."
-Reasoning: 2 - "The third trust question is what this does to the office manager whose week it changes. We are not answering it in this chapter, because our field visit is this week and we would rather ask them than guess."
-Movement: 3 - The team directly addresses each point from last week's gate, revises their understanding of a key legal concept (Article 50), and adapts their approach to a practical problem (buying unreviewed tools) by shifting from appraisal to providing advice on how to proceed without it.
+*   EU AI Act, Article 50 — transparency obligations for providers and deployers of certain AI systems. \[https://artificialintelligenceact.eu/article/50/] artificialintelligenceact.eu/article/50
+    *   Cited at: "Article 50 of the AI Act sets transparency obligations..."
+    *   Found: CONFIRMED
+*   EU AI Act, Article 6 — classification rules for high-risk AI systems. \[https://artificialintelligenceact.eu/article/6/] artificialintelligenceact.eu/article/6
+    *   Cited at: NOWHERE
+    *   Found: CONFIRMED
+*   Microsoft. What is the EU Data Boundary? \[https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn] learn.microsoft.com
+    *   Cited at: "Microsoft's own documentation sets out where its enterprise services store and process data..."
+    *   Found: CONFIRMED
+*   Stanford HAI. AI Index Report. \[https://hai.stanford.edu/ai-index] hai.stanford.edu/ai-index
+    *   Cited at: "Stanford's AI Index is useful for the direction of travel on model capability..."
+    *   Found: CONFIRMED
 
-Gate A opens because Movement is 3 and the total score is 9.
+**Sourcing**: 3
+The team demonstrates good appraisal of their sources, distinguishing between primary legal texts, vendor documentation for specific facts about their own products, and academic reports for general trends. They explicitly acknowledge the limitations of their sources (e.g., for independent evaluations) and state when a source is used for general direction rather than specific figures relevant to the SME. They also explicitly stated they read the legal text after last week's gate showed they had got this wrong from a summary.
+*Weakest evidence*: "EU AI Act, Article 6 — carried over from last week\'s chapter, and still the article that determines whether any of the heavier obligations apply to this firm. They do not." (This source is present in the source list but not explicitly cited to a claim in the body of the current week's page.)
+
+**Vetting**: 3
+The team clearly engaged in vetting, as evidenced by their direct correction of a previous error regarding the EU AI Act's transparency obligation. They also acknowledge the lack of independent evaluations for certain tools and provide advice that derives from this gap, rather than inventing unsupported claims. Furthermore, they explicitly state the limits of their own advice by saying, "we have not tested any of the buying advice above against an owner who has actually bought one of these tools — it is reasoning from what we could not find, which is weaker than evidence."
+*Weakest evidence*: "Last week we called both of these things \"a house rule\" and that was wrong: one is law and one is management, and an owner who confuses them will either over-comply or assume the whole Act is somebody else's problem."
+
+**Reasoning**: 3
+The team clearly outlines their approach by identifying three core trust questions and justifying their decision to defer one of them until they can conduct a field visit. They tailored their advice to the specific SME persona and explained their methodology when evidence was scarce (e.g., "reasoning from what we could not find"). They also provided a clear distinction between legal obligations and internal company rules.
+*Weakest evidence*: "The third trust question is what this does to the office manager whose week it changes. We are not answering it in this chapter, because our field visit is this week and we would rather ask them than guess."
+
+**Movement**: 3
+The team demonstrated significant movement by directly addressing and correcting the feedback from the previous week's gate report. They revised their understanding and presentation of the EU AI Act's transparency obligation and developed a new section ("How to buy something nobody has reviewed") based on the identified lack of independent evaluations.
+*Weakest evidence*: "On calling the transparency obligation \"a house rule\". We were wrong, and the correction changed how this chapter is organised."
+
+Gate A opens because the Movement score is 3 (2 or higher) and the total score is 12 (6 or higher).

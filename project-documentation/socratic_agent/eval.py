@@ -28,7 +28,11 @@ RAW = ("https://raw.githubusercontent.com/datadrivendecisions/ai-in-business/"
 FIXTURES = Path(__file__).parent.parent / "test-fixtures"
 
 VERDICT_WORDS = r"\b(good|bad|strong|weak|thorough|promising|excellent|poor|impressive|well done|great job|solid)\b"
-ADVICE_WORDS = r"\b(you might|you should|consider |try to|it would help|we recommend|I suggest)\b"
+# Advice is the agent proposing an action. "What did you consider" asks about
+# their process and is exactly what the agent is for, so the verbs are matched
+# only in a suggesting frame.
+ADVICE_WORDS = (r"\b(you might|you should|you could try|it would help|we recommend|"
+                r"I suggest|(?<!did )(?<!you )consider (?:adding|using|looking|asking))\b")
 LEDGER_WORDS = ("CONFIRMED", "MISMATCHED", "NOT-FOUND", "UNCHECKED")
 
 CASES = {
@@ -72,7 +76,9 @@ def questions(team_half):
 
 
 def score(owner_half, name):
-    m = re.search(rf"{name}\s*[:\-]?\s*(n/a|[0-3])", owner_half, re.I)
+    # The model bolds these labels about half the time, putting ** between the
+    # colon and the digit.
+    m = re.search(rf"{name}\W{{0,4}}\s*(n/a|[0-3])\b", owner_half, re.I)
     if not m:
         return None
     v = m.group(1).lower()
@@ -94,13 +100,14 @@ def check(case_name, case, text):
     qs = questions(team)
     add(3 <= len(qs) <= 5, "B3: three to five questions", f"{len(qs)}")
 
-    v = re.findall(VERDICT_WORDS, team, re.I)
-    add(not v, "I1: no verdict to the team", ", ".join(sorted(set(v))))
-    a = re.findall(ADVICE_WORDS, team, re.I)
-    add(not a, "I1: no advice to the team", ", ".join(sorted(set(a))))
-    # Quoting the team's own words back is not rubric language, so scan only
-    # outside quotations, and only flag a dimension name used as a score.
+    # Quoting the team's own page back is not the agent's own voice: a question
+    # about a sentence containing "good enough" is not praise. Scan outside
+    # quotations only, for all three.
     unquoted = re.sub(r'"[^"]*"', " ", team)
+    v = re.findall(VERDICT_WORDS, unquoted, re.I)
+    add(not v, "I1: no verdict to the team", ", ".join(sorted(set(v))))
+    a = re.findall(ADVICE_WORDS, unquoted, re.I)
+    add(not a, "I1: no advice to the team", ", ".join(sorted(set(a))))
     s = re.findall(r"\b(Sourcing|Vetting|Reasoning|Movement)\s*[:=]\s*[0-3]|\b(rubric|gate A)\b",
                    unquoted, re.I)
     s = [x for pair in s for x in pair if x]
@@ -118,16 +125,23 @@ def check(case_name, case, text):
             add(isinstance(got, int) and lo <= got <= hi,
                 f"{dim} in {lo}-{hi}", str(got))
 
+    # An entry runs from its source name to whichever source name comes next.
+    # The layout has varied between runs — bulleted, plain lines, verdict on its
+    # own line — so bound the entry by the names rather than by the formatting.
+    names = list(case.get("ledger", {}))
     for source, allowed in case.get("ledger", {}).items():
-        # The ledger is a block per source, not a line: fix 16 added a "cited at"
-        # line, so the verdict sits below the name. Read from the name to the
-        # next name.
-        m = re.search(rf"{re.escape(source)}(.{{0,600}}?)(?=\n\s*[*-]\s+\S|\Z)",
-                      owner, re.I | re.S)
-        entry = m.group(0) if m else ""
+        start = owner.lower().find(source.lower())
+        if start < 0:
+            add(False, f"ledger: {source} -> {'/'.join(allowed)}", "source not in ledger")
+            continue
+        later = [owner.lower().find(n.lower(), start + len(source))
+                 for n in names if n != source]
+        ends = [i for i in later if i > 0] + [len(owner)]
+        entry = owner[start:min(ends)]
         found = [w for w in LEDGER_WORDS if w in entry]
         add(bool(found) and found[0] in allowed,
-            f"ledger: {source} -> {'/'.join(allowed)}", found[0] if found else "not in ledger")
+            f"ledger: {source} -> {'/'.join(allowed)}",
+            found[0] if found else "no verdict in entry")
 
     g = case.get("growth")
     if g:

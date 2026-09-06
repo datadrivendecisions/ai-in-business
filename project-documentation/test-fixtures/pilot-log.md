@@ -682,3 +682,72 @@ under pressure, and tells competent work from weak work. That is the mechanism w
   parsed them and delivered one half to a channel and the other to an instructor.
 - **Consistency.** Eight runs on two pages says the mechanism can work, not that it works every
   week on ten pages written by people who are not trying to test it.
+
+---
+
+## Runs 9–12 — the eval harness, and what four runs of the same inputs show
+
+`../socratic_agent/eval.py` turns the answer keys into assertions and runs all three fixtures:
+invariants pass/fail on every report, expected score ranges per fixture, ledger verdicts, and
+string heuristics for the growth checks. Four runs were made while the harness itself was being
+debugged, which turned out to be the more useful experiment — the same three inputs, four times,
+against an unchanged agent.
+
+### The harness was wrong more often than the agent
+
+Six of the first eight failures were defects in the checker, not the gate: it read the ledger a line
+at a time after fix 16 made entries multi-line; it flagged "good" and "consider" inside quotations
+of the team's own page; it missed scores when the model bolded the labels; and it counted a topic
+reappearing as a repeated question when the report was explicitly building on last week's answer.
+Every one of those would have been reported as an agent fault by anyone reading the summary line.
+
+An eval that has not itself been checked against a report you have read by hand is a machine for
+generating confident wrong answers about your system.
+
+### The harness also found a defect in a fixture
+
+Team 07's week 2 page listed Stanford HAI in its sources and cited it nowhere in the body — which
+the agent noticed once fix 16 required it to record where each source is cited, and which scored
+Sourcing down to 1. That is correct behaviour on a flawed exemplar. The page now cites it, and the
+run-8 result that gave it Sourcing 3 was reading a page that did not deserve it.
+
+### What is stable
+
+- **The growth test passes every time.** Team 07 week 3 with history: Sourcing 3, Vetting 3,
+  Reasoning 3, **Movement 3**, in all four runs. It returns to the ducked claim every time, names it
+  as a return every time, and does not re-ask the two questions the page answered. The dimension
+  that had never been exercised is the most reliable one measured.
+- **The invariants hold.** No verdict, no advice, no score language, no other team named — in every
+  run that produced output, once the checker stopped flagging the team's own quoted words.
+- **Direction is right every time.** The weak page scores 0–1, the strong pages 2–3. The gate has
+  never once confused them.
+
+### What is not stable
+
+- **The numbers move.** Team 03 Sourcing across runs: 1, 1, 0, 0. Vetting: 1, 0, 0, 0. Team 07 week
+  2 Sourcing: 3, 1, 2. A two-point swing on identical input.
+- **One ledger verdict took three values.** Van der Meer, the invented reference, came back
+  NOT-FOUND, then MISMATCHED, then UNCHECKED on the same page. Only the first is right, and the
+  middle one vouches for work that does not exist.
+- **One run in twelve returned nothing at all.** Team 07 week 2, fourth run: an empty response, no
+  error. In production that team gets no report and nobody knows unless someone counts. The PRD
+  already requires a weekly confirmation that N reports landed; this is what it is for.
+
+### What this means for the design
+
+The score is a signal to an instructor, which is all §6.4 asks of it, and as a signal it works: high
+for good work, low for weak work, every time. It is not a measurement, and the gate threshold does
+arithmetic on it — Movement ≥ 2 and total ≥ 6. On these fixtures the *decision* was stable even
+where the numbers were not, because the gap between a good page and a weak one is far wider than
+the noise. A page near the boundary would be decided by that noise, and the override in LRD §6.6
+exists for precisely that case.
+
+Worth noting that the threshold has still never closed a gate: every run so far has opened on the
+first-report rule or on a comfortable pass.
+
+### Next
+
+- Run the eval three times in a row and treat a defect as real only when it recurs. One run is an
+  anecdote, and four runs of debugging made that plain.
+- The empty response needs a retry in whatever calls the agent, and the weekly count needs an owner.
+- Nothing here has yet been tested on a page written by someone who was not trying to test it.
