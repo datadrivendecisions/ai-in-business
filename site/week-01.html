@@ -405,6 +405,185 @@ tr.wk-now { background: var(--bg-yellow); }
   color: var(--text-secondary);
 }
 .aside strong { color: var(--text-primary); }
+/* --- cycle 2: the now board — status strip, do-now panel, orientation rail --- */
+
+/* Status strip: what is live and what is next, directly under the nav */
+.status-strip {
+  background: var(--supporting); color: var(--bg-page);
+  padding: var(--space-2) var(--space-8); font-size: var(--text-sm);
+}
+.status-strip-inner {
+  max-width: 1180px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-2) var(--space-6);
+}
+.status-now {
+  background: var(--primary); color: var(--supporting);
+  font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--text-xs); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.status-strip strong { color: var(--primary); }
+.status-quiet { color: var(--border-strong); }
+.status-last { margin-left: auto; color: var(--border-strong); }
+
+/* Two-column layout: the page, and a rail that stays with it */
+.bds-layout {
+  max-width: 1180px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+  display: grid; grid-template-columns: minmax(0, 1fr) 288px;
+  gap: var(--space-12); align-items: start;
+}
+.bds-layout > main { min-width: 0; }
+/* The rail itself does not stick. Pinning all 1104px of it put the last cards
+   permanently below the fold, and capping it into its own scroller only hid
+   them behind a second scrollbar nobody knows to look for. Instead the
+   orientation cards scroll away with the page — a reader meets every one of
+   them on the way past — and only the contents list stays pinned.
+   It stretches to the full row so the sticky child has a tall containing
+   block; without this the list would come unstuck after ~1100px. */
+.bds-rail {
+  align-self: stretch;
+  min-width: 0; display: flex; flex-direction: column; gap: var(--space-4);
+}
+.rail-toc {
+  position: sticky; top: calc(var(--space-16) + var(--space-6));
+  z-index: 1;  /* the cards below it in the source slide behind, not over */
+  /* .rail-card declares no background, so a pinned one is transparent and the
+     cards passing behind it read straight through. It has to be opaque. */
+  background: var(--bg-page);
+  /* Only bites if the contents list ever outgrows the screen; at nine
+     entries it is 331px and no scrollbar appears. */
+  max-height: calc(100vh - var(--space-16) - var(--space-6) - var(--space-4));
+  overflow-y: auto;
+}
+.rail-card {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6);
+}
+.rail-card.is-cream { background: var(--bg-cream); border-color: var(--border-strong); }
+.rail-card > :last-child { margin-bottom: 0; }
+.rail-card p { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.rail-card p strong { color: var(--text-primary); }
+.rail-h {
+  margin: 0 0 var(--space-3); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-secondary); font-weight: 700;
+}
+.rail-facts {
+  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4); font-size: var(--text-sm);
+}
+.rail-facts dt { color: var(--text-secondary); }
+.rail-facts dd { margin: 0; font-weight: 700; }
+.rail-links { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm); }
+.rail-links a { color: var(--text-secondary); }
+.rail-note {
+  border-left: 4px solid var(--primary); background: var(--bg-yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: var(--space-3) var(--space-4);
+}
+.rail-note p { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* "Do this now" — the three things the first session needs */
+.do-now {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  overflow: hidden; margin: var(--space-8) 0;
+}
+.do-now-head {
+  background: var(--bg-cream); border-bottom: 1px solid var(--border-strong);
+  padding: var(--space-3) var(--space-6);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3);
+}
+.do-now-head h2 { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+.do-now-head span { font-size: var(--text-sm); color: var(--text-secondary); }
+.do-now ol { list-style: none; margin: 0; padding: 0; counter-reset: donow; }
+.do-now li {
+  counter-increment: donow; margin: 0;
+  display: flex; gap: var(--space-4); align-items: flex-start;
+  padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border);
+}
+.do-now li:first-child { border-top: none; }
+.do-now li::before {
+  content: counter(donow); flex: 0 0 1.75rem; height: 1.75rem;
+  border-radius: var(--radius-full); background: var(--primary); color: var(--supporting);
+  font-weight: 700; font-size: var(--text-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.do-now li > div { min-width: 0; }
+.do-now li p { margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Week map: one card a week, the live one marked */
+.wk-map {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--space-3); margin: var(--space-6) 0;
+}
+.wk-card {
+  border: 1px solid var(--border); border-top: 5px solid var(--border);
+  border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4);
+}
+.wk-card.is-now {
+  border-color: var(--border-strong); border-top-color: var(--primary);
+  background: var(--bg-yellow);
+}
+.wk-card-date { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.wk-card h3 { margin: var(--space-1) 0 var(--space-2); font-size: var(--text-base); line-height: 1.3; }
+.wk-card p { margin: 0 0 var(--space-2); font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.55; }
+.wk-card p strong { color: var(--text-primary); }
+.wk-card > :last-child { margin-bottom: 0; }
+.wk-card .wk-more { font-size: var(--text-sm); font-weight: 700; }
+.wk-card .tpl { font-size: var(--text-xs); }
+
+/* The two things that carry the mark */
+.marks { display: flex; flex-wrap: wrap; gap: var(--space-4); margin: var(--space-6) 0; }
+.mark {
+  flex: 1 1 240px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md); padding: var(--space-4) var(--space-6);
+}
+.mark.is-dark { background: var(--supporting); border-color: var(--supporting); color: var(--bg-page); }
+.mark.is-dark p { color: var(--cream); }
+.mark.is-dark .mark-figure { color: var(--primary); }
+.mark-figure { font-size: var(--text-3xl); font-weight: 700; line-height: 1; }
+.mark-what { font-weight: 700; margin: var(--space-2) 0 var(--space-1); }
+.mark p { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Plain tiles — the build roles */
+.tiles {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3); margin: var(--space-4) 0 var(--space-6);
+}
+.tile { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); }
+.tile.is-quiet { background: var(--bg-off-white); }
+.tile > :last-child { margin-bottom: 0; }
+.tile p { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.tile p strong { color: var(--text-primary); }
+.tile-name { font-weight: 700; margin-bottom: var(--space-1); }
+.tile p.card-kicker { font-size: var(--text-xs); margin-bottom: var(--space-1); }
+
+/* Variants of existing blocks the now board needs */
+.cards.cards-auto { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.callout.is-warm { background: var(--bg-yellow); }
+ol.steps.steps-quiet > li::before {
+  background: var(--bg-cream); border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  .bds-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  /* Stacked below the page, the rail is just another block: no pinning, no cap. */
+  .bds-rail { align-self: auto; }
+  .rail-toc { position: static; max-height: none; overflow: visible; }
+}
+@media (max-width: 640px) {
+  .status-strip { padding: var(--space-2) var(--space-4); }
+  .status-last { margin-left: 0; }
+  .bds-layout { padding: var(--space-8) var(--space-4) var(--space-12); }
+  .do-now-head { padding: var(--space-3) var(--space-4); }
+  .do-now li { padding: var(--space-3) var(--space-4); }
+  .rail-card { padding: var(--space-4); }
+  .rail-facts { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .rail-facts dd { margin-bottom: var(--space-2); }
+}
 </style>
 </head>
 <body>
