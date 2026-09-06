@@ -68,6 +68,35 @@ asked of it is whether a work exists.
 adk web        # from project-documentation/, then open the printed URL
 ```
 
+## Running a week
+
+[`socratic_agent/run_week.py`](socratic_agent/run_week.py) takes a roster of teams and writes two
+files each — see [`socratic_agent/roster-example.tsv`](socratic_agent/roster-example.tsv) for the
+format, which is `team<TAB>url<TAB>[prior report]`.
+
+```
+cd socratic_agent
+set -a && . ./.env && set +a
+python run_week.py roster.tsv --week 2 --out ../gate-reports
+```
+
+It prints a table — scores, gate signal, ledger flags, one line per team — and writes
+`<team>-for-the-team.md` and `<team>-for-the-owners.md`. **Only the first may be forwarded.**
+Nothing is sent anywhere by the script: forwarding is a person's job, because the one unrecoverable
+mistake in this system is the owners' half reaching a student, and it should take a deliberate act.
+
+It retries a team twice on an empty response, in a fresh session each time — one run in twelve came
+back empty during the pilot with no error — and exits non-zero naming any team it could not produce
+a report for. That exit code is the weekly confirmation the PRD asks for.
+
+**Why this is a script and not a page on the site.** A tool that calls the agent needs a key and a
+network call. `site/` is a public URL from a public repository; its tool exception allows JavaScript
+only for pages that are self-contained and make no network calls; and the instructor view is
+signposting rather than access control, so "instructor-only" is not a property a page there can
+have. The rubric is tier-1 material and may not enter `site/` in any form. ADR-0014 weighed this as
+option B and declined it; a front end would need a record that supersedes or extends it, not a page
+that quietly contradicts it.
+
 ---
 
 ## Notes on the choices above
