@@ -89,6 +89,18 @@ It retries a team twice on an empty response, in a fresh session each time — o
 back empty during the pilot with no error — and exits non-zero naming any team it could not produce
 a report for. That exit code is the weekly confirmation the PRD asks for.
 
+## Running it as a service
+
+`run_week.py` is the manual route. [`socratic_agent/service/`](socratic_agent/service/) is the
+scheduled one: Cloud Run reads the roster from Firestore, runs each team, and writes the two halves
+to two collections so that a permission boundary keeps them apart rather than a careful person. One
+Cloud Scheduler job per teaching week — **the schedule is the deadline**, and there is no endpoint
+that reruns a team because its page was late. [`service/DEPLOY.md`](socratic_agent/service/DEPLOY.md)
+has the commands and the three decisions to take first.
+
+Keeping the manual route is not sentiment: every automated step in this module keeps one, and a
+team whose page was published late still has to be gradeable by hand.
+
 **Why this is a script and not a page on the site.** A tool that calls the agent needs a key and a
 network call. `site/` is a public URL from a public repository; its tool exception allows JavaScript
 only for pages that are self-contained and make no network calls; and the instructor view is
