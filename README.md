@@ -26,10 +26,23 @@ the project started with, so that the address says what the course is; links to 
 - [`site/handbook.html`](site/handbook.html) — the handbook's **template**: the shell every cohort fills (start here, the theme index, the chapter anatomy, tooling, ecosystem, quality bar and disclaimer). The programme design the handbook page used to carry — mission, curriculum, seven themes with readings, partners, roadmap — is superseded by the LRD and lives only in git history; the handbook's own requirements come from the PRD each team writes in AEL
 - [`site/integrated-lrd.html`](site/integrated-lrd.html) — the integrated learning-requirements document for AIBS and AEL, published at https://datadrivendecisions.github.io/ai-in-business/integrated-lrd.html so it can be shared by link; its Appendix A records the module as it runs today. Written for the module owners, not for students; the landing page links it from a *For the module owners* section that only appears with `?instructor`, and the handbook does not link it at all.
 
+#### Two audiences on one site
+
+Every page in `site/` is written for students. The one exception is marked
+`data-audience="instructor"` and stays hidden unless the address carries `?instructor` —
+<https://datadrivendecisions.github.io/ai-in-business/index.html?instructor> is the landing page
+with its *For the module owners* section showing.
+
+That is **signposting, not access control**: the markup is public either way. So anything whose
+worth depends on a student not having read it — a reveal, a withheld manipulation, a hidden rubric,
+an answer key — is not in `site/` at all; it lives in `project-documentation/` or `work/`. Full
+rules and how to add a section: [`project-documentation/instructor-view.md`](project-documentation/instructor-view.md).
+
 ### `project-documentation/` — internal
 - `module-redesign-sketches.md` — three paired sketches for splitting the current module into a business/society module and a technical sister module
 - `Voorstel Handbook DIAIA .pdf` — the original proposal
 - [`project-documentation/lrd-logbook.md`](project-documentation/lrd-logbook.md) — what changed in the LRD and why, per version. The LRD itself carries only a version number and date.
+- [`project-documentation/instructor-view.md`](project-documentation/instructor-view.md) — the instructor view: the `?instructor` address, which pages carry it, what may and may not go behind it, and how to add a section to a page
 
 These are in the repo but not on the site. The LRD refers to them, and to the decision
 records, by their GitHub URLs, so those links work from the published page.

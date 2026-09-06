@@ -146,7 +146,10 @@ not the same rule:
 
 The query parameter is **signposting, not access control**. The content is in the HTML either way,
 and view-source defeats it in one click — it keeps instructor material out of a student's way, not
-out of their reach. The first rule is the one that protects anything.
+out of their reach. The first rule is the one that protects anything. The mechanism, the pages that
+carry it and how to add a section to one are written up for the teaching team in
+[`project-documentation/instructor-view.md`](project-documentation/instructor-view.md); keep it and
+this section in step.
 
 **Brand system.** Every HTML file carries its own inlined copy of the Business Data Solutions
 palette — identical `:root` custom-property blocks, ~24 tokens for colour, type scale, spacing,
