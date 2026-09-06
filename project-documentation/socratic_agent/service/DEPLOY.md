@@ -1,5 +1,10 @@
 # Deploying the weekly gate
 
+> **Deployed 6 September 2026.** Project `ai-in-business-507819`, region `europe-west4`, service
+> `socratic-gate`, five scheduler jobs for weeks 2–6 **created and paused**. The roster holds the
+> two test fixtures, not a cohort. What remains before it can run for real: replace the roster,
+> unpause the weeks, set a budget, and add a second owner to the project.
+
 ADR-0014's scheduled pull, with the parts named: Firestore holds the roster the record calls
 infrastructure, Cloud Scheduler is the clock, and Cloud Run runs the agent. Nothing about the
 architecture changes — the agent's only input is still a page that is already public, which is what
@@ -103,3 +108,33 @@ curl -X POST "http://localhost:8080/run?week=2"
 
 Expect team 03 to score low with a NOT-FOUND in its ledger, team 07 to score 2–3 with everything
 confirmed. `../../test-fixtures/README.md` holds what each fixture should produce.
+
+## The state as deployed
+
+| | |
+|---|---|
+| Project | `ai-in-business-507819` (349006826805) |
+| Region | `europe-west4`, Firestore and Cloud Run both |
+| Service | `socratic-gate`, `--no-allow-unauthenticated` |
+| Service account | `socratic-gate@…`, `datastore.user` + `aiplatform.user` + `run.invoker` |
+| Schedule | Mondays 07:00 Europe/Amsterdam, weeks 2–6, **paused** |
+| Roster | two test fixtures |
+
+Verified end to end on deployment: `POST /run?week=2` produced a report for each fixture, the weak
+page scoring 1/1/1 and the strong page 2/3/2, and the two halves landed in `reports/` and
+`owner_reports/` with no score, ledger word or gate signal anywhere in the team-facing documents.
+
+The jobs are paused because the roster is fixtures. A job that fires on a Monday nobody expects is
+noise, and noise teaches people to ignore the thing that is supposed to tell them a run failed.
+
+### Before a cohort
+
+1. Replace the roster: one `teams/{id}` document per team, `url` + `name` + `active: true`. Delete
+   the two `fixture-*` documents, and the reports they produced.
+2. `gcloud scheduler jobs resume socratic-gate-week-NN --location=europe-west4` per week, once the
+   publication deadline that week's run sits behind is agreed and on the week page.
+3. Set a budget on the project. Cloud Billing alerts rather than stops, so this is the monitored
+   ceiling ADR-0009 asks for and not the hard cap it promises.
+4. Add a second owner. The project has one, and it is a personal account — ADR-0015's ownership
+   consequence, now holding a database of student work.
+5. Build the delivery job, granted `reports/` and refused `owner_reports/`.
