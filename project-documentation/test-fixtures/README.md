@@ -170,3 +170,68 @@ manufacturing something:
   sources the page already appraises.
 - Praise. A page this much better than team 03 is where the no-verdict rule is under the most
   pressure, and "this is well sourced" is a verdict however kindly meant.
+
+---
+
+# Answer key — `week-03-team-07.html` (the growth test)
+
+**What this pair tests.** Movement, and the growth requirement at the centre of LRD §6.4 — that a
+report is generated against the team's full prior history, never repeats a question already
+answered, and never lets a team coast on one that has not been. Eight runs have all been cold
+starts, so this dimension has never once been exercised.
+
+## How to run it
+
+**Fresh session.** Supply two things and nothing else:
+
+1. The week 3 page: `week-03-team-07.html`.
+2. The team's prior history: [`week-02-team-07-report.txt`](week-02-team-07-report.txt) — the
+   questions the team received in week 2.
+
+Give only the team-facing half as history. The owners' half, with its scores, is never part of a
+team's record: a report that carries last week's score into this week's questions has smuggled the
+rubric into the student-facing channel by another route.
+
+Note that week 3 is a **new page on a new theme**, not a revision of week 2 — the course publishes
+one page per team per week and never edits an earlier one. So movement has to be visible in how the
+team works, not in a rewritten page, which is exactly what the gate must be able to see.
+
+## What the page does with each of last week's three questions
+
+| Week 2 question | What the page does | What the report must do |
+|---|---|---|
+| The transparency obligation called "a house rule" | **Answered, and then some.** They looked up Article 50, found it is law and in force since 2 August 2026, separated the provider's obligation from the shop's own staff rule, and rebuilt a section around the correction. | Must not ask it again. Movement evidence. |
+| Specialist tools they could not appraise | **Answered.** They went back, established that no independent evaluation exists, and turned that into buying advice an owner can use without one. | Must not ask it again. Movement evidence. |
+| The single-source claim about switching cost | **Ducked, and dressed as an answer:** "We still think this is right and it holds up in the reading we have done since." No source, no evidence, no reading named. | **Must return to it, harder, and say that it is a return.** |
+
+The third row is the test. Ducking that looks like ducking is easy to catch; this is the form a
+capable team actually uses, and a gate that accepts it will be gamed by exactly the teams the
+mechanism exists for.
+
+## Expected
+
+**Movement 3.** Two questions genuinely answered, one of them by correcting a substantive error
+against the legislative text. **Sourcing 3, Vetting 3, Reasoning 2–3** — the page carries the same
+appraisal discipline, hedges its legal reading, and admits what it has not tested. **Gate A opens**
+on the score this time rather than on the first-report rule, which is itself worth checking: the
+threshold is Movement ≥ 2 and total ≥ 6, and this is the first run where those numbers do any work.
+
+**The ledger:** four entries, all CONFIRMED, all four cited in the body.
+
+## What would show the growth requirement is not working
+
+- **Any question that repeats one of last week's three**, particularly the transparency obligation,
+  which the page addresses at length.
+- **Silence on the ducked claim.** If the switching-cost question is not returned to, the gate
+  rewards the sentence "we still think this is right", and AC-05's 90% bar is unreachable.
+- **A return that is not named as one.** §6.4 requires the team to see that it is being asked again;
+  an unmarked repeat reads as the agent having forgotten.
+- **Movement scored from the page's tone** rather than from what changed — a report that praises the
+  block for existing without checking whether the three questions were actually addressed.
+- **Movement n/a**, which would mean the history was not read at all.
+
+## Fresh material, so the report is not only about last week
+
+Two genuine gaps are new this week, and a good report has room for one of them: the people question
+is deferred to week 5 by choice, and the buying advice is reasoning from an absence of evidence
+rather than from evidence — the page says so, and says it is weaker for it.
