@@ -104,7 +104,9 @@ designed to earn it.
 
 ## How to run it
 
-Exactly as team 03: full text, cold start, no prior reports. Then compare the two reports side by
+Exactly as team 03: full text, cold start, no prior reports. **Start a new session first.** Run 7
+was given this page and reported on team 03, because the earlier page was still in the conversation
+history and the model answered from it rather than fetching. Then compare the two reports side by
 side. The single question this fixture answers is whether the gate can tell competent work from
 weak work, and that is visible in the scores rather than in the questions.
 

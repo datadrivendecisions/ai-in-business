@@ -582,3 +582,55 @@ same page under configurations that differ only in wording.
 That is the argument for stopping here and building the good-page fixture. Without a page that
 should score 2–3, there is no way to tell whether these movements are calibration or noise, and
 another round of tightening on a page designed to fail cannot answer it.
+
+---
+
+## Run 7 — 6 September 2026 — reported on the wrong page
+
+Given team 07's URL, the agent produced a report about **team 03**. Every distinguishing marker in
+it belongs to the weak fixture — the 70% sentence, Van der Meer, TechRadar, Azure OpenAI, the GDPR
+line — and none to team 07, which has none of them. Team 07's URL returns 200 and 11,232 bytes, so
+the page was reachable. The run was almost certainly made in the same ADK session as the one
+before, leaving the earlier page in the conversation history; the model answered from it and never
+called `fetch_page`.
+
+**This is a production risk, not a testing mishap.** A workflow that reuses a session across teams
+sends team B a report about team A's page. That breaches the one invariant with a named victim —
+never mention another team — in the worst available way, and the team receiving it has no way to
+know the questions are not about their work.
+
+### The ledger, though, is the best of the pilot
+
+Read against team 03, which is what it actually assessed:
+
+| Source | Verdict | Correct |
+|---|---|---|
+| Microsoft | CONFIRMED | yes |
+| Stanford HAI | CONFIRMED | yes |
+| Van der Meer | NOT-FOUND | yes — back from MISMATCHED |
+| TechRadar | NOT-FOUND | yes — that article is invented too |
+| Draghi | UNCHECKED | acceptable; the entry names a summary, not the report |
+
+Fix 14 did what it was written for: no vouching for invented work, and NOT-FOUND no longer landing
+on the Draghi report. Four correct verdicts and one honest abstention is the first ledger worth
+trusting.
+
+### The attribution failure, third occurrence
+
+Question 1 again told the team their source for the uncited 70% claim was Van der Meer — in the
+same report whose ledger says that work does not exist. Two rounds of rules have not fixed it, which
+is what run 6 said would trigger a structural answer rather than a third sentence.
+
+### Changes made
+
+16. **The ledger now states where each source is cited**, quoting the few words of the sentence that
+    cites it or writing NOWHERE, before anything else and by looking rather than guessing. A source
+    cited NOWHERE supports nothing and no claim may be attached to it, in the ledger or in a
+    question. The model has to make the observation that contradicts the mistake before it is in a
+    position to make it.
+17. **Always fetch, even when a page is already in context.** Report only on the page given in the
+    message being answered; an earlier page belongs to another team or another week.
+
+### Next run
+
+Team 07, **in a fresh session**. The discrimination test has still not been run.
