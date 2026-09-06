@@ -128,8 +128,12 @@ to write against §6.2 — the gate is judged the way we teach them to judge.
 
 ## 4. Known constraints
 
-- **Pull only.** The single input is the team's published page URL. No text box, no upload, no
+- **Pull only.** The single input is the team's published page. No text box, no upload, no
   student authentication, nothing student-supplied beyond what is already public.
+- **The workflow fetches, not the agent.** Gemini Enterprise's URL Context tool returns a summary
+  rather than the page, and a summary drops the source list and rewrites the team's sentences —
+  see run 4 in `test-fixtures/pilot-log.md`. The agent must receive full text, or the questions
+  quote words no student wrote.
 - **That boundary is what keeps NFR-11.** Interview material cannot reach the model service
   through this gate, because the gate cannot be handed anything. Do not add an input that breaks it.
 - **One scheduled run a week**, weeks 2–6. The schedule is the protocol (§6.4).

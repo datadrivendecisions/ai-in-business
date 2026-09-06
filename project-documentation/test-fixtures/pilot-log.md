@@ -344,3 +344,71 @@ they honestly used is a worse failure than missing one they did invent — worse
 worse for the gate's standing the first time it happens in front of a cohort. Added to the
 configuration: a source you cannot find is not a fabricated source, never say or imply to a team
 that a source is fake, ask them where they found it and what it says.
+
+---
+
+## Run 4 — 6 September 2026 — the agent never saw the page
+
+**Fixture:** the raw GitHub URL · **Model:** `gemini-2.5-flash`, `thinking_budget: 0` ·
+**Tools declared:** `UrlContextAgent`, `GoogleSearchAgent` · **Prompt tokens:** 2966 ·
+**Output:** 576
+
+The full trace, rather than the reply alone, is what made this run worth more than the three
+before it.
+
+### URL Context is a summariser, not a fetch
+
+`UrlContextAgent` is a sub-agent, and what it returned is a prose summary of the page. **The
+summary contains no source list at all** — Van der Meer, Stanford HAI, the Microsoft link, Draghi
+and TechRadar are all absent, because the summariser dropped the section. The agent then scored a
+page it had never read.
+
+Everything wrong with the report follows from that one fact:
+
+- **The ledger is confabulated.** Its three entries are claims from the body, not sources, all
+  marked NOT-FOUND. The page's four actual sources appear nowhere, because the agent never saw
+  them. NOT-FOUND asserts a search that did not happen.
+- **The quotations are not the team's words.** The report quotes "This is increasingly relevant in
+  2026, as approximately 70%…", which appears nowhere on the page; the team wrote "Research shows
+  that around 70% of Dutch SMEs will be using AI tools in their primary process by 2027". Run 2's
+  attribution failure is back, caused this time by the architecture rather than the model, and no
+  prompt rule can catch it — the agent is quoting faithfully from what it was given.
+- **A question about a choice the team did not make.** It asks why CRISP-DM rather than another
+  project-management approach. CRISP-DM is prescribed by the handbook template.
+
+### Google Search has never fired
+
+`GoogleSearchAgent` is declared and was not called, in this run or any earlier one. That closes the
+question left open after run 3: the tool is available and the model does not reach for it. With
+`thinking_budget: 0` there is no planning step in which it would decide to.
+
+### Also learned from the trace
+
+The platform appends the Description field to the system instruction — "You are an agent. Your
+internal name is… The description about you is…". The description is therefore live context, not
+routing metadata, which is a reason to keep it short and accurate rather than promotional.
+
+### Changes made
+
+9. **The page must arrive as full text.** If the agent has only a URL or only a summary it replies
+   with the single line CANNOT READ THE PAGE. Failing loudly is worth more than a plausible report
+   built on a summary, which is what this run produced and what nobody would have caught without
+   the trace.
+10. **The ledger lists sources, never claims** — one line per entry in the page's own source list,
+    named as the page names it, or "no source list on the page". CONFIRMED and NOT-FOUND now
+    explicitly require that a search was run; UNCHECKED is the honest word otherwise.
+
+### What this changes about the design
+
+ADR-0014 has the agent read the published page. On this platform the fetch has to sit in the
+workflow instead: it retrieves the page and passes the text, and the agent never holds a URL. The
+architecture is unaffected — the input is still a page that is already public, so NFR-11 holds
+exactly as before — but the layer that fetches is now decided, and decided against the tool that
+looked purpose-built for it.
+
+### Next run
+
+Workflow fetches, agent gets full text, URL Context off. Then look at the ledger first: it should
+carry five lines naming the page's own sources, and if they are all UNCHECKED the search problem is
+confirmed as the remaining one. Raise `thinking_budget` above 0 before concluding anything about
+Google Search — a model with no planning budget was never going to call a tool it was not forced to.
