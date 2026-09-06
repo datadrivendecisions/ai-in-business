@@ -46,6 +46,7 @@ decision — the point is to force a yes or a no, not to host an open question.
 | 0012 | [A sector per team, and what stays invariant when the sectors differ](0012-sector-allocation.md) | Proposed |
 | 0013 | [Where work is handed in — HANDIN, Teams, or one route per artefact](0013-hand-in-routes.md) | Proposed |
 | 0014 | [How the Socratic gate runs — the platform, and what carries the traffic](0014-socratic-gate-architecture.md) | Proposed |
+| 0015 | [What the Socratic gate runs on — the no-code canvas or a service we own](0015-gate-runtime.md) | Proposed |
 
 ADR-0001 is the keystone. ADR-0002, ADR-0003 and ADR-0006 follow from it and
 should not be accepted before it is.
