@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #111827; background: #ffffff; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  * { box-sizing: border-box; }
+  a { color: #111827; text-decoration: underline; text-decoration-color: #d4db3e; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { background: #fafbf0; }
+  summary::-webkit-details-marker { display: none; }
+</style>
+</helmet>
+
+<div style="max-width: 100%; overflow-x: hidden;">
+
+<nav style="position: sticky; top: 0; z-index: 100; background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 14px 20px;">
+  <div style="max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px;">
+    <a href="index.html" style="display: inline-flex; align-items: center; gap: 12px; text-decoration: none;">
+      <svg width="30" height="30" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions" style="flex-shrink: 0;">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"></polygon>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"></polygon>
+          <rect x="11" y="5" width="6" height="3.5"></rect>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"></path>
+          <rect x="13.5" y="0" width="1" height="1.8"></rect>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"></rect>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"></path>
+          <path d="M26 4 L31 7 L26 10"></path>
+        </g>
+      </svg>
+      <span>
+        <span style="display: block; font-weight: 700; font-size: 19px; line-height: 1.2;">AI in Business</span>
+        <span style="display: block; font-size: 12px; color: #4b5563; line-height: 1.3;">HAN · minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px;">
+      <a href="week-01.html" style="color: #4b5563;">Week 1</a>
+      <a href="handbook.html" style="color: #4b5563;">Handbook</a>
+      <a href="#programme" style="color: #4b5563;">Programme</a>
+      <a href="#assessment" style="color: #4b5563;">Assessment</a>
+      <a href="#tools" style="color: #4b5563;">Tools</a>
+      <a href="#practical" style="color: #4b5563;">Dates</a>
+    </span>
+  </div>
+</nav>
+
+<sc-if value="{{ statusStrip }}" hint-placeholder-val="{{ true }}">
+<div style="background: #1a1a1a; color: #ffffff; padding: 10px 20px;">
+  <div style="max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline; font-size: 13px;">
+    <span style="background: #d4db3e; color: #1a1a1a; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; padding: 3px 8px; border-radius: 4px;">Week 1 · live</span>
+    <span>Next session <strong style="color: #d4db3e;">Mon 7 Sep</strong>, about four hours</span>
+    <span style="color: #d1d5db;">Next hand-in: week 1 drafts, Mon 14 Sep</span>
+    <span style="color: #d1d5db; margin-left: auto;">Later weeks are published about a week ahead</span>
+  </div>
+</div>
+</sc-if>
+
+<div style="max-width: 1180px; margin: 0 auto; padding: 36px 20px 40px; display: flex; flex-wrap: wrap; gap: 44px; align-items: flex-start;">
+
+  <main style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 40px;">
+
+    <header>
+      <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600; margin-bottom: 6px;">HAN · minor Data Driven Decision Making in Business</div>
+      <h1 style="font-size: 42px; line-height: 1.08; font-weight: 700; margin: 0 0 16px;">AI in Business</h1>
+      <p style="font-size: 19px; color: #4b5563; margin: 0 0 12px; max-width: 62ch; text-wrap: pretty;">Six weeks in which your team researches what a regional manufacturer needs to decide about AI — and builds the agentic platform that produces the answer.</p>
+      <p style="margin: 0 0 12px; max-width: 66ch;">You will spend those weeks on one question a real regional manufacturer is asking — <em>should we be doing something with AI, and what?</em> — and answer it properly: researched, published, and produced by a platform your own team builds.</p>
+      <p style="margin: 0; max-width: 66ch; color: #4b5563;">This site holds the purpose, the structure, the assessment and the programme for the two modules that run as one: <strong style="color: #111827;">AIBS</strong> and <strong style="color: #111827;">AEL</strong>. <a href="week-01.html">Week 1 is published</a>; every later week is filled in about one week ahead.</p>
+    </header>
+
+    <section style="border: 1px solid #d1d5db; border-radius: 12px; overflow: hidden;">
+      <div style="background: #f5f0e6; padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; border-bottom: 1px solid #d1d5db;">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 700;">Do this now</h2>
+        <span style="font-size: 13px; color: #4b5563;">Everything the first session needs</span>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; align-items: flex-start;">
+          <span style="flex: 0 0 28px; height: 28px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">1</span>
+          <div style="min-width: 0;">
+            <div style="font-weight: 700; margin-bottom: 2px;"><a href="week-01.html">Read week 1</a></div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">The assignment, the session, what to bring.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; align-items: flex-start;">
+          <span style="flex: 0 0 28px; height: 28px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">2</span>
+          <div style="min-width: 0;">
+            <div style="font-weight: 700; margin-bottom: 2px;"><a href="https://commission.europa.eu/topics/eu-competitiveness/draghi-report_en" target="_blank" rel="noopener">Read the one-page Draghi summary</a></div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">One page is enough — nobody needs to read all four hundred.</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; padding: 16px 20px; align-items: flex-start;">
+          <span style="flex: 0 0 28px; height: 28px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">3</span>
+          <div style="min-width: 0;">
+            <div style="font-weight: 700; margin-bottom: 2px;"><a href="tool-ai-worker-maturity.html">Place yourself on the AI Worker Maturity Scale</a></div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">Optional but useful before the first session. Your answers stay in your browser.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="programme">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 4px;">Where the six weeks go</h2>
+      <p style="margin: 0 0 16px; font-size: 14px; color: #6b7280; max-width: 68ch;">The themes are the intended spine; how far we get through them is one of the things we decide as we go. <strong style="color: #111827;">The six session dates are fixed.</strong> A week with no link has not been written yet.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 16px;">
+        <div style="border: 1px solid #d1d5db; border-top: 5px solid #d4db3e; border-radius: 8px; padding: 12px; background: #fafbf0;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 7 Sep · week 1</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">Problem analysis, audience, research proposal</div>
+          <div style="font-size: 12px; color: #4b5563; margin-bottom: 8px;">First PRD; a throwaway build and a log of what failed.</div>
+          <a href="week-01.html" style="font-size: 13px; font-weight: 700;">Week 1 →</a>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 14 Sep · week 2</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">Geopolitics &amp; vendor models</div>
+          <div style="font-size: 12px; color: #4b5563;"><strong style="color: #111827;">Context layer</strong> — you write down, once, what the tool must always know about your SME and your criteria.</div>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 21 Sep · week 3</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">Trust &amp; AI safety</div>
+          <div style="font-size: 12px; color: #4b5563;"><strong style="color: #111827;">Knowledge architecture</strong> — how sources are stored and retrieved, and why. The rest of the platform is stuck with it.</div>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 28 Sep · week 4</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">SME knowledge gaps</div>
+          <div style="font-size: 12px; color: #4b5563;"><strong style="color: #111827;">Evaluation pipeline</strong> — your quality criteria become checks the tool runs itself.</div>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 5 Oct · week 5</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">AI use cases at SMEs</div>
+          <div style="font-size: 12px; color: #4b5563;"><strong style="color: #111827;">Monitoring hooks</strong> — the platform says when it is failing, drifting or making things up.</div>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums;">Mon 12 Oct · week 6</div>
+          <div style="font-weight: 700; font-size: 15px; margin: 2px 0 6px;">Successful implementations</div>
+          <div style="font-size: 12px; color: #4b5563;"><strong style="color: #111827;">Skills &amp; memory</strong> — the sixth page costs less work than the first.</div>
+        </div>
+      </div>
+      <div style="border: 1px solid #d1d5db; background: #f5f0e6; border-radius: 12px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline;">
+        <strong>After 12 Oct · assessment period</strong>
+        <span style="color: #4b5563; font-size: 14px; flex: 1 1 280px;">Consolidation and editorial merge into one handbook, then the joint interview. <strong style="color: #111827;">Its exact dates are published here in week 5</strong> — a fortnight ahead.</span>
+      </div>
+      <p style="margin: 14px 0 0; font-size: 14px; color: #4b5563;">Field research — one regional SME partner per team — is planned once, across weeks 2–4.</p>
+    </section>
+
+    <section id="work">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 4px;">What you make</h2>
+      <p style="margin: 0 0 16px; color: #4b5563;">One deliverable, approached from two sides.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 18px; background: #ffffff;">
+          <h3 style="margin: 0 0 8px; font-size: 17px;">The handbook</h3>
+          <p style="margin: 0 0 10px; font-size: 14px; color: #4b5563;">Your team writes a handbook about the state of AI <strong style="color: #111827;">for SMEs</strong>: what a regional manufacturing owner needs to know and decide. Every week each team publishes <strong style="color: #111827;">one new page</strong> — a new page, never an edit to a previous one, so the trail of your thinking stays visible. In the assessment period the pages are merged into one handbook.</p>
+          <p style="margin: 0; font-size: 14px;"><a href="handbook.html"><strong>Look at the chapter template</strong></a> — the shell every chapter fills, with the quality bar it is measured against.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 18px; background: #ffffff;">
+          <h3 style="margin: 0 0 8px; font-size: 17px;">The platform that produces it</h3>
+          <p style="margin: 0 0 10px; font-size: 14px; color: #4b5563;">Your team also builds the agentic platform you research and write with: gathering and appraising sources, processing interview material, keeping citations accurate, drafting the page and checking it against the criteria. Your own four researchers are its client.</p>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">The handbook never waits on it: for every step it automates you keep a manual route. The platform is judged on whether it works; the page is judged on the research.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="rhythm">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px;">How a week runs</h2>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span style="flex: 0 0 30px; height: 30px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">1</span>
+          <p style="margin: 3px 0 0; min-width: 0;"><strong>One session a week, shared by both modules.</strong> <span style="color: #4b5563;">Both lecturers, the whole cohort. The theme is opened, then you work as a team inside it. Week 1 is a long one — about four hours; later sessions are shaped as we go.</span></p>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span style="flex: 0 0 30px; height: 30px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">2</span>
+          <p style="margin: 3px 0 0; min-width: 0;"><strong>Your team publishes one page.</strong> <span style="color: #4b5563;">A new handbook page on that week's theme, on the shared site.</span></p>
+        </div>
+        <div id="gates" style="display: flex; gap: 14px; align-items: flex-start;">
+          <span style="flex: 0 0 30px; height: 30px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">3</span>
+          <div style="min-width: 0;">
+            <p style="margin: 3px 0 6px;"><strong>Two gates, both informational.</strong> <span style="color: #4b5563;">Neither is scored and neither counts towards your mark. They exist to make you revise. They are called gates because your page passes through both before you call it done — <strong style="color: #111827;">not because either can stop you</strong>. Nothing here is blocked by a gate.</span></p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px;">
+              <div style="background: #f9f8f4; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">The Socratic gate</strong> — an AI tutor, run by the lecturers, questions your team's thinking. One submission per team per week; questions back, never a verdict and never a score.</div>
+              <div style="background: #f9f8f4; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 14px; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">The peer gate</strong> — a partner team reviews your page against the same published criteria everyone is measured against, and you review theirs.</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span style="flex: 0 0 30px; height: 30px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">4</span>
+          <p style="margin: 3px 0 0; min-width: 0;"><strong>You add a page to your portfolio.</strong> <span style="color: #4b5563;">Individually, every week, the same four questions. It is the one piece of the week that is yours rather than your team's, and it carries 30 % of both marks.</span></p>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span style="flex: 0 0 30px; height: 30px; border-radius: 999px; background: #d4db3e; color: #1a1a1a; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">5</span>
+          <p style="margin: 3px 0 0; min-width: 0;"><strong>We decide the next week.</strong> <span style="color: #4b5563;">What we saw in the session and in your pages determines what week <em>N</em>+1 asks for. That week's page appears about a week before the session.</span></p>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; border-left: 4px solid #d4db3e; background: #fafbf0; border-radius: 0 8px 8px 0; padding: 16px 20px;">
+        <h3 style="margin: 0 0 8px; font-size: 17px;">The field visit</h3>
+        <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;">Each team visits one regional SME partner, once, somewhere in weeks 2–4. It is a team obligation and the source of the field data your pages rest on.</p>
+        <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">Finding the partner is not your problem alone.</strong> The course maintains a pool of regional firms that have agreed to receive a team, and we match teams to it. Own contact you would rather use? Allowed — tell us first so we can check the consent terms. <strong style="color: #111827;">In week 2 you are told which firm is yours, who to contact there, and what language the visit will run in.</strong></p>
+        <p style="margin: 0; font-size: 14px; color: #4b5563;">The visit runs in whatever language the partner is comfortable in, and that is often Dutch. Plan for it as a team: an interpreter from inside your own team, a recorded interview your platform transcribes, or a partner happy to work in English. What is not acceptable is a team in which two people conduct the research and two wait outside.</p>
+      </div>
+    </section>
+
+    <section id="modules">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 4px;">Two modules, one team</h2>
+      <p style="margin: 0 0 16px; color: #4b5563; max-width: 68ch;">The two modules are taught as one pipeline, by both lecturers, to the same teams. <strong style="color: #111827;">AEL builds the tool; AIBS decides what the tool's output must achieve, and judges whether it does.</strong> They constrain each other on purpose.</p>
+      <div style="overflow-x: auto; margin-bottom: 18px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid #e5e7eb; border-radius: 8px;">
+          <thead>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; background: #f5f0e6; border-bottom: 2px solid #d1d5db; border-right: 1px solid #e5e7eb; width: 20%;"></th>
+              <th style="text-align: left; padding: 10px 12px; background: #f5f0e6; border-bottom: 2px solid #d1d5db; border-right: 1px solid #e5e7eb;">AIBS — AI in Business &amp; Society</th>
+              <th style="text-align: left; padding: 10px 12px; background: #f5f0e6; border-bottom: 2px solid #d1d5db;">AEL — Agent Engineering Lab</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; background: #f9f8f4;">The track</th>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; color: #4b5563;">Applied research on the business, economic and societal side of AI for SMEs</td>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #4b5563;">Building the research platform your team researches and writes with</td>
+            </tr>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; background: #f9f8f4;">Your role</th>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; color: #4b5563;">Independent researcher — everyone on the team researches</td>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #4b5563;">One of four build roles: product manager, developer, tester, deployer</td>
+            </tr>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; background: #f9f8f4;">What you produce</th>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; color: #4b5563;">The team's handbook pages: the problem analysis, the sources and field data, the advice</td>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #4b5563;">The team's own platform, judged on whether it works</td>
+            </tr>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; background: #f9f8f4;">Week 1 deliverable</th>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; color: #4b5563;">A first-draft <strong style="color: #111827;">research proposal</strong></td>
+              <td style="padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #4b5563;">A first-draft <strong style="color: #111827;">product requirements document</strong></td>
+            </tr>
+            <tr>
+              <th style="text-align: left; padding: 10px 12px; border-right: 1px solid #e5e7eb; background: #f9f8f4;">How it is assessed</th>
+              <td colspan="2" style="padding: 10px 12px; color: #4b5563;">One joint criterion-based interview with both lecturers — two independent marks, one per module</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Teams of four, four build roles</h3>
+      <p style="margin: 0 0 12px; color: #4b5563; max-width: 68ch;">Teams are formed in the first session and stay together for the run. Everyone researches in AIBS; in AEL each of you holds one build role, and the role is what you owe the team.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 16px;">
+        <div style="border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">Product manager</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Guards the requirements: what the platform is for, what it must let a user do, what is deliberately out of scope. Owns the PRD.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">Developer</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Drives the agentic CLI: turns requirements into something that runs, and keeps a log of what failed and why.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">Tester</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Holds the bar: checks output against the quality criteria before anyone else sees it, and says when it does not clear them.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">Deployer</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Gets the work published and reproducible: the page reaches the shared site, and someone else can run what you ran.</p>
+        </div>
+      </div>
+      <p style="margin: 0 0 10px; color: #4b5563; max-width: 68ch;"><strong style="color: #111827;">How to choose.</strong> Take the role you want to get better at, not the one you are already good at — none of the four is graded on how well you arrived at it. If you have never opened a terminal, <em>developer</em> is a legitimate choice and the tool is built on the assumption that you will make it. None of the four roles is a spectator.</p>
+      <p style="margin: 0 0 10px; color: #4b5563; max-width: 68ch;"><strong style="color: #111827;">The fifth job, which is not a role.</strong> Your team also has to reach a real firm, interview the people in it, and read sources about a region — and that work is not evenly easy for four different people. Whoever can approach a local company, or read a Dutch source, is holding something the team needs. Share it out: <strong style="color: #111827;">do not hand it to one person</strong>, and do not let it stop anyone building. Teams that drift into <em>the ones who talk to the firm</em> and <em>the ones who touch the tool</em> produce the weakest handbooks, every time.</p>
+      <p style="margin: 0; color: #4b5563; max-width: 68ch;"><strong style="color: #111827;">When you form a team</strong>, aim for four people who do not already work together, and for a mix: at least one comfortable at a command line, at least one who knows this region or can work in Dutch. If your team has neither, say so in the session — we would rather fix that in week 1 than in week 4.</p>
+    </section>
+
+    <section id="assessment">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px;">How you are assessed</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+        <div style="flex: 1 1 250px; background: #1a1a1a; color: #ffffff; border-radius: 12px; padding: 18px 20px;">
+          <div style="font-size: 34px; font-weight: 700; color: #d4db3e; line-height: 1;">70 %</div>
+          <div style="font-weight: 700; margin: 6px 0 4px;">One joint criterion-based interview</div>
+          <p style="margin: 0; font-size: 14px; color: #f5f0e6;">Your whole team and both lecturers, in English, in the assessment period. Each lecturer questions from their own side and marks their own module.</p>
+        </div>
+        <div style="flex: 1 1 250px; border: 1px solid #d1d5db; border-radius: 12px; padding: 18px 20px;">
+          <div style="font-size: 34px; font-weight: 700; line-height: 1;">30 %</div>
+          <div style="font-weight: 700; margin: 6px 0 4px;">Your individual portfolio</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Built weekly, submitted once. Both lecturers read the <em>same</em> portfolio from their own side: there is one portfolio, not two.</p>
+        </div>
+      </div>
+      <p style="margin: 0 0 10px; color: #4b5563; max-width: 68ch;">Everything else — the team's weekly pages, the two gates, the drafts — stays formative. It is the raw material your portfolio is written from, not the grade. Your two marks are individual, and the portfolio is the reason they can be: four people share a team page; only you can say what you did to it.</p>
+      <p style="margin: 0 0 16px; color: #4b5563; max-width: 68ch;"><strong style="color: #111827;">Two independent marks, one per module.</strong> A strong technical answer is not marked up on research grounds, or the reverse.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 18px;">
+        <div style="background: #f9f8f4; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600; margin-bottom: 4px;">The evidence</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Your portfolio, your team's frozen submissions — the pages as they stood before the merge — and your team's gate and iteration history: what the tutor asked, what your peers said, what you changed.</p>
+        </div>
+        <div style="background: #f9f8f4; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600; margin-bottom: 4px;">What is not evidence</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">The gates themselves. Neither changes your mark and neither is a verdict on your page; both are prompts to revise. What you <em>did</em> with the questions goes in your portfolio, and that is a different thing.</p>
+        </div>
+        <div style="background: #f9f8f4; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600; margin-bottom: 4px;">Deliverables at the end</div>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">The consolidated handbook, your team's frozen contribution to it, your team's platform with the documents that specify it — starting with the week 1 PRD — and your own portfolio.</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 18px; margin: 0 0 8px;">The portfolio</h3>
+      <p style="margin: 0 0 12px; color: #4b5563; max-width: 68ch;">One document per student, yours alone, added to <strong style="color: #111827;">every week</strong>. Short by design — about a page a week — and it always answers the same four questions:</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: 0 0 26px; height: 26px; border-radius: 999px; background: #f5f0e6; border: 1px solid #d1d5db; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">1</span>
+          <p style="margin: 2px 0 0;"><strong>What did the team publish this week?</strong> <span style="color: #4b5563;">The page, in a line or two.</span></p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: 0 0 26px; height: 26px; border-radius: 999px; background: #f5f0e6; border: 1px solid #d1d5db; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">2</span>
+          <p style="margin: 2px 0 0;"><strong>What did you contribute to it?</strong> <span style="color: #4b5563;">Specifically, and without inflating it. "I wrote the section on vendor lock-in and found three of the six sources" is worth more than "I helped with the research".</span></p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: 0 0 26px; height: 26px; border-radius: 999px; background: #f5f0e6; border: 1px solid #d1d5db; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">3</span>
+          <p style="margin: 2px 0 0;"><strong>What did the two gates ask, and what did you change?</strong> <span style="color: #4b5563;">Not whether you agreed — <em>what moved</em>. A question you rejected, with a reason, counts as much as one you acted on.</span></p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <span style="flex: 0 0 26px; height: 26px; border-radius: 999px; background: #f5f0e6; border: 1px solid #d1d5db; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">4</span>
+          <p style="margin: 2px 0 0;"><strong>What did your build role produce?</strong> <span style="color: #4b5563;">The PRD revision, the failure log, the test results, the deployment.</span></p>
+        </div>
+      </div>
+      <p style="margin: 0 0 10px; color: #4b5563; max-width: 68ch;">Write it the same week, not at the end. A portfolio assembled from memory in the assessment period is visible as one, and it is worth less than a thin record kept as you went. <strong style="color: #111827;">An honest small contribution scores better than an unsupportable large one</strong> — the portfolio makes a claim; the interview is where the claim is tested.</p>
+      <p style="margin: 0; color: #4b5563; max-width: 68ch;">The two criterion sets — one per module — are written by each module's owner and published here before they are used to judge anything. Until they are on this site, they do not exist.</p>
+    </section>
+
+    <section id="fixed">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 8px;">Fixed, and decided as we go</h2>
+      <p style="margin: 0 0 16px; color: #4b5563; max-width: 68ch;">This course is run <strong style="color: #111827;">adaptively</strong>. We are not building six weeks of material in advance: we start with the first assignments, watch what you can already do, and decide week by week what comes next. It has one consequence worth stating — some of what you want to know in week 1 does not exist yet in week 1. So here is the split, and we will hold ourselves to it.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px;">
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 18px;">
+          <span style="display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; background: #d4db3e; color: #1a1a1a;">Fixed</span>
+          <h3 style="margin: 8px 0 10px; font-size: 17px;">Settled before week 1, will not move</h3>
+          <ul style="margin: 0; padding-left: 20px; color: #4b5563; font-size: 14px; display: flex; flex-direction: column; gap: 6px;">
+            <li>The end goal: a handbook about the state of AI for SMEs.</li>
+            <li>The scope: six weeks of classes, then an assessment period.</li>
+            <li>Teams of four; one build role each; everyone researches.</li>
+            <li>One published page per team per week.</li>
+            <li><a href="#gates">Two gates a week</a> — the AI tutor and your peer team — both informational, never scored.</li>
+            <li>An individual portfolio, a page a week, carrying 30 % of each mark.</li>
+            <li>The finish: a consolidated handbook and one joint interview, two marks.</li>
+          </ul>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #e5e7eb; border-radius: 12px; padding: 18px; background: #f9f8f4;">
+          <span style="display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; background: #f0ebe0; border: 1px solid #d1d5db; color: #4b5563;">Decided as we go</span>
+          <h3 style="margin: 8px 0 10px; font-size: 17px;">Set week by week, published a week ahead</h3>
+          <ul style="margin: 0; padding-left: 20px; color: #4b5563; font-size: 14px; display: flex; flex-direction: column; gap: 6px;">
+            <li>How much scaffolding each assignment gets — worked examples, templates, checklists.</li>
+            <li>The exact sub-theme and the depth of each weekly page.</li>
+            <li>Whether the field visit runs as planned in weeks 2–4.</li>
+            <li>How far we get through the week map.</li>
+            <li>The length and shape of the weekly session after week 1.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px;">Why this course exists</h2>
+      <p style="margin: 0 0 12px; color: #4b5563; max-width: 68ch;">In September 2024 Mario Draghi handed the European Commission a report on why Europe is falling behind the United States and China. Its central finding is not that Europe lacks ideas. It is that Europe is slow to <strong style="color: #111827;">diffuse</strong> technology into the businesses it already has — and the place diffusion stalls hardest is the small and mid-sized firm. Fragmented markets, regulatory complexity, no capital to spare, no in-house skills, no scale. The gap in productivity is, to a large extent, a gap in adoption.</p>
+      <p style="margin: 0 0 12px; color: #4b5563; max-width: 68ch;">Most of those firms are within an hour's drive of this building. They are being told, loudly and from every direction, that they must "do something with AI". Very few have anyone who can tell them what, or whether, or first. This course puts you in that gap as a researcher who can find out and explain, not as a consultant.</p>
+      <p style="margin: 0 0 20px; color: #4b5563; max-width: 68ch;"><a href="https://commission.europa.eu/topics/eu-competitiveness/draghi-report_en" target="_blank" rel="noopener">The Commission's one-page summary</a> is your pre-reading for week 1.</p>
+
+      <h3 style="font-size: 18px; margin: 0 0 10px;">What you will be able to do afterwards</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600;">Research</div>
+          <h4 style="margin: 4px 0 6px; font-size: 16px;">Turn a firm's vague worry into an answerable question</h4>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">You take "should we do something with AI?" from a real regional manufacturer, turn it into a research question with sub-questions, answer it with desk <em>and</em> field research, and write the answer for someone who will act on it.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600;">Judgement</div>
+          <h4 style="margin: 4px 0 6px; font-size: 16px;">Tell whether an AI output is any good</h4>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Most people arrive thinking the skill is producing text with a model. The scarce one is verification. You practise it every week: you generate, then you check the claim, the source and the reasoning before you put your name on it.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600;">Build</div>
+          <h4 style="margin: 4px 0 6px; font-size: 16px;">Direct an agentic system to do real work</h4>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">You specify, build, test and deploy a working platform by instructing an agentic CLI rather than hand-writing code — and you learn what that mode of working is good at, and where it fails without telling you.</p>
+        </div>
+        <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 16px;">
+          <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600;">Publish</div>
+          <h4 style="margin: 4px 0 6px; font-size: 16px;">Ship something a stranger reads</h4>
+          <p style="margin: 0; font-size: 14px; color: #4b5563;">Your work is published, cited and read outside the classroom. It is a chapter of a handbook the next cohort builds on.</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 18px; margin: 0 0 8px;">Where it sits, and what it assumes</h3>
+      <p style="margin: 0 0 12px; color: #4b5563; max-width: 68ch;"><em>AI in Business</em> is the AI strand of HAN's minor <a href="https://www.kiesopmaat.nl/modules/han/-/141533/" target="_blank" rel="noopener">Data Driven Decision Making in Business</a>. It assumes what the minor already gives you: that you can frame a business problem, work with data and evidence, and defend a recommendation. It does <strong style="color: #111827;">not</strong> assume that you can program. In the technical track you direct an agentic command-line tool; the design rule is that a non-coder must be able to run it, and that every automated step keeps a manual fallback.</p>
+      <p style="margin: 0; color: #4b5563; max-width: 68ch;">The course is taught, written and assessed in <strong style="color: #111827;">English</strong>. It does not assume you are Dutch, or that you already know this region and its firms — one of the things week 1 does is make sure no team is short of that knowledge. Where the work runs into Dutch, the <em>team</em> solves that together.</p>
+    </section>
+
+    <section id="tools">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 8px;">Course tools</h2>
+      <p style="margin: 0 0 10px; color: #4b5563; max-width: 68ch;">Things we use in a session, or that an assignment needs you to have used. This list grows as the course does — a tool appears here when there is a week that wants it.</p>
+      <p style="margin: 0 0 16px; color: #4b5563; max-width: 68ch;">They are <strong style="color: #111827;">instruments</strong>. Nothing here is marked, and nothing here reports anything about you to us: where a tool records your answers it does so in your own browser and nowhere else. What you take away from one may well be worth a paragraph in <a href="#assessment">your portfolio</a>, which is a different matter.</p>
+      <div style="border: 1px solid #e5e7eb; border-top: 5px solid #d4db3e; border-radius: 12px; padding: 18px; max-width: 640px;">
+        <div style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6b7280; font-weight: 600;">Self-assessment · week 1</div>
+        <h3 style="margin: 4px 0 8px; font-size: 17px;"><a href="tool-ai-worker-maturity.html">The AI Worker Maturity Scale</a></h3>
+        <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;">Sixteen questions that place you on a six-level scale from <em>Bystander</em> to <em>Compounding</em>, then name the single thing standing between you and the next level. Unlike most maturity models it measures <strong style="color: #111827;">a person, not a company</strong>, and it asks for observable facts about how you work rather than how capable you feel.</p>
+        <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;">Use it before or during the first session. The level it gives you — plus the gate it says is holding you — is a good opening for your first portfolio entry.</p>
+        <p style="margin: 0; font-size: 14px; color: #4b5563;">It is <strong style="color: #111827;">not a validated instrument</strong> and says so on its own front page: it is composed from published research rather than tested as a scale. Treat the result as a conversation with yourself, not a score.</p>
+      </div>
+      <p style="margin: 14px 0 0; font-size: 14px; color: #4b5563; max-width: 68ch;">The maturity scale is reproduced here from the <a href="https://businessdatasolutions.github.io/ai-wiki/" target="_blank" rel="noopener">AI Wiki</a>, where it is maintained and where its calibration record and sources live. It keeps its own look on purpose — a tool that happens to live on the course site, not a page of the course.</p>
+    </section>
+
+    <section id="practical">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px;">Practical</h2>
+      <div style="border: 1px solid #d1d5db; background: #f5f0e6; border-radius: 12px; padding: 20px 24px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px 28px;">
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">When it runs</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">Six Mondays: 7, 14, 21 and 28 September, 5 and 12 October 2026, then the assessment period. Room and start time are in your timetable. <strong style="color: #111827;">Your team's interview slot and the assessment dates are published on this page in week 5</strong> — a fortnight's notice. Hard constraint on when you can be here? Tell us in week 4, not week 6.</p>
+          </div>
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">Who teaches it</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">Meike Botterweg</strong> — AIBS, the research track. <strong style="color: #111827;">Witek ten Hove</strong> — AEL, the technical track. Both are in every session.</p>
+          </div>
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">If you are stuck</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">Ask in the session: the team work time is for exactly this, and both lecturers circulate through it. Between sessions, mail the lecturer whose side the problem is on; if you are unsure which, ask either. <strong style="color: #111827;">Being stuck early is ordinary and we would rather hear it in week 2 than in week 6.</strong></p>
+          </div>
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">Where the work goes</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">One document per team, per assignment. <strong style="color: #111827;">The default deadline is the start of the next session</strong> — week 1's drafts are due by Monday 14 September. If a week needs a different deadline, that week's page says so a week ahead; the default never moves later without notice.</p>
+          </div>
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">When this site changes</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">Each week's page appears about a week before its session. Nothing already published is rewritten without saying so.</p>
+          </div>
+          <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">What to do first</div>
+            <p style="margin: 0; font-size: 14px; color: #4b5563;">Read <a href="week-01.html">week 1</a> and the one-page Draghi summary it links. That is all the preparation the first session needs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ instructorView }}" hint-placeholder-val="{{ false }}">
+    <section id="owners">
+      <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px;">For the module owners</h2>
+      <p style="margin: 0 0 12px; padding: 14px 18px; background: #f9fafb; border-left: 3px solid #d1d5db; border-radius: 0 6px 6px 0; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">Instructor view.</strong> This section is hidden on the ordinary page.</p>
+      <p style="margin: 0; color: #4b5563; max-width: 68ch;">The <a href="integrated-lrd.html">integrated learning-requirements document</a> specifies both modules — outcomes, calendar, the gated learning path and the assessment. It describes the design in its ideal form and is written for the course team, not for students. Where it and this site differ, this site is what we are running.</p>
+    </section>
+    </sc-if>
+
+    <section id="colophon">
+      <div style="border: 1px solid #e5e7eb; border-left: 4px solid #d4db3e; background: #f9f8f4; border-radius: 12px; padding: 18px 22px;">
+        <h2 style="margin: 0 0 8px; font-size: 17px;">Colophon</h2>
+        <p style="margin: 0; font-size: 14px; color: #4b5563;">This site was designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener"><strong>Business Data Solutions</strong></a> and is provided to the minor as a courtesy. It is not a commercial engagement, and nothing on it is a consultancy product — the course, its content and its assessment belong to HAN. The lighthouse in the masthead is that company's mark, and it stands here as a build credit rather than a claim on the material.</p>
+      </div>
+    </section>
+  </main>
+
+  <aside style="flex: 1 1 260px; min-width: 0; position: sticky; top: 88px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="border: 1px solid #d1d5db; border-radius: 12px; padding: 18px; background: #f5f0e6;">
+      <h2 style="margin: 0 0 12px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: #4b5563;">At a glance</h2>
+      <div style="display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 14px; font-size: 14px;">
+        <span style="color: #4b5563;">Runs</span><strong>6 Mondays, 7 Sep – 12 Oct 2026</strong>
+        <span style="color: #4b5563;">Team</span><strong>Four people, four build roles</strong>
+        <span style="color: #4b5563;">Language</span><strong>English</strong>
+        <span style="color: #4b5563;">Coding</span><strong>Not assumed</strong>
+        <span style="color: #4b5563;">Mark</span><strong>70 % interview / 30 % portfolio</strong>
+        <span style="color: #4b5563;">Field visit</span><strong>One SME, weeks 2–4</strong>
+      </div>
+    </div>
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px;">
+      <h2 style="margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: #4b5563;">On this page</h2>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px;">
+        <a href="#programme" style="color: #4b5563;">Where the six weeks go</a>
+        <a href="#work" style="color: #4b5563;">What you make</a>
+        <a href="#rhythm" style="color: #4b5563;">How a week runs</a>
+        <a href="#modules" style="color: #4b5563;">Two modules, one team</a>
+        <a href="#assessment" style="color: #4b5563;">How you are assessed</a>
+        <a href="#fixed" style="color: #4b5563;">Fixed, and decided as we go</a>
+        <a href="#why" style="color: #4b5563;">Why this course exists</a>
+        <a href="#tools" style="color: #4b5563;">Course tools</a>
+        <a href="#practical" style="color: #4b5563;">Practical</a>
+      </div>
+    </div>
+    <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px;">
+      <h2 style="margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: #4b5563;">Who to ask</h2>
+      <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">Meike Botterweg</strong> — AIBS, research track.</p>
+      <p style="margin: 0 0 8px; font-size: 14px; color: #4b5563;"><strong style="color: #111827;">Witek ten Hove</strong> — AEL, technical track.</p>
+      <p style="margin: 0; font-size: 14px; color: #4b5563;">Both are in every session. Being stuck early is ordinary — week 2 beats week 6.</p>
+    </div>
+    <div style="border-left: 4px solid #d4db3e; background: #fafbf0; padding: 14px 16px; border-radius: 0 8px 8px 0;">
+      <p style="margin: 0; font-size: 13px; color: #4b5563;">The course is run adaptively: the spine is fixed, the depth of each week is decided from what we see in the room. <a href="#fixed">What is fixed, and what moves</a>.</p>
+    </div>
+  </aside>
+</div>
+
+<footer style="border-top: 1px solid #e5e7eb; background: #f9fafb; padding: 28px 20px; text-align: center; color: #6b7280; font-size: 14px;">
+  <div style="max-width: 1024px; margin: 0 auto;">
+    <p style="margin: 0 0 8px;">AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p style="margin: 0; font-size: 12px;">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy — <a href="#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;statusStrip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Page state&quot;},&quot;instructorView&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Page state&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      statusStrip: this.props.statusStrip !== false,
+      instructorView: this.props.instructorView === true
+    };
+  }
+}
+</script>
+</body>
+</html>
