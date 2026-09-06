@@ -5,3 +5,8 @@
 # Tooling
 __pycache__/
 .pytest_cache/
+
+# Secrets — this repository is public
+.env
+.env.*
+!.env.example
