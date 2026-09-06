@@ -1,6 +1,6 @@
 # Work — not published
 
-Nothing in this folder reaches https://datadrivendecisions.github.io/diaia/.
+Nothing in this folder reaches https://datadrivendecisions.github.io/ai-in-business/.
 The publish workflow uploads `site/` and only `site/`.
 
 Note: this repo is **public**, so `work/` is separated from the handbook but still

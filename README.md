@@ -3,11 +3,14 @@
 The course site for two HAN modules that share one team and one deliverable: a living handbook
 helping regional manufacturing SMEs put AI to work.
 
-**Site:** https://datadrivendecisions.github.io/diaia/ · **Handbook template:** https://datadrivendecisions.github.io/diaia/handbook.html
+**Site:** https://datadrivendecisions.github.io/ai-in-business/ · **Handbook template:** https://datadrivendecisions.github.io/ai-in-business/handbook.html
+
+The course is published to students as **AI in Business**.
 
 The modules are **AIBS** (AI in Business & Society, the research track) and **AEL** (Agent
-Engineering Lab, the technical track). The repository and its URL keep the `diaia` slug the
-project started with, so that no shared link breaks.
+Engineering Lab, the technical track). The repository and its URL were moved off the `diaia` slug
+the project started with, so that the address says what the course is; links to the old
+`.../diaia/` URL no longer resolve.
 
 ## Repo layout
 
@@ -18,9 +21,10 @@ project started with, so that no shared link breaks.
 | [`project-documentation/`](project-documentation/) | **Not published.** Internal project documents, tracked in git. |
 
 ### `site/` — the course site
-- [`site/index.html`](site/index.html) — the landing page for the combined AIBS / AEL course: the two modules, the handbook, and placeholders for the weekly programme and the shared quality bar
+- [`site/index.html`](site/index.html) — the landing page for **AI in Business**, the combined AIBS / AEL course, written for students: why the course matters, how it is structured and assessed, what is fixed versus decided week by week, and the provisional week map
+- [`site/week-01.html`](site/week-01.html) — week 1: the pre-reading, the first joint session, and both week-1 assignments in full. One page per teaching week, published about a week before its session; copy this file for the next one and add its link to the week map
 - [`site/handbook.html`](site/handbook.html) — the handbook's **template**: the shell every cohort fills (start here, the theme index, the chapter anatomy, tooling, ecosystem, quality bar and disclaimer). The programme design the handbook page used to carry — mission, curriculum, seven themes with readings, partners, roadmap — is superseded by the LRD and lives only in git history; the handbook's own requirements come from the PRD each team writes in AEL
-- [`site/integrated-lrd.html`](site/integrated-lrd.html) — the integrated learning-requirements document for AIBS and AEL, published at https://datadrivendecisions.github.io/diaia/integrated-lrd.html so it can be shared by link; its Appendix A records the module as it runs today. Written for the module owners, not for students; the landing page links it under that heading, and the handbook does not link it at all.
+- [`site/integrated-lrd.html`](site/integrated-lrd.html) — the integrated learning-requirements document for AIBS and AEL, published at https://datadrivendecisions.github.io/ai-in-business/integrated-lrd.html so it can be shared by link; its Appendix A records the module as it runs today. Written for the module owners, not for students; the landing page links it under that heading, and the handbook does not link it at all.
 
 ### `project-documentation/` — internal
 - `module-redesign-sketches.md` — three paired sketches for splitting the current module into a business/society module and a technical sister module

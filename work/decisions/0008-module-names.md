@@ -70,10 +70,16 @@ cite it say which module it refers to.
   source documents written before this decision, and rewriting them would
   falsify the sources the other records cite. A note at the top of the sketches
   maps the old names to the new ones.
-- The repository slug and the published URL stay `diaia`. Changing them breaks
-  every link already shared; the handbook's own address is not worth moving for
-  a name. The module keeps its registered course code until the programme
-  changes it; Appendix A of the LRD records the module by that code.
+- The repository slug and the published URL move to `ai-in-business`, the name
+  the course carries for students. This record first held them at `diaia`, on
+  the grounds that no shared link is worth breaking for a name; that was
+  weighed before the site had a landing page addressed to students, and an
+  address a student cannot connect to the course they enrolled in costs more
+  than the handful of links shared so far. GitHub redirects the repository URL
+  and the git remote, but not the Pages URL: `.../diaia/` stops resolving, and
+  anything already pointing at it has to be reissued. The module keeps its
+  registered course code until the programme changes it; Appendix A of the LRD
+  records the module by that code.
 - Two names will circulate for at least one cohort, and the published documents
   do not explain the old ones. Whoever introduces the modules to a group that
   knows the previous names has to make the connection in person.
