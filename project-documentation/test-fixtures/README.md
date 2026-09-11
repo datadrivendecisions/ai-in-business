@@ -235,3 +235,21 @@ threshold is Movement ≥ 2 and total ≥ 6, and this is the first run where tho
 Two genuine gaps are new this week, and a good report has room for one of them: the people question
 is deferred to week 5 by choice, and the buying advice is reasoning from an absence of evidence
 rather than from evidence — the page says so, and says it is weaker for it.
+
+---
+
+# Fixtures for the document pipeline
+
+The pipeline in [`../hand-in-pipeline.md`](../hand-in-pipeline.md) scores documents, not pages.
+Its gates run against three fixtures that are the teaching team's own documents, so they can live
+in a public repository:
+
+| Fixture | File | Used by |
+|---|---|---|
+| The PRD | [`../prd-socratic-gate.md`](../prd-socratic-gate.md) | Gate 2 (scorer), gate 3 (questioner), gate 4 (coherence) |
+| The blueprint | [`../../work/drafts/blueprint-socratic-workflow.html`](../../work/drafts/blueprint-socratic-workflow.html) | Gate 4 (coherence) |
+| The planted finding | The blueprint's §9 trace marks one departure from the PRD: the inbox door against the PRD's *pull only* rule | Gate 4 must report it under `## FINDINGS` |
+
+Each gate builds a throw-away intake root under the scratch directory, copies the fixtures in under
+made-up team numbers, and runs the step against that. Nothing a gate writes touches the real intake
+folder. Transcripts go in [`pipeline-log.md`](pipeline-log.md).
