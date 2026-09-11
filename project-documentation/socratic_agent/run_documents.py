@@ -275,6 +275,174 @@ def manifest_text(rows):
 
 
 # ----------------------------------------------------------------------------
+# the model, shared by every step that reads and judges
+# ----------------------------------------------------------------------------
+
+REPO = pathlib.Path(__file__).resolve().parents[2]
+HERE = pathlib.Path(__file__).resolve().parent
+MODEL = "gemini-2.5-flash"
+RETRIES = 2
+
+
+def call_model(name, instruction, message, shapes):
+    """One fresh session per attempt, as run_week.py does. Returns the text, or
+    "" when no attempt produced output in one of the `shapes` (lists of headings)."""
+    import asyncio
+    from dotenv import load_dotenv
+    load_dotenv(HERE / ".env")  # the course-owned project; never a personal key
+    from google.adk.agents import LlmAgent
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
+
+    agent = LlmAgent(
+        name=name, model=MODEL, instruction=instruction,
+        generate_content_config=types.GenerateContentConfig(
+            thinking_config=types.ThinkingConfig(thinking_budget=-1)),
+    )
+
+    async def once():
+        runner = InMemoryRunner(agent=agent, app_name="documents")
+        session = await runner.session_service.create_session(app_name="documents", user_id="owner")
+        out = []
+        async for event in runner.run_async(
+                user_id="owner", session_id=session.id,
+                new_message=types.Content(role="user", parts=[types.Part(text=message)])):
+            if event.content and event.content.parts:
+                out.extend(p.text for p in event.content.parts if p.text)
+        return "".join(out).strip()
+
+    for _ in range(RETRIES + 1):
+        text = asyncio.run(once())
+        if text and has_shape(text, shapes):
+            return text
+    return ""
+
+
+def has_shape(text, alternatives):
+    """True when the text carries every heading of at least one alternative."""
+    return any(all(h in text for h in alt) for alt in alternatives)
+
+
+def page_text(path):
+    """A site page as text with its links kept, through agent.py's extractor."""
+    from agent import _Extract
+    p = _Extract()
+    p.feed(path.read_text(encoding="utf-8", errors="replace"))
+    return p.text()
+
+
+def git_short_hash(rel):
+    r = subprocess.run(["git", "-C", str(REPO), "log", "-1", "--format=%h", "--", rel],
+                       capture_output=True, text=True)
+    return r.stdout.strip() or "uncommitted"
+
+
+def parse_header(path):
+    """The key: value lines between the two --- markers at the top of a report."""
+    out = {}
+    if not path.exists():
+        return out
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0].strip() != "---":
+        return out
+    for line in lines[1:]:
+        if line.strip() == "---":
+            break
+        if ":" in line:
+            k, v = line.split(":", 1)
+            out[k.strip()] = v.strip()
+    return out
+
+
+def header(fields):
+    return "---\n" + "".join(f"{k}: {v}\n" for k, v in fields.items()) + "---\n\n"
+
+
+def latest_texts(week_dir, team, week):
+    """{deliverable: (version, text path)} for the highest version in this week's folder."""
+    found = {}
+    for txt in week_dir.glob(f"{team}-week-{week:02d}-*.txt"):
+        rest = txt.stem[len(f"{team}-week-{week:02d}-"):]
+        m = re.fullmatch(r"([a-z]+)(?:-v(\d+))?", rest)
+        if not m:
+            continue
+        deliv, version = m.group(1), int(m.group(2) or 1)
+        if deliv in DELIVERABLES and version >= found.get(deliv, (0, None))[0]:
+            found[deliv] = (version, txt)
+    return found
+
+
+def teams_in(root, only_team=None):
+    teams_dir = root / "teams"
+    if not teams_dir.is_dir():
+        return []
+    return sorted(p.name for p in teams_dir.iterdir()
+                  if p.is_dir() and p.name.startswith("team-") and (not only_team or p.name == only_team))
+
+
+# ----------------------------------------------------------------------------
+# step 2 — score: one scoresheet per document, against its criteria and sheet
+# ----------------------------------------------------------------------------
+
+SCORE_SHAPES = [["## RETURNED"], ["## SCORESHEET", "## BEFORE V1"]]
+
+
+def previous_score(root, team, deliv, week):
+    """The most recent earlier score of the same deliverable for this team."""
+    cands = []
+    for p in (root / "teams" / team).glob(f"week-*/owners/score-{deliv}.md"):
+        m = re.search(r"week-(\d+)", p.parent.parent.name)
+        if m and int(m.group(1)) < week:
+            cands.append((int(m.group(1)), p))
+    return max(cands)[1] if cands else None
+
+
+def step_score(root, week, only_team=None):
+    done, problems = [], []
+    for team in teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        if not week_dir.is_dir():
+            continue
+        for deliv, (version, txt) in sorted(latest_texts(week_dir, team, week).items()):
+            out = week_dir / "owners" / f"score-{deliv}.md"
+            if out.exists() and parse_header(out).get("version") == str(version):
+                continue  # scored already, at this version
+            sheet = root / "rubric" / f"{deliv}-scoresheet.md"
+            criteria = REPO / "site" / f"{deliv}-criteria.html"
+            missing = [str(p.relative_to(root)) for p in (sheet,) if not p.exists()]
+            missing += [f"site/{criteria.name}" for p in (criteria,) if not p.exists()]
+            if missing:
+                problems.append(f"{team} {deliv}: unscored: no sheet for {deliv}"
+                                if not sheet.exists() else f"{team} {deliv}: unscored: no criteria page {missing[0]}")
+                continue
+
+            prev = previous_score(root, team, deliv, week)
+            fields = {
+                "team": team, "deliverable": deliv, "week": week, "version": version,
+                "document": txt.name,
+                "criteria": f"site/{criteria.name} @ {git_short_hash(f'site/{criteria.name}')}",
+                "sheet": f"rubric/{sheet.name} sha256 {sha256(sheet)[:12]}",
+                "previous": str(prev.relative_to(root)) if prev else "none",
+                "scored": now(),
+            }
+            message = (f"# THE CRITERIA — {criteria.name}, as published to the team\n\n{page_text(criteria)}\n\n"
+                       f"# THE DOCUMENT — {team}, week {week}, version {version}\n\n"
+                       f"{txt.read_text(encoding='utf-8', errors='replace')}\n")
+            if prev:
+                body = prev.read_text(encoding="utf-8").split("---\n\n", 1)[-1]
+                message += f"\n# THE PREVIOUS SCORESHEET — {fields['previous']}\n\n{body}\n"
+            text = call_model("scorer", sheet.read_text(encoding="utf-8"), message, SCORE_SHAPES)
+            if not text:
+                problems.append(f"{team} {deliv}: no scoresheet after {RETRIES + 1} attempts")
+                continue
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(header(fields) + text.strip() + "\n", encoding="utf-8")
+            verdict = "RETURNED" if "## RETURNED" in text else "SCORESHEET"
+            done.append(f"{team} {deliv} v{version}: {verdict} → {out.relative_to(root)}")
+    return done, problems
+
+
+# ----------------------------------------------------------------------------
 # later steps — arriving one phase at a time
 # ----------------------------------------------------------------------------
 
@@ -287,7 +455,7 @@ def step_not_built(name):
 
 STEPS = [
     ("intake", step_intake),
-    ("score", step_not_built("score")),
+    ("score", step_score),
     ("coherence", step_not_built("coherence")),
     ("question", step_not_built("question")),
 ]

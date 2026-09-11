@@ -137,7 +137,46 @@ def gate_1():
     return ok
 
 
-GATES = {0: gate_0, 1: gate_1}
+def gate_2():
+    """Scorer: the gate's own PRD scored; a document without a sheet named, not scored."""
+    import hashlib
+    real_sheet = DEFAULT_ROOT / "rubric/prd-scoresheet.md"
+    if not real_sheet.exists():
+        print(f"gate 2 needs the real sheet at {real_sheet}; it is outside the repository")
+        return False
+    root = scratch_root()
+    (root / "rubric/prd-scoresheet.md").write_bytes(real_sheet.read_bytes())
+    print(f"gate 2 — scorer, scratch root {root}")
+    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    (root / "inbox/team-03-blueprint.html").write_bytes(
+        (REPO / "work/drafts/blueprint-socratic-workflow.html").read_bytes())
+    ok = True
+    print("  intake")
+    ok &= say(run(root, 1, "--step", "intake") == 0, "both fixtures filed and converted")
+
+    print("  run 1 — score")
+    code = run(root, 1, "--step", "score")
+    score = root / "teams/team-03/week-01/owners/score-prd.md"
+    ok &= say(code == 1, f"exit 1, because the blueprint has no sheet (got {code})")
+    ok &= say(score.exists(), "owners/score-prd.md written")
+    text = score.read_text() if score.exists() else ""
+    head = text.split("---\n\n", 1)[0]
+    ok &= say(text.startswith("---\n") and all(k in head for k in ("criteria: site/prd-criteria.html @", "sheet: rubric/prd-scoresheet.md sha256", "version: 1")),
+              "provenance header carries criteria commit, sheet hash and version")
+    ok &= say("## RETURNED" in text or ("## SCORESHEET" in text and "## BEFORE V1" in text), "required headings present")
+    ok &= say(not (root / "teams/team-03/week-01/owners/score-blueprint.md").exists(), "nothing written for the blueprint")
+    print("    headings found:", ", ".join(h for h in ("## RETURNED", "## SCORESHEET", "## BEFORE V1") if h in text))
+    print("    header:\n      " + head.strip().replace("\n", "\n      "))
+
+    print("  run 2 — skip")
+    before = hashlib.sha256(score.read_bytes()).hexdigest() if score.exists() else ""
+    code = run(root, 1, "--step", "score")
+    ok &= say(code == 1, f"exit 1 again: the blueprint is still unscored (got {code})")
+    ok &= say(score.exists() and hashlib.sha256(score.read_bytes()).hexdigest() == before, "score-prd.md unchanged")
+    return ok
+
+
+GATES = {0: gate_0, 1: gate_1, 2: gate_2}
 
 
 def main():

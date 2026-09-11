@@ -64,3 +64,44 @@ gate 1 — intake, scratch root /var/folders/tl/27n5mfs173zf3987pbbpmpcw0000gn/T
 PASSED
 exit 
 ```
+
+## Gate 2 — 11 September 2026 — scorer
+
+```
+$ .venv/bin/python project-documentation/socratic_agent/gates.py 2
+gate 2 — scorer, scratch root /var/folders/…/intake-gate-rqt7nh1d
+  intake
+      team-03 blueprint v1: team-03-blueprint.html → team-03-week-01-blueprint.txt (3374 words)
+      team-03 prd v1: team-03-prd.md → team-03-week-01-prd.txt (2203 words)
+  ok   both fixtures filed and converted
+  run 1 — score
+      team-03 prd v1: SCORESHEET → teams/team-03/week-01/owners/score-prd.md
+      ! team-03 blueprint: unscored: no sheet for blueprint
+  ok   exit 1, because the blueprint has no sheet (got 1)
+  ok   owners/score-prd.md written
+  ok   provenance header carries criteria commit, sheet hash and version
+  ok   required headings present
+  ok   nothing written for the blueprint
+    headings found: ## SCORESHEET, ## BEFORE V1
+    header:
+      criteria: site/prd-criteria.html @ e5f12af
+      sheet: rubric/prd-scoresheet.md sha256 8edcc7d4ec1c
+      previous: none
+  run 2 — skip
+  ok   exit 1 again: the blueprint is still unscored (got 1)
+  ok   score-prd.md unchanged
+PASSED
+exit 0
+```
+
+About 30 seconds of model time per document.
+
+**Read, not gated.** The fixture was scored three times in three fresh scratch roots. One run
+*returned* it on invariant V2 — the primary user is a student team, not "the team as
+researchers" building a platform — which is arguably right: the gate's own PRD is not the kind of
+document the sheet was written for, and the fixture is a stand-in. The other two runs scored it,
+six points apart, and disagreed by two or more on three items (A5, C1, B3). Two readings for the
+sheet's author: the invariants are applied softly two times in three, and the items that moved
+are the ones whose criterion asks for something the document could carry implicitly. Neither is
+a defect in the step; both are calibration, and the sheet is the place to tighten them. A team's
+real PRD, written to the brief, will not trip V2 the way this fixture does.
