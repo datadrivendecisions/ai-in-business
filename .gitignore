@@ -13,3 +13,6 @@ __pycache__/
 
 # Local Python environment for the Socratic gate
 .venv/
+
+# Local archive of old material, kept out of the public repo
+archive/
