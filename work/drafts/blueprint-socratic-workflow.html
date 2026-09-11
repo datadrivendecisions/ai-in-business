@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blueprint: the Socratic workflow — AI in Business</title>
+<meta name="description" content="The teaching team's own technical blueprint for the pipeline that turns a team's weekly hand-in into Socratic questions — written to the week 2 brief, as a worked example." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-01.html">Week 1</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">AEL · week 2 · technical blueprint · worked example</div>
+    <h1 class="bds-h1">Blueprint: the Socratic workflow</h1>
+    <blockquote class="lead-quote"><em>A reader can tell what each part does, what passes between the parts, and where the line is that nothing may cross.</em></blockquote>
+    <p class="lead">This is the teaching team's own blueprint for the pipeline that turns a team's weekly hand-in into a set of Socratic questions. It is written to the same brief you get in week 2, on the same one-to-three-page bar, and it will be read against the same criteria — so it is a worked example of the document, and of the discipline: it implements a PRD, it traces every part back to that PRD, and it says out loud where it departs from it.</p>
+    <p class="tpl-notice"><strong>Draft, and honest about it.</strong> One part of this is built (the intake step); the rest is designed. Where a decision is not yet taken it is in the open questions with a role and a route, which is worth more than a filled section that asserts.</p>
+  </header>
+
+  <section id="provenance">
+    <h2 class="bds-part">1 · Header and provenance</h2>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          <tr><th>Document</th><td>Technical blueprint — the Socratic workflow for document hand-ins</td></tr>
+          <tr><th>Version</th><td>0.1, 11 September 2026</td></tr>
+          <tr><th>Implements</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/prd-socratic-gate.md" target="_blank" rel="noopener">PRD — the Socratic gate</a>, extended by one door (§9)</td></tr>
+          <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0013-hand-in-routes.md" target="_blank" rel="noopener">ADR-0013</a> (where hand-ins go), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0014-socratic-gate-architecture.md" target="_blank" rel="noopener">ADR-0014</a> (the gate pulls a published page), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0010-ael-arc.md" target="_blank" rel="noopener">ADR-0010</a> (the six documents), and the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/hand-in-pipeline.md" target="_blank" rel="noopener">pipeline design note</a></td></tr>
+          <tr><th>Owner</th><td>The two module owners; the AEL owner runs it</td></tr>
+          <tr><th>Status</th><td>Step 1 built and in use; steps 2–4 still to build. The build plan that follows from this blueprint is a separate page.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="context">
+    <h2 class="bds-part">2 · What it builds, in one paragraph</h2>
+    <p>Each week an AEL team posts one document in its Teams channel — a PRD, then a blueprint, then a knowledge architecture, a build plan, and two evaluations. A lecturer drops the file in an inbox. From there the system does four things without further hands: it files the document under the team and the week and turns it into plain text; it scores the document against criteria the team has already read, for the owners only; from week 2 it checks whether this week's document agrees with the ones before it; and it writes three to five Socratic questions for the team, knowing which earlier questions are still open. The lecturer reads the questions and sends them. The team never touches the system, and the system never touches anything but the team's own writing.</p>
+    <div class="aside">
+      <p><strong>The boundary, stated once.</strong> Two roots, and nothing crosses between them by accident. The <em>repository</em> is public: it holds the code, the criteria pages and this blueprint. The <em>intake folder</em> is one lecturer's disk: it holds every student document, every score, every question ever asked, and the one file that links a team number to first names. Student work never enters the repository, and nothing that would be damaging in a student's hands ever enters the site.</p>
+    </div>
+  </section>
+
+  <section id="parts">
+    <h2 class="bds-part">3 · The parts</h2>
+    <p>Seven parts, and only three of them are a language model. The rest are folders, a script and a person, because a folder cannot hallucinate and a person is the manual step every automated step keeps.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Part</th><th>What it does</th><th>Reads</th><th>Writes</th><th>Kind</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Inbox</strong></td><td>Receives what the lecturer drops in. The team's whole interface is "post it in the channel"; the lecturer's is "drop it here".</td><td>—</td><td>—</td><td>Folder</td></tr>
+          <tr><td>2</td><td><strong>Intake</strong></td><td>Works out team and deliverable from the file name, moves the file under the team and the week, converts it to plain text, names anything it could not convert.</td><td>Inbox; the manifest the lecturer corrects</td><td>The original, the text, <code>documents.tsv</code>, <code>log.tsv</code></td><td>Script (built)</td></tr>
+          <tr><td>3</td><td><strong>Scorer</strong></td><td>Scores one document against its published criteria and its scoresheet, both read fresh on every run, and records which version of each it read.</td><td>Criteria page, scoresheet, the text, last time's score if the same document came in before</td><td><code>owners/score-&lt;id&gt;.md</code></td><td>Model call</td></tr>
+          <tr><td>4</td><td><strong>Coherence checker</strong></td><td>From week 2: reads the latest version of every document the team has handed in and asks whether they describe one platform — what is promised but not designed, designed but not promised, built but never tested, or simply contradicted.</td><td>The latest text of each deliverable; the coherence sheet</td><td><code>owners/coherence.md</code></td><td>Model call</td></tr>
+          <tr><td>5</td><td><strong>Questioner</strong></td><td>Checks each open question in the register against this week's document, updates its status with a quote, then writes three to five new questions and the message that carries them.</td><td>The register; this week's text; the <em>qualitative columns only</em> of every score written this week; its own instructions</td><td>The register, <code>team/questions.md</code>, <code>team/message.md</code></td><td>Model call</td></tr>
+          <tr><td>6</td><td><strong>Message lint</strong></td><td>Reads the message and fails the run if it carries a criterion code, a total, a band or the word <em>score</em>. It fails rather than warns, because this is the one file that leaves the building.</td><td><code>team/message.md</code></td><td>A pass, or a stopped run</td><td>Script</td></tr>
+          <tr><td>7</td><td><strong>The lecturer</strong></td><td>Corrects the manifest where a guess was wrong; reads the message; sends it to the team's channel; reads the owners' half before the session. Never sends anything from <code>owners/</code>.</td><td><code>team/message.md</code>, <code>owners/</code></td><td>A message in Teams</td><td>Person</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="flow">
+    <h2 class="bds-part">4 · The flow of one week</h2>
+    <p>One command a week, with the week number as its only argument. Each step runs wherever its input exists and its output does not, so a run that stops can simply be started again and picks up where it broke — the presence of a file is the signal from one step to the next, and there is no queue, no status and no clock to keep anywhere else.</p>
+<pre class="tree">inbox/                              ─ lecturer drops the week's files
+   │
+   ▼  step 1  intake        (per file)      → teams/team-NN/week-NN/…-original.pdf, …txt
+   │
+   ▼  step 2  scorer        (per document)  → owners/score-&lt;id&gt;.md
+   │
+   ▼  step 2b coherence     (per team, from week 2)  → owners/coherence.md
+   │
+   ▼  step 3  questioner    (per team)      → register.tsv · team/questions.md · team/message.md
+   │
+   ▼  lint    message       (per team)      → pass, or the run stops here
+   │
+   ▼  lecturer sends team/message.md — and nothing else</pre>
+    <ol>
+      <li><strong>A file with no recognisable team or deliverable goes nowhere.</strong> It stays in the inbox with a line in the manifest for the lecturer to fill in. The system never guesses either from what the document says.</li>
+      <li><strong>A document with no scoresheet is reported, not scored.</strong> The scorer does not improvise criteria; <em>unscored: no sheet for blueprint</em> is the whole output, and next week's fix is to write the sheet.</li>
+      <li><strong>The questioner runs last, and only once every score due this week exists.</strong> Its questions are shaped by what the scorer found, which is the design — but it is handed the findings, never the numbers (§6).</li>
+      <li><strong>A second hand-in of the same document in the same week is a new version</strong>, <code>-v2</code>, never an overwrite. Later steps take the highest.</li>
+    </ol>
+  </section>
+
+  <section id="storage">
+    <h2 class="bds-part">5 · Where things live</h2>
+    <p>The layout is the design. Two folders per week per team, and which of the two a file lands in decides who may ever see it.</p>
+<pre class="tree">ai-in-business-intake/                 ← outside the repository, one lecturer's disk
+  README.md
+  roster.tsv                           team-NN → first names, Teams channel: the only file that links them
+  rubric/
+    prd-scoresheet.md                  one sheet per deliverable id, read at runtime, never copied
+    coherence-scoresheet.md
+  inbox/
+  teams/
+    team-03/
+      documents.tsv                    the current version of each deliverable, and where it is
+      register.tsv                     every question ever asked, one line each
+      week-01/
+        team-03-week-01-prd-original.pdf
+        team-03-week-01-prd.txt
+        owners/score-prd.md            never leaves owners/
+        team/questions.md
+        team/message.md                the one file that is sent
+      week-02/
+        team-03-week-02-blueprint-original.docx
+        team-03-week-02-blueprint.txt
+        owners/score-blueprint.md
+        owners/coherence.md
+        team/…
+  log.tsv                              what moved where, when
+
+ai-in-business/                        ← the public repository
+  site/prd-criteria.html               the criteria, published before the hand-in
+  site/blueprint-criteria.html         (due before week 2)
+  project-documentation/socratic_agent/intake.py
+  project-documentation/socratic_agent/instructions.txt
+  project-documentation/hand-in-pipeline.md</pre>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Thing</th><th>Lives</th><th>Because</th></tr></thead>
+        <tbody>
+          <tr><td>The criteria a document is read against</td><td>The site</td><td>A team is entitled to know the bar, and the course promises criteria are published before they judge anything</td></tr>
+          <tr><td>The reading the criteria were drawn from</td><td><code>project-documentation/</code></td><td>Course-design rationale; internal but not damaging</td></tr>
+          <tr><td>The scoresheets — scale, invariants, sheet, prompt</td><td><code>rubric/</code>, outside the repository</td><td>Their worth depends on a student not having read them, and a public repository has no instructor-only corner</td></tr>
+          <tr><td>Student documents, scores, coherence reports, the register</td><td><code>teams/</code>, outside the repository</td><td>Student work is not public, and a <code>.gitignore</code> is one <code>git add -A</code> from failing</td></tr>
+          <tr><td>The one file with first names</td><td><code>roster.tsv</code>, outside the repository</td><td>No path that reaches a prompt carries a student's name</td></tr>
+          <tr><td>Code, the questioner's instructions, this blueprint</td><td>The repository</td><td>Nothing in them is a secret, and the teaching team edits them like any other page</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="contracts">
+    <h2 class="bds-part">6 · Contracts — what passes between the parts</h2>
+    <p>Every handover is a file with a fixed shape. That is what lets a script check a step's output and what lets a person read it a year later.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Written by</th><th>Read by</th><th>Shape</th></tr></thead>
+        <tbody>
+          <tr><td><code>manifest.tsv</code></td><td>Intake</td><td>The lecturer, then intake again</td><td>One line per inbox file: team, deliverable, source, text, word count. Empty cells are the lecturer's to fill.</td></tr>
+          <tr><td><code>documents.tsv</code></td><td>Intake</td><td>Coherence checker, questioner</td><td>One line per deliverable id: week, version, path of the current text.</td></tr>
+          <tr><td><code>owners/score-&lt;id&gt;.md</code></td><td>Scorer</td><td>Owners; questioner (two columns only); next run of the scorer for the same document</td><td>A provenance header — criteria page commit, scoresheet hash, date — then either <code>## RETURNED</code> with the reason, or the sheet, the total and the band, then the three items to revise first.</td></tr>
+          <tr><td><code>owners/coherence.md</code></td><td>Coherence checker</td><td>Owners; questioner (findings only)</td><td><code>## TRACE</code>: one row per PRD requirement and where each later document carries it, or NONE. <code>## FINDINGS</code>: orphans, contradictions and dropped questions, each with the quotes that disagree.</td></tr>
+          <tr><td><code>register.tsv</code></td><td>Questioner</td><td>Questioner, owners, the examiner at the interview</td><td>id · asked (week) · about (deliverable or <em>coherence</em>) · question · status (open · answered · partly · ducked · withdrawn) · resolved (week) · evidence (the quote that carries the status)</td></tr>
+          <tr><td><code>team/questions.md</code></td><td>Questioner</td><td>Lecturer</td><td>Three to five questions, nothing else.</td></tr>
+          <tr><td><code>team/message.md</code></td><td>Questioner</td><td>Lint, then the lecturer, then the team</td><td>The fixed opening the team always gets, the questions, the fixed closing. Fails lint on any criterion code, total, band or the word <em>score</em>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="aside">
+      <p><strong>The contract that matters most is an input, not a file.</strong> The questioner is given, from each score written this week, two columns and no more: <em>the weakest evidence quoted</em> and <em>what would raise it by one</em>; and from the coherence report, the findings. It is never given a score, a total, a band, or the sheet. Its questions are shaped by the rubric — that is the design — but a part that never sees a number cannot leak one, and that is a property of the wiring rather than a rule the model has to remember.</p>
+    </div>
+  </section>
+
+  <section id="runtime">
+    <h2 class="bds-part">7 · Runtime and technology</h2>
+    <p>What it is made of, so that a build plan can be written from this page without asking. Every choice below is one the blueprint takes, and the reason is beside it; the one that could go the other way is marked.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Concern</th><th>Choice</th><th>Because</th></tr></thead>
+        <tbody>
+          <tr><td>Where it runs</td><td>One lecturer's machine, one command a week: <code>run_documents.py --week N</code>, beside <code>run_week.py</code> in <code>socratic_agent/</code></td><td>The inbox is filled by a person, so the run is already tied to a person; a service would add a deployment for a job that is ten teams once a week</td></tr>
+          <tr><td>Language</td><td>Python 3, standard library for everything that is not a model call: files, TSV, hashing, regular expressions, the markdown parsing of a score</td><td>No build step, no framework, no database, nothing that can be down — the same discipline as the site</td></tr>
+          <tr><td>Converters</td><td><code>pdftotext</code> (poppler) for PDF; <code>textutil</code> (macOS) for Word, RTF, ODT; the standard library for Markdown, text and HTML</td><td>What <code>intake.py</code> already uses; a document it cannot convert is named, never skipped</td></tr>
+          <tr><td>The three model calls</td><td>The same runtime as the page gate: <code>google-adk</code>, one <code>LlmAgent</code> per part, <code>gemini-2.5-flash</code> with the thinking budget on, the course-owned key from <code>.env</code></td><td>ADR-0009 funds one capped model line, and this is it; <code>run_week.py</code> is the working pattern for a run-per-team with retries; <code>agent.py</code>'s extractor already turns a site page into text the model can read. <span class="departs">The alternative</span> — a skill run interactively in a coding assistant on the lecturer's machine — is kept for running one step by hand: it needs a personal subscription, has no cap, and is a second thing to keep in step with the first</td></tr>
+          <tr><td>How an instruction is built</td><td>At run time, per call, from files: the sheet verbatim, the criteria page as extracted text, the document, and last time's score if there is one. Nothing is cached and nothing is pasted into code</td><td>The sheets and the criteria are edited as insight accumulates; a copy drifts the first time the original changes</td></tr>
+          <tr><td>What is a model and what is a script</td><td>A model reads and judges: score, coherence, questions. A script does everything with a right answer: naming, moving, hashing, the provenance header, pulling the two columns out of a score, the lint, the register's file format</td><td>A script cannot misread a number, and the parts that guard the boundary must not be the parts that can</td></tr>
+          <tr><td>Idempotence and retries</td><td>A step whose output exists is skipped; a model call that returns nothing, or without the required headings, is retried twice in a fresh session, as <code>run_week.py</code> does; output is written only when it has the shape §6 requires</td><td>The pilot saw one empty response in twelve; a half-written score must never look like a score</td></tr>
+          <tr><td>Failure</td><td>Loud and named: the file, the team, the step, the reason. Exit 0 when every team is done, 1 when anything is unscored or a message failed lint, 2 when there was nothing to do</td><td>A hand-in that vanishes between inbox and run is the failure nobody notices, and an exit code is what the lecturer's Saturday morning reads</td></tr>
+          <tr><td>Tests</td><td>Fixtures in <code>project-documentation/test-fixtures/</code>, none of them student work: the gate's own PRD as the PRD fixture, this blueprint as the blueprint fixture, its §9 departure as the coherence finding the checker must produce. Every run against fixtures is logged, as the page gate's pilot was</td><td>The pipeline's own documents are the one test set that can live in a public repository</td></tr>
+          <tr><td>Size and cost</td><td>Ten teams, at most two scores, one coherence check and one questioner call each: about forty calls a week, none larger than a handful of one-to-three-page documents</td><td>A rounding error against the funded line, and small enough to re-run in full when a sheet changes</td></tr>
+          <tr><td>Secrets and names</td><td>The key in <code>.env</code> beside the script, git-ignored; the roster on the disk it was written on. Neither is read by any part that talks to a model</td><td>The repository is public, and a key committed is a key published</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="enforced">
+    <h2 class="bds-part">8 · What the wiring enforces</h2>
+    <p>Rules that hold because of how the parts are joined, whoever is running it. Each is a rule the PRD states; the blueprint's job is to make it structural.</p>
+    <ul>
+      <li><strong>Numbers never reach the questioner</strong> — it is handed columns, not sheets (§6). And the lint behind it fails the run rather than warning.</li>
+      <li><strong>Names never reach a prompt</strong> — teams are numbers in every path, file and report. The roster is the only file that knows otherwise, and no part reads it.</li>
+      <li><strong>Student work never enters the repository</strong> — the intake root is a sibling folder of the repository.</li>
+      <li><strong>Two audiences, two folders</strong> — a file is in <code>owners/</code> or in <code>team/</code>, and a folder boundary is harder to cross by accident than a file suffix.</li>
+      <li><strong>Every score says what scored it</strong> — the criteria page's commit and the sheet's hash, so a sheet edited in week 3 cannot silently rescore week 1.</li>
+      <li><strong>No sheet, no score</strong> — an unwritten sheet produces a named gap, never an improvised judgement.</li>
+      <li><strong>Originals are immutable</strong> — as received, never edited, never overwritten.</li>
+      <li><strong>One run does not repeat itself</strong> — a step whose output exists is skipped, so a re-run after a failure cannot double a team's questions.</li>
+    </ul>
+  </section>
+
+  <section id="trace">
+    <h2 class="bds-part">9 · Trace to the PRD</h2>
+    <p>Every requirement the PRD makes of the gate, and where this blueprint carries it. One line is a departure, and it is marked as one — a blueprint that silently drops a requirement is exactly what the coherence checker in §3 exists to find.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>PRD says</th><th>Carried by</th></tr></thead>
+        <tbody>
+          <tr><td>One report per team per week, by construction</td><td>One run a week; per-team steps that skip when their output exists (§4)</td></tr>
+          <tr><td>No verdict, questions only, nothing numeric in what the team sees (I1–I3)</td><td>The questioner's instructions; the two-column input contract; the lint (§6)</td></tr>
+          <tr><td>Nothing from another team (I4)</td><td>One team per folder, one team per model call; a call is never given two teams' files</td></tr>
+          <tr><td>The report grows: builds on last week's, never repeats an answered question, returns harder to a ducked one (C1–C3)</td><td>The register, with statuses and evidence, read before any new question is written (§6)</td></tr>
+          <tr><td>The instructor's half carries the score and one line of evidence per item (D1)</td><td><code>owners/score-&lt;id&gt;.md</code> and <code>owners/coherence.md</code></td></tr>
+          <tr><td>No student write access to prompts, rubric or configuration</td><td>Prompts in the repository, sheets on a lecturer's disk; no student account anywhere in the system</td></tr>
+          <tr><td>The rubric and its scores never enter the site or any student-readable path</td><td>Sheets in <code>rubric/</code>, scores in <code>owners/</code>, both outside the repository (§5)</td></tr>
+          <tr><td>Every automated step keeps a manual one</td><td>The lecturer corrects the manifest, sends the message, and can run any step by hand (§3, part 7)</td></tr>
+          <tr><td>The report reaches the channel before the weekly block</td><td>The run is scheduled by the lecturer ahead of the session; the clock is an open question (§11)</td></tr>
+          <tr><td class="departs">Pull only: the single input is the team's published page, and nothing student-supplied</td><td><span class="departs">Departure.</span> The weekly <em>page</em> is still pulled (ADR-0014; that path is unchanged). The AEL <em>documents</em> are files, and there is nothing to pull — so this blueprint adds one door: an inbox a <em>lecturer</em> fills from the team's channel. The student still supplies nothing beyond the post ADR-0013 already asks for. What the PRD's rule protects — that interview material cannot reach a model service by a student's mistake — is kept, but it is now kept by the lecturer choosing what to drop in, rather than by the wiring. That is weaker, and it is said here so that it can be judged.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="not-here">
+    <h2 class="bds-part">10 · Not in this blueprint</h2>
+    <p>Sending the message to Teams automatically — a person does it, on purpose, because forwarding the wrong file should take effort. Archiving the register at the end of the run, which the hand-in routes record already says where to do. The instructor dashboard as one screen. The runtime of the page gate, which has its own record. And the content of any scoresheet — this page says where they are and what shape they have, never what is on them.</p>
+  </section>
+
+  <section id="open">
+    <h2 class="bds-part">11 · Open questions</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Question</th><th>Owner</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td>The runtime chosen in §7 is this blueprint's decision and is not yet recorded. The contracts in §6 hold under either runtime; the cost, the keys and who can edit the instructions do not.</td><td>AEL module owner</td><td>An entry in the decision log before the week-2 run, or the choice reverts to open</td></tr>
+          <tr><td>The clock: which day the lecturer runs it, and how many hours before the block the message must be in the channel.</td><td>Both owners</td><td>On the week page, before week 2</td></tr>
+          <tr><td>What the scorer does with a document that fails an invariant: return it to the team with the reason at once, or hold it for the lecturer first.</td><td>AEL module owner</td><td>Decide on the first case; then write it into the sheet's instructions</td></tr>
+          <tr><td>How the second module owner runs this while the intake root is one machine's path.</td><td>Both owners</td><td>Before week 3, when the AIBS owner first needs the register</td></tr>
+          <tr><td>Whether a revised PRD is required, or merely allowed, in the week the blueprint changes what the PRD can promise.</td><td>AEL module owner</td><td>Say so on the week-2 page</td></tr>
+          <tr><td>Cold start: in week 1 there is no register and no earlier document, so the questioner's history rules do not apply. Either the kick-off's by-hand round is written up as the first entries, or week 1 runs without them.</td><td>AEL module owner</td><td>An hour after the kick-off, if the first</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="where">
+    <h2 class="bds-part">Where this comes from, and how it is judged</h2>
+    <p>The design behind this page is the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/hand-in-pipeline.md" target="_blank" rel="noopener">pipeline design note</a>, and the PRD it implements is the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/prd-socratic-gate.md" target="_blank" rel="noopener">PRD for the Socratic gate</a>. Both are in the repository, off the site, because the PRD carries the design of a rubric.</p>
+    <p>This blueprint will be read against the criteria for the week-2 blueprint, which are published before that hand-in, on this site, beside the assignment — the same criteria yours is read against. Until they exist, this page is a draft in the repository's <code>work/drafts/</code> folder, which is where every page waits before it is fit to be read by students.</p>
+    <p class="chapter-meta">Version 0.1 · 11 September 2026 · draft</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

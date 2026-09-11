@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Build plan: the Socratic workflow — AI in Business</title>
+<meta name="description" content="The teaching team's own build plan for the Socratic workflow: phases, subtasks, test gates and the commit and pull-request run for each — written to the week 4 brief, as a worked example." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+
+.gate {
+  border-left: 4px solid var(--supporting); background: var(--bg-cream);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm);
+  margin: var(--space-4) 0;
+}
+.gate p:last-child { margin-bottom: 0; }
+.phase-meta { font-size: var(--text-sm); color: var(--text-secondary); margin-top: calc(-1 * var(--space-2)); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-01.html">Week 1</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">AEL · week 4 · build plan · worked example</div>
+    <h1 class="bds-h1">Build plan: the Socratic workflow</h1>
+    <blockquote class="lead-quote"><em>A reader can tell what gets built in what order, how each step proves it works before the next begins, and what a commit has to show before it is allowed in.</em></blockquote>
+    <p class="lead">This is the build plan for the <a href="blueprint-socratic-workflow.html">blueprint of the Socratic workflow</a>: six phases, each with its subtasks, one binary test gate, and the commit-and-pull-request run that closes it. It is written to the brief you get in week 4, as a worked example of the document — and of its discipline: nothing is built that the blueprint does not name, and nothing is merged that its gate has not passed.</p>
+    <p class="tpl-notice"><strong>The runs set the order.</strong> The week-1 documents are waiting to be scored now, so the scorer and the questioner come before the coherence checker, which has nothing to check until a second document exists. Each phase is dated to the run it must precede.</p>
+  </header>
+
+  <section id="provenance">
+    <h2 class="bds-part">1 · Header and provenance</h2>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          <tr><th>Document</th><td>Build plan — the Socratic workflow for document hand-ins</td></tr>
+          <tr><th>Version</th><td>0.1, 11 September 2026</td></tr>
+          <tr><th>Builds</th><td><a href="blueprint-socratic-workflow.html">Blueprint: the Socratic workflow</a> v0.1 — every phase names the blueprint section it builds</td></tr>
+          <tr><th>Owner</th><td>The AEL module owner builds; both owners hold the gates</td></tr>
+          <tr><th>Runs it must precede</th><td>The week-1 run (the PRDs), the week-2 run (the blueprints), the week-3 run (the knowledge architectures)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="rules">
+    <h2 class="bds-part">2 · The rules every phase follows</h2>
+    <ul>
+      <li><strong>One branch per phase</strong>, named <code>pipeline/&lt;phase&gt;</code>, one pull request, merged to <code>main</code> only when the gate has passed. The pull request's description states the gate and pastes the transcript of it passing — the command, its output, the exit code.</li>
+      <li><strong>A gate is a command with an exit code</strong>, run against fixtures that are not student work. A gate a person has to interpret is not a gate.</li>
+      <li><strong>Model steps are gated on shape, and read by a person for sense.</strong> A script checks that a score has its headings and its provenance line; an owner reads the score of the fixture and logs what they think of it. Both happen before merge; only the first blocks it.</li>
+      <li><strong>Nothing from the intake folder ever appears in a diff.</strong> Before every push: <code>git diff --cached --name-only</code> is read for a team folder, a roster, or an inbox file. The intake root is outside the repository, so this should be impossible; the check is for the day it is not.</li>
+      <li><strong>Every phase leaves the previous one working.</strong> The manual path — a lecturer scoring by hand with the sheet, in twenty minutes — is the fallback for any week a phase is late. A missed phase costs an hour; it never costs a team its questions.</li>
+      <li><strong>CI runs what CI can:</strong> the link check on every pull request. Model calls are not run in CI, because the key is course-owned and the fixtures are enough; their transcript travels in the pull request instead.</li>
+    </ul>
+  </section>
+
+  <section id="phase-0">
+    <h2 class="bds-part">Phase 0 · Ground</h2>
+    <p class="phase-meta">Builds blueprint §5 (where things live) and §7 (tests) · before phase 1 · half a day</p>
+    <p>Nothing that talks to a model. The folder layout the whole design rests on, and the fixtures every later gate runs against.</p>
+    <ol>
+      <li>Lay out the intake folder as blueprint §5 draws it: <code>rubric/</code>, <code>inbox/</code>, <code>teams/</code>, <code>roster.tsv</code>, <code>log.tsv</code>. Move the existing <code>week-01/inbox/</code> files into <code>inbox/</code>; delete the derived <code>week-01/text/</code>.</li>
+      <li>Rewrite the intake folder's <code>README.md</code> to describe the per-team layout and the one command a week.</li>
+      <li>Write <code>roster.tsv</code> for the cohort: team number, first names, Teams channel. On the disk only.</li>
+      <li>Name the fixtures in <code>project-documentation/test-fixtures/README.md</code>: the gate's PRD as the PRD fixture, the blueprint as the blueprint fixture, and the departure in the blueprint's §9 as the coherence finding the checker must produce.</li>
+      <li>Make a scratch intake root under the fixtures' own folder structure, so every gate can run against a throw-away copy.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 0.</strong> <code>ls -R</code> of the intake root matches the tree in blueprint §5 line for line, with <code>teams/</code> empty. <code>roster.tsv</code> has one line per team and no line with an empty channel. The fixtures README names three fixtures and where each is used.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/ground</code>. Two files in the diff, both documentation. Pull request states gate 0 and its listing; link check in CI; merge.</p>
+  </section>
+
+  <section id="phase-1">
+    <h2 class="bds-part">Phase 1 · Intake</h2>
+    <p class="phase-meta">Builds blueprint §3 part 2, §4 step 1, §6 <code>manifest.tsv</code> and <code>documents.tsv</code> · before the week-1 run · one day</p>
+    <p><code>intake.py</code> becomes step 1 of <code>run_documents.py</code>. Everything here is a script; every subtask has a right answer.</p>
+    <ol>
+      <li>The skeleton of <code>run_documents.py</code>: <code>--week</code>, <code>--root</code>, <code>--team</code>, <code>--step</code>; the step loop; exit codes 0, 1 and 2 as blueprint §7 defines them.</li>
+      <li>The deliverable guess beside the team guess: <code>prd</code>, <code>blueprint</code>, <code>knowledge</code>, <code>buildplan</code>, <code>eval</code>, <code>decisions</code>, with the Dutch spellings students actually use. Both guesses go in the manifest; both are the lecturer's to correct.</li>
+      <li>The move: hash before, move, hash after, or stop and say so. <code>-vN</code> when the target exists. A line in <code>log.tsv</code>, a line updated in <code>documents.tsv</code>.</li>
+      <li>Conversion from the team folder, since the inbox is emptied; the regeneration of a <code>text/</code> folder goes.</li>
+      <li>A file with no team or no deliverable stays where it is, with its manifest line, and the run says so and exits 1.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 1.</strong> Five files in a scratch inbox: <code>Team 3 PRD.pdf</code>, <code>t05_prd.docx</code>, <code>prd-final.pdf</code> (no team), <code>team-03-prd-v2.md</code>, and a PDF that is not a PDF. After one run: two moved and converted, one is <code>-v2</code>, one stays in the inbox with an empty team cell, one is named as unconvertible, exit 1. After a second run with the manifest corrected: the stray is filed, exit 0, and <code>documents.tsv</code> and <code>log.tsv</code> gain exactly one line each. A third run changes nothing.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/intake</code>. Pull request pastes the three transcripts. Link check; merge. <code>intake.py</code> is removed in the same pull request, so there is one door and not two.</p>
+  </section>
+
+  <section id="phase-2">
+    <h2 class="bds-part">Phase 2 · Scorer</h2>
+    <p class="phase-meta">Builds blueprint §3 part 3, §4 step 2, §6 <code>score-&lt;id&gt;.md</code>, §7 instruction assembly · before the week-1 run · one day</p>
+    <p>The first model call. Its instruction is built from files at run time and nothing else; a script wraps it in a provenance header and checks its shape before anything is written.</p>
+    <ol>
+      <li>The criteria page as text: <code>site/&lt;id&gt;-criteria.html</code> through the extractor <code>agent.py</code> already has.</li>
+      <li>Instruction assembly: the sheet from <code>rubric/&lt;id&gt;-scoresheet.md</code> verbatim, then the criteria, then the document, then the previous score for the same deliverable if <code>documents.tsv</code> shows one.</li>
+      <li>The provenance header: the criteria page's last commit, the sheet's content hash, the date.</li>
+      <li>The call, per document, with the retry rule from <code>run_week.py</code>; written only when <code>## RETURNED</code>, or <code>## SCORESHEET</code> and <code>## BEFORE V1</code>, are present.</li>
+      <li><em>No sheet, no score</em>: a deliverable without a sheet or a criteria page is reported by name, and the step continues with the next.</li>
+      <li>Skip when <code>owners/score-&lt;id&gt;.md</code> exists.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 2.</strong> The PRD fixture scores: the file starts with the provenance header and carries the required headings, checked by script. A second run skips it and the file's hash is unchanged. A blueprint fixture with no sheet in <code>rubric/</code> yields the line <em>unscored: no sheet for blueprint</em> and exit 1, and nothing is written for it. <strong>Read by a person, without blocking merge:</strong> both owners read the fixture's score and log in the pilot log whether they would sign it; two runs on the same fixture are compared for variance.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/scorer</code>. The pull request pastes the provenance header and the headings found — not the score itself, which carries the sheet's bands. Link check; merge.</p>
+  </section>
+
+  <section id="phase-3">
+    <h2 class="bds-part">Phase 3 · Questioner, register, lint</h2>
+    <p class="phase-meta">Builds blueprint §3 parts 5 and 6, §4 step 3, §6 <code>register.tsv</code>, <code>questions.md</code>, <code>message.md</code>, and the two-column contract · before the week-1 run · two days</p>
+    <p>The part that produces the only file that leaves the building, and the two scripts that stand between it and the door.</p>
+    <ol>
+      <li><code>register.tsv</code>: read, filter to open · partly · ducked, append, rewrite. The status vocabulary is closed; anything else is a parse error.</li>
+      <li>The two-column extraction, as a script: parse the score's table, keep <em>weakest evidence</em> and <em>what would raise it by one</em>, drop the score column, the total and the band before the text reaches any prompt.</li>
+      <li>The questioner's instructions: <code>instructions.txt</code> keeps its rules on history, on questions only, on never quoting a sentence the team did not write — and loses the fetch, since the document is handed in as text. Two files, one for a page and one for a document, or one file with the fetch paragraph made conditional; either way the rules are stated once.</li>
+      <li>Instruction assembly in the order blueprint §6 fixes: register, this week's text, the columns, the instructions. Cold start: an empty register is passed as such, and the history rules are told they do not yet apply.</li>
+      <li>Output parsing into register updates, <code>questions.md</code>, and <code>message.md</code> with the fixed opening and closing from a file in the repository.</li>
+      <li>The lint: criterion codes, <code>/60</code>, band names, the word <em>score</em>. A hit fails the step with the line quoted.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 3.</strong> On the PRD fixture's score: <code>questions.md</code> has three to five lines and each ends in a question mark; <code>message.md</code> passes lint; the register gains that many lines, all <em>open</em>. A message with <code>A3</code> and <code>/60</code> planted in it fails lint and the run exits 1. On a second fixture with one register question answered in a doctored copy: that question's status becomes <em>answered</em> with a quote, and it is not asked again. A fake roster with distinctive names: none of them appears in any assembled prompt, checked by grep.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/questioner</code>. Pull request pastes the four transcripts and the fixture's <code>message.md</code> in full — it is the one output that is meant to be read. Link check; merge. <strong>Then the week-1 run</strong>, for real: the cohort's PRDs, one command, the exit code and the terminal summary logged, every <code>message.md</code> read by an owner before it is sent.</p>
+  </section>
+
+  <section id="phase-4">
+    <h2 class="bds-part">Phase 4 · Coherence</h2>
+    <p class="phase-meta">Builds blueprint §3 part 4, §4 step 2b, §6 <code>coherence.md</code>, and the findings-to-questioner input · before the week-2 run · one day, plus the sheet</p>
+    <p>The first step that reads more than one document. It has nothing to do until the blueprints arrive, and everything to do then.</p>
+    <ol>
+      <li>The latest version of every deliverable from <code>documents.tsv</code>; the step skips, saying why, when there is only one.</li>
+      <li><code>rubric/coherence-scoresheet.md</code>, written by the AEL owner from the rows in the pipeline design note: the questions in both directions, the findings each produces, the 0–3 per direction, the instruction block. Outside the repository, like every sheet.</li>
+      <li>What the sheet checks, published: a short section on the blueprint criteria page saying a team's documents are read against each other, and how. Before the hand-in, like every criterion.</li>
+      <li>Instruction assembly and the call; written only with <code>## TRACE</code> and <code>## FINDINGS</code> present.</li>
+      <li>The findings section handed to the questioner beside the two columns, and the questioner's instructions told what a coherence finding is and that both sides are quoted.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 4.</strong> On the fixture pair — the gate's PRD and the workflow blueprint — <code>coherence.md</code> has both headings; <code>## TRACE</code> has one row per line of the PRD's "what it must let a user do" table; <code>## FINDINGS</code> names the planted departure, checked by grep for the inbox door against the PRD's pull-only rule. With the blueprint fixture removed, the step skips with a named reason and exit 0. The questioner, run after it, produces at least one question tagged <em>coherence</em> in the register.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/coherence</code>. Pull request pastes the transcript and the <code>## FINDINGS</code> of the fixture pair — our own documents, so publishable. Link check; merge. Then the week-2 run.</p>
+  </section>
+
+  <section id="phase-5">
+    <h2 class="bds-part">Phase 5 · Handover and hardening</h2>
+    <p class="phase-meta">Builds blueprint §7 (failure, secrets), §10, §11 · before the week-3 run · one day, spread over the week</p>
+    <p>What turns a script one person can run into a workflow two people can run, and closes the blueprint's open questions that a build can close.</p>
+    <ol>
+      <li>The runbook in the intake folder's README: the Saturday-morning sequence in ten lines, including what to do when the exit code is 1 and when it is 2.</li>
+      <li>The second owner: the intake root reachable from a second machine, inside the institution's tenant, and <code>--root</code> pointing at it. Which store is a decision (ADR-0013 route 4 names the candidates), and it is taken and written down here.</li>
+      <li>The invariant-failure policy — return at once or hold for the lecturer — decided on the first real case and written into the sheet's instruction block.</li>
+      <li>Two decision-log entries: the runtime chosen in blueprint §7, and the inbox door in blueprint §9. Without them the blueprint's own open question stands.</li>
+      <li>The pilot log for the document pipeline: every fixture run and every live run, one line each, as the page gate keeps.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 5.</strong> The second owner runs gates 1 to 4 on their own machine from the runbook alone, without asking a question, and every one passes. The two decision-log entries exist. The runbook's exit-code table matches the code.</p>
+    </div>
+    <p><strong>Run.</strong> Branch <code>pipeline/handover</code>. Pull request lists what the second owner had to ask, if anything, and what changed in the runbook because of it. Link check; merge.</p>
+  </section>
+
+  <section id="content">
+    <h2 class="bds-part">3 · The content track, one week ahead</h2>
+    <p>The pipeline scores nothing it has no sheet for. Beside the phases above runs a second track of writing, and it is the one that slips. Each row is due before the run that needs it.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Before the run of</th><th>On the site</th><th>In <code>rubric/</code></th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Week 2 (blueprint)</td><td><code>blueprint-criteria.html</code>, linked from the week-2 page beside the assignment; a section on coherence</td><td><code>blueprint-scoresheet.md</code>, <code>coherence-scoresheet.md</code></td><td>AEL owner</td></tr>
+          <tr><td>Week 3 (knowledge architecture)</td><td><code>knowledge-criteria.html</code></td><td><code>knowledge-scoresheet.md</code>; the knowledge rows of the coherence sheet</td><td>AEL owner</td></tr>
+          <tr><td>Week 4 (build plan)</td><td><code>buildplan-criteria.html</code></td><td><code>buildplan-scoresheet.md</code>; the build-plan rows</td><td>AEL owner</td></tr>
+          <tr><td>Week 5 (evaluation, decisions)</td><td><code>eval-criteria.html</code>, <code>decisions-criteria.html</code></td><td><code>eval-scoresheet.md</code>, <code>decisions-scoresheet.md</code>; the evaluation and decision rows</td><td>Both owners</td></tr>
+          <tr><td>Week 6 (second evaluation)</td><td>—</td><td>The eval sheet's v2-against-v1 section</td><td>Both owners</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="risks">
+    <h2 class="bds-part">4 · What can go wrong, and what catches it</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Caught by</th><th>If it is not</th></tr></thead>
+        <tbody>
+          <tr><td>Phase 3 is not merged before the week-1 run</td><td>The date on the phase</td><td>The owners score the PRDs by hand with the sheet, and the questions come from the kick-off's by-hand round; the register starts in week 2</td></tr>
+          <tr><td>A message carries rubric language the lint does not know</td><td>The owner reading every message before sending (phase 3's run rule)</td><td>The lint gains the word; the message is rewritten by hand; the case goes in the pilot log</td></tr>
+          <tr><td>The scorer's variance between two runs is wide enough that a band flips</td><td>Gate 2's read-not-gated check, logged</td><td>The sheet's instructions are tightened, or the score is run twice and the owners read both — a decision for the log</td></tr>
+          <tr><td>A student's name reaches a prompt through a file name the team chose</td><td>Intake renames every file to <code>team-NN-week-NN-&lt;id&gt;</code> before anything reads it; gate 3's roster grep</td><td>The original is renamed in place, the log line corrected, and the prompt assembly gains a check against the roster</td></tr>
+          <tr><td>The sheet changes mid-week and two teams are scored against different versions</td><td>The provenance header on every score</td><td>Re-run the week; the header says which scores predate the change</td></tr>
+          <tr><td>The content track slips and a deliverable has no sheet</td><td><em>No sheet, no score</em>, exit 1, by name</td><td>That week's questions come from the coherence findings and the document alone, and the sheet lands the week after — said to the team as such</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="where">
+    <h2 class="bds-part">Where this comes from, and how it is judged</h2>
+    <p>Every phase names the section of the <a href="blueprint-socratic-workflow.html">blueprint</a> it builds, and the blueprint names the section of the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/prd-socratic-gate.md" target="_blank" rel="noopener">PRD</a> it implements — which is exactly the chain the coherence checker in phase 4 reads a team's documents for. This build plan will be read against the criteria for the week-4 build plan, published before that hand-in; until then it is a draft in the repository's <code>work/drafts/</code> folder, beside the blueprint.</p>
+    <p class="chapter-meta">Version 0.1 · 11 September 2026 · draft</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
