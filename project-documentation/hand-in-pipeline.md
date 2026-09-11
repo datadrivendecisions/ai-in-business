@@ -146,8 +146,8 @@ calendar would save an argument and cost a wrong week now and then, which is wor
 For each file in `inbox/`:
 
 1. Work out the team **and the deliverable**. `intake.py`'s `guess_team()` reads the team from
-   the file name; the deliverable is guessed the same way (`blueprint`, `bouwplan`, `build
-   plan`…) and both are corrected by the lecturer in the manifest where the guess is empty or
+   the file name; the deliverable is guessed the same way (`blueprint`, `build plan`,
+   `decision log`…) and both are corrected by the lecturer in the manifest where the guess is empty or
    wrong. A file with no team or no deliverable **stays in the inbox** and goes no further
    until someone fills them in. The agent never guesses either from the document's content.
 2. Move the file to `teams/team-NN/week-NN/team-NN-week-NN-<deliverable>-original.<ext>`, or

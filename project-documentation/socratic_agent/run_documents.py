@@ -31,16 +31,17 @@ from html.parser import HTMLParser
 
 DEFAULT_ROOT = pathlib.Path.home() / "Documents/HAN/M3DM/ai-in-business-intake"
 
-# The six documents of ADR-0010's spine, and the names students actually give
-# their files. Order matters where one alias contains another: 'plan' alone is
-# not listed, because a build plan and a knowledge plan would both match it.
+# The six documents of ADR-0010's spine, and the names students give their
+# files. Students write in English, so only English aliases are listed. Order
+# matters where one alias contains another: 'plan' alone is not listed, because
+# a build plan and a knowledge plan would both match it.
 DELIVERABLES = {
     "prd": ["prd", "product requirements", "requirements"],
-    "blueprint": ["blueprint", "blauwdruk", "technical design", "technisch ontwerp"],
-    "knowledge": ["knowledge", "kennis", "knowledge architecture", "kennisarchitectuur"],
-    "buildplan": ["buildplan", "build plan", "build-plan", "bouwplan"],
-    "eval": ["eval", "evaluation", "evaluatie"],
-    "decisions": ["decisions", "decision log", "decision-log", "besluiten", "beslissingen", "decisionlog"],
+    "blueprint": ["blueprint", "technical design"],
+    "knowledge": ["knowledge", "knowledge architecture"],
+    "buildplan": ["buildplan", "build plan", "build-plan"],
+    "eval": ["eval", "evaluation"],
+    "decisions": ["decisions", "decision log", "decision-log", "decisionlog"],
 }
 
 # Word and RTF go through textutil, which ships with macOS. PDF needs poppler.

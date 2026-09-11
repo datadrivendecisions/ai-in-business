@@ -258,6 +258,10 @@ pre.tree {
 }
 .gate p:last-child { margin-bottom: 0; }
 .phase-meta { font-size: var(--text-sm); color: var(--text-secondary); margin-top: calc(-1 * var(--space-2)); }
+/* Build status. The boxes are static: they are ticked by editing this page when a
+   phase lands, so the page is the status and git is its history. No script. */
+input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1em; accent-color: var(--supporting); }
+.status-table td:first-child { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -319,8 +323,27 @@ pre.tree {
     </div>
   </section>
 
+  <section id="status">
+    <h2 class="bds-part">2 · Build status</h2>
+    <p>Ticked by editing this page when a phase's gate has passed and its commit is on the remote, so the page is the status and git is its history. Every box beside a task below is kept the same way. Last updated <strong>11 September 2026</strong>.</p>
+    <div class="tbl-wrap">
+      <table class="status-table">
+        <thead><tr><th>Phase</th><th>Gate</th><th>Pushed as</th><th>Open</th></tr></thead>
+        <tbody>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 0 · Ground</td><td>passed</td><td><code>963ac12</code></td><td>the roster has its header and no teams yet — the owner's, with names</td></tr>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 1 · Intake</td><td>passed, after two defects it found</td><td><code>cb1e740</code></td><td>—</td></tr>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 2 · Scorer</td><td>passed</td><td><code>25fd7b7</code></td><td>the sheet's author reads the variance note in the pipeline log</td></tr>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 3 · Questioner</td><td>passed, after the lint was narrowed twice</td><td><code>dad9f4e</code></td><td><input class="done" type="checkbox" disabled aria-label="not yet"> the week-1 run, on the cohort's PRDs</td></tr>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 4 · Coherence</td><td>passed</td><td><code>6c3fde0</code></td><td>the public coherence section (no blueprint criteria page yet); <input class="done" type="checkbox" disabled aria-label="not yet"> the week-2 run</td></tr>
+          <tr><td><input class="done" type="checkbox" disabled aria-label="not yet"> Phase 5 · Handover</td><td>not run</td><td>—</td><td>the runbook is written; the second owner's store, the invariant policy and the two decision-log entries are the owners' decisions</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The transcripts behind the ticks are in the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/test-fixtures/pipeline-log.md" target="_blank" rel="noopener">pipeline log</a>.</p>
+  </section>
+
   <section id="rules">
-    <h2 class="bds-part">2 · The rules every phase follows</h2>
+    <h2 class="bds-part">3 · The rules every phase follows</h2>
     <ul>
       <li><strong>One commit per phase, on <code>main</code>, pushed straight to the remote</strong> when the gate has passed. No branches and no pull requests: the gate is the review. The commit message says why the phase is shaped as it is; the gate's transcript — the command, its output, the exit code — goes in the pipeline log, and the message names the entry.</li>
       <li><strong>A phase begins only after the previous phase's push has succeeded.</strong> A push that is rejected, or a gate that fails, stops the clock; the next phase does not start on a promise.</li>
@@ -333,7 +356,7 @@ pre.tree {
   </section>
 
   <section id="graph">
-    <h2 class="bds-part">3 · The order, as a graph</h2>
+    <h2 class="bds-part">4 · The order, as a graph</h2>
     <p>Top to bottom is time. A phase begins only when the previous phase's gate has passed and its commit has been pushed. Inside a phase, boxes on one row run in sequence and rows stacked on each other run in parallel — each row is one agent's lane. The yellow boxes are the gate scripts, written in their own lane by an agent that did not write the code they test.</p>
     <div class="tbl-wrap">
 <svg viewBox="0 0 846 1372" width="846" height="1372" role="img" aria-labelledby="graph-title graph-desc" style="max-width:100%;height:auto;font-family:inherit;font-size:12px">
@@ -474,7 +497,7 @@ pre.tree {
   </section>
 
   <section id="parallel">
-    <h2 class="bds-part">4 · What several agents can build at once</h2>
+    <h2 class="bds-part">5 · What several agents can build at once</h2>
     <p>The file contracts in the blueprint's §6 are the seams. Anything on one side of a contract can be written without seeing the other side, so it can be written by a different agent at the same time. Four rules keep that from turning into a merge conflict:</p>
     <ul>
       <li><strong>Phases are never parallel.</strong> No agent starts phase N+1 before phase N's push has succeeded. The gate is the only thing that lets time move.</li>
@@ -502,11 +525,11 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §5 (where things live) and §7 (tests) · before phase 1 · half a day</p>
     <p>Nothing that talks to a model. The folder layout the whole design rests on, and the fixtures every later gate runs against.</p>
     <ol>
-      <li>Lay out the intake folder as blueprint §5 draws it: <code>rubric/</code>, <code>inbox/</code>, <code>teams/</code>, <code>roster.tsv</code>, <code>log.tsv</code>. Move the existing <code>week-01/inbox/</code> files into <code>inbox/</code>; delete the derived <code>week-01/text/</code>.</li>
-      <li>Rewrite the intake folder's <code>README.md</code> to describe the per-team layout and the one command a week.</li>
-      <li>Write <code>roster.tsv</code> for the cohort: team number, first names, Teams channel. On the disk only.</li>
-      <li>Name the fixtures in <code>project-documentation/test-fixtures/README.md</code>: the gate's PRD as the PRD fixture, the blueprint as the blueprint fixture, and the departure in the blueprint's §9 as the coherence finding the checker must produce.</li>
-      <li>Make a scratch intake root under the fixtures' own folder structure, so every gate can run against a throw-away copy.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Lay out the intake folder as blueprint §5 draws it: <code>rubric/</code>, <code>inbox/</code>, <code>teams/</code>, <code>roster.tsv</code>, <code>log.tsv</code>. Move the existing <code>week-01/inbox/</code> files into <code>inbox/</code>; delete the derived <code>week-01/text/</code>.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Rewrite the intake folder's <code>README.md</code> to describe the per-team layout and the one command a week.</li>
+      <li><input class="done" type="checkbox" disabled aria-label="not yet"> Write <code>roster.tsv</code> for the cohort: team number, first names, Teams channel. On the disk only.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Name the fixtures in <code>project-documentation/test-fixtures/README.md</code>: the gate's PRD as the PRD fixture, the blueprint as the blueprint fixture, and the departure in the blueprint's §9 as the coherence finding the checker must produce.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Make a scratch intake root under the fixtures' own folder structure, so every gate can run against a throw-away copy.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 0.</strong> <code>ls -R</code> of the intake root matches the tree in blueprint §5 line for line, with <code>teams/</code> empty. <code>roster.tsv</code> has one line per team and no line with an empty channel. The fixtures README names three fixtures and where each is used.</p>
@@ -519,11 +542,11 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §3 part 2, §4 step 1, §6 <code>manifest.tsv</code> and <code>documents.tsv</code> · before the week-1 run · one day</p>
     <p><code>intake.py</code> becomes step 1 of <code>run_documents.py</code>. Everything here is a script; every subtask has a right answer.</p>
     <ol>
-      <li>The skeleton of <code>run_documents.py</code>: <code>--week</code>, <code>--root</code>, <code>--team</code>, <code>--step</code>; the step loop; exit codes 0, 1 and 2 as blueprint §7 defines them.</li>
-      <li>The deliverable guess beside the team guess: <code>prd</code>, <code>blueprint</code>, <code>knowledge</code>, <code>buildplan</code>, <code>eval</code>, <code>decisions</code>, with the Dutch spellings students actually use. Both guesses go in the manifest; both are the lecturer's to correct.</li>
-      <li>The move: hash before, move, hash after, or stop and say so. <code>-vN</code> when the target exists. A line in <code>log.tsv</code>, a line updated in <code>documents.tsv</code>.</li>
-      <li>Conversion from the team folder, since the inbox is emptied; the regeneration of a <code>text/</code> folder goes.</li>
-      <li>A file with no team or no deliverable stays where it is, with its manifest line, and the run says so and exits 1.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The skeleton of <code>run_documents.py</code>: <code>--week</code>, <code>--root</code>, <code>--team</code>, <code>--step</code>; the step loop; exit codes 0, 1 and 2 as blueprint §7 defines them.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The deliverable guess beside the team guess: <code>prd</code>, <code>blueprint</code>, <code>knowledge</code>, <code>buildplan</code>, <code>eval</code>, <code>decisions</code>, and the English variants students actually type (<em>build plan</em>, <em>decision log</em>). Both guesses go in the manifest; both are the lecturer's to correct.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The move: hash before, move, hash after, or stop and say so. <code>-vN</code> when the target exists. A line in <code>log.tsv</code>, a line updated in <code>documents.tsv</code>.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Conversion from the team folder, since the inbox is emptied; the regeneration of a <code>text/</code> folder goes.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> A file with no team or no deliverable stays where it is, with its manifest line, and the run says so and exits 1.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 1.</strong> Five files in a scratch inbox: <code>Team 3 PRD.pdf</code>, <code>t05_prd.docx</code>, <code>prd-final.pdf</code> (no team), <code>team-03-prd-v2.md</code>, and a PDF that is not a PDF. After one run: two moved and converted, one is <code>-v2</code>, one stays in the inbox with an empty team cell, one is named as unconvertible, exit 1. After a second run with the manifest corrected: the stray is filed, exit 0, and <code>documents.tsv</code> and <code>log.tsv</code> gain exactly one line each. A third run changes nothing.</p>
@@ -536,12 +559,12 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §3 part 3, §4 step 2, §6 <code>score-&lt;id&gt;.md</code>, §7 instruction assembly · before the week-1 run · one day</p>
     <p>The first model call. Its instruction is built from files at run time and nothing else; a script wraps it in a provenance header and checks its shape before anything is written.</p>
     <ol>
-      <li>The criteria page as text: <code>site/&lt;id&gt;-criteria.html</code> through the extractor <code>agent.py</code> already has.</li>
-      <li>Instruction assembly: the sheet from <code>rubric/&lt;id&gt;-scoresheet.md</code> verbatim, then the criteria, then the document, then the previous score for the same deliverable if <code>documents.tsv</code> shows one.</li>
-      <li>The provenance header: the criteria page's last commit, the sheet's content hash, the date.</li>
-      <li>The call, per document, with the retry rule from <code>run_week.py</code>; written only when <code>## RETURNED</code>, or <code>## SCORESHEET</code> and <code>## BEFORE V1</code>, are present.</li>
-      <li><em>No sheet, no score</em>: a deliverable without a sheet or a criteria page is reported by name, and the step continues with the next.</li>
-      <li>Skip when <code>owners/score-&lt;id&gt;.md</code> exists.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The criteria page as text: <code>site/&lt;id&gt;-criteria.html</code> through the extractor <code>agent.py</code> already has.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Instruction assembly: the sheet from <code>rubric/&lt;id&gt;-scoresheet.md</code> verbatim, then the criteria, then the document, then the previous score for the same deliverable if <code>documents.tsv</code> shows one.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The provenance header: the criteria page's last commit, the sheet's content hash, the date.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The call, per document, with the retry rule from <code>run_week.py</code>; written only when <code>## RETURNED</code>, or <code>## SCORESHEET</code> and <code>## BEFORE V1</code>, are present.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <em>No sheet, no score</em>: a deliverable without a sheet or a criteria page is reported by name, and the step continues with the next.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Skip when <code>owners/score-&lt;id&gt;.md</code> exists.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 2.</strong> The PRD fixture scores: the file starts with the provenance header and carries the required headings, checked by script. A second run skips it and the file's hash is unchanged. A blueprint fixture with no sheet in <code>rubric/</code> yields the line <em>unscored: no sheet for blueprint</em> and exit 1, and nothing is written for it. <strong>Read by a person, without blocking merge:</strong> both owners read the fixture's score and log in the pilot log whether they would sign it; two runs on the same fixture are compared for variance.</p>
@@ -554,12 +577,12 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §3 parts 5 and 6, §4 step 3, §6 <code>register.tsv</code>, <code>questions.md</code>, <code>message.md</code>, and the two-column contract · before the week-1 run · two days</p>
     <p>The part that produces the only file that leaves the building, and the two scripts that stand between it and the door.</p>
     <ol>
-      <li><code>register.tsv</code>: read, filter to open · partly · ducked, append, rewrite. The status vocabulary is closed; anything else is a parse error.</li>
-      <li>The two-column extraction, as a script: parse the score's table, keep <em>weakest evidence</em> and <em>what would raise it by one</em>, drop the score column, the total and the band before the text reaches any prompt.</li>
-      <li>The questioner's instructions: <code>instructions.txt</code> keeps its rules on history, on questions only, on never quoting a sentence the team did not write — and loses the fetch, since the document is handed in as text. Two files, one for a page and one for a document, or one file with the fetch paragraph made conditional; either way the rules are stated once.</li>
-      <li>Instruction assembly in the order blueprint §6 fixes: register, this week's text, the columns, the instructions. Cold start: an empty register is passed as such, and the history rules are told they do not yet apply.</li>
-      <li>Output parsing into register updates, <code>questions.md</code>, and <code>message.md</code> with the fixed opening and closing from a file in the repository.</li>
-      <li>The lint: criterion codes, <code>/60</code>, band names, the word <em>score</em>. A hit fails the step with the line quoted.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <code>register.tsv</code>: read, filter to open · partly · ducked, append, rewrite. The status vocabulary is closed; anything else is a parse error.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The two-column extraction, as a script: parse the score's table, keep <em>weakest evidence</em> and <em>what would raise it by one</em>, drop the score column, the total and the band before the text reaches any prompt.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The questioner's instructions: <code>instructions.txt</code> keeps its rules on history, on questions only, on never quoting a sentence the team did not write — and loses the fetch, since the document is handed in as text. Two files, one for a page and one for a document, or one file with the fetch paragraph made conditional; either way the rules are stated once.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Instruction assembly in the order blueprint §6 fixes: register, this week's text, the columns, the instructions. Cold start: an empty register is passed as such, and the history rules are told they do not yet apply.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Output parsing into register updates, <code>questions.md</code>, and <code>message.md</code> with the fixed opening and closing from a file in the repository.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The lint: criterion codes, <code>/60</code>, band names, the word <em>score</em>. A hit fails the step with the line quoted.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 3.</strong> On the PRD fixture's score: <code>questions.md</code> has three to five lines and each ends in a question mark; <code>message.md</code> passes lint; the register gains that many lines, all <em>open</em>. A message with <code>A3</code> and <code>/60</code> planted in it fails lint and the run exits 1. On a second fixture with one register question answered in a doctored copy: that question's status becomes <em>answered</em> with a quote, and it is not asked again. A fake roster with distinctive names: none of them appears in any assembled prompt, checked by grep.</p>
@@ -572,11 +595,11 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §3 part 4, §4 step 2b, §6 <code>coherence.md</code>, and the findings-to-questioner input · before the week-2 run · one day, plus the sheet</p>
     <p>The first step that reads more than one document. It has nothing to do until the blueprints arrive, and everything to do then.</p>
     <ol>
-      <li>The latest version of every deliverable from <code>documents.tsv</code>; the step skips, saying why, when there is only one.</li>
-      <li><code>rubric/coherence-scoresheet.md</code>, written by the AEL owner from the rows in the pipeline design note: the questions in both directions, the findings each produces, the 0–3 per direction, the instruction block. Outside the repository, like every sheet.</li>
-      <li>What the sheet checks, published: a short section on the blueprint criteria page saying a team's documents are read against each other, and how. Before the hand-in, like every criterion.</li>
-      <li>Instruction assembly and the call; written only with <code>## TRACE</code> and <code>## FINDINGS</code> present.</li>
-      <li>The findings section handed to the questioner beside the two columns, and the questioner's instructions told what a coherence finding is and that both sides are quoted.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The latest version of every deliverable from <code>documents.tsv</code>; the step skips, saying why, when there is only one.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <code>rubric/coherence-scoresheet.md</code>, written by the AEL owner from the rows in the pipeline design note: the questions in both directions, the findings each produces, the 0–3 per direction, the instruction block. Outside the repository, like every sheet.</li>
+      <li><input class="done" type="checkbox" disabled aria-label="not yet"> What the sheet checks, published: a short section on the blueprint criteria page saying a team's documents are read against each other, and how. Before the hand-in, like every criterion.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> Instruction assembly and the call; written only with <code>## TRACE</code> and <code>## FINDINGS</code> present.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The findings section handed to the questioner beside the two columns, and the questioner's instructions told what a coherence finding is and that both sides are quoted.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 4.</strong> On the fixture pair — the gate's PRD and the workflow blueprint — <code>coherence.md</code> has both headings; <code>## TRACE</code> has one row per line of the PRD's "what it must let a user do" table; <code>## FINDINGS</code> names the planted departure, checked by grep for the inbox door against the PRD's pull-only rule. With the blueprint fixture removed, the step skips with a named reason and exit 0. The questioner, run after it, produces at least one question tagged <em>coherence</em> in the register.</p>
@@ -589,11 +612,11 @@ pre.tree {
     <p class="phase-meta">Builds blueprint §7 (failure, secrets), §10, §11 · before the week-3 run · one day, spread over the week</p>
     <p>What turns a script one person can run into a workflow two people can run, and closes the blueprint's open questions that a build can close.</p>
     <ol>
-      <li>The runbook in the intake folder's README: the Saturday-morning sequence in ten lines, including what to do when the exit code is 1 and when it is 2.</li>
-      <li>The second owner: the intake root reachable from a second machine, inside the institution's tenant, and <code>--root</code> pointing at it. Which store is a decision (ADR-0013 route 4 names the candidates), and it is taken and written down here.</li>
-      <li>The invariant-failure policy — return at once or hold for the lecturer — decided on the first real case and written into the sheet's instruction block.</li>
-      <li>Two decision-log entries: the runtime chosen in blueprint §7, and the inbox door in blueprint §9. Without them the blueprint's own open question stands.</li>
-      <li>The pilot log for the document pipeline: every fixture run and every live run, one line each, as the page gate keeps.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The runbook in the intake folder's README: the Saturday-morning sequence in ten lines, including what to do when the exit code is 1 and when it is 2.</li>
+      <li><input class="done" type="checkbox" disabled aria-label="not yet"> The second owner: the intake root reachable from a second machine, inside the institution's tenant, and <code>--root</code> pointing at it. Which store is a decision (ADR-0013 route 4 names the candidates), and it is taken and written down here.</li>
+      <li><input class="done" type="checkbox" disabled aria-label="not yet"> The invariant-failure policy — return at once or hold for the lecturer — decided on the first real case and written into the sheet's instruction block.</li>
+      <li><input class="done" type="checkbox" disabled aria-label="not yet"> Two decision-log entries: the runtime chosen in blueprint §7, and the inbox door in blueprint §9. Without them the blueprint's own open question stands.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The pilot log for the document pipeline: every fixture run and every live run, one line each, as the page gate keeps.</li>
     </ol>
     <div class="gate">
       <p><strong>Gate 5.</strong> The second owner runs gates 1 to 4 on their own machine from the runbook alone, without asking a question, and every one passes. The two decision-log entries exist. The runbook's exit-code table matches the code.</p>
@@ -602,13 +625,13 @@ pre.tree {
   </section>
 
   <section id="content">
-    <h2 class="bds-part">5 · The content track, one week ahead</h2>
+    <h2 class="bds-part">6 · The content track, one week ahead</h2>
     <p>The pipeline scores nothing it has no sheet for. Beside the phases above runs a second track of writing, and it is the one that slips. Each row is due before the run that needs it.</p>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Before the run of</th><th>On the site</th><th>In <code>rubric/</code></th><th>Owner</th></tr></thead>
         <tbody>
-          <tr><td>Week 2 (blueprint)</td><td><code>blueprint-criteria.html</code>, linked from the week-2 page beside the assignment; a section on coherence</td><td><code>blueprint-scoresheet.md</code>, <code>coherence-scoresheet.md</code></td><td>AEL owner</td></tr>
+          <tr><td>Week 2 (blueprint)</td><td><input class="done" type="checkbox" disabled aria-label="not yet"> <code>blueprint-criteria.html</code>, linked from the week-2 page beside the assignment; <input class="done" type="checkbox" disabled aria-label="not yet"> a section on coherence</td><td><input class="done" type="checkbox" disabled aria-label="not yet"> <code>blueprint-scoresheet.md</code>, <input class="done" type="checkbox" checked disabled aria-label="done"> <code>coherence-scoresheet.md</code> (drafted; the owner edits)</td><td>AEL owner</td></tr>
           <tr><td>Week 3 (knowledge architecture)</td><td><code>knowledge-criteria.html</code></td><td><code>knowledge-scoresheet.md</code>; the knowledge rows of the coherence sheet</td><td>AEL owner</td></tr>
           <tr><td>Week 4 (build plan)</td><td><code>buildplan-criteria.html</code></td><td><code>buildplan-scoresheet.md</code>; the build-plan rows</td><td>AEL owner</td></tr>
           <tr><td>Week 5 (evaluation, decisions)</td><td><code>eval-criteria.html</code>, <code>decisions-criteria.html</code></td><td><code>eval-scoresheet.md</code>, <code>decisions-scoresheet.md</code>; the evaluation and decision rows</td><td>Both owners</td></tr>
@@ -619,7 +642,7 @@ pre.tree {
   </section>
 
   <section id="risks">
-    <h2 class="bds-part">6 · What can go wrong, and what catches it</h2>
+    <h2 class="bds-part">7 · What can go wrong, and what catches it</h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Risk</th><th>Caught by</th><th>If it is not</th></tr></thead>
