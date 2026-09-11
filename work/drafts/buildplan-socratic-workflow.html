@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Build plan: the Socratic workflow — AI in Business</title>
-<meta name="description" content="The teaching team's own build plan for the Socratic workflow: phases, subtasks, test gates and the commit and pull-request run for each — written to the week 4 brief, as a worked example." />
+<meta name="description" content="The teaching team's own build plan for the Socratic workflow: phases, subtasks, test gates and the commit and push that close each — written to the week 4 brief, as a worked example." />
 <style>
 /* ================================================================
    Business Data Solutions — brand system (palette C "strict minimal")
@@ -300,7 +300,7 @@ pre.tree {
     <div class="bds-eyebrow">AEL · week 4 · build plan · worked example</div>
     <h1 class="bds-h1">Build plan: the Socratic workflow</h1>
     <blockquote class="lead-quote"><em>A reader can tell what gets built in what order, how each step proves it works before the next begins, and what a commit has to show before it is allowed in.</em></blockquote>
-    <p class="lead">This is the build plan for the <a href="blueprint-socratic-workflow.html">blueprint of the Socratic workflow</a>: six phases, each with its subtasks, one binary test gate, and the commit-and-pull-request run that closes it. It is written to the brief you get in week 4, as a worked example of the document — and of its discipline: nothing is built that the blueprint does not name, and nothing is merged that its gate has not passed.</p>
+    <p class="lead">This is the build plan for the <a href="blueprint-socratic-workflow.html">blueprint of the Socratic workflow</a>: six phases, each with its subtasks, one binary test gate, and the commit and push that close it. It is written to the brief you get in week 4, as a worked example of the document — and of its discipline: nothing is built that the blueprint does not name, and nothing is pushed that its gate has not passed.</p>
     <p class="tpl-notice"><strong>The runs set the order.</strong> The week-1 documents are waiting to be scored now, so the scorer and the questioner come before the coherence checker, which has nothing to check until a second document exists. Each phase is dated to the run it must precede.</p>
   </header>
 
@@ -322,13 +322,182 @@ pre.tree {
   <section id="rules">
     <h2 class="bds-part">2 · The rules every phase follows</h2>
     <ul>
-      <li><strong>One branch per phase</strong>, named <code>pipeline/&lt;phase&gt;</code>, one pull request, merged to <code>main</code> only when the gate has passed. The pull request's description states the gate and pastes the transcript of it passing — the command, its output, the exit code.</li>
+      <li><strong>One commit per phase, on <code>main</code>, pushed straight to the remote</strong> when the gate has passed. No branches and no pull requests: the gate is the review. The commit message says why the phase is shaped as it is; the gate's transcript — the command, its output, the exit code — goes in the pipeline log, and the message names the entry.</li>
+      <li><strong>A phase begins only after the previous phase's push has succeeded.</strong> A push that is rejected, or a gate that fails, stops the clock; the next phase does not start on a promise.</li>
       <li><strong>A gate is a command with an exit code</strong>, run against fixtures that are not student work. A gate a person has to interpret is not a gate.</li>
       <li><strong>Model steps are gated on shape, and read by a person for sense.</strong> A script checks that a score has its headings and its provenance line; an owner reads the score of the fixture and logs what they think of it. Both happen before merge; only the first blocks it.</li>
       <li><strong>Nothing from the intake folder ever appears in a diff.</strong> Before every push: <code>git diff --cached --name-only</code> is read for a team folder, a roster, or an inbox file. The intake root is outside the repository, so this should be impossible; the check is for the day it is not.</li>
       <li><strong>Every phase leaves the previous one working.</strong> The manual path — a lecturer scoring by hand with the sheet, in twenty minutes — is the fallback for any week a phase is late. A missed phase costs an hour; it never costs a team its questions.</li>
-      <li><strong>CI runs what CI can:</strong> the link check on every pull request. Model calls are not run in CI, because the key is course-owned and the fixtures are enough; their transcript travels in the pull request instead.</li>
+      <li><strong>CI runs what CI can:</strong> the link check on every push that touches the repository's documents. Model calls are not run in CI, because the key is course-owned and the fixtures are enough; their transcript lives in the pipeline log instead.</li>
     </ul>
+  </section>
+
+  <section id="graph">
+    <h2 class="bds-part">3 · The order, as a graph</h2>
+    <p>Top to bottom is time. A phase begins only when the previous phase's gate has passed and its commit has been pushed. Inside a phase, boxes on one row run in sequence and rows stacked on each other run in parallel — each row is one agent's lane. The yellow boxes are the gate scripts, written in their own lane by an agent that did not write the code they test.</p>
+    <div class="tbl-wrap">
+<svg viewBox="0 0 804 1414" width="804" height="1414" role="img" aria-labelledby="graph-title graph-desc" style="max-width:100%;height:auto;font-family:inherit;font-size:12px">
+<title id="graph-title">Phases and tasks of the build, in order</title>
+<desc id="graph-desc">Six phases from top to bottom, each ending in a gate and a push. Inside a phase, boxes in one row run in sequence; rows stacked in a phase run in parallel, one per agent. Yellow boxes are gate scripts.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--text-secondary)"/></marker></defs>
+<rect x="4" y="10" width="796" height="100" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="32" style="font-weight:600;fill:var(--text)">Phase 0</text>
+<text x="16" y="50" style="fill:var(--text-secondary);font-size:12px">Ground</text>
+<text x="16" y="100" style="fill:var(--text-secondary);font-size:11px">2 lanes in parallel</text>
+<rect x="130" y="24" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="43" style="font-size:11.5px;fill:var(--text)">0.1 layout of the intake root</text>
+<rect x="348" y="24" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="43" style="font-size:11.5px;fill:var(--text)">0.2 intake README</text>
+<line x1="326" y1="39.0" x2="348" y2="39.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="566" y="24" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="574" y="43" style="font-size:11.5px;fill:var(--text)">0.3 roster (owner)</text>
+<line x1="544" y1="39.0" x2="566" y2="39.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="130" y="66" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="85" style="font-size:11.5px;fill:var(--text)">0.4 fixtures README</text>
+<rect x="348" y="66" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="85" style="font-size:11.5px;fill:var(--text)">0.5 scratch root for gates</text>
+<line x1="326" y1="81.0" x2="348" y2="81.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="116" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="132" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 0 · commit · push</text>
+<line x1="402.0" y1="140" x2="402.0" y2="154" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="160" width="796" height="184" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="182" style="font-weight:600;fill:var(--text)">Phase 1</text>
+<text x="16" y="200" style="fill:var(--text-secondary);font-size:12px">Intake</text>
+<text x="16" y="334" style="fill:var(--text-secondary);font-size:11px">4 lanes in parallel</text>
+<rect x="130" y="174" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="193" style="font-size:11.5px;fill:var(--text)">1.1 run_documents.py skeleton</text>
+<rect x="348" y="174" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="193" style="font-size:11.5px;fill:var(--text)">1.3 move, hash, -vN, documents.tsv</text>
+<line x1="326" y1="189.0" x2="348" y2="189.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="566" y="174" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="574" y="193" style="font-size:11.5px;fill:var(--text)">1.5 unknown stays in inbox</text>
+<line x1="544" y1="189.0" x2="566" y2="189.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="130" y="216" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="235" style="font-size:11.5px;fill:var(--text)">1.2 deliverable guess + manifest</text>
+<rect x="130" y="258" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="277" style="font-size:11.5px;fill:var(--text)">1.4 convert from team folder</text>
+<rect x="130" y="300" width="196" height="30" rx="4" style="fill:var(--bg-yellow);stroke:var(--border)"/>
+<text x="138" y="319" style="font-size:11.5px;fill:var(--text)">gate-1 script + fixture files</text>
+<path d="M326,189.0 C337.0,189.0 119.0,231.0 130,231.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<path d="M326,189.0 C337.0,189.0 119.0,273.0 130,273.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<path d="M326,273.0 C337.0,273.0 555.0,189.0 566,189.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="350" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="366" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 1 · commit · push</text>
+<line x1="402.0" y1="374" x2="402.0" y2="388" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="394" width="796" height="184" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="416" style="font-weight:600;fill:var(--text)">Phase 2</text>
+<text x="16" y="434" style="fill:var(--text-secondary);font-size:12px">Scorer</text>
+<text x="16" y="568" style="fill:var(--text-secondary);font-size:11px">4 lanes in parallel</text>
+<rect x="130" y="408" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="427" style="font-size:11.5px;fill:var(--text)">2.2 instruction assembly</text>
+<rect x="348" y="408" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="427" style="font-size:11.5px;fill:var(--text)">2.4 call, retries, shape check</text>
+<line x1="326" y1="423.0" x2="348" y2="423.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="566" y="408" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="574" y="427" style="font-size:11.5px;fill:var(--text)">2.5 no sheet no score · 2.6 skip</text>
+<line x1="544" y1="423.0" x2="566" y2="423.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="130" y="450" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="469" style="font-size:11.5px;fill:var(--text)">2.1 criteria page → text</text>
+<rect x="130" y="492" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="511" style="font-size:11.5px;fill:var(--text)">2.3 provenance header</text>
+<rect x="130" y="534" width="196" height="30" rx="4" style="fill:var(--bg-yellow);stroke:var(--border)"/>
+<text x="138" y="553" style="font-size:11.5px;fill:var(--text)">gate-2 script</text>
+<path d="M326,465.0 C337.0,465.0 119.0,423.0 130,423.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<path d="M326,507.0 C337.0,507.0 337.0,423.0 348,423.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="584" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="600" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 2 · commit · push</text>
+<line x1="402.0" y1="608" x2="402.0" y2="622" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="628" width="796" height="226" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="650" style="font-weight:600;fill:var(--text)">Phase 3</text>
+<text x="16" y="668" style="fill:var(--text-secondary);font-size:12px">Questioner</text>
+<text x="16" y="844" style="fill:var(--text-secondary);font-size:11px">5 lanes in parallel</text>
+<rect x="130" y="642" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="661" style="font-size:11.5px;fill:var(--text)">3.1 register read/write</text>
+<rect x="348" y="642" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="661" style="font-size:11.5px;fill:var(--text)">3.4 instruction assembly</text>
+<line x1="326" y1="657.0" x2="348" y2="657.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="566" y="642" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="574" y="661" style="font-size:11.5px;fill:var(--text)">3.5 output → register, questions, message</text>
+<line x1="544" y1="657.0" x2="566" y2="657.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="130" y="684" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="703" style="font-size:11.5px;fill:var(--text)">3.2 two-column extraction</text>
+<rect x="130" y="726" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="745" style="font-size:11.5px;fill:var(--text)">3.3 instructions, document variant</text>
+<rect x="130" y="768" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="787" style="font-size:11.5px;fill:var(--text)">3.6 message lint</text>
+<rect x="130" y="810" width="196" height="30" rx="4" style="fill:var(--bg-yellow);stroke:var(--border)"/>
+<text x="138" y="829" style="font-size:11.5px;fill:var(--text)">gate-3 script + doctored fixture</text>
+<path d="M326,699.0 C337.0,699.0 337.0,657.0 348,657.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<path d="M326,741.0 C337.0,741.0 337.0,657.0 348,657.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<path d="M326,783.0 C337.0,783.0 555.0,657.0 566,657.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="860" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="876" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 3 · commit · push · week-1 run</text>
+<line x1="402.0" y1="884" x2="402.0" y2="898" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="904" width="796" height="184" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="926" style="font-weight:600;fill:var(--text)">Phase 4</text>
+<text x="16" y="944" style="fill:var(--text-secondary);font-size:12px">Coherence</text>
+<text x="16" y="1078" style="fill:var(--text-secondary);font-size:11px">4 lanes in parallel</text>
+<rect x="130" y="918" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="937" style="font-size:11.5px;fill:var(--text)">4.1 latest of each deliverable</text>
+<rect x="348" y="918" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="356" y="937" style="font-size:11.5px;fill:var(--text)">4.4 assembly, call, TRACE/FINDINGS</text>
+<line x1="326" y1="933.0" x2="348" y2="933.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="566" y="918" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="574" y="937" style="font-size:11.5px;fill:var(--text)">4.5 findings → questioner</text>
+<line x1="544" y1="933.0" x2="566" y2="933.0" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="130" y="960" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="979" style="font-size:11.5px;fill:var(--text)">4.2 coherence sheet (owner)</text>
+<rect x="130" y="1002" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1021" style="font-size:11.5px;fill:var(--text)">4.3 coherence section on criteria page (owner)</text>
+<rect x="130" y="1044" width="196" height="30" rx="4" style="fill:var(--bg-yellow);stroke:var(--border)"/>
+<text x="138" y="1063" style="font-size:11.5px;fill:var(--text)">gate-4 script</text>
+<path d="M326,975.0 C337.0,975.0 337.0,933.0 348,933.0" fill="none" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="1094" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="1110" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 4 · commit · push · week-2 run</text>
+<line x1="402.0" y1="1118" x2="402.0" y2="1132" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="1138" width="796" height="226" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="1160" style="font-weight:600;fill:var(--text)">Phase 5</text>
+<text x="16" y="1178" style="fill:var(--text-secondary);font-size:12px">Handover</text>
+<text x="16" y="1354" style="fill:var(--text-secondary);font-size:11px">5 lanes in parallel</text>
+<rect x="130" y="1152" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1171" style="font-size:11.5px;fill:var(--text)">5.1 runbook</text>
+<rect x="130" y="1194" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1213" style="font-size:11.5px;fill:var(--text)">5.2 second owner's store (decision)</text>
+<rect x="130" y="1236" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1255" style="font-size:11.5px;fill:var(--text)">5.3 invariant-failure policy → sheet</text>
+<rect x="130" y="1278" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1297" style="font-size:11.5px;fill:var(--text)">5.4 two decision-log entries</text>
+<rect x="130" y="1320" width="196" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1339" style="font-size:11.5px;fill:var(--text)">5.5 pipeline log</text>
+<rect x="4" y="1370" width="796" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="402.0" y="1386" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 5 · commit · push</text>
+<line x1="402.0" y1="1394" x2="402.0" y2="1408" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+</svg>
+    </div>
+  </section>
+
+  <section id="parallel">
+    <h2 class="bds-part">4 · What several agents can build at once</h2>
+    <p>The file contracts in the blueprint's §6 are the seams. Anything on one side of a contract can be written without seeing the other side, so it can be written by a different agent at the same time. Four rules keep that from turning into a merge conflict:</p>
+    <ul>
+      <li><strong>Phases are never parallel.</strong> No agent starts phase N+1 before phase N's push has succeeded. The gate is the only thing that lets time move.</li>
+      <li><strong>One file, one agent.</strong> Lanes are cut along file boundaries, or along functions with a stated signature inside <code>run_documents.py</code>. Two agents never hold the same file open.</li>
+      <li><strong>The gate script is written by someone else.</strong> The agent that writes the code does not write the test of it. The gate lane starts from the blueprint's contract, not from the code.</li>
+      <li><strong>Assembly is one lane.</strong> Where a step joins the others' work — the instruction assembly in phases 2, 3 and 4 — one agent owns it and starts when the parts it joins exist.</li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Phase</th><th>Can run at once</th><th>Must wait</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>The intake root's layout and README (one lane); the fixtures README and scratch root (another). The roster is the owner's, in parallel with both.</td><td>Nothing — but the roster has names in it, and only a person writes it.</td></tr>
+          <tr><td>1</td><td>After the skeleton: the deliverable guess, the converter, and the gate-1 fixture set are three independent lanes. The move logic is a fourth, and the longest.</td><td>1.5 (unknown stays) needs both the move and the converter, because it is the branch where neither runs.</td></tr>
+          <tr><td>2</td><td>The criteria-page extractor, the provenance header and the gate-2 script are three independent scripts. Each is a function with an input and an output and no model in it.</td><td>The assembly needs the extractor; the call needs the assembly and the header.</td></tr>
+          <tr><td>3</td><td>Four lanes at once: the register's file I/O, the two-column extraction, the document variant of the questioner's instructions, and the lint. Plus the gate-3 lane with its doctored fixture.</td><td>The assembly needs the first three; the output parsing needs the assembly's format and the lint.</td></tr>
+          <tr><td>4</td><td>Code in one lane; the two pieces of writing — the coherence sheet and its public section — in two more. The writing is the owner's and the slower.</td><td>The call needs the sheet; the questioner's new input needs the call's output.</td></tr>
+          <tr><td>5</td><td>All five: none depends on another. Three are writing, one is a decision, one is a log.</td><td>The second owner's gate run, which needs all five done.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section id="phase-0">
@@ -345,7 +514,7 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 0.</strong> <code>ls -R</code> of the intake root matches the tree in blueprint §5 line for line, with <code>teams/</code> empty. <code>roster.tsv</code> has one line per team and no line with an empty channel. The fixtures README names three fixtures and where each is used.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/ground</code>. Two files in the diff, both documentation. Pull request states gate 0 and its listing; link check in CI; merge.</p>
+    <p><strong>Run.</strong> One commit: two files in the diff, both documentation. Gate 0's listing goes in the pipeline log. Push; phase 1 starts when the push has landed.</p>
   </section>
 
   <section id="phase-1">
@@ -362,7 +531,7 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 1.</strong> Five files in a scratch inbox: <code>Team 3 PRD.pdf</code>, <code>t05_prd.docx</code>, <code>prd-final.pdf</code> (no team), <code>team-03-prd-v2.md</code>, and a PDF that is not a PDF. After one run: two moved and converted, one is <code>-v2</code>, one stays in the inbox with an empty team cell, one is named as unconvertible, exit 1. After a second run with the manifest corrected: the stray is filed, exit 0, and <code>documents.tsv</code> and <code>log.tsv</code> gain exactly one line each. A third run changes nothing.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/intake</code>. Pull request pastes the three transcripts. Link check; merge. <code>intake.py</code> is removed in the same pull request, so there is one door and not two.</p>
+    <p><strong>Run.</strong> One commit, with the three transcripts in the pipeline log. <code>intake.py</code> is removed in the same commit, so there is one door and not two. Push; phase 2 starts when it has landed.</p>
   </section>
 
   <section id="phase-2">
@@ -380,7 +549,7 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 2.</strong> The PRD fixture scores: the file starts with the provenance header and carries the required headings, checked by script. A second run skips it and the file's hash is unchanged. A blueprint fixture with no sheet in <code>rubric/</code> yields the line <em>unscored: no sheet for blueprint</em> and exit 1, and nothing is written for it. <strong>Read by a person, without blocking merge:</strong> both owners read the fixture's score and log in the pilot log whether they would sign it; two runs on the same fixture are compared for variance.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/scorer</code>. The pull request pastes the provenance header and the headings found — not the score itself, which carries the sheet's bands. Link check; merge.</p>
+    <p><strong>Run.</strong> One commit. The pipeline log records the provenance header and the headings found — not the score itself, which carries the sheet's bands, and the log is in the public repository. Push; phase 3 starts when it has landed.</p>
   </section>
 
   <section id="phase-3">
@@ -398,7 +567,7 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 3.</strong> On the PRD fixture's score: <code>questions.md</code> has three to five lines and each ends in a question mark; <code>message.md</code> passes lint; the register gains that many lines, all <em>open</em>. A message with <code>A3</code> and <code>/60</code> planted in it fails lint and the run exits 1. On a second fixture with one register question answered in a doctored copy: that question's status becomes <em>answered</em> with a quote, and it is not asked again. A fake roster with distinctive names: none of them appears in any assembled prompt, checked by grep.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/questioner</code>. Pull request pastes the four transcripts and the fixture's <code>message.md</code> in full — it is the one output that is meant to be read. Link check; merge. <strong>Then the week-1 run</strong>, for real: the cohort's PRDs, one command, the exit code and the terminal summary logged, every <code>message.md</code> read by an owner before it is sent.</p>
+    <p><strong>Run.</strong> One commit, with the four transcripts and the fixture's <code>message.md</code> in full in the pipeline log — it is the one output that is meant to be read. Push. <strong>Then the week-1 run</strong>, for real: the cohort's PRDs, one command, the exit code and the terminal summary logged, every <code>message.md</code> read by an owner before it is sent.</p>
   </section>
 
   <section id="phase-4">
@@ -415,7 +584,7 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 4.</strong> On the fixture pair — the gate's PRD and the workflow blueprint — <code>coherence.md</code> has both headings; <code>## TRACE</code> has one row per line of the PRD's "what it must let a user do" table; <code>## FINDINGS</code> names the planted departure, checked by grep for the inbox door against the PRD's pull-only rule. With the blueprint fixture removed, the step skips with a named reason and exit 0. The questioner, run after it, produces at least one question tagged <em>coherence</em> in the register.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/coherence</code>. Pull request pastes the transcript and the <code>## FINDINGS</code> of the fixture pair — our own documents, so publishable. Link check; merge. Then the week-2 run.</p>
+    <p><strong>Run.</strong> One commit, with the transcript and the <code>## FINDINGS</code> of the fixture pair in the pipeline log — our own documents, so publishable. Push. Then the week-2 run.</p>
   </section>
 
   <section id="phase-5">
@@ -432,11 +601,11 @@ pre.tree {
     <div class="gate">
       <p><strong>Gate 5.</strong> The second owner runs gates 1 to 4 on their own machine from the runbook alone, without asking a question, and every one passes. The two decision-log entries exist. The runbook's exit-code table matches the code.</p>
     </div>
-    <p><strong>Run.</strong> Branch <code>pipeline/handover</code>. Pull request lists what the second owner had to ask, if anything, and what changed in the runbook because of it. Link check; merge.</p>
+    <p><strong>Run.</strong> One commit, and the pipeline log lists what the second owner had to ask, if anything, and what changed in the runbook because of it. Push.</p>
   </section>
 
   <section id="content">
-    <h2 class="bds-part">3 · The content track, one week ahead</h2>
+    <h2 class="bds-part">5 · The content track, one week ahead</h2>
     <p>The pipeline scores nothing it has no sheet for. Beside the phases above runs a second track of writing, and it is the one that slips. Each row is due before the run that needs it.</p>
     <div class="tbl-wrap">
       <table>
@@ -453,7 +622,7 @@ pre.tree {
   </section>
 
   <section id="risks">
-    <h2 class="bds-part">4 · What can go wrong, and what catches it</h2>
+    <h2 class="bds-part">6 · What can go wrong, and what catches it</h2>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Risk</th><th>Caught by</th><th>If it is not</th></tr></thead>
