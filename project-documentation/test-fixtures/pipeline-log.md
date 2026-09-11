@@ -105,3 +105,56 @@ sheet's author: the invariants are applied softly two times in three, and the it
 are the ones whose criterion asks for something the document could carry implicitly. Neither is
 a defect in the step; both are calibration, and the sheet is the place to tighten them. A team's
 real PRD, written to the brief, will not trip V2 the way this fixture does.
+
+## Gate 3 — 11 September 2026 — questioner, register, lint
+
+The first run failed on the lint, and the lint was wrong: it rejected a question for the word
+*assessment*, which is the fixture's own subject, and another for a section code the team had
+written itself. The lint now exempts quoted spans, no longer flags ordinary words, and treats a
+code as a leak only when it does not occur in the team's own text. What it still catches is what
+the sheet would leak: a code the team never wrote, a total, a fraction, a band name, and the
+words score, scoresheet, band and rubric.
+
+```
+$ .venv/bin/python project-documentation/socratic_agent/gates.py 3
+gate 3 — questioner
+  scenario 1 — first week, PRD fixture
+      team-03 prd v1: RETURNED → teams/team-03/week-01/owners/score-prd.md
+      team-03: 4 questions → teams/team-03/week-01/team/message.md; register: no earlier questions
+  ok   questions.md has three to five lines (4)
+  ok   every question ends in a question mark
+  ok   message.md written and passes lint
+  ok   register has 4 lines, all open
+  ok   no roster name in the assembled input
+  ok   no roster name in the message
+  ok   no score column in the assembled input
+  scenario 2 — planted lint failure
+  ok   lint catches the planted lines (3 hits: criterion code, a total, the word band)
+  ok   lint passes a question quoting the team's own code and words
+  scenario 3 — week 2, one register question answered in a doctored document
+      team-03 prd v1: RETURNED → teams/team-03/week-02/owners/score-prd.md
+      team-03: 4 questions → teams/team-03/week-02/team/message.md; register: team-03-w01-q1→answered, team-03-w01-q2→ducked
+  ok   q1 (the clock) is answered with a quote
+  ok   the answered question is not asked again
+  ok   q2 has a valid status (open)
+  ok   at most five questions open
+PASSED
+exit 0
+```
+
+About a minute of model time for two scores and two question sets.
+
+**The fixture's message, in full** (scenario 1) — the one output that is meant to be read:
+
+> 1. The document states, "Primary user — a team of four, in weeks 2 to 6, who have just published that week's handbook page." Given that "The problem" is described as the gate being "built not at all" and the mechanism it replaces "does not scale past the kick-off," what problem, from the perspective of this primary user, does the Socratic gate solve?
+> 2. The document states, "The hard deadline is a feature, and it is this document's sharpest claim." How does the document demonstrate that this hard deadline serves as a beneficial "feature" for the "Primary user — a team of four"?
+> 3. The document states, "The team's only action is to publish on time — the whole interface, by design." However, it also states that someone "must be able to... Show what a question changed" and that "What they owe in return is a revision." In what ways are these actions of showing changes and making revisions consistent with the team's "only action"?
+> 4. The "Secondary user — the two module owners" receive "the same report the team received, plus the score behind it and the gate-A signal." What specific action would a module owner take, or what decision would they make differently, on Monday morning, given this information and the criteria described in section 3.D1?
+
+**Read, not gated.** Every question is anchored in a quoted sentence, and the third finds a real
+tension in the document. The fourth asks about "the criteria described in section 3.D1" — a
+section of the fixture, so allowed, and a reminder that the questioner will refer to a team's own
+codes when the team uses them. Across gates 2 and 3 the scorer has now *returned* this fixture on
+invariant V2 four times in seven; the questioner worked from the returned reason each time and
+still produced grounded questions, which is the behaviour the design wanted for a document that
+fails an invariant.

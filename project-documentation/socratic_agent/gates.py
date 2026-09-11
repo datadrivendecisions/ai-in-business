@@ -7,6 +7,7 @@ the real one, because it checks the layout and nothing else.
 """
 
 import pathlib
+import re
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
@@ -176,7 +177,82 @@ def gate_2():
     return ok
 
 
-GATES = {0: gate_0, 1: gate_1, 2: gate_2}
+FAKE_NAMES = ["Zebedeus", "Quintilla", "Xerxes", "Ysolde"]
+
+
+def gate_3():
+    """Questioner: questions, message, register and lint on the PRD fixture; a
+    planted lint failure; a doctored second week that answers one open question."""
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import run_documents as rd
+    real_sheet = DEFAULT_ROOT / "rubric/prd-scoresheet.md"
+    if not real_sheet.exists():
+        print(f"gate 3 needs the real sheet at {real_sheet}")
+        return False
+    fixture = (REPO / "project-documentation/prd-socratic-gate.md").read_text(encoding="utf-8")
+    ok = True
+
+    def fresh():
+        root = scratch_root()
+        (root / "rubric/prd-scoresheet.md").write_bytes(real_sheet.read_bytes())
+        (root / "roster.tsv").write_text("team\tnames\tchannel\nteam-03\t" + ", ".join(FAKE_NAMES) + "\tTeam 3 channel\n")
+        return root
+
+    print("gate 3 — questioner")
+    print("  scenario 1 — first week, PRD fixture")
+    root = fresh()
+    (root / "inbox/team-03-prd.md").write_text(fixture, encoding="utf-8")
+    for step in ("intake", "score", "question"):
+        run(root, 1, "--step", step)
+    wk = root / "teams/team-03/week-01"
+    qs = (wk / "team/questions.md").read_text().splitlines() if (wk / "team/questions.md").exists() else []
+    ok &= say(3 <= len(qs) <= 5, f"questions.md has three to five lines ({len(qs)})")
+    ok &= say(all(q.rstrip().endswith("?") for q in qs), "every question ends in a question mark")
+    msg = (wk / "team/message.md").read_text() if (wk / "team/message.md").exists() else ""
+    ok &= say(bool(msg) and not rd.lint_message(msg, root, [fixture]), "message.md written and passes lint")
+    reg = rd.read_tsv(root / "teams/team-03/register.tsv", rd.REGISTER_HEADER)
+    ok &= say(len(reg) == len(qs) and all(r["status"] == "open" for r in reg), f"register has {len(reg)} lines, all open")
+    inp = (wk / "owners/question-input.md").read_text() if (wk / "owners/question-input.md").exists() else "MISSING"
+    ok &= say(inp != "MISSING" and not any(n in inp for n in FAKE_NAMES), "no roster name in the assembled input")
+    ok &= say(not any(n in msg for n in FAKE_NAMES), "no roster name in the message")
+    ok &= say(not re.search(r"\|\s*[0-3]\s*\|", inp), "no score column in the assembled input")
+    print("    message.md:\n      " + msg.strip().replace("\n", "\n      "))
+
+    print("  scenario 2 — planted lint failure")
+    planted = "Questions for team-03.\n\n1. On F2, why is the evidence thin?\n2. You scored 41/60; what would raise it?\n3. Which band do you think you are in?\n"
+    hits = rd.lint_message(planted, root, [fixture])
+    ok &= say(len(hits) >= 3, f"lint catches the planted lines ({len(hits)} hits: {', '.join(w for w, _ in hits)})")
+    ok &= say(not rd.lint_message('1. Under 3b, A1 says "a report that would fit any team is worth nothing": which sentence did nobody read closely?\n', root, [fixture]), "lint passes a question quoting the team's own code and words")
+
+    print("  scenario 3 — week 2, one register question answered in a doctored document")
+    root = fresh()
+    reg_path = root / "teams/team-03/register.tsv"
+    rd.write_tsv(reg_path, rd.REGISTER_HEADER, [
+        {"id": "team-03-w01-q1", "asked": "1", "about": "prd",
+         "question": "Which day and hour does the weekly run happen, and how many hours before the block does the report have to be in the channel?",
+         "status": "open", "resolved": "", "evidence": ""},
+        {"id": "team-03-w01-q2", "asked": "1", "about": "prd",
+         "question": "Who owns the project and its billing when the current owner is no longer on the module?",
+         "status": "open", "resolved": "", "evidence": ""},
+    ])
+    doctored = fixture + ("\n\n## 7. The clock, decided\n\nTeams publish by Friday 18:00. The run happens Saturday 09:00, "
+                          "which is 46 hours before the Monday block, and the report is in the channel by 09:30.\n")
+    (root / "inbox/team-03-prd-v2.md").write_text(doctored, encoding="utf-8")
+    for step in ("intake", "score", "question"):
+        run(root, 2, "--step", step)
+    wk2 = root / "teams/team-03/week-02"
+    reg = {r["id"]: r for r in rd.read_tsv(reg_path, rd.REGISTER_HEADER)}
+    q1 = reg.get("team-03-w01-q1", {})
+    ok &= say(q1.get("status") in ("answered", "partly") and bool(q1.get("evidence")), f"q1 (the clock) is {q1.get('status')} with a quote")
+    qs2 = (wk2 / "team/questions.md").read_text().lower() if (wk2 / "team/questions.md").exists() else ""
+    ok &= say(bool(qs2) and "which day and hour" not in qs2, "the answered question is not asked again")
+    ok &= say(reg.get("team-03-w01-q2", {}).get("status") in rd.STATUSES, f"q2 has a valid status ({reg.get('team-03-w01-q2', {}).get('status')})")
+    ok &= say(len([r for r in reg.values() if r["status"] in rd.STILL_OPEN]) <= rd.MAX_OPEN, "at most five questions open")
+    print("    register:\n      " + reg_path.read_text().strip().replace("\n", "\n      ")[:1500])
+    return ok
+
+
+GATES = {0: gate_0, 1: gate_1, 2: gate_2, 3: gate_3}
 
 
 def main():

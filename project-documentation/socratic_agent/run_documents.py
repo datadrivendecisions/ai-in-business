@@ -443,6 +443,236 @@ def step_score(root, week, only_team=None):
 
 
 # ----------------------------------------------------------------------------
+# step 3 — question: the register, the questions, the message, the lint
+# ----------------------------------------------------------------------------
+
+REGISTER_HEADER = ["id", "asked", "about", "question", "status", "resolved", "evidence"]
+STATUSES = ("open", "answered", "partly", "ducked", "withdrawn")
+STILL_OPEN = ("open", "partly", "ducked")   # fed back next week
+MAX_OPEN = 5
+QUESTION_SHAPES = [["## REGISTER", "## QUESTIONS"]]
+
+
+def score_columns(path):
+    """The two qualitative columns of a scoresheet, and nothing numeric: for each
+    row, the criterion, the weakest evidence quoted and what would raise it. Item
+    codes, scores, totals and bands never leave this function. A RETURNED sheet
+    yields its reason, minus the invariant's code."""
+    text = path.read_text(encoding="utf-8").split("---\n\n", 1)[-1]
+    if "## RETURNED" in text:
+        body = text.split("## RETURNED", 1)[1].strip()
+        body = re.sub(r"^V\d\s*[—-]\s*", "", body)
+        return "The document was not read against the criteria, for this reason:\n" + body.strip()
+    lines = []
+    for row in re.findall(r"^\|\s*[A-G]\d\s*\|(.*)$", text, re.M):
+        cells = [c.strip() for c in row.strip().strip("|").split("|")]
+        if len(cells) < 4:
+            continue
+        criterion, evidence, raise_ = cells[0], cells[2], cells[3]
+        if evidence.upper().startswith("NONE"):
+            evidence = "nothing found — " + evidence[4:].strip(" :—-") if len(evidence) > 4 else "nothing found"
+        line = f"- {criterion}. Weakest sentence: {evidence}"
+        if raise_ and raise_.upper() not in ("N/A", "NA", "—", "-"):
+            line += f" What is missing: {raise_}"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def band_words(root):
+    """Band names from every sheet's bands table, learnt at run time so the lint
+    knows them without the repository carrying them."""
+    words = set()
+    for sheet in (root / "rubric").glob("*-scoresheet.md"):
+        text = sheet.read_text(encoding="utf-8")
+        m = re.search(r"^###\s*3\.4.*?(?=^###|\Z)", text, re.S | re.M)
+        if not m:
+            continue
+        for b in re.findall(r"\*\*([^*]+?)\.?\*\*", m.group(0)):
+            if not re.fullmatch(r"[\d–\-\s]+", b):
+                words.add(b.strip().lower())
+    return words
+
+
+LINT_PATTERNS = [
+    (r"\b[A-G]\d\b", "criterion code"),
+    (r"\bV[1-3]\b", "invariant code"),
+    (r"/\s*\d{2,3}\b", "a total"),
+    (r"\b\d+\s*(?:out of|/)\s*\d+\b", "a fraction"),
+    (r"\bscor(?:e|es|ed|ing)\b", "the word score"),
+    (r"\bscoresheet\b", "the word scoresheet"),
+    (r"\bband\b", "the word band"),
+    (r"\brubric\b", "the word rubric"),
+]
+
+QUOTED = re.compile(r'"[^"\n]*"|“[^”\n]*”|‘[^’\n]*’')
+
+
+def lint_message(text, root, own_texts=()):
+    """Every line of the message that carries rubric language. Empty = clean.
+
+    What the team wrote is theirs to be asked about, so a quoted span is exempt,
+    and a code that appears in the team's own text is not a leak. Everything
+    else that looks like the sheet — a code, a total, a band name, the words
+    score, band or rubric — fails the line."""
+    own = " ".join(own_texts)
+    own_codes = set(re.findall(r"\b[A-G]\d\b", own)) | set(re.findall(r"\bV[1-3]\b", own))
+    hits = []
+    pats = list(LINT_PATTERNS) + [(re.escape(w), f"band name '{w}'") for w in band_words(root)]
+    for line in text.splitlines():
+        bare = QUOTED.sub('""', line)
+        for pat, why in pats:
+            m = re.search(pat, bare, re.I)
+            if not m:
+                continue
+            if why.endswith("code") and m.group(0) in own_codes:
+                continue
+            hits.append((why, line.strip()))
+            break
+    return hits
+
+
+def message_frame():
+    raw = (HERE / "message-frame.md").read_text(encoding="utf-8")
+    parts = raw.split("\n---\n")
+    if len(parts) < 3:
+        raise SystemExit("message-frame.md needs two --- lines: opening between them, closing after")
+    return parts[1].strip(), parts[2].strip()
+
+
+def compose_message(team, week, documents, questions):
+    opening, closing = message_frame()
+    names = ", ".join(documents)
+    opening = opening.format(team=team, week=week, documents=names)
+    body = "\n".join(f"{i}. {q}" for i, q in enumerate(questions, 1))
+    return f"{opening}\n\n{body}\n\n{closing}\n"
+
+
+def parse_question_output(text):
+    """(register lines as (id, status, note), questions as (return_id or None, text))."""
+    reg_part, q_part = text.split("## QUESTIONS", 1)
+    reg_part = reg_part.split("## REGISTER", 1)[1]
+    reg = []
+    for line in reg_part.splitlines():
+        line = line.strip().strip("-* ")
+        if not line or line.lower() == "none":
+            continue
+        cells = [c.strip() for c in line.split("|")]
+        if len(cells) >= 2:
+            reg.append((cells[0], cells[1].lower(), cells[2] if len(cells) > 2 else ""))
+    qs = []
+    for line in q_part.splitlines():
+        m = re.match(r"^\s*(?:\d+[.)]|-|\*)\s+(.*\S)\s*$", line)
+        if not m:
+            continue
+        q = m.group(1)
+        r = re.match(r"^\[return\s+([^\]]+)\]\s*(.*)$", q, re.I)
+        qs.append((r.group(1).strip(), r.group(2).strip()) if r else (None, q))
+    return reg, qs
+
+
+def step_question(root, week, only_team=None):
+    done, problems = [], []
+    instructions = (HERE / "instructions-documents.txt").read_text(encoding="utf-8") \
+        .replace("{{TODAY}}", dt.date.today().strftime("%-d %B %Y"))
+    for team in teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        if not week_dir.is_dir():
+            continue
+        out_q, out_m = week_dir / "team" / "questions.md", week_dir / "team" / "message.md"
+        if out_q.exists():
+            continue
+        texts = latest_texts(week_dir, team, week)
+        if not texts:
+            continue
+
+        # every score that is due must exist; a deliverable with no sheet is due nothing
+        readings, waiting = [], []
+        for deliv in sorted(texts):
+            score = week_dir / "owners" / f"score-{deliv}.md"
+            if score.exists():
+                readings.append(f"## Reading of the {deliv}\n\n{score_columns(score)}")
+            elif (root / "rubric" / f"{deliv}-scoresheet.md").exists():
+                waiting.append(deliv)
+        if waiting:
+            problems.append(f"{team}: questions not written, waiting for score of {', '.join(waiting)}")
+            continue
+        coherence = week_dir / "owners" / "coherence.md"
+        if coherence.exists() and "## FINDINGS" in coherence.read_text(encoding="utf-8"):
+            findings = coherence.read_text(encoding="utf-8").split("## FINDINGS", 1)[1].strip()
+            readings.append(f"## Reading of how this week's document agrees with the earlier ones\n\n{findings}")
+
+        reg_path = root / "teams" / team / "register.tsv"
+        register = read_tsv(reg_path, REGISTER_HEADER)
+        open_rows = [r for r in register if r["status"] in STILL_OPEN]
+        reg_text = "\n".join(f"{r['id']} | asked in week {r['asked']} about the {r['about']} | {r['status']} | {r['question']}"
+                             for r in open_rows) or "none — this is the team's first week; the rules on history do not apply."
+        docs_text = "\n\n".join(f"## The {d} (version {v})\n\n{p.read_text(encoding='utf-8', errors='replace')}"
+                                for d, (v, p) in sorted(texts.items()))
+        message = (f"# THE REGISTER\n\n{reg_text}\n\n# THE DOCUMENTS — {team}, week {week}\n\n{docs_text}\n\n"
+                   f"# THE READING\n\n" + ("\n\n".join(readings) or "none"))
+        (week_dir / "owners").mkdir(parents=True, exist_ok=True)
+        (week_dir / "owners" / "question-input.md").write_text(message, encoding="utf-8")
+
+        text = call_model("questioner", instructions, message, QUESTION_SHAPES)
+        if not text:
+            problems.append(f"{team}: no questions after {RETRIES + 1} attempts")
+            continue
+        reg_updates, qs = parse_question_output(text)
+        if not 3 <= len(qs) <= 5:
+            problems.append(f"{team}: {len(qs)} questions, not three to five; nothing written")
+            continue
+
+        # apply the register updates, then add the new questions
+        by_id = {r["id"]: r for r in register}
+        for rid, status, note in reg_updates:
+            if rid not in by_id or status not in STATUSES:
+                problems.append(f"{team}: register line ignored: {rid} | {status}")
+                continue
+            by_id[rid]["status"] = status
+            by_id[rid]["evidence"] = note
+            if status in ("answered", "withdrawn"):
+                by_id[rid]["resolved"] = str(week)
+        n = 1
+        final_questions = []
+        for return_id, q in qs:
+            if return_id and return_id in by_id:
+                by_id[return_id]["status"] = "open"
+                by_id[return_id]["evidence"] = f"returned in week {week}: " + by_id[return_id]["evidence"]
+                by_id[return_id]["question"] = q or by_id[return_id]["question"]
+                final_questions.append(q or by_id[return_id]["question"])
+                continue
+            while f"{team}-w{week:02d}-q{n}" in by_id:
+                n += 1
+            rid = f"{team}-w{week:02d}-q{n}"
+            about = "coherence" if coherence.exists() and "earlier" in q.lower() else "+".join(sorted(texts))
+            by_id[rid] = {"id": rid, "asked": str(week), "about": about, "question": q,
+                          "status": "open", "resolved": "", "evidence": ""}
+            final_questions.append(q)
+        still_open = [r for r in by_id.values() if r["status"] in STILL_OPEN]
+        if len(still_open) > MAX_OPEN:
+            problems.append(f"{team}: {len(still_open)} questions open after this week, more than {MAX_OPEN}; nothing written")
+            continue
+
+        # the lint stands between the questions and the door
+        composed = compose_message(team, week, sorted(texts), final_questions)
+        hits = lint_message(composed, root, [p.read_text(encoding='utf-8', errors='replace') for _, p in texts.values()])
+        if hits:
+            for why, line in hits:
+                problems.append(f"{team}: message failed lint ({why}): {line[:120]}")
+            (week_dir / "owners" / "message-rejected.md").write_text(composed, encoding="utf-8")
+            continue
+
+        write_tsv(reg_path, REGISTER_HEADER, [by_id[k] for k in by_id],
+                  comment="every question ever asked; status open/partly/ducked come back next week")
+        out_q.parent.mkdir(parents=True, exist_ok=True)
+        out_q.write_text("\n".join(f"{i}. {q}" for i, q in enumerate(final_questions, 1)) + "\n", encoding="utf-8")
+        out_m.write_text(composed, encoding="utf-8")
+        changed = ", ".join(f"{rid}→{st}" for rid, st, _ in reg_updates) or "no earlier questions"
+        done.append(f"{team}: {len(final_questions)} questions → {out_m.relative_to(root)}; register: {changed}")
+    return done, problems
+
+
+# ----------------------------------------------------------------------------
 # later steps — arriving one phase at a time
 # ----------------------------------------------------------------------------
 
@@ -457,7 +687,7 @@ STEPS = [
     ("intake", step_intake),
     ("score", step_score),
     ("coherence", step_not_built("coherence")),
-    ("question", step_not_built("question")),
+    ("question", step_question),
 ]
 
 
