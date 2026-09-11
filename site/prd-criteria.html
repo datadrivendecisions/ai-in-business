@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>What a good PRD looks like — AI in Business</title>
+<meta name="description" content="The criteria your team's product requirements document is read against: problem and users, what it must let a user do, output qualities, constraints, scope, open questions." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-01.html">Week 1</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">AEL · week 1 · product requirements document</div>
+    <h1 class="bds-h1">What a good PRD looks like</h1>
+    <blockquote class="lead-quote"><em>A reader can tell what you're building, for whom, and how you'll know it works.</em></blockquote>
+    <p class="lead">That single sentence is the bar the <a href="week-01.html">week 1 assignment</a> sets. This page is that bar unpacked into the twenty things a reader looks for, so you can hold your own draft against them before anyone else does.</p>
+    <p>The criteria come from Marily Nika's <em>Building AI-Powered Products</em> (O'Reilly, 2025), folded into the six sections the assignment asks for, plus a seventh group for the document as a working instrument. Each criterion says where it comes from.</p>
+    <p class="tpl-notice"><strong>This is published before it is used.</strong> Your PRD is read against these criteria and nothing else. Where the book and the brief pull in different directions, the brief wins — the three places that happens are named below.</p>
+  </header>
+
+  <section id="departures">
+    <h2 class="bds-part">Three departures from the book</h2>
+    <p>Nika's template is written for a nought-to-one commercial AI product with a market. Your platform is an internal research tool whose user is your own team, so three parts of the template are deliberately trimmed.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>The user is the team</h3>
+        <p>"Customer segments" and "personas" become the four researchers in their roles, with the SME owner as the <strong>downstream reader</strong> of what the platform produces. A PRD that answers <em>who</em> with an SME has drifted back to a client prototype.</p>
+      </div>
+      <div class="card">
+        <h3>No market, no rollout</h3>
+        <p>There is no market to size and no launch to plan. What survives is the <strong>technology analysis</strong> — what exists already, the wiki, the site, the CLI — and <strong>stakeholders and communication</strong>: who sees what, when.</p>
+      </div>
+      <div class="card">
+        <h3>Architecture is one paragraph</h3>
+        <p>The technical blueprint is week 2's artefact. Nika wants it "on a very high level"; here a data-flow sentence is enough, and a diagram is not required.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="criteria">
+    <h2 class="bds-part">The twenty criteria</h2>
+    <p>Five groups follow the assignment's six sections; the last group, <strong>G</strong>, is about the document itself.</p>
+
+    <div class="theme">
+      <h3>A · Problem and users</h3>
+      <ul class="angles">
+        <li><strong>A1 — Problem statement, in one piece.</strong> One statement in Nika's form — <em>who</em> spends too much time on, or cannot do, <em>what</em>, with <em>what consequence</em> — and a tl;dr the reader meets first. <span class="src">Template §1, §3</span></li>
+        <li><strong>A2 — Users named concretely and kept apart.</strong> The team as researchers, by role and by what each does with the platform in a week; the SME owner as the reader of the output, with what they need from a page. The two are distinguished, and the team is the primary user. <span class="src">Template §2 personas</span></li>
+        <li><strong>A3 — Pain points carried by evidence.</strong> The problem is grounded in the AIBS problem analysis and the week-1 spike's failure log, quoted or pointed at, so a reader can see the users are bothered enough. Not a hunch. <span class="src">Ch. 2 dos and don'ts</span></li>
+        <li><strong>A4 — Why an agentic platform, specifically.</strong> Name what the agent does that a wiki plus hands does not, and what it would be unwise to hand it. The "shiny AI object" test: would the argument survive if the technology were not interesting? <span class="src">Template §3, §4; ch. 2 don'ts</span></li>
+        <li><strong>A5 — Hypothesis, falsifiable.</strong> "By bringing x to life, z becomes easier, faster or more reliable for the researcher" — stated so that a week's use could show it wrong. <span class="src">Template §3</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>B · What it must let a user do</h3>
+      <ul class="angles">
+        <li><strong>B1 — The path, as a user journey.</strong> From raw source material to a published handbook page, step by step, with who acts at each step: where the agent acts, where a person does, and where a person checks. <span class="src">Template §5; assignment §2</span></li>
+        <li><strong>B2 — Functional requirements say what smart behaviour, and why.</strong> <em>What</em> the platform must do and <em>why that needs an agent</em> — not which model, which prompt library or which framework. <span class="src">Template §5</span></li>
+        <li><strong>B3 — Prioritised, with the uncertainty named.</strong> Which capabilities are the minimum and which come later, with a reason, and <em>confidence</em> made explicit where feasibility is unknown. A flat list of everything scores low. <span class="src">Ch. 2 step 4; template §4</span></li>
+        <li><strong>B4 — Sources and data.</strong> What source material the platform ingests, in what form, where it comes from, where it and the drafts live, and what may <strong>not</strong> be fed to it. <span class="src">Template §5, §6; ch. 7 privacy</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>C · Output qualities</h3>
+      <ul class="angles">
+        <li><strong>C1 — A good page, in checkable terms.</strong> State the qualities of a handbook page so a reader could hold a page against them and answer yes or no per quality: sourced at the claim, sources appraised, addressed to an SME owner who acts on Monday. Adjectives without a test — <em>clear, useful, professional</em> — score low. <span class="src">Template §8</span></li>
+        <li><strong>C2 — Good enough to publish: the threshold.</strong> A minimum viable quality: what must be true of a page before it goes up, and who decides, with the reasoning — what the team expects of itself, what the reader risks if it is wrong. <span class="src">Ch. 3 MVQ; template §8</span></li>
+        <li><strong>C3 — How the team will know the platform works.</strong> A small blend, not a single number: one North Star; at least one product measure (pages on time, hours per page); at least one AI-specific measure (unconfirmable citations per page); and one guardrail — the harm you watch for, such as fluent prose nobody checked. Each measurable with what you have, on a stated cadence. <span class="src">Ch. 6; template §8</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>D · Known constraints</h3>
+      <ul class="angles">
+        <li><strong>D1 — The four given constraints, owned.</strong> Each of the brief's constraints — directing an agentic CLI rather than hand-coding; reusing the wiki and site; runnable by a non-coder; a manual fallback for every automated step — restated in your own words <strong>with its consequence for the design</strong>. A copy of the four lines scores 1. <span class="src">Assignment §4; template §4</span></li>
+        <li><strong>D2 — Risks, each with a mitigation or a detection.</strong> Risks specific to an AI research platform: fabricated or mismatched sources; confident prose nobody read; drift from the research question; cost or time per page. Each with what you will do about it, or how you will notice. Non-functional requirements you add beyond the given four belong here too. <span class="src">Template §4, §5; ch. 5</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>E · Out of scope</h3>
+      <ul class="angles">
+        <li><strong>E1 — Explicit exclusions with a reason.</strong> What you are deliberately not building, one line of reason each, and where useful when it might return. "No UI" without a why scores 1. <span class="src">Ch. 3 scoping</span></li>
+        <li><strong>E2 — Scope proportionate to seven weeks and a non-coding team.</strong> The minimum you promise is something you can have working, badly, by week 2 and improve weekly. A PRD promising a trained model, a full pipeline, or a performance level you cannot yet know scores low. <span class="src">Ch. 4</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>F · Open questions and assumptions</h3>
+      <ul class="angles">
+        <li><strong>F1 — Assumptions marked as assumptions, with a consequence.</strong> Each assumption is labelled as one and says what changes if it is wrong. <span class="src">Template §4; worksheet 1</span></li>
+        <li><strong>F2 — Open questions that are real, owned and routed.</strong> Not rhetorical. Each has an owner and a route to an answer — which week, which experiment, which conversation — and says what it will gain when answered. <span class="src">Template §6; ch. 5</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>G · The document as a working instrument</h3>
+      <ul class="angles">
+        <li><strong>G1 — Header and provenance.</strong> Product name; the product manager as author; contributors named by role; a version and a date; links to the relevant documents — the AIBS problem analysis, the week-1 failure log, the wiki or site it reuses. <span class="src">Template header</span></li>
+        <li><strong>G2 — The three-question test.</strong> From the document alone, in a minute each: <em>what</em> are you building, <em>for whom</em>, and <em>how will you know it works</em>. This is the assignment's own bar and the only holistic item. <span class="src">Assignment; template §1</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="not-scored">
+    <h2 class="bds-part">What is not read against you</h2>
+    <div class="callout">
+      <p>Not scored, on purpose: length beyond the one to three pages; prose quality; the presence of Nika's headings as such; and anything about the platform's <em>code</em>, which no one has yet.</p>
+      <p>Nor is anything the brief does not ask for — market analysis, competitor analysis, rollout strategy, architecture diagrams. Brevity is not penalised either: <strong>a one-page document that answers the three questions beats three pages that do not.</strong></p>
+      <p>One thing is worth more than it looks. An honest gap, named in the open questions with an owner and a route, is worth more than a filled section that asserts.</p>
+    </div>
+  </section>
+
+  <section id="where">
+    <h2 class="bds-part">Where this comes from</h2>
+    <p>The assignment itself is on the <a href="week-01.html">week 1 page</a>. The criteria are drawn from <a href="https://www.oreilly.com/library/view/building-ai-powered-products/9781098152369/" target="_blank" rel="noopener">Marily Nika, <em>Building AI-Powered Products</em></a> (O'Reilly, 2025) and from the course's own design records, which are <a href="https://github.com/datadrivendecisions/ai-in-business/tree/main/work/decisions" target="_blank" rel="noopener">in the repository</a>.</p>
+    <p>These criteria are formative: they shape the draft and the conversation about it. They are not the criterion sets your two marks are given against — <a href="index.html#assessment">those are separate</a>, one per module, and are published before they judge anything.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
