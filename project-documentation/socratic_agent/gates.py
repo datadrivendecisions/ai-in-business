@@ -164,9 +164,11 @@ def gate_2():
     head = text.split("---\n\n", 1)[0]
     ok &= say(text.startswith("---\n") and all(k in head for k in ("criteria: site/prd-criteria.html @", "sheet: rubric/prd-scoresheet.md sha256", "version: 1")),
               "provenance header carries criteria commit, sheet hash and version")
-    ok &= say("## RETURNED" in text or ("## SCORESHEET" in text and "## BEFORE V1" in text), "required headings present")
+    ok &= say(all(h in text for h in ("## INVARIANTS", "## SCORESHEET", "## BEFORE V1")), "required headings present: invariants, sheet, before v1")
+    ok &= say("## RETURNED" not in text, "nothing is returned: the sheet is filled in whatever the invariants say")
     ok &= say(not (root / "teams/team-03/week-01/owners/score-blueprint.md").exists(), "nothing written for the blueprint")
-    print("    headings found:", ", ".join(h for h in ("## RETURNED", "## SCORESHEET", "## BEFORE V1") if h in text))
+    print("    headings found:", ", ".join(h for h in ("## INVARIANTS", "## SCORESHEET", "## BEFORE V1") if h in text))
+    print("    invariants:", " · ".join(l.strip() for l in text.split("## INVARIANTS", 1)[-1].split("## SCORESHEET", 1)[0].strip().splitlines() if l.strip())[:300])
     print("    header:\n      " + head.strip().replace("\n", "\n      "))
 
     print("  run 2 — skip")
@@ -223,6 +225,15 @@ def gate_3():
     hits = rd.lint_message(planted, root, [fixture])
     ok &= say(len(hits) >= 3, f"lint catches the planted lines ({len(hits)} hits: {', '.join(w for w, _ in hits)})")
     ok &= say(not rd.lint_message('1. Under 3b, A1 says "a report that would fit any team is worth nothing": which sentence did nobody read closely?\n', root, [fixture]), "lint passes a question quoting the team's own code and words")
+
+    print("  scenario 2b — an invariant failure becomes a plain note before the questions")
+    fake_score = "---\nteam: team-03\n---\n\n## INVARIANTS\n- V1: fail — the document runs to about 2,400 words. The brief asked for one to three pages.\n- V2: pass\n- V3: pass\n\n## SCORESHEET\n"
+    notes = rd.invariant_failures(fake_score)
+    composed = rd.compose_message("team-03", 1, ["prd"], ["Which sentence did nobody read?", "Why this SME?", "What would show it works?"], notes)
+    ok &= say(len(notes) == 1 and "V1" not in notes[0] and "2,400 words" in notes[0], f"one failure extracted, code stripped: {notes[0] if notes else '—'}")
+    ok &= say("This is feedback rather\nthan a question" in composed and composed.index("2,400 words") < composed.index("1. Which"), "the note sits before the questions and is marked as feedback")
+    ok &= say(not rd.lint_message(composed, root, [fixture]), "the message with the note passes lint")
+    ok &= say(not rd.invariant_failures(fake_score.replace("fail —", "pass —")), "a passing invariant produces no note")
 
     print("  scenario 3 — week 2, one register question answered in a doctored document")
     root = fresh()

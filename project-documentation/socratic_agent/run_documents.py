@@ -385,7 +385,23 @@ def teams_in(root, only_team=None):
 # step 2 — score: one scoresheet per document, against its criteria and sheet
 # ----------------------------------------------------------------------------
 
-SCORE_SHAPES = [["## RETURNED"], ["## SCORESHEET", "## BEFORE V1"]]
+SCORE_SHAPES = [["## INVARIANTS", "## SCORESHEET", "## BEFORE V1"]]
+
+
+def invariant_failures(text):
+    """The failed invariants of a score, as plain sentences without their codes.
+    Nothing is returned on a failure (owner's decision, 11 September 2026): a
+    fail is a warning to the owners and one plain note to the team."""
+    if "## INVARIANTS" not in text:
+        return []
+    section = text.split("## INVARIANTS", 1)[1].split("## SCORESHEET", 1)[0]
+    out = []
+    for line in section.splitlines():
+        line = line.strip().lstrip("-* ")
+        if re.search(r"\bfail", line, re.I):
+            line = re.sub(r"^\**V\d\**\s*[—:\-|]*\s*(?:\**fail\**\s*[—:\-|]*\s*)?", "", line, flags=re.I)
+            out.append(line.strip(" .") + ".")
+    return out
 
 
 def previous_score(root, team, deliv, week):
@@ -426,8 +442,9 @@ def step_score(root, week, only_team=None):
                 "previous": str(prev.relative_to(root)) if prev else "none",
                 "scored": now(),
             }
+            words = len(txt.read_text(encoding="utf-8", errors="replace").split())
             message = (f"# THE CRITERIA — {criteria.name}, as published to the team\n\n{page_text(criteria)}\n\n"
-                       f"# THE DOCUMENT — {team}, week {week}, version {version}\n\n"
+                       f"# THE DOCUMENT — {team}, week {week}, version {version}, {words} words\n\n"
                        f"{txt.read_text(encoding='utf-8', errors='replace')}\n")
             if prev:
                 body = prev.read_text(encoding="utf-8").split("---\n\n", 1)[-1]
@@ -438,8 +455,9 @@ def step_score(root, week, only_team=None):
                 continue
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(header(fields) + text.strip() + "\n", encoding="utf-8")
-            verdict = "RETURNED" if "## RETURNED" in text else "SCORESHEET"
-            done.append(f"{team} {deliv} v{version}: {verdict} → {out.relative_to(root)}")
+            done.append(f"{team} {deliv} v{version}: scored → {out.relative_to(root)}")
+            for f in invariant_failures(text):
+                done.append(f"{team} {deliv}: warning, invariant not met: {f}")
     return done, problems
 
 
@@ -457,13 +475,9 @@ QUESTION_SHAPES = [["## REGISTER", "## QUESTIONS"]]
 def score_columns(path):
     """The two qualitative columns of a scoresheet, and nothing numeric: for each
     row, the criterion, the weakest evidence quoted and what would raise it. Item
-    codes, scores, totals and bands never leave this function. A RETURNED sheet
-    yields its reason, minus the invariant's code."""
+    codes, scores, totals, bands and the invariants never leave this function;
+    a failed invariant reaches the team by another route, as a plain note."""
     text = path.read_text(encoding="utf-8").split("---\n\n", 1)[-1]
-    if "## RETURNED" in text:
-        body = text.split("## RETURNED", 1)[1].strip()
-        body = re.sub(r"^V\d\s*[—-]\s*", "", body)
-        return "The document was not read against the criteria, for this reason:\n" + body.strip()
     lines = []
     for row in re.findall(r"^\|\s*[A-G]\d\s*\|(.*)$", text, re.M):
         cells = [c.strip() for c in row.strip().strip("|").split("|")]
@@ -534,19 +548,27 @@ def lint_message(text, root, own_texts=()):
 
 
 def message_frame():
+    """(opening, notice, closing) from message-frame.md's three --- blocks."""
     raw = (HERE / "message-frame.md").read_text(encoding="utf-8")
     parts = raw.split("\n---\n")
-    if len(parts) < 3:
-        raise SystemExit("message-frame.md needs two --- lines: opening between them, closing after")
-    return parts[1].strip(), parts[2].strip()
+    if len(parts) < 4:
+        raise SystemExit("message-frame.md needs three --- lines: opening, notice, closing")
+    return parts[1].strip(), parts[2].strip(), parts[3].strip()
 
 
-def compose_message(team, week, documents, questions):
-    opening, closing = message_frame()
+def compose_message(team, week, documents, questions, notices=()):
+    """The frame around the questions. `notices` are plain sentences for the
+    team — an invariant the document did not meet — and go before the
+    questions as feedback, marked as such, never dressed as a question."""
+    opening, notice, closing = message_frame()
     names = ", ".join(documents)
     opening = opening.format(team=team, week=week, documents=names)
-    body = "\n".join(f"{i}. {q}" for i, q in enumerate(questions, 1))
-    return f"{opening}\n\n{body}\n\n{closing}\n"
+    parts = [opening]
+    if notices:
+        parts.append(notice.format(notes="\n".join(f"- {n}" for n in notices)))
+    parts.append("\n".join(f"{i}. {q}" for i, q in enumerate(questions, 1)))
+    parts.append(closing)
+    return "\n\n".join(parts) + "\n"
 
 
 def parse_question_output(text):
@@ -588,11 +610,12 @@ def step_question(root, week, only_team=None):
             continue
 
         # every score that is due must exist; a deliverable with no sheet is due nothing
-        readings, waiting = [], []
+        readings, waiting, notices = [], [], []
         for deliv in sorted(texts):
             score = week_dir / "owners" / f"score-{deliv}.md"
             if score.exists():
                 readings.append(f"## Reading of the {deliv}\n\n{score_columns(score)}")
+                notices += [f"About the {deliv}: {f}" for f in invariant_failures(score.read_text(encoding="utf-8"))]
             elif (root / "rubric" / f"{deliv}-scoresheet.md").exists():
                 waiting.append(deliv)
         if waiting:
@@ -658,7 +681,7 @@ def step_question(root, week, only_team=None):
             continue
 
         # the lint stands between the questions and the door
-        composed = compose_message(team, week, sorted(texts), final_questions)
+        composed = compose_message(team, week, sorted(texts), final_questions, notices)
         hits = lint_message(composed, root, [p.read_text(encoding='utf-8', errors='replace') for _, p in texts.values()])
         if hits:
             for why, line in hits:

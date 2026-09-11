@@ -192,10 +192,11 @@ Two consequences of criteria and sheets that change:
   changed it. If the criteria or the sheet changed between the two, the agent is told so, and
   says which movements are the page and which are the ruler.
 
-The output is what the instruction block specifies: `## RETURNED` with the invariant and the
-sentence, or `## SCORESHEET` with the table, total and band, and `## BEFORE V1` with the three
-items to revise first. These files are the owners' half. They are never forwarded and never
-given to a student, in any week.
+The output is what the instruction block specifies: `## INVARIANTS` as pass or fail, then
+`## SCORESHEET` with the table, total and band, and `## BEFORE V1` with the three items to
+revise first. **Nothing is returned** (decided 11 September 2026): a failed invariant is a
+warning beside the score, and one plain note to the team before the questions, marked as
+feedback rather than a question.
 
 ### Step 2b — coherence: do the documents describe one platform?
 
@@ -274,7 +275,8 @@ Four outputs:
 - **`team/questions.md`** — three to five questions, nothing else, as the instructions require.
   Across all of this week's documents, not three to five per document.
 - **`team/message.md`** — the questions wrapped in the fixed opening and closing the team
-  always gets, ready to paste into the channel.
+  always gets, ready to paste into the channel; and, only when an invariant failed, one plain
+  note before the questions saying so, marked as feedback.
 - A one-line summary to the terminal per team: status changes in the register, and the count
   of new questions.
 
@@ -345,8 +347,6 @@ assignment text for each week has to exist before its criteria can be mapped to 
 Still open, and not decided here:
 
 - Whether the inbox path is ever used for the weekly pages (see §1).
-- What the scoring agent does with a document that fails an invariant — return it to the team
-  with the reason, which the sheet says, or hold it for the lecturer first.
 - How the second module owner runs this, given the intake root is a path on one machine.
 - Whether a revised PRD in week 2 is *required* when the blueprint changes what it promises, or
   merely allowed. ADR-0010 says the decision log is where PRD changes are recorded; that log

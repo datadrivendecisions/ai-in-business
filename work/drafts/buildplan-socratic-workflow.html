@@ -335,7 +335,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 2 · Scorer</td><td>passed</td><td><code>25fd7b7</code></td><td>the sheet's author reads the variance note in the pipeline log</td></tr>
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 3 · Questioner</td><td>passed, after the lint was narrowed twice</td><td><code>dad9f4e</code></td><td><input class="done" type="checkbox" disabled aria-label="not yet"> the week-1 run, on the cohort's PRDs</td></tr>
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 4 · Coherence</td><td>passed</td><td><code>6c3fde0</code></td><td>the public coherence section (no blueprint criteria page yet); <input class="done" type="checkbox" disabled aria-label="not yet"> the week-2 run</td></tr>
-          <tr><td><input class="done" type="checkbox" disabled aria-label="not yet"> Phase 5 · Handover</td><td>not run</td><td>—</td><td>the runbook is written; the second owner's store, the invariant policy and the two decision-log entries are the owners' decisions</td></tr>
+          <tr><td><input class="done" type="checkbox" disabled aria-label="not yet"> Phase 5 · Handover</td><td>not run</td><td>—</td><td>the runbook is written and the invariant policy decided; the second owner's store and the two decision-log entries are the owners' decisions</td></tr>
         </tbody>
       </table>
     </div>
@@ -562,7 +562,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> The criteria page as text: <code>site/&lt;id&gt;-criteria.html</code> through the extractor <code>agent.py</code> already has.</li>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> Instruction assembly: the sheet from <code>rubric/&lt;id&gt;-scoresheet.md</code> verbatim, then the criteria, then the document, then the previous score for the same deliverable if <code>documents.tsv</code> shows one.</li>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> The provenance header: the criteria page's last commit, the sheet's content hash, the date.</li>
-      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The call, per document, with the retry rule from <code>run_week.py</code>; written only when <code>## RETURNED</code>, or <code>## SCORESHEET</code> and <code>## BEFORE V1</code>, are present.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The call, per document, with the retry rule from <code>run_week.py</code>; written only when <code>## INVARIANTS</code>, <code>## SCORESHEET</code> and <code>## BEFORE V1</code> are all present. Nothing is returned: a failed invariant is reported beside the score.</li>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> <em>No sheet, no score</em>: a deliverable without a sheet or a criteria page is reported by name, and the step continues with the next.</li>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> Skip when <code>owners/score-&lt;id&gt;.md</code> exists.</li>
     </ol>
@@ -614,7 +614,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
     <ol>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> The runbook in the intake folder's README: the Saturday-morning sequence in ten lines, including what to do when the exit code is 1 and when it is 2.</li>
       <li><input class="done" type="checkbox" disabled aria-label="not yet"> The second owner: the intake root reachable from a second machine, inside the institution's tenant, and <code>--root</code> pointing at it. Which store is a decision (ADR-0013 route 4 names the candidates), and it is taken and written down here.</li>
-      <li><input class="done" type="checkbox" disabled aria-label="not yet"> The invariant-failure policy — return at once or hold for the lecturer — decided on the first real case and written into the sheet's instruction block.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> The invariant-failure policy, decided on the first real case: <strong>nothing is returned.</strong> A failed invariant is reported at the top of the owners' score and reaches the team as one plain note before the questions, marked as feedback and not a question. Written into the sheet's instruction block and the message frame.</li>
       <li><input class="done" type="checkbox" disabled aria-label="not yet"> Two decision-log entries: the runtime chosen in blueprint §7, and the inbox door in blueprint §9. Without them the blueprint's own open question stands.</li>
       <li><input class="done" type="checkbox" checked disabled aria-label="done"> The pilot log for the document pipeline: every fixture run and every live run, one line each, as the page gate keeps.</li>
     </ol>

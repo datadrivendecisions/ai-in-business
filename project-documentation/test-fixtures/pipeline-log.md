@@ -207,3 +207,32 @@ the top findings did not.
 > the wiring rather than a rule the model has to remember". What specific aspect of the wiring, as
 > described in the blueprint, ensures that the questioner model call definitively does not receive
 > any numerical data from the scoring process?
+
+## Decision on the first live run — 11 September 2026 — nothing is returned
+
+The first real PRD scored (team 2, week 1) was *returned* by the scorer on invariant V1: it
+judged roughly 1,600 words of Markdown to be more than three pages, from text in which it
+could not see pages. The module owner decided on the spot: **nothing is returned.** A failed
+invariant is reported at the top of the owners' score under `## INVARIANTS`, the sheet is filled
+in regardless, and the team gets one plain note before the questions, marked as feedback and
+not a question. The scorer is now also told the document's word count, so V1 is no longer an
+estimate. The sheet's §3.2 and instruction block, the scorer's required shape, the message
+frame and the build plan's phase 5.3 all changed together.
+
+```
+$ .venv/bin/python project-documentation/socratic_agent/gates.py 2
+  ok   required headings present: invariants, sheet, before v1
+  ok   nothing is returned: the sheet is filled in whatever the invariants say
+    invariants: V1 — pass · V2 — pass · V3 — pass        (the fixture; the 2,203-word PRD)
+PASSED
+$ .venv/bin/python project-documentation/socratic_agent/gates.py 3
+  ok   one failure extracted, code stripped: the document runs to about 2,400 words. The brief asked for one to three pages.
+  ok   the note sits before the questions and is marked as feedback
+  ok   the message with the note passes lint
+  ok   a passing invariant produces no note
+  … (the earlier scenarios unchanged)
+PASSED
+```
+
+Also on this run: the questioner's first message for team 2 failed the lint on the word
+*scoring*, used outside a quotation, and the second attempt passed. The retry is the design.
