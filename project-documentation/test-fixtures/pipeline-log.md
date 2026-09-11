@@ -34,3 +34,33 @@ exit 0
 ```
 
 The roster has zero teams: the file has its header and its comment, and the names are the owner's to fill in before the week-1 run. Gate 0 checks the roster's shape and reports the count; it does not require a team, because the run that needs one is phase 3's, not this one.
+
+## Gate 1 — 11 September 2026 — intake
+
+Two defects found on the first run, both fixed before this transcript: a second hand-in of the same deliverable with a different extension was filed as a first version and its text overwrote the first; and the manifest was rewritten on a run that did nothing, so "no file changed" could not be checked.
+
+```
+$ python3 project-documentation/socratic_agent/gates.py 1
+gate 1 — intake, scratch root /var/folders/tl/27n5mfs173zf3987pbbpmpcw0000gn/T/intake-gate-zjrdi6o3
+  run 1
+  ok   exit 1 (got 1)
+  ok   Team 3 PRD.pdf filed and converted
+  ok   team-03-prd-v2.md filed as -v2 and converted
+  ok   t05_prd.docx filed and converted
+  ok   the non-PDF is filed but not converted
+  ok   prd-final.pdf stays in the inbox
+  ok   manifest has prd-final.pdf with an empty team cell
+  ok   team-03 documents.tsv holds one prd line, at version 2
+  ok   log.tsv has header + 4 moves (5 lines)
+  run 2 — manifest corrected
+  ok   exit 0 (got 0)
+  ok   prd-final.pdf filed as team-06 and converted
+  ok   log.tsv gained exactly one line
+  ok   team-06 documents.tsv has one line
+  ok   manifest is empty
+  run 3 — nothing to do
+  ok   exit 2 (got 2)
+  ok   no file changed
+PASSED
+exit 
+```
