@@ -252,7 +252,62 @@ def gate_3():
     return ok
 
 
-GATES = {0: gate_0, 1: gate_1, 2: gate_2, 3: gate_3}
+def gate_4():
+    """Coherence: the PRD and the blueprint fixtures as weeks 1 and 2; the planted
+    departure must be a finding; one document alone is skipped with a reason;
+    the questioner then asks at least one question tagged coherence."""
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import run_documents as rd
+    sheets = {n: DEFAULT_ROOT / "rubric" / f"{n}-scoresheet.md" for n in ("prd", "coherence")}
+    for n, path in sheets.items():
+        if not path.exists():
+            print(f"gate 4 needs the real sheet at {path}")
+            return False
+    ok = True
+    print("gate 4 — coherence")
+    root = scratch_root()
+    for n, path in sheets.items():
+        (root / "rubric" / path.name).write_bytes(path.read_bytes())
+    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    run(root, 1, "--step", "intake")
+    (root / "inbox/team-03-blueprint.html").write_bytes((REPO / "work/drafts/blueprint-socratic-workflow.html").read_bytes())
+    run(root, 2, "--step", "intake")
+
+    print("  the pair — week 2")
+    code = run(root, 2, "--step", "coherence")
+    rep = root / "teams/team-03/week-02/owners/coherence.md"
+    text = rep.read_text() if rep.exists() else ""
+    ok &= say(code == 0, f"exit 0 (got {code})")
+    ok &= say(all(h in text for h in ("## TRACE", "## FINDINGS", "## DIRECTIONS")), "the three headings are present")
+    trace = text.split("## TRACE", 1)[-1].split("## FINDINGS", 1)[0] if text else ""
+    # top-level items only: a table row, a bullet or a number at column 0; nested bullets are the documents that carry it
+    rows = [l for l in trace.splitlines() if re.match(r"^(?:\||[-*]|\d+[.)])\s*\S", l) and not re.match(r"^\|\s*-", l)]
+    ok &= say(len(rows) >= 7, f"TRACE has at least seven rows, one per line of the PRD's table ({len(rows)})")
+    findings = text.split("## FINDINGS", 1)[-1].split("## DIRECTIONS", 1)[0].lower() if text else ""
+    ok &= say(("inbox" in findings or "pull" in findings), "FINDINGS names the planted departure: the inbox door against pull-only")
+    ok &= say(text.startswith("---\n") and "sheet: rubric/coherence-scoresheet.md sha256" in text.split("---\n\n", 1)[0], "provenance header carries the sheet hash")
+    print("    findings:\n      " + text.split("## FINDINGS", 1)[-1].split("## DIRECTIONS", 1)[0].strip().replace("\n", "\n      ")[:2500])
+
+    print("  the questioner, after it")
+    code = run(root, 2, "--step", "question")
+    reg = rd.read_tsv(root / "teams/team-03/register.tsv", rd.REGISTER_HEADER)
+    ok &= say(code == 0, f"exit 0 (got {code})")
+    ok &= say(any(r["about"] == "coherence" for r in reg), f"at least one register line is tagged coherence ({sum(r['about'] == 'coherence' for r in reg)})")
+    msg = root / "teams/team-03/week-02/team/message.md"
+    ok &= say(msg.exists() and not re.search(r"\bX\d\b", msg.read_text()), "no direction code in the message")
+
+    print("  one document alone")
+    root1 = scratch_root()
+    for n, path in sheets.items():
+        (root1 / "rubric" / path.name).write_bytes(path.read_bytes())
+    (root1 / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    run(root1, 1, "--step", "intake")
+    code = run(root1, 1, "--step", "coherence")
+    ok &= say(code == 2 and not (root1 / "teams/team-03/week-01/owners/coherence.md").exists(), f"skipped with a reason, nothing written, exit 2 (got {code})")
+    return ok
+
+
+GATES = {0: gate_0, 1: gate_1, 2: gate_2, 3: gate_3, 4: gate_4}
 
 
 def main():

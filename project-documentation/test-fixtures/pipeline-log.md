@@ -158,3 +158,52 @@ codes when the team uses them. Across gates 2 and 3 the scorer has now *returned
 invariant V2 four times in seven; the questioner worked from the returned reason each time and
 still produced grounded questions, which is the behaviour the design wanted for a document that
 fails an invariant.
+
+## Gate 4 — 11 September 2026 — coherence
+
+Two things changed on the way to this transcript. The gate's own trace counter only knew tables
+and dashes, and the model writes the trace as a nested list, one top-level item per PRD line;
+the counter now counts top-level items. And the lint rejected a good question for the word
+*scoring* — the blueprint fixture is a document about a scorer — so the exemption that already
+held for codes now holds for words: a term the team's own text contains is not a leak. The
+lecturer reading every message before it is sent is the rule; the lint is the net under it.
+
+```
+$ .venv/bin/python project-documentation/socratic_agent/gates.py 4
+gate 4 — coherence
+  the pair — week 2
+      team-03: coherence over 2 documents, 22 finding(s) → teams/team-03/week-02/owners/coherence.md
+  ok   exit 0 (got 0)
+  ok   the three headings are present
+  ok   TRACE has at least seven rows, one per line of the PRD's table (57)
+  ok   FINDINGS names the planted departure: the inbox door against pull-only
+  ok   provenance header carries the sheet hash
+  the questioner, after it
+      team-03: 5 questions → teams/team-03/week-02/team/message.md; register: no earlier questions
+  ok   exit 0 (got 0)
+  ok   at least one register line is tagged coherence (5)
+  ok   no direction code in the message
+  one document alone
+      team-03: coherence skipped — 1 document(s) so far, needs two
+  ok   skipped with a reason, nothing written, exit 2 (got 2)
+PASSED
+exit 0
+```
+
+About a minute and a quarter: one coherence call over both fixtures, one questioner call.
+
+**The findings, in part** — our own documents, so publishable. Besides the planted departure,
+which the report classified as a *recorded change* rather than a contradiction because the
+blueprint states and justifies it, the first run found two open questions of the PRD that the
+blueprint's own list of open questions drops — region and residency, and who owns the project —
+and a PRD requirement the blueprint carries only generally: the manual override of a gate,
+"logged with a reason". All three are true, and they are the blueprint's to answer. The count of
+findings varied between runs (6, 12, 22) as the model split or merged items; the substance of
+the top findings did not.
+
+**The questions it led to** (one of five):
+
+> The blueprint states that the questioner "never sees a number" and that this "is a property of
+> the wiring rather than a rule the model has to remember". What specific aspect of the wiring, as
+> described in the blueprint, ensures that the questioner model call definitively does not receive
+> any numerical data from the scoring process?

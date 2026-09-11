@@ -496,6 +496,7 @@ def band_words(root):
 LINT_PATTERNS = [
     (r"\b[A-G]\d\b", "criterion code"),
     (r"\bV[1-3]\b", "invariant code"),
+    (r"\bX\d\b", "direction code"),
     (r"/\s*\d{2,3}\b", "a total"),
     (r"\b\d+\s*(?:out of|/)\s*\d+\b", "a fraction"),
     (r"\bscor(?:e|es|ed|ing)\b", "the word score"),
@@ -511,11 +512,11 @@ def lint_message(text, root, own_texts=()):
     """Every line of the message that carries rubric language. Empty = clean.
 
     What the team wrote is theirs to be asked about, so a quoted span is exempt,
-    and a code that appears in the team's own text is not a leak. Everything
-    else that looks like the sheet — a code, a total, a band name, the words
-    score, band or rubric — fails the line."""
-    own = " ".join(own_texts)
-    own_codes = set(re.findall(r"\b[A-G]\d\b", own)) | set(re.findall(r"\bV[1-3]\b", own))
+    and a code or a word that appears in the team's own text is not a leak.
+    Everything else that looks like the sheet — a code, a total, a band name,
+    the words score, band or rubric — fails the line. The lecturer reads every
+    message before it is sent; this is the net under that, not a replacement."""
+    own = " ".join(own_texts).lower()
     hits = []
     pats = list(LINT_PATTERNS) + [(re.escape(w), f"band name '{w}'") for w in band_words(root)]
     for line in text.splitlines():
@@ -524,8 +525,8 @@ def lint_message(text, root, own_texts=()):
             m = re.search(pat, bare, re.I)
             if not m:
                 continue
-            if why.endswith("code") and m.group(0) in own_codes:
-                continue
+            if m.group(0).lower() in own:
+                continue  # a word or code the team wrote is theirs to be asked about
             hits.append((why, line.strip()))
             break
     return hits
@@ -598,7 +599,8 @@ def step_question(root, week, only_team=None):
             continue
         coherence = week_dir / "owners" / "coherence.md"
         if coherence.exists() and "## FINDINGS" in coherence.read_text(encoding="utf-8"):
-            findings = coherence.read_text(encoding="utf-8").split("## FINDINGS", 1)[1].strip()
+            findings = coherence.read_text(encoding="utf-8").split("## FINDINGS", 1)[1].split("## DIRECTIONS", 1)[0].strip()
+            findings = re.sub(r"\bX\d\b", "", findings)
             readings.append(f"## Reading of how this week's document agrees with the earlier ones\n\n{findings}")
 
         reg_path = root / "teams" / team / "register.tsv"
@@ -644,7 +646,8 @@ def step_question(root, week, only_team=None):
             while f"{team}-w{week:02d}-q{n}" in by_id:
                 n += 1
             rid = f"{team}-w{week:02d}-q{n}"
-            about = "coherence" if coherence.exists() and "earlier" in q.lower() else "+".join(sorted(texts))
+            named = [d for d in current_documents(root, team) if re.search(rf"\b{d}\b", q, re.I)]
+            about = "coherence" if coherence.exists() and len(named) >= 2 else "+".join(sorted(texts))
             by_id[rid] = {"id": rid, "asked": str(week), "about": about, "question": q,
                           "status": "open", "resolved": "", "evidence": ""}
             final_questions.append(q)
@@ -673,20 +676,59 @@ def step_question(root, week, only_team=None):
 
 
 # ----------------------------------------------------------------------------
-# later steps — arriving one phase at a time
+# step 2b — coherence: do the team's documents describe one platform?
 # ----------------------------------------------------------------------------
 
-def step_not_built(name):
-    def run(root, week, only_team=None):
-        print(f"  step {name}: not built yet")
-        return [], []
-    return run
+COHERENCE_SHAPES = [["## TRACE", "## FINDINGS", "## DIRECTIONS"]]
+
+
+def current_documents(root, team):
+    """{deliverable: (week, version, text path)} from documents.tsv, text present."""
+    out = {}
+    for r in read_tsv(root / "teams" / team / "documents.tsv", DOCUMENTS_HEADER):
+        if r["text"] and (root / r["text"]).exists():
+            out[r["deliverable"]] = (int(r["week"]), int(r["version"]), root / r["text"])
+    return out
+
+
+def step_coherence(root, week, only_team=None):
+    done, problems = [], []
+    sheet = root / "rubric" / "coherence-scoresheet.md"
+    for team in teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        if not week_dir.is_dir():
+            continue
+        out = week_dir / "owners" / "coherence.md"
+        if out.exists():
+            continue
+        docs = current_documents(root, team)
+        if len(docs) < 2:
+            print(f"  {team}: coherence skipped — {len(docs)} document(s) so far, needs two")
+            continue
+        if not sheet.exists():
+            problems.append(f"{team}: coherence unchecked: no sheet rubric/{sheet.name}")
+            continue
+        listing = ", ".join(f"{d} (week {w}, v{v})" for d, (w, v, _) in sorted(docs.items()))
+        fields = {"team": team, "week": week, "documents": listing,
+                  "sheet": f"rubric/{sheet.name} sha256 {sha256(sheet)[:12]}", "checked": now()}
+        message = f"# THE DOCUMENTS — {team}, latest version of each, as of week {week}\n\n" + "\n\n".join(
+            f"## The {d} — handed in week {w}, version {v}\n\n{path.read_text(encoding='utf-8', errors='replace')}"
+            for d, (w, v, path) in sorted(docs.items()))
+        text = call_model("coherence", sheet.read_text(encoding="utf-8"), message, COHERENCE_SHAPES)
+        if not text:
+            problems.append(f"{team}: no coherence report after {RETRIES + 1} attempts")
+            continue
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(header(fields) + text.strip() + "\n", encoding="utf-8")
+        n = len(re.findall(r"^\s*(?:\d+[.)]|-|\*|#{3,})\s*\S", text.split("## FINDINGS", 1)[1].split("## DIRECTIONS", 1)[0], re.M))
+        done.append(f"{team}: coherence over {len(docs)} documents, {n} finding(s) → {out.relative_to(root)}")
+    return done, problems
 
 
 STEPS = [
     ("intake", step_intake),
     ("score", step_score),
-    ("coherence", step_not_built("coherence")),
+    ("coherence", step_coherence),
     ("question", step_question),
 ]
 
