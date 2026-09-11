@@ -5,9 +5,12 @@ which says what the gate must do, and to [`socratic_agent/intake.py`](socratic_a
 which already does the first step of what is described here. Nothing below is built yet beyond
 that script.*
 
-**Not for `site/`.** The pipeline handles student work and carries the scoresheets from the
-quality manuals, which are instructor material under the publication rule in `CLAUDE.md`. The
-files it produces live outside the repository altogether — see §2.
+**Not for `site/`.** The pipeline handles student work and runs on scoresheets whose worth
+depends on a student not having read them — instructor material under the publication rule in
+`CLAUDE.md`. Everything it reads that is not public, and everything it produces, lives outside
+the repository altogether — see §2. What a document is judged *against* is public by design:
+the criteria for each deliverable are published on the site before the hand-in, as
+`prd-criteria.html` is for week 1, and `index.html` promises as much.
 
 ---
 
@@ -30,20 +33,25 @@ here.
 
 ### 1.1 What comes in, week by week
 
-One document a week, six weeks, each scored against its own manual and checked against
+One document a week, six weeks, each scored against its own criteria and sheet, and checked against
 everything handed in before it:
 
-| Week | Hand-in | Deliverable id | Scored against | Checked against |
-|---|---|---|---|---|
-| 1 | PRD v0 | `prd` | `prd-quality-manual.md` | — |
-| 2 | Technical blueprint | `blueprint` | `blueprint-quality-manual.md` | PRD |
-| 3 | Knowledge architecture — where sources, drafts and pages live | `knowledge` | `knowledge-quality-manual.md` | blueprint (the components it serves), PRD B4 (sources and data) |
-| 4 | Build plan — phases, tasks, test gates | `buildplan` | `buildplan-quality-manual.md` | blueprint (every component built), knowledge (built where the sources are), PRD C1–C3 (every gate tests a named quality) |
-| 5 | Evaluation of the first artefact the platform produced, **with the decision log** | `eval`, `decisions` | `eval-quality-manual.md`, `decisions-quality-manual.md` | eval: PRD C1–C3 and the build plan's gates — measured against the bar the team set itself; decisions: every entry answers a failure, a gate, or a change to an earlier document, and every change to an earlier document has an entry |
-| 6 | Evaluation of the second artefact | `eval` (v2) | `eval-quality-manual.md` | eval v1 (same criteria, and what moved), PRD, and the decision log for what changed between the two |
+| Week | Hand-in | Deliverable id | Checked against |
+|---|---|---|---|
+| 1 | PRD v0 | `prd` | — |
+| 2 | Technical blueprint | `blueprint` | PRD |
+| 3 | Knowledge architecture — where sources, drafts and pages live | `knowledge` | blueprint (the components it serves), PRD B4 (sources and data) |
+| 4 | Build plan — phases, tasks, test gates | `buildplan` | blueprint (every component built), knowledge (built where the sources are), PRD C1–C3 (every gate tests a named quality) |
+| 5 | Evaluation of the first artefact the platform produced, **with the decision log** | `eval`, `decisions` | eval: PRD C1–C3 and the build plan's gates — measured against the bar the team set itself; decisions: every entry answers a failure, a gate, or a change to an earlier document, and every change to an earlier document has an entry |
+| 6 | Evaluation of the second artefact | `eval` (v2) | eval v1 (same criteria, and what moved), PRD, and the decision log for what changed between the two |
 
-Only the PRD manual exists. The other five are written one week ahead of the hand-in they
-score, in the shape of the PRD manual (§3, step 2).
+Each deliverable is scored against two files, split the way the PRD's were on 11 September
+2026: the **criteria**, published on the site (`site/<id>-criteria.html`), and the
+**scoresheet** — scale, invariants, sheet, bands and the agent's prompt — in
+`ai-in-business-intake/rubric/<id>-scoresheet.md`, outside the repository. The reading behind
+the criteria, where there is one, stays in `project-documentation/` as
+[`prd-quality-manual.md`](prd-quality-manual.md) does. Only the PRD's pair exists; the rest are
+written one week ahead of the hand-in they score (§5).
 
 This is ADR-0010's spine with its harness column folded into the hand-ins: the knowledge
 architecture is that record's week-3 element and the first entry of its decision log, the two
@@ -68,6 +76,10 @@ Outside the repository, as a sibling of it — `intake.py`'s default already:
 
 ```
 ~/Documents/HAN/M3DM/ai-in-business-intake/
+  README.md
+  rubric/
+    prd-scoresheet.md             one scoresheet per deliverable id; read at runtime, never copied
+    coherence-scoresheet.md
   roster.tsv                      team-NN → first names, Teams channel; the only file that links the two
   inbox/                          the lecturer drops files here
   teams/
@@ -115,6 +127,10 @@ Four rules carried by the layout rather than by memory:
 file of its current version. Step 1 updates it; steps 2b and 3 read it to find "the latest
 PRD" without guessing from folder names.
 
+The folder today is laid out per week — `week-NN/inbox/`, `week-NN/text/`, `manifest.tsv` —
+because that is what `intake.py` writes. The per-team layout above is what the coherence check
+and the register need, and moving to it is part of building step 1.
+
 ## 3. The steps
 
 One script, four steps, each of which skips work whose output already exists. That makes the
@@ -145,43 +161,41 @@ For each file in `inbox/`:
 Anything the converter cannot read is named in the output, as `intake.py` already does. A
 hand-in that vanishes between inbox and run is the failure nobody notices.
 
-### Step 2 — score: one scoresheet per document, against that document's manual
+### Step 2 — score: one scoresheet per document, against that document's criteria and sheet
 
 Runs for every `<deliverable>.txt` in the week folder that has no `owners/score-<deliverable>.md`.
 
-**The agent reads the manual for that deliverable at the start of every run, from its path in
-the repository, before it reads the document.** For the PRD that is
-[`prd-quality-manual.md`](prd-quality-manual.md): Part 2 (the criteria), §3.1–3.4 (scale,
-invariants, sheet, bands) and the instruction block in §3.5, applied as read. The blueprint
-and build plan manuals follow the same shape — what the book says, the criteria mapped to the
-assignment, the sheet and the agent's instructions — so the pipeline treats them alike.
-Nothing from a manual is copied into the skill, the prompt or the script: the manuals are
-edited as insight accumulates, and a copy is a second version that drifts the first time the
-original changes. The skill's own text is one line long on this point — *read the manual
-first, in full, every time* — and the criteria are wherever the manual says they are.
+**The agent reads two files at the start of every run, before it reads the document, and
+applies them as read:** the published criteria (`site/<id>-criteria.html`, from the
+repository) and the scoresheet (`rubric/<id>-scoresheet.md`, from the intake folder) — scale,
+invariants, sheet, bands and the instruction block the agent is given verbatim. Nothing from
+either is copied into the skill, the prompt or the script: both are edited as insight
+accumulates, and a copy is a second version that drifts the first time the original changes.
+The skill's own text is one line long on this point — *read the criteria and the sheet first,
+in full, every time* — and the criteria are wherever those two files say they are.
 
-**No manual, no score.** A deliverable whose manual does not exist in the repository is
-reported as *unscored: no manual for `blueprint`* and the step moves on. The agent does not
-improvise criteria, because an improvised sheet cannot be compared with next week's, and a
-score the manual did not define is a number nobody can defend to a student.
+**No sheet, no score.** A deliverable whose scoresheet is not in `rubric/`, or whose criteria
+page is not on the site, is reported as *unscored: no sheet for `blueprint`* and the step moves
+on. The agent does not improvise criteria, because an improvised sheet cannot be compared with
+next week's, and a score nobody published the criteria for is a number nobody can defend to a
+student.
 
-Two consequences of manuals that change:
+Two consequences of criteria and sheets that change:
 
-- **Every scoresheet records which manual scored it.** The first lines carry the manual's git
-  commit (the short hash of the last commit that touched the file) and the date, or
-  *uncommitted* plus a content hash while it has not been committed. Without this, a score of
-  38 in week 1 and 41 in week 3 cannot be told apart from a manual that moved by three points
-  in between. The PRD manual is currently untracked; committing it is what makes the hash mean
-  something.
-- **A previous scoresheet is an input, as §3.5 already says.** Where the same deliverable comes
-  in again — a revised PRD in week 2 — the previous `score-prd.md` is passed along, and the
-  agent says per changed item what on the page changed it. If the manual changed between the
-  two, the agent is told so, and says which movements are the page and which are the ruler.
+- **Every scoresheet records what scored it.** The first lines carry the criteria page's git
+  commit (the short hash of the last commit that touched it) and, for the sheet outside the
+  repository, a content hash and the file's date. Without this, a score of 38 in week 1 and
+  41 in week 3 cannot be told apart from a sheet that moved by three points in between.
+- **A previous scoresheet is an input, as the sheet's own instruction block already says.**
+  Where the same deliverable comes in again — a revised PRD in week 2 — the previous
+  `score-prd.md` is passed along, and the agent says per changed item what on the page
+  changed it. If the criteria or the sheet changed between the two, the agent is told so, and
+  says which movements are the page and which are the ruler.
 
-The output is what §3.5 specifies: `## RETURNED` with the invariant and the sentence, or
-`## SCORESHEET` with the table, total and band, and `## BEFORE V1` with the three items to
-revise first. These files are the owners' half. They are never forwarded and never given to a
-student, in any week.
+The output is what the instruction block specifies: `## RETURNED` with the invariant and the
+sentence, or `## SCORESHEET` with the table, total and band, and `## BEFORE V1` with the three
+items to revise first. These files are the owners' half. They are never forwarded and never
+given to a student, in any week.
 
 ### Step 2b — coherence: do the documents describe one platform?
 
@@ -191,8 +205,10 @@ exercised as the documents arrive: PRD ↔ blueprint in week 2, the knowledge ro
 the build-plan rows in week 4, the evaluation and decision-log rows in weeks 5 and 6. The
 "Checked against" column of §1.1 says which rows a given week runs. Inputs: the **latest**
 text of every deliverable the team has handed in so far — from `documents.tsv`, not from this
-week's folder — and a coherence manual, `coherence-quality-manual.md`, read fresh like the
-others. That manual is *to be written*; what follows is what it has to contain.
+week's folder — and `rubric/coherence-scoresheet.md`, read fresh like the others. That sheet
+is *to be written*; what follows is what it has to contain. What it checks is fair to publish
+(a team is entitled to know its documents will be read against each other, and how); how it
+scores stays in `rubric/`, the same split as the rest.
 
 The check is traceability in both directions plus contradiction, and it is a check of the
 set, not of any one document:
@@ -214,7 +230,7 @@ set, not of any one document:
 Output, under `## TRACE`, the matrix — one row per PRD requirement, with the blueprint element
 and build-plan phase that carry it, or NONE — and under `## FINDINGS` the orphans,
 contradictions and dropped questions, each with quotes from the documents concerned, in the
-team's own words. Scored 0–3 per direction on the same scale as the manuals, so the owners see
+team's own words. Scored 0–3 per direction on the same scale as the other sheets, so the owners see
 at a glance whether the set is one platform or three documents. Like the other scoresheets,
 this one stays in `owners/`.
 
@@ -234,9 +250,10 @@ Runs where every scoresheet due this week exists (including `coherence.md` from 
    coherence questions the latest versions the check ran on.
 3. **The qualitative columns only** of every scoresheet written this week — *weakest evidence*
    and *what would raise it by one* from each `score-*.md`, and the `## FINDINGS` section of
-   `coherence.md` — and **not** the scores, totals or bands of any of them. This is the one
-   design choice in the note that matters most. The Socratic agent's questions are shaped by
-   the rubrics, which is the design; but if it never sees a number, it cannot leak one.
+   `coherence.md` — and **not** the scores, totals or bands of any of them, and never the
+   sheet itself. This is the one design choice in the note that matters most. The Socratic
+   agent's questions are shaped by the sheets, which is the design; but if it never sees a
+   number, it cannot leak one.
    `run_week.py`'s docstring names exactly this route — a history carrying last week's score
    into this week's questions — as the way the rubric ends up in the student channel by the
    back door. Keep the numbers out of its context rather than asking it to keep them out of
@@ -262,7 +279,7 @@ Four outputs:
   of new questions.
 
 A small check runs over `team/message.md` before the step reports success: no item codes
-(`A1`…`G2`, and their equivalents in the other manuals), no `/60`, no band names, no *score*.
+(`A1`…`G2`, and their equivalents on the other sheets), no `/60`, no band names, no *score*.
 It fails the step rather than warns, because the file it guards is the one that gets sent.
 
 ## 4. The register
@@ -309,25 +326,27 @@ Two things were decided on 11 September 2026 as *for now*, and both are reversib
   route 1; Teams storage, route 4). Where the register goes at the end of the run, and whether
   a team ever sees its own register, are both open.
 
-**Manuals, one week ahead of the hand-in they score**, or the pipeline reports *unscored*:
+**Criteria and sheets, one week ahead of the hand-in they score**, or the pipeline reports
+*unscored*. Each week: the assignment, the criteria page on the site, the scoresheet in
+`rubric/`, and the new rows of the coherence sheet.
 
-| Before week | Write |
-|---|---|
-| 2 | `blueprint-quality-manual.md`; `coherence-quality-manual.md` with at least the PRD ↔ blueprint rows of step 2b |
-| 3 | `knowledge-quality-manual.md`; the knowledge rows of the coherence manual |
-| 4 | `buildplan-quality-manual.md`; the build-plan rows |
-| 5 | `eval-quality-manual.md` and `decisions-quality-manual.md`; the evaluation and decision rows |
-| 6 | nothing new — the eval manual gains a section on comparing v2 with v1, if it does not already have one |
+| Before week | Criteria on the site | Sheet in `rubric/` | Coherence rows |
+|---|---|---|---|
+| 2 | `blueprint-criteria.html` | `blueprint-scoresheet.md` | PRD ↔ blueprint |
+| 3 | `knowledge-criteria.html` | `knowledge-scoresheet.md` | knowledge |
+| 4 | `buildplan-criteria.html` | `buildplan-scoresheet.md` | build plan |
+| 5 | `eval-criteria.html`, `decisions-criteria.html` | `eval-scoresheet.md`, `decisions-scoresheet.md` | evaluation, decisions |
+| 6 | — | the eval sheet gains a v2-against-v1 section, if it lacks one | eval v2 ↔ v1 |
 
-Each in the shape of the PRD manual: what the source says, the criteria mapped to the
-assignment, the sheet, the instruction block. The assignment text for each week has to exist
-before its manual can map criteria to it.
+The criteria page is published *before* the hand-in, as `index.html` promises and as
+`prd-criteria.html` was, and is linked from the week page beside the assignment. The
+assignment text for each week has to exist before its criteria can be mapped to it.
 
 Still open, and not decided here:
 
 - Whether the inbox path is ever used for the weekly pages (see §1).
 - What the scoring agent does with a document that fails an invariant — return it to the team
-  with the reason, which the manual says, or hold it for the lecturer first.
+  with the reason, which the sheet says, or hold it for the lecturer first.
 - How the second module owner runs this, given the intake root is a path on one machine.
 - Whether a revised PRD in week 2 is *required* when the blueprint changes what it promises, or
   merely allowed. ADR-0010 says the decision log is where PRD changes are recorded; that log
