@@ -16,3 +16,4 @@ __pycache__/
 
 # Local archive of old material, kept out of the public repo
 archive/
+archive-local/
