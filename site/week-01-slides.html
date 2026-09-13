@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Week 1 slides — AI in Business</title>
+<meta name="description" content="The slides from the week-1 session of AI in Business, as one readable page." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Slide decks as pages: one card per slide, in reading order. */
+.deck-nav { columns: 2; column-gap: var(--space-6); font-size: var(--text-sm); margin: 0 0 var(--space-8); padding-left: 1.4em; }
+.deck-nav li { break-inside: avoid; margin-bottom: var(--space-1); }
+.slide { border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff; padding: var(--space-6) var(--space-6) var(--space-6); margin: 0 0 var(--space-6); }
+.slide-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); margin: 0 0 var(--space-2); }
+.slide-kicker { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--supporting); margin: 0; }
+.slide h2 { font-size: var(--text-2xl); line-height: 1.2; margin: 0 0 var(--space-4); }
+.slide-no { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.slide ul { margin: 0; padding-left: 1.2em; }
+.slide li { margin-bottom: var(--space-2); }
+.slide li strong { color: var(--text-primary); }
+.slide p { margin: 0 0 var(--space-3); }
+.slide > :last-child { margin-bottom: 0; }
+.slide.is-title { background: var(--bg-cream); border-color: var(--border-strong); }
+.slide.is-title h2 { font-size: var(--text-4xl); }
+.slide.is-title p { color: var(--text-secondary); }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-6); }
+.cols h3 { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); margin: 0 0 var(--space-2); }
+.slide .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--space-2); margin: var(--space-3) 0; padding: 0; list-style: none; }
+.slide .roles li { background: var(--bg-cream); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); font-weight: 700; text-align: center; margin: 0; }
+@media (max-width: 640px) { .deck-nav { columns: 1; } .slide { padding: var(--space-6) var(--space-4); } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-01.html">Week 1</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · <a href="week-01.html">week 1</a> · slides</div>
+    <h1 class="bds-h1">AI adoption by European SMEs</h1>
+    <p class="lead">Welcome, discussion, and the assignments.</p>
+    <p>The slides shown in the week-1 session, one card per slide, in order. Same content as on the screen, readable on a phone, nothing to download. The <a href="week-01.html">week 1 page</a> is the reference; the slides are what was said in the room.</p>
+  </header>
+
+  <nav aria-label="Slides">
+    <ol class="deck-nav"><li><a href="#s1">AI adoption by European SMEs</a></li><li><a href="#s2">Two modules, one question</a></li><li><a href="#s3">How this module runs</a></li><li><a href="#s4">We're running this week by week</a></li><li><a href="#s5">Today's session (about 4 hours)</a></li><li><a href="#s6">Your experience with AI</a></li><li><a href="#s7">The Draghi report</a></li><li><a href="#s8">Guided discussion</a></li><li><a href="#s9">Teams of four</a></li><li><a href="#s10">AEL — Product Requirements Document</a></li><li><a href="#s11">AIBS — Research Proposal</a></li><li><a href="#s12">1–3 pages each. This is a starting point.</a></li><li><a href="#s13">Share-out and next steps</a></li></ol>
+  </nav>
+
+  <section class="slide is-title" id="s1">
+    <div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 13</span></div>
+    <h2>AI adoption by European SMEs</h2>
+    <p>Week 1: welcome, discussion, and the assignments.</p>
+  </section>
+  <section class="slide" id="s2">
+    <div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">2 / 13</span></div>
+    <h2>Two modules, one question</h2>
+    <ul><li><strong>AEL — tech.</strong> Led by Witek ten Hove. Builds the tool.</li><li><strong>AIBS — research.</strong> Led by Meike Botterweg. Decides what the tool’s output must achieve, and judges it.</li><li><strong>One research problem.</strong> What do European SMEs need to implement AI in their business?</li></ul>
+  </section>
+  <section class="slide" id="s3">
+    <div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">3 / 13</span></div>
+    <h2>How this module runs</h2>
+    <ul><li><strong>One pipeline, two modules.</strong> AEL builds the tool. AIBS decides what its output must achieve, and judges it.</li><li><strong>Teams of four, both modules.</strong> Every team works together on the AEL and AIBS assignments; each student also holds one AEL build role.</li><li><strong>The goal:</strong> a Handbook about the state of AI, aimed at SMEs — what a regional owner needs to know and decide.</li><li><strong>The rhythm:</strong> one new published page per team, per week.</li><li><strong>The scope:</strong> 6 weeks of classes, then one combined assessment for both modules.</li></ul>
+  </section>
+  <section class="slide" id="s4">
+    <div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">4 / 13</span></div>
+    <h2>We're running this week by week</h2>
+    <div class="cols"><div><h3>Fixed</h3><ul><li>The end goal — the Handbook</li><li>6 weeks + assessment</li><li>Teams of four, one build role each</li><li>One page per team per week</li><li>Two informational gates: Socratic + peer</li><li>Final: consolidated handbook + joint interview</li></ul></div><div><h3>Decided as we go</h3><ul><li>How much scaffolding each assignment needs</li><li>The exact sub-theme and depth per week</li><li>Whether the field visit runs weeks 2–4 as planned</li><li>How far we get through the provisional week map</li></ul></div></div>
+  </section>
+  <section class="slide" id="s5">
+    <div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">5 / 13</span></div>
+    <h2>Today's session (about 4 hours)</h2>
+    <ul><li><strong>Welcome</strong> — how the module runs</li><li><strong>Discussion 1</strong> — your experience with AI</li><li><strong>Discussion 2</strong> — the Draghi report</li><li>Break</li><li><strong>Team formation</strong> — teams of four, one build role each</li><li><strong>Assignments</strong> — kick off the PRD and the research proposal</li><li><strong>Share-out</strong> — one sentence per team: who your handbook is for</li></ul>
+  </section>
+  <section class="slide" id="s6">
+    <div class="slide-head"><div class="slide-kicker">Discussion 1</div><span class="slide-no">6 / 13</span></div>
+    <h2>Your experience with AI</h2>
+    <p>This is also our diagnostic — it shapes what we do in the coming weeks.</p><ul><li>Which AI tools have you actually used, and for what?</li><li>Where has it clearly helped you? Where has it failed or misled you?</li><li>Confidence check: using AI · building with AI · judging AI output</li><li>How will AI change the job market you're about to enter?</li><li>What skills will you need — which do you have, which are gaps?</li><li>What do you want to be able to do by the end of this minor?</li></ul>
+  </section>
+  <section class="slide" id="s7">
+    <div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">7 / 13</span></div>
+    <h2>The Draghi report</h2>
+    <ul><li><strong>What it is.</strong> Mario Draghi's report for the European Commission (September 2024) on why the EU is falling behind the US and China.</li><li><strong>Core diagnosis.</strong> The gap is largely a technology gap — and Europe is slow to diffuse digital tech into existing businesses, especially SMEs.</li><li><strong>On AI.</strong> Europe won't win only by building frontier models; it has to get AI adopted across its industrial base.</li><li><strong>SME barriers.</strong> Fragmented single market, regulatory complexity, limited capital access, skills shortages, limited scale.</li><li><strong>Why it's our starting point.</strong> The Handbook is a small, concrete contribution to exactly that diffusion problem.</li></ul>
+  </section>
+  <section class="slide" id="s8">
+    <div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">8 / 13</span></div>
+    <h2>Guided discussion</h2>
+    <ul><li>Do you recognise the “Europe is behind” framing? Who makes the AI tools you named earlier?</li><li>Draghi treats the productivity gap as a tech gap. What would closing it actually take for one local SME?</li><li>If you were advising a regional SME tomorrow, what's the first thing they'd need to know about AI?</li></ul>
+  </section>
+  <section class="slide" id="s9">
+    <div class="slide-head"><div class="slide-kicker">Team formation</div><span class="slide-no">9 / 13</span></div>
+    <h2>Teams of four</h2>
+    <p>Four people, four AEL build roles, one team:</p><ul class="roles"><li>Product manager</li><li>Developer</li><li>Tester</li><li>Deployer</li></ul><p>Everyone also researches in AIBS — same people build and research.</p><p>Sanity check: four people, four roles, at least one willing to drive the CLI — the command line used to direct the AI coding agent.</p>
+  </section>
+  <section class="slide" id="s10">
+    <div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">10 / 13</span></div>
+    <h2>AEL — Product Requirements Document</h2>
+    <ul><li><strong>Problem and users.</strong> What the platform is for, and who uses it — your research team, and, downstream, the SME owner.</li><li><strong>What it must let a user do.</strong> The path from raw source material to a published handbook page.</li><li><strong>Output qualities.</strong> What a good handbook page produced by the platform looks like.</li><li><strong>Known constraints.</strong> You direct an agentic CLI rather than hand-code; reuse existing infrastructure; a non-coder must be able to run it; every step needs a manual fallback.</li><li><strong>Out of scope, for now.</strong> What you are deliberately not building yet.</li><li><strong>Open questions and assumptions.</strong> What you're still unsure about.</li></ul>
+  </section>
+  <section class="slide" id="s11">
+    <div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">11 / 13</span></div>
+    <h2>AIBS — Research Proposal</h2>
+    <ul><li><strong>Target audience.</strong> Which SMEs is this for? Be specific — sector, size, region. A named partner company is ideal.</li><li><strong>What they need.</strong> What these SMEs need to know or decide about AI, and why — use the Draghi report and your own reasoning.</li><li><strong>Research question.</strong> One main question + at least 4 sub-questions — at least 2 on external analysis, at least 2 on internal analysis.</li><li><strong>Quality criteria for the handbook.</strong> What must it do to be genuinely useful to this audience?</li><li><strong>Methodology.</strong> Desk research + field research — one SME visit, weeks 2–4. Which questions does each method serve?</li></ul>
+  </section>
+  <section class="slide" id="s12">
+    <div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">12 / 13</span></div>
+    <h2>1–3 pages each. This is a starting point.</h2>
+    <ul><li><strong>PRD, the bar:</strong> a reader can tell what you're building, for whom, and how you'll know it works.</li><li><strong>Research proposal, the bar:</strong> a reader can tell who the handbook serves, what it must answer, and how you'll judge it.</li></ul><p>Push for a concrete target SME — sector, size, region — as early as possible.</p><p>You'll revise both as you learn more. Nothing here is final.</p>
+  </section>
+  <section class="slide" id="s13">
+    <div class="slide-head"><div class="slide-kicker">Close</div><span class="slide-no">13 / 13</span></div>
+    <h2>Share-out and next steps</h2>
+    <ul><li>Each team, one sentence: who is our handbook for?</li><li>Each team, one sentence: what's an open question we're stuck on?</li></ul><p>Next week is decided from what we see today.</p>
+  </section>
+
+  <section id="where">
+    <p class="chapter-meta">Session of Monday 7 September 2026. Back to <a href="week-01.html">week 1</a> or the <a href="index.html#programme">week map</a>.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
