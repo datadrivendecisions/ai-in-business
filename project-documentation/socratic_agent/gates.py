@@ -403,6 +403,14 @@ def gate_6():
     if (root / "inbox/manifest.tsv").exists():
         (root / "inbox/manifest.tsv").unlink()
 
+    print("  a file that bundles the PRD with the research proposal")
+    bundled = ("# Week 1 hand-in\n\n## 1. Research proposal\n\nTarget audience: bakeries.\n" + "Words " * 300 +
+               "\n\n## 2. Product Requirements Document\n\nProblem and users: our team.\n" + "Prd " * 120 + "\n\n## 3. Appendix\n\nSources.\n")
+    hint = rd.part_hint(bundled, "prd")
+    ok &= say(hint is not None and "Product Requirements" in hint[0] and 100 < hint[1] < 200, f"the PRD part is found by its heading and measured on its own ({hint})")
+    ok &= say(rd.part_hint("# PRD\n\nOnly a PRD here.\n" + "Prd " * 50, "prd") is None, "a file that is one document gets no hint")
+    ok &= say(rd.part_hint(bundled.replace("Product Requirements Document", "PRD"), "prd")[1] < 200, "the short form PRD in a heading is found too")
+
     print("  status and sent")
     import subprocess
     out = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name("run_documents.py")),

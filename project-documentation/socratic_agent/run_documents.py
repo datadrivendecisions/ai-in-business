@@ -493,6 +493,51 @@ def teams_in(root, only_team=None):
 
 SCORE_SHAPES = [["## INVARIANTS", "## SCORESHEET", "## BEFORE V1"]]
 
+# Words that name each deliverable in a heading, for documents that bundle
+# more than one — a PRD handed in together with the research proposal, say.
+PART_WORDS = {
+    "prd": ["product requirements", "prd"],
+    "blueprint": ["blueprint", "technical design"],
+    "knowledge": ["knowledge architecture", "knowledge"],
+    "buildplan": ["build plan", "buildplan"],
+    "eval": ["evaluation", "eval"],
+    "decisions": ["decision log", "decisions"],
+}
+OTHER_PARTS = ["research proposal", "proposal", "problem analysis"]
+
+
+def headings(text):
+    """(line index, heading text) for the lines that look like headings: a
+    Markdown heading, a numbered title, or a short line with a blank line after."""
+    lines = text.splitlines()
+    out = []
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if not t or len(t) > 80 or t[-1] in ".,;:":
+            continue
+        nxt = lines[i + 1].strip() if i + 1 < len(lines) else ""
+        if t.startswith("#") or re.match(r"^(?:part\s+)?\d+(?:\.\d+)*[.)]?\s+\S", t, re.I) or (not nxt and len(t.split()) <= 8):
+            out.append((i, t.lstrip("# ").strip()))
+    return out
+
+
+def part_hint(text, deliv):
+    """When the document bundles more than `deliv`, where that part starts and
+    how long it is: (heading, words), or None when the document is one thing.
+    A heuristic for a hint to the model and the word count, never a cut."""
+    hs = headings(text)
+    mine = [(i, h) for i, h in hs if any(w in h.lower() for w in PART_WORDS.get(deliv, []))]
+    # only the AIBS documents count as "other": a PRD may well carry a section
+    # called architecture or build plan, and that is still the PRD
+    others = [(i, h) for i, h in hs if any(w in h.lower() for w in OTHER_PARTS)]
+    if not mine or not others:
+        return None
+    start = mine[0][0]
+    ends = [i for i, _ in others if i > start]
+    lines = text.splitlines()
+    part = "\n".join(lines[start:ends[0]] if ends else lines[start:])
+    return mine[0][1], len(part.split())
+
 
 def invariant_failures(text):
     """The failed invariants of a score, as plain sentences without their codes.
@@ -548,10 +593,17 @@ def step_score(root, week, only_team=None):
                 "previous": str(prev.relative_to(root)) if prev else "none",
                 "scored": now(),
             }
-            words = len(txt.read_text(encoding="utf-8", errors="replace").split())
+            body = txt.read_text(encoding="utf-8", errors="replace")
+            words = len(body.split())
+            hint = part_hint(body, deliv)
+            note = ""
+            if hint:
+                note = (f"\n\nNOTE: this file bundles more than the {deliv}. The {deliv} part begins at the heading "
+                        f"\u201c{hint[0]}\u201d and runs to about {hint[1]} words. Assess only that part, say which part "
+                        f"you read, and apply any length limit to that part alone.")
             message = (f"# THE CRITERIA — {criteria.name}, as published to the team\n\n{page_text(criteria)}\n\n"
-                       f"# THE DOCUMENT — {team}, week {week}, version {version}, {words} words\n\n"
-                       f"{txt.read_text(encoding='utf-8', errors='replace')}\n")
+                       f"# THE DOCUMENT — {team}, week {week}, version {version}, {words} words in the file{note}\n\n"
+                       f"{body}\n")
             if prev:
                 body = prev.read_text(encoding="utf-8").split("---\n\n", 1)[-1]
                 message += f"\n# THE PREVIOUS SCORESHEET — {fields['previous']}\n\n{body}\n"
@@ -738,8 +790,13 @@ def step_question(root, week, only_team=None):
         open_rows = [r for r in register if r["status"] in STILL_OPEN]
         reg_text = "\n".join(f"{r['id']} | asked in week {r['asked']} about the {r['about']} | {r['status']} | {r['question']}"
                              for r in open_rows) or "none — this is the team's first week; the rules on history do not apply."
-        docs_text = "\n\n".join(f"## The {d} (version {v})\n\n{p.read_text(encoding='utf-8', errors='replace')}"
-                                for d, (v, p) in sorted(texts.items()))
+        def doc_block(d, v, p):
+            body = p.read_text(encoding="utf-8", errors="replace")
+            hint = part_hint(body, d)
+            note = (f"\n\nNOTE: this file bundles more than the {d}. The {d} part begins at the heading \u201c{hint[0]}\u201d; "
+                    f"question only that part.") if hint else ""
+            return f"## The {d} (version {v}){note}\n\n{body}"
+        docs_text = "\n\n".join(doc_block(d, v, p) for d, (v, p) in sorted(texts.items()))
         message = (f"# THE REGISTER\n\n{reg_text}\n\n# THE DOCUMENTS — {team}, week {week}\n\n{docs_text}\n\n"
                    f"# THE READING\n\n" + ("\n\n".join(readings) or "none"))
         (week_dir / "owners").mkdir(parents=True, exist_ok=True)
