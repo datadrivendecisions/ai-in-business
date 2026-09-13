@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI adoption by European SMEs — week 1 presenter deck</title>
+<meta name="robots" content="noindex" />
+<style>
+:root{--primary:#d4db3e;--supporting:#1a1a1a;--bg-cream:#f5f0e6;--bg-yellow:#fafbf0;--bg-off-white:#f9f8f4;
+--text-primary:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--bg-page:#fff;--border:#e5e7eb;--border-strong:#d1d5db;}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#111;color:var(--text-primary);
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--primary);text-decoration-thickness:.12em;text-underline-offset:.15em}
+.app{display:grid;grid-template-columns:1fr;grid-template-rows:1fr auto;height:100%}
+.app.notes-on{grid-template-columns:1fr minmax(18rem,28vw)}
+.stagewrap{display:flex;align-items:center;justify-content:center;padding:1.5vmin;min-width:0}
+.stage{position:relative;width:min(100%,calc((100vh - 5rem) * 16 / 9));aspect-ratio:16/9;container-type:inline-size;background:var(--bg-page);
+box-shadow:0 8px 40px rgba(0,0,0,.5);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:5cqw 6cqw 6cqw;line-height:1.35}
+.slide.is-dense p,.slide.is-dense li{font-size:2.15cqw}.slide.is-dense li{margin-bottom:.9cqw}.slide.is-dense h2{font-size:4cqw;margin-bottom:2cqw}
+.slide.is-denser p,.slide.is-denser li{font-size:1.9cqw}.slide.is-denser li{margin-bottom:.7cqw}.slide.is-denser h2{font-size:3.6cqw;margin-bottom:1.6cqw}
+.slide.current{display:flex}
+.slide-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.2cqw}
+.slide-kicker{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--supporting)}
+.slide-kicker::before{content:"";display:inline-block;width:2.2cqw;height:.5cqw;background:var(--primary);border-radius:99px;margin-right:1cqw;vertical-align:middle}
+.slide-no{font-size:1.4cqw;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.slide h2{font-size:4.6cqw;line-height:1.15;margin:0 0 2.6cqw;font-weight:700}
+.slide p,.slide li{font-size:2.5cqw;color:var(--text-primary)}
+.slide p{margin:0 0 1.6cqw}
+.slide ul{margin:0;padding-left:1.1em}
+.slide li{margin-bottom:1.3cqw}
+.slide li strong{color:var(--text-primary)}
+.slide em{color:var(--text-secondary)}
+.slide > :last-child{margin-bottom:0}
+.slide.is-title{background:var(--bg-cream);justify-content:center}
+.slide.is-title h2{font-size:7cqw}
+.slide.is-title p{color:var(--text-secondary);font-size:3cqw}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw}
+.cols h3{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 1.2cqw}
+.slide .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5cqw;margin:1.5cqw 0 2cqw;padding:0;list-style:none}
+.slide .roles li{background:var(--bg-cream);border-radius:.8cqw;padding:1.4cqw 1cqw;font-weight:700;text-align:center;margin:0;font-size:2.2cqw}
+.tpl{color:var(--text-muted);font-style:italic;border-bottom:.15cqw dashed var(--border-strong)}
+li.tpl,p.tpl{display:block;border:.15cqw dashed var(--border-strong);border-radius:.6cqw;padding:1cqw 1.5cqw;background:var(--bg-off-white);list-style:none;margin-left:-1.1em}
+.foot{position:absolute;left:6cqw;right:6cqw;bottom:1.8cqw;display:flex;justify-content:space-between;font-size:1.3cqw;color:var(--text-muted)}
+.notes{background:#1c1c1c;color:#e5e7eb;padding:1.5rem 1.6rem;overflow:auto;font-size:1.05rem;line-height:1.5;border-left:1px solid #333;display:none}
+.notes-on .notes{display:block}
+.notes h3{margin:0 0 .8rem;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#a3a3a3}
+.notes p{margin:0 0 .8rem}.notes ul{margin:0 0 .8rem;padding-left:1.2em}.notes li{margin-bottom:.35rem}
+.notes .empty{color:#777;font-style:italic}
+.notes .iv{font-size:.85rem;color:#a3a3a3;border-left:3px solid #444;padding-left:.7rem}.notes .iv a{color:#ddd}.notes code{font-family:inherit;background:#333;padding:0 .3em;border-radius:3px}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:1rem;padding:.5rem 1rem;background:#000;color:#bbb;font-size:.85rem}
+.bar button{background:#222;color:#eee;border:1px solid #444;border-radius:6px;padding:.3rem .7rem;cursor:pointer;font:inherit}
+.bar button:hover{background:#333}
+.bar .counter{font-variant-numeric:tabular-nums;min-width:4.5rem;text-align:center}
+.bar .title{margin-left:auto;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar kbd{background:#222;border:1px solid #444;border-radius:4px;padding:0 .35em;font-family:inherit}
+.printonly{display:none}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  html,body{background:#fff;height:auto}
+  .app,.bar,.notes,.stagewrap{display:none!important}
+  .printonly{display:block}
+  .page{break-after:page;display:grid;grid-template-rows:auto 1fr;gap:4mm;min-height:calc(210mm - 24mm)}
+  .page:last-child{break-after:auto}
+  .page .stage{width:190mm;aspect-ratio:16/9;box-shadow:none;border:.3mm solid #999;margin:0 auto;container-type:inline-size;position:relative;background:#fff;overflow:hidden}
+  .page .slide{display:flex}
+  .page .pnotes{font-size:10pt;line-height:1.4;color:#111;column-count:2;column-gap:8mm}
+  .page .pnotes h3{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 2mm;column-span:all}
+  .page .pnotes p{margin:0 0 2.5mm}.page .pnotes ul{margin:0 0 2.5mm;padding-left:1.2em}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="stagewrap"><div class="stage">
+<section class="slide is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 13</span></div><h2>AI adoption by European SMEs</h2><p>Week 1: welcome, discussion, and the assignments.</p><div class="foot"><span>AI in Business · week 1</span><span>1 / 13</span></div></section>
+<section class="slide" id="s2"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">2 / 13</span></div><h2>Two modules, one question</h2><ul><li><strong>AEL — tech.</strong> Led by Witek ten Hove. Builds the tool.</li><li><strong>AIBS — research.</strong> Led by Meike Botterweg. Decides what the tool’s output must achieve, and judges it.</li><li><strong>One research problem.</strong> What do European SMEs need to implement AI in their business?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>2 / 13</span></div></section>
+<section class="slide is-denser" id="s3"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">3 / 13</span></div><h2>How this module runs</h2><ul><li><strong>One pipeline, two modules.</strong> AEL builds the tool. AIBS decides what its output must achieve, and judges it.</li><li><strong>Teams of four, both modules.</strong> Every team works together on the AEL and AIBS assignments; each student also holds one AEL build role.</li><li><strong>The goal:</strong> a Handbook about the state of AI, aimed at SMEs — what a regional owner needs to know and decide.</li><li><strong>The rhythm:</strong> one new published page per team, per week.</li><li><strong>The scope:</strong> 6 weeks of classes, then one combined assessment for both modules.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>3 / 13</span></div></section>
+<section class="slide is-dense" id="s4"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">4 / 13</span></div><h2>We're running this week by week</h2><div class="cols"><div><h3>Fixed</h3><ul><li>The end goal — the Handbook</li><li>6 weeks + assessment</li><li>Teams of four, one build role each</li><li>One page per team per week</li><li>Two informational gates: Socratic + peer</li><li>Final: consolidated handbook + joint interview</li></ul></div><div><h3>Decided as we go</h3><ul><li>How much scaffolding each assignment needs</li><li>The exact sub-theme and depth per week</li><li>Whether the field visit runs weeks 2–4 as planned</li><li>How far we get through the provisional week map</li></ul></div></div><div class="foot"><span>AI in Business · week 1</span><span>4 / 13</span></div></section>
+<section class="slide" id="s5"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">5 / 13</span></div><h2>Today's session (about 4 hours)</h2><ul><li><strong>Welcome</strong> — how the module runs</li><li><strong>Discussion 1</strong> — your experience with AI</li><li><strong>Discussion 2</strong> — the Draghi report</li><li>Break</li><li><strong>Team formation</strong> — teams of four, one build role each</li><li><strong>Assignments</strong> — kick off the PRD and the research proposal</li><li><strong>Share-out</strong> — one sentence per team: who your handbook is for</li></ul><div class="foot"><span>AI in Business · week 1</span><span>5 / 13</span></div></section>
+<section class="slide is-denser" id="s6"><div class="slide-head"><div class="slide-kicker">Discussion 1</div><span class="slide-no">6 / 13</span></div><h2>Your experience with AI</h2><p>This is also our diagnostic — it shapes what we do in the coming weeks.</p><ul><li>Which AI tools have you actually used, and for what?</li><li>Where has it clearly helped you? Where has it failed or misled you?</li><li>Confidence check: using AI · building with AI · judging AI output</li><li>How will AI change the job market you're about to enter?</li><li>What skills will you need — which do you have, which are gaps?</li><li>What do you want to be able to do by the end of this minor?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>6 / 13</span></div></section>
+<section class="slide is-denser" id="s7"><div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">7 / 13</span></div><h2>The Draghi report</h2><ul><li><strong>What it is.</strong> Mario Draghi's report for the European Commission (September 2024) on why the EU is falling behind the US and China.</li><li><strong>Core diagnosis.</strong> The gap is largely a technology gap — and Europe is slow to diffuse digital tech into existing businesses, especially SMEs.</li><li><strong>On AI.</strong> Europe won't win only by building frontier models; it has to get AI adopted across its industrial base.</li><li><strong>SME barriers.</strong> Fragmented single market, regulatory complexity, limited capital access, skills shortages, limited scale.</li><li><strong>Why it's our starting point.</strong> The Handbook is a small, concrete contribution to exactly that diffusion problem.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>7 / 13</span></div></section>
+<section class="slide" id="s8"><div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">8 / 13</span></div><h2>Guided discussion</h2><ul><li>Do you recognise the “Europe is behind” framing? Who makes the AI tools you named earlier?</li><li>Draghi treats the productivity gap as a tech gap. What would closing it actually take for one local SME?</li><li>If you were advising a regional SME tomorrow, what's the first thing they'd need to know about AI?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>8 / 13</span></div></section>
+<section class="slide" id="s9"><div class="slide-head"><div class="slide-kicker">Team formation</div><span class="slide-no">9 / 13</span></div><h2>Teams of four</h2><p>Four people, four AEL build roles, one team:</p><ul class="roles"><li>Product manager</li><li>Developer</li><li>Tester</li><li>Deployer</li></ul><p>Everyone also researches in AIBS — same people build and research.</p><p>Sanity check: four people, four roles, at least one willing to drive the CLI — the command line used to direct the AI coding agent.</p><div class="foot"><span>AI in Business · week 1</span><span>9 / 13</span></div></section>
+<section class="slide is-denser" id="s10"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">10 / 13</span></div><h2>AEL — Product Requirements Document</h2><ul><li><strong>Problem and users.</strong> What the platform is for, and who uses it — your research team, and, downstream, the SME owner.</li><li><strong>What it must let a user do.</strong> The path from raw source material to a published handbook page.</li><li><strong>Output qualities.</strong> What a good handbook page produced by the platform looks like.</li><li><strong>Known constraints.</strong> You direct an agentic CLI rather than hand-code; reuse existing infrastructure; a non-coder must be able to run it; every step needs a manual fallback.</li><li><strong>Out of scope, for now.</strong> What you are deliberately not building yet.</li><li><strong>Open questions and assumptions.</strong> What you're still unsure about.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>10 / 13</span></div></section>
+<section class="slide is-denser" id="s11"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">11 / 13</span></div><h2>AIBS — Research Proposal</h2><ul><li><strong>Target audience.</strong> Which SMEs is this for? Be specific — sector, size, region. A named partner company is ideal.</li><li><strong>What they need.</strong> What these SMEs need to know or decide about AI, and why — use the Draghi report and your own reasoning.</li><li><strong>Research question.</strong> One main question + at least 4 sub-questions — at least 2 on external analysis, at least 2 on internal analysis.</li><li><strong>Quality criteria for the handbook.</strong> What must it do to be genuinely useful to this audience?</li><li><strong>Methodology.</strong> Desk research + field research — one SME visit, weeks 2–4. Which questions does each method serve?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>11 / 13</span></div></section>
+<section class="slide is-dense" id="s12"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">12 / 13</span></div><h2>1–3 pages each. This is a starting point.</h2><ul><li><strong>PRD, the bar:</strong> a reader can tell what you're building, for whom, and how you'll know it works.</li><li><strong>Research proposal, the bar:</strong> a reader can tell who the handbook serves, what it must answer, and how you'll judge it.</li></ul><p>Push for a concrete target SME — sector, size, region — as early as possible.</p><p>You'll revise both as you learn more. Nothing here is final.</p><div class="foot"><span>AI in Business · week 1</span><span>12 / 13</span></div></section>
+<section class="slide" id="s13"><div class="slide-head"><div class="slide-kicker">Close</div><span class="slide-no">13 / 13</span></div><h2>Share-out and next steps</h2><ul><li>Each team, one sentence: who is our handbook for?</li><li>Each team, one sentence: what's an open question we're stuck on?</li></ul><p>Next week is decided from what we see today.</p><div class="foot"><span>AI in Business · week 1</span><span>13 / 13</span></div></section>
+  </div></div>
+  <aside class="notes" aria-label="Instructor notes" data-audience="instructor" hidden>
+    <p class="iv"><strong>Instructor view.</strong> The notes show because the address carried <code>?instructor</code>. <a href="week-01-deck.html?student">Leave the instructor view</a>.</p>
+    <h3>Instructor notes</h3>
+<div class="note" id="note-s1"><p>Session of Monday 7 September, about four hours with one break, both lecturers in the room.</p>
+<p>Goal: everyone leaves in a team of four, with both first drafts started, and we leave with a read on where the group starts.</p>
+<p>Pre-reading was Draghi's address to the European Parliament, eleven pages. Ask who read it; do not make a point of it yet.</p></div>
+<div class="note" id="note-s2" hidden><p>Two modules, taught as one pipeline to the same teams.</p>
+<ul><li>AEL, the technical track: builds the tool. Witek.</li><li>AIBS, the research track: decides what the tool's output must achieve, and judges whether it does. Meike.</li><li>One research problem holds both: what do European SMEs need in order to implement AI in their business?</li></ul>
+<p>Say once: you never work on one module at a time. Every week has both hats.</p></div>
+<div class="note" id="note-s3" hidden><p>Keep this short: all of it is on the course page in writing, and they will read it again.</p>
+<ul><li>The handbook is the end goal — what a regional SME owner needs to know and decide about AI.</li><li>One new published page per team per week. New page, never an edit to an earlier one, so the trail of thinking stays visible.</li><li>Teams of four; everyone researches; each holds one AEL build role.</li><li>Six Mondays, then an assessment period: consolidated handbook and one joint interview, two marks.</li></ul></div>
+<div class="note" id="note-s4" hidden><p>We run this adaptively. We start with the first assignments, watch what the group can do, and decide week by week what comes next.</p>
+<p>Be explicit about the consequence: some things you want to know in week 1 do not exist yet in week 1. Each week's page appears about a week before its session.</p>
+<p>Left column is a promise — it will not move. Right column is decided as we go, and that is deliberate, so we pitch the work at the level in the room.</p></div>
+<div class="note" id="note-s5" hidden><p>Timings, 240 minutes:</p>
+<ul><li>0:00–0:20 welcome and how the module runs</li><li>0:20–0:55 discussion 1, your experience with AI</li><li>0:55–1:35 discussion 2, the Draghi report</li><li>1:35–1:45 break</li><li>1:45–2:10 team formation</li><li>2:10–2:25 the two assignments</li><li>2:25–3:40 team work time, both lecturers circulating</li><li>3:40–4:00 share-out and close</li></ul></div>
+<div class="note" id="note-s6" hidden><p>Structured round; capture the answers on the board. Say that this is our diagnostic: it shapes the coming weeks, so understating what you can do does not help.</p>
+<p>Confidence check by hands, 1 to 5, three times: using AI tools; building something with AI; judging whether an AI output is any good.</p>
+<p>Keep a written record of three things: the confidence spread, the job-market and skills answers, and the "want to be able to do" answers. They go into the first decision-log entry after class.</p></div>
+<div class="note" id="note-s7" hidden><p>Framing, about ten minutes, lecturer only.</p>
+<ul><li>What it is: Draghi's report for the European Commission, September 2024, on why the EU falls behind the US and China on growth and productivity.</li><li>Core diagnosis: largely a technology gap. Few large tech firms, and, the point that matters for us, slow to diffuse digital technology into the businesses Europe already has, especially SMEs.</li><li>On AI: Europe will not win by building frontier models alone; it has to get AI adopted across its industrial base.</li><li>Barriers for SMEs: fragmented single market, regulatory complexity, limited access to capital, skills shortages, limited scale.</li><li>Why it is our starting point: the handbook is a small, concrete contribution to exactly that diffusion problem.</li></ul></div>
+<div class="note" id="note-s8" hidden><p>Guided discussion, about 25 minutes. The slide carries three questions; there is a fourth to ask between the second and the third:</p>
+<p>The report's lens is competitiveness. What does that lens underweight — trust, dependency on foreign vendors, jobs, data?</p>
+<p>Take the first question back to the board from discussion 1: the tools they named, and who makes them.</p>
+<p>The last question is the bridge into the assignments. End on it.</p></div>
+<div class="note" id="note-s9" hidden><p>Teams of four, formed now, together for the run. Each member takes one build role; everyone also researches.</p>
+<p>Sanity check per team: four people, four roles, at least one willing to drive the command line, at least one who knows this region or can work in Dutch. If a team is missing one of the last two, say so now; it is far cheaper to fix in week 1 than in week 3.</p>
+<p>Push for four people who are not already a group. A team that formed in the corridor tends to research the firm one of them already knew.</p>
+<p>On roles: take the one you want to get better at. If you have never opened a terminal, developer is a legitimate choice.</p></div>
+<div class="note" id="note-s10" hidden><p>Hand out the PRD prompt. The platform helps the team research and produce the handbook, one page a week. Its user is the team itself; the SME owner is the downstream reader.</p>
+<p>Walk the six sections. On constraints, say the four out loud: you direct an agentic CLI rather than hand-code; you reuse the wiki and the site; a non-coder must be able to run it; every automated step keeps a manual fallback.</p>
+<p>Add the point the slide does not carry: much of the source material is Dutch — CBS, the Chamber of Commerce, sector bodies, the regional press, probably the interview too. Crossing that gap is a requirement of the platform, not a favour someone does by hand. Say so in the PRD.</p>
+<p>The bar: a reader can tell what you are building, for whom, and how you will know it works.</p></div>
+<div class="note" id="note-s11" hidden><p>Hand out the research proposal prompt. Walk the five sections.</p>
+<p>On target audience, give the shape of "specific enough": a sector, a size, a region and a decision the owner is actually facing. The week 1 page has the worked example — metal and machine-building firms in the Achterhoek, 20 to 100 staff, spending two days a week turning drawings into quotations. It is there to show the shape, not to be copied.</p>
+<p>Research question: one main question, at least four sub-questions, two external and two internal.</p>
+<p>Quality criteria: this list becomes the checklist the handbook is later judged against. Methodology: desk research plus one SME visit in weeks 2 to 4, and which questions each serves.</p></div>
+<div class="note" id="note-s12" hidden><p>The two documents constrain each other. The proposal's quality criteria and the PRD's output qualities describe the same thing from two sides. If they disagree, one of them is wrong; find out now, not in week 4.</p>
+<p>Team work time, 2:25 to 3:40. Both lecturers circulate: AEL on the PRD, AIBS on the proposal. Push every team, early and repeatedly, to name a concrete target SME: sector, size, region.</p></div>
+<div class="note" id="note-s13" hidden><p>Share-out: each team, one sentence on who the handbook is for, and one open question they are stuck on.</p>
+<p>Then the close, four points:</p>
+<ul><li>Where the drafts go: post both in the team's Teams channel, due by the start of next session. The PRD is the first of six weekly AEL documents; the site lists them.</li><li>The individual portfolio: one document per student, added to every week, 30 % of each mark; the interview carries the other 70 %. Say the four standard questions. Week 1's entry is shorter: what you contributed, what your role did first, and what you do not understand yet. Half a page.</li><li>Two things the instrument lives or dies on: write it the same week, not at the end; and an honest small contribution scores better than an unsupportable large one, because the interview tests the claim.</li><li>The two weekly gates are still not scored. Say it explicitly; students will assume otherwise now that something weekly carries a mark.</li></ul>
+<p>Next week is decided from what we saw today, partly from the "what I do not understand yet" answers.</p>
+<p>After class: write the first decision-log entry, and read the portfolio entries.</p></div>
+  </aside>
+  <div class="bar">
+    <button id="prev" type="button" aria-label="Previous slide">◀</button>
+    <span class="counter" id="counter">1 / 13</span>
+    <button id="next" type="button" aria-label="Next slide">▶</button>
+    <button id="notesbtn" type="button" data-audience="instructor" hidden>Notes <kbd>N</kbd></button>
+    <button id="printbtn" type="button">Print <kbd>P</kbd></button>
+    <span><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> full screen</span>
+    <span class="title"><a href="week-01-slides.html">AI adoption by European SMEs · week 1 · one card per slide</a> · <a href="index.html">course</a></span>
+  </div>
+</div>
+<div class="printonly">
+<div class="page"><div class="stage"><section class="slide current is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 13</span></div><h2>AI adoption by European SMEs</h2><p>Week 1: welcome, discussion, and the assignments.</p><div class="foot"><span>AI in Business · week 1</span><span>1 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 1 / 13</h3><p>Session of Monday 7 September, about four hours with one break, both lecturers in the room.</p>
+<p>Goal: everyone leaves in a team of four, with both first drafts started, and we leave with a read on where the group starts.</p>
+<p>Pre-reading was Draghi's address to the European Parliament, eleven pages. Ask who read it; do not make a point of it yet.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s2"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">2 / 13</span></div><h2>Two modules, one question</h2><ul><li><strong>AEL — tech.</strong> Led by Witek ten Hove. Builds the tool.</li><li><strong>AIBS — research.</strong> Led by Meike Botterweg. Decides what the tool’s output must achieve, and judges it.</li><li><strong>One research problem.</strong> What do European SMEs need to implement AI in their business?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>2 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 2 / 13</h3><p>Two modules, taught as one pipeline to the same teams.</p>
+<ul><li>AEL, the technical track: builds the tool. Witek.</li><li>AIBS, the research track: decides what the tool's output must achieve, and judges whether it does. Meike.</li><li>One research problem holds both: what do European SMEs need in order to implement AI in their business?</li></ul>
+<p>Say once: you never work on one module at a time. Every week has both hats.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-denser" id="s3"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">3 / 13</span></div><h2>How this module runs</h2><ul><li><strong>One pipeline, two modules.</strong> AEL builds the tool. AIBS decides what its output must achieve, and judges it.</li><li><strong>Teams of four, both modules.</strong> Every team works together on the AEL and AIBS assignments; each student also holds one AEL build role.</li><li><strong>The goal:</strong> a Handbook about the state of AI, aimed at SMEs — what a regional owner needs to know and decide.</li><li><strong>The rhythm:</strong> one new published page per team, per week.</li><li><strong>The scope:</strong> 6 weeks of classes, then one combined assessment for both modules.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>3 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 3 / 13</h3><p>Keep this short: all of it is on the course page in writing, and they will read it again.</p>
+<ul><li>The handbook is the end goal — what a regional SME owner needs to know and decide about AI.</li><li>One new published page per team per week. New page, never an edit to an earlier one, so the trail of thinking stays visible.</li><li>Teams of four; everyone researches; each holds one AEL build role.</li><li>Six Mondays, then an assessment period: consolidated handbook and one joint interview, two marks.</li></ul></div></div>
+<div class="page"><div class="stage"><section class="slide current is-dense" id="s4"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">4 / 13</span></div><h2>We're running this week by week</h2><div class="cols"><div><h3>Fixed</h3><ul><li>The end goal — the Handbook</li><li>6 weeks + assessment</li><li>Teams of four, one build role each</li><li>One page per team per week</li><li>Two informational gates: Socratic + peer</li><li>Final: consolidated handbook + joint interview</li></ul></div><div><h3>Decided as we go</h3><ul><li>How much scaffolding each assignment needs</li><li>The exact sub-theme and depth per week</li><li>Whether the field visit runs weeks 2–4 as planned</li><li>How far we get through the provisional week map</li></ul></div></div><div class="foot"><span>AI in Business · week 1</span><span>4 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 4 / 13</h3><p>We run this adaptively. We start with the first assignments, watch what the group can do, and decide week by week what comes next.</p>
+<p>Be explicit about the consequence: some things you want to know in week 1 do not exist yet in week 1. Each week's page appears about a week before its session.</p>
+<p>Left column is a promise — it will not move. Right column is decided as we go, and that is deliberate, so we pitch the work at the level in the room.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s5"><div class="slide-head"><div class="slide-kicker">Course design</div><span class="slide-no">5 / 13</span></div><h2>Today's session (about 4 hours)</h2><ul><li><strong>Welcome</strong> — how the module runs</li><li><strong>Discussion 1</strong> — your experience with AI</li><li><strong>Discussion 2</strong> — the Draghi report</li><li>Break</li><li><strong>Team formation</strong> — teams of four, one build role each</li><li><strong>Assignments</strong> — kick off the PRD and the research proposal</li><li><strong>Share-out</strong> — one sentence per team: who your handbook is for</li></ul><div class="foot"><span>AI in Business · week 1</span><span>5 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 5 / 13</h3><p>Timings, 240 minutes:</p>
+<ul><li>0:00–0:20 welcome and how the module runs</li><li>0:20–0:55 discussion 1, your experience with AI</li><li>0:55–1:35 discussion 2, the Draghi report</li><li>1:35–1:45 break</li><li>1:45–2:10 team formation</li><li>2:10–2:25 the two assignments</li><li>2:25–3:40 team work time, both lecturers circulating</li><li>3:40–4:00 share-out and close</li></ul></div></div>
+<div class="page"><div class="stage"><section class="slide current is-denser" id="s6"><div class="slide-head"><div class="slide-kicker">Discussion 1</div><span class="slide-no">6 / 13</span></div><h2>Your experience with AI</h2><p>This is also our diagnostic — it shapes what we do in the coming weeks.</p><ul><li>Which AI tools have you actually used, and for what?</li><li>Where has it clearly helped you? Where has it failed or misled you?</li><li>Confidence check: using AI · building with AI · judging AI output</li><li>How will AI change the job market you're about to enter?</li><li>What skills will you need — which do you have, which are gaps?</li><li>What do you want to be able to do by the end of this minor?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>6 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 6 / 13</h3><p>Structured round; capture the answers on the board. Say that this is our diagnostic: it shapes the coming weeks, so understating what you can do does not help.</p>
+<p>Confidence check by hands, 1 to 5, three times: using AI tools; building something with AI; judging whether an AI output is any good.</p>
+<p>Keep a written record of three things: the confidence spread, the job-market and skills answers, and the "want to be able to do" answers. They go into the first decision-log entry after class.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-denser" id="s7"><div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">7 / 13</span></div><h2>The Draghi report</h2><ul><li><strong>What it is.</strong> Mario Draghi's report for the European Commission (September 2024) on why the EU is falling behind the US and China.</li><li><strong>Core diagnosis.</strong> The gap is largely a technology gap — and Europe is slow to diffuse digital tech into existing businesses, especially SMEs.</li><li><strong>On AI.</strong> Europe won't win only by building frontier models; it has to get AI adopted across its industrial base.</li><li><strong>SME barriers.</strong> Fragmented single market, regulatory complexity, limited capital access, skills shortages, limited scale.</li><li><strong>Why it's our starting point.</strong> The Handbook is a small, concrete contribution to exactly that diffusion problem.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>7 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 7 / 13</h3><p>Framing, about ten minutes, lecturer only.</p>
+<ul><li>What it is: Draghi's report for the European Commission, September 2024, on why the EU falls behind the US and China on growth and productivity.</li><li>Core diagnosis: largely a technology gap. Few large tech firms, and, the point that matters for us, slow to diffuse digital technology into the businesses Europe already has, especially SMEs.</li><li>On AI: Europe will not win by building frontier models alone; it has to get AI adopted across its industrial base.</li><li>Barriers for SMEs: fragmented single market, regulatory complexity, limited access to capital, skills shortages, limited scale.</li><li>Why it is our starting point: the handbook is a small, concrete contribution to exactly that diffusion problem.</li></ul></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s8"><div class="slide-head"><div class="slide-kicker">Discussion 2</div><span class="slide-no">8 / 13</span></div><h2>Guided discussion</h2><ul><li>Do you recognise the “Europe is behind” framing? Who makes the AI tools you named earlier?</li><li>Draghi treats the productivity gap as a tech gap. What would closing it actually take for one local SME?</li><li>If you were advising a regional SME tomorrow, what's the first thing they'd need to know about AI?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>8 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 8 / 13</h3><p>Guided discussion, about 25 minutes. The slide carries three questions; there is a fourth to ask between the second and the third:</p>
+<p>The report's lens is competitiveness. What does that lens underweight — trust, dependency on foreign vendors, jobs, data?</p>
+<p>Take the first question back to the board from discussion 1: the tools they named, and who makes them.</p>
+<p>The last question is the bridge into the assignments. End on it.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s9"><div class="slide-head"><div class="slide-kicker">Team formation</div><span class="slide-no">9 / 13</span></div><h2>Teams of four</h2><p>Four people, four AEL build roles, one team:</p><ul class="roles"><li>Product manager</li><li>Developer</li><li>Tester</li><li>Deployer</li></ul><p>Everyone also researches in AIBS — same people build and research.</p><p>Sanity check: four people, four roles, at least one willing to drive the CLI — the command line used to direct the AI coding agent.</p><div class="foot"><span>AI in Business · week 1</span><span>9 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 9 / 13</h3><p>Teams of four, formed now, together for the run. Each member takes one build role; everyone also researches.</p>
+<p>Sanity check per team: four people, four roles, at least one willing to drive the command line, at least one who knows this region or can work in Dutch. If a team is missing one of the last two, say so now; it is far cheaper to fix in week 1 than in week 3.</p>
+<p>Push for four people who are not already a group. A team that formed in the corridor tends to research the firm one of them already knew.</p>
+<p>On roles: take the one you want to get better at. If you have never opened a terminal, developer is a legitimate choice.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-denser" id="s10"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">10 / 13</span></div><h2>AEL — Product Requirements Document</h2><ul><li><strong>Problem and users.</strong> What the platform is for, and who uses it — your research team, and, downstream, the SME owner.</li><li><strong>What it must let a user do.</strong> The path from raw source material to a published handbook page.</li><li><strong>Output qualities.</strong> What a good handbook page produced by the platform looks like.</li><li><strong>Known constraints.</strong> You direct an agentic CLI rather than hand-code; reuse existing infrastructure; a non-coder must be able to run it; every step needs a manual fallback.</li><li><strong>Out of scope, for now.</strong> What you are deliberately not building yet.</li><li><strong>Open questions and assumptions.</strong> What you're still unsure about.</li></ul><div class="foot"><span>AI in Business · week 1</span><span>10 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 10 / 13</h3><p>Hand out the PRD prompt. The platform helps the team research and produce the handbook, one page a week. Its user is the team itself; the SME owner is the downstream reader.</p>
+<p>Walk the six sections. On constraints, say the four out loud: you direct an agentic CLI rather than hand-code; you reuse the wiki and the site; a non-coder must be able to run it; every automated step keeps a manual fallback.</p>
+<p>Add the point the slide does not carry: much of the source material is Dutch — CBS, the Chamber of Commerce, sector bodies, the regional press, probably the interview too. Crossing that gap is a requirement of the platform, not a favour someone does by hand. Say so in the PRD.</p>
+<p>The bar: a reader can tell what you are building, for whom, and how you will know it works.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-denser" id="s11"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">11 / 13</span></div><h2>AIBS — Research Proposal</h2><ul><li><strong>Target audience.</strong> Which SMEs is this for? Be specific — sector, size, region. A named partner company is ideal.</li><li><strong>What they need.</strong> What these SMEs need to know or decide about AI, and why — use the Draghi report and your own reasoning.</li><li><strong>Research question.</strong> One main question + at least 4 sub-questions — at least 2 on external analysis, at least 2 on internal analysis.</li><li><strong>Quality criteria for the handbook.</strong> What must it do to be genuinely useful to this audience?</li><li><strong>Methodology.</strong> Desk research + field research — one SME visit, weeks 2–4. Which questions does each method serve?</li></ul><div class="foot"><span>AI in Business · week 1</span><span>11 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 11 / 13</h3><p>Hand out the research proposal prompt. Walk the five sections.</p>
+<p>On target audience, give the shape of "specific enough": a sector, a size, a region and a decision the owner is actually facing. The week 1 page has the worked example — metal and machine-building firms in the Achterhoek, 20 to 100 staff, spending two days a week turning drawings into quotations. It is there to show the shape, not to be copied.</p>
+<p>Research question: one main question, at least four sub-questions, two external and two internal.</p>
+<p>Quality criteria: this list becomes the checklist the handbook is later judged against. Methodology: desk research plus one SME visit in weeks 2 to 4, and which questions each serves.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-dense" id="s12"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">12 / 13</span></div><h2>1–3 pages each. This is a starting point.</h2><ul><li><strong>PRD, the bar:</strong> a reader can tell what you're building, for whom, and how you'll know it works.</li><li><strong>Research proposal, the bar:</strong> a reader can tell who the handbook serves, what it must answer, and how you'll judge it.</li></ul><p>Push for a concrete target SME — sector, size, region — as early as possible.</p><p>You'll revise both as you learn more. Nothing here is final.</p><div class="foot"><span>AI in Business · week 1</span><span>12 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 12 / 13</h3><p>The two documents constrain each other. The proposal's quality criteria and the PRD's output qualities describe the same thing from two sides. If they disagree, one of them is wrong; find out now, not in week 4.</p>
+<p>Team work time, 2:25 to 3:40. Both lecturers circulate: AEL on the PRD, AIBS on the proposal. Push every team, early and repeatedly, to name a concrete target SME: sector, size, region.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s13"><div class="slide-head"><div class="slide-kicker">Close</div><span class="slide-no">13 / 13</span></div><h2>Share-out and next steps</h2><ul><li>Each team, one sentence: who is our handbook for?</li><li>Each team, one sentence: what's an open question we're stuck on?</li></ul><p>Next week is decided from what we see today.</p><div class="foot"><span>AI in Business · week 1</span><span>13 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 13 / 13</h3><p>Share-out: each team, one sentence on who the handbook is for, and one open question they are stuck on.</p>
+<p>Then the close, four points:</p>
+<ul><li>Where the drafts go: post both in the team's Teams channel, due by the start of next session. The PRD is the first of six weekly AEL documents; the site lists them.</li><li>The individual portfolio: one document per student, added to every week, 30 % of each mark; the interview carries the other 70 %. Say the four standard questions. Week 1's entry is shorter: what you contributed, what your role did first, and what you do not understand yet. Half a page.</li><li>Two things the instrument lives or dies on: write it the same week, not at the end; and an honest small contribution scores better than an unsupportable large one, because the interview tests the claim.</li><li>The two weekly gates are still not scored. Say it explicitly; students will assume otherwise now that something weekly carries a mark.</li></ul>
+<p>Next week is decided from what we saw today, partly from the "what I do not understand yet" answers.</p>
+<p>After class: write the first decision-log entry, and read the portfolio entries.</p></div></div>
+</div>
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('#app .stage > .slide'));
+  var app=document.getElementById('app'), counter=document.getElementById('counter');
+  var noteBoxes=[].slice.call(document.querySelectorAll('.notes .note'));
+  var i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('current',k===i)});
+    noteBoxes.forEach(function(b,k){b.hidden=(k!==i)});
+    counter.textContent=(i+1)+' / '+slides.length;
+    if(location.hash!=='#'+slides[i].id) history.replaceState(null,'','#'+slides[i].id);
+  }
+  function fromHash(){var k=slides.findIndex(function(s){return '#'+s.id===location.hash});go(k<0?0:k)}
+  var notesEl=document.querySelector('.notes');
+  function notesAllowed(){return notesEl&&!notesEl.hidden}
+  function toggleNotes(){if(!notesAllowed())return;app.classList.toggle('notes-on');try{localStorage.setItem('deck-notes',app.classList.contains('notes-on')?'1':'0')}catch(e){}}
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': go(i+1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': go(i-1); e.preventDefault(); break;
+      case 'Home': go(0); break; case 'End': go(slides.length-1); break;
+      case 'n': case 'N': toggleNotes(); break;
+      case 'f': case 'F': if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); break;
+      case 'p': case 'P': window.print(); break;
+    }
+  });
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.getElementById('notesbtn').onclick=toggleNotes;
+  document.getElementById('printbtn').onclick=function(){window.print()};
+  document.querySelector('#app .stage').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    var r=this.getBoundingClientRect(); go(e.clientX-r.left>r.width/2?i+1:i-1);
+  });
+  window.addEventListener('hashchange',fromHash);
+  var want=new URLSearchParams(location.search).get('notes');
+  try{ if(notesAllowed()&&(want==='1'||(want===null&&localStorage.getItem('deck-notes')==='1'))) app.classList.add('notes-on'); }catch(e){}
+  fromHash();
+})();
+</script>
+</body>
+</html>

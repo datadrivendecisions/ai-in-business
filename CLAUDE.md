@@ -57,6 +57,8 @@ python3 -m http.server -d site     # preview the site locally at :8000
 gh run list --workflow=pages.yml   # deploy status
 
 python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/ --codes A1,A16,A17          # prose: AI language, every page
+python3 .claude/skills/slide-deck/scripts/slidewords.py site/week-02-slides.html               # slides: words, bullets, longest sentence per card
+.venv/bin/python project-documentation/slides/build_deck.py 2                                    # slides: presenter deck, PDF and PPTX with the instructor notes
 python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/index.html site/week-01.html site/handbook.html --codes D1,D3   # reading level, student pages only
 ```
 
@@ -107,6 +109,20 @@ Publishing week N is two edits: the new file, and its link in the week map on th
 (plus the previous week's pager). Copy `week-01.html` — it is the pattern. Anything still unknown
 uses the same `.tpl` placeholder convention as the handbook template, so an unfilled slot reads as
 deliberate rather than forgotten.
+
+**`site/week-NN-slides.html` is the session's slides as cards**, one per slide, in order, published
+beside the week they belong to and linked from its week-map card. The card *is* the projected slide,
+so it obeys one rule: **slides support the story; the lecturer tells it.** A student reads or
+listens, never both, so a card carries only what the voice cannot — the sentence to remember, a
+number, a quote, a name, a link — and the detail lives on the week page. The
+[`slide-deck`](.claude/skills/slide-deck/SKILL.md) skill holds the rule, the limits and the counter.
+The lecturer presents from **`site/week-NN-deck.html`**, a generated full-screen deck beside the card
+page, never edited by hand: `project-documentation/slides/build_deck.py` writes it from the cards plus
+`week-NN-notes.md`, and writes the PDF and PPTX beside itself. The deck is the second agreed reason for
+JavaScript on a course page — a deck without navigation is not a deck — and the notes are run-sheet
+material published behind the instructor view: marked `data-audience="instructor"`, revealed by
+`?instructor`, toggled with N only then. Anything that only works if a student has not read it stays
+out of the notes file, which is in a public repository either way.
 
 **`site/handbook.html` is the handbook's template, not the handbook.** It holds the shell every
 cohort fills — start here, the theme index, the chapter template, the tooling index, the regional
@@ -204,7 +220,7 @@ font loads: the site is system-stack only.
 
 No page of the course itself has any JavaScript — not `index.html`, not a week page, not the
 handbook template, not the LRD. Keep it that way unless there is a reason not to. The **instructor
-view** is the one agreed reason, and it lives at the foot of `index.html`: twenty lines that unhide
+view** is one agreed reason, and the generated `week-NN-deck.html` presenter decks are the other; and it lives at the foot of `index.html`: twenty lines that unhide
 the sections marked `data-audience="instructor"` when the URL carries `?instructor`, remember the
 choice in `sessionStorage` for the rest of the visit, and let `?student` turn it off again. Copy
 that block verbatim into a page when it gains an instructor section, and add nothing to it.

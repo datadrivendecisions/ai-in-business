@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Geopolitics and the AI race — week 2 presenter deck</title>
+<meta name="robots" content="noindex" />
+<style>
+:root{--primary:#d4db3e;--supporting:#1a1a1a;--bg-cream:#f5f0e6;--bg-yellow:#fafbf0;--bg-off-white:#f9f8f4;
+--text-primary:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--bg-page:#fff;--border:#e5e7eb;--border-strong:#d1d5db;}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#111;color:var(--text-primary);
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--primary);text-decoration-thickness:.12em;text-underline-offset:.15em}
+.app{display:grid;grid-template-columns:1fr;grid-template-rows:1fr auto;height:100%}
+.app.notes-on{grid-template-columns:1fr minmax(18rem,28vw)}
+.stagewrap{display:flex;align-items:center;justify-content:center;padding:1.5vmin;min-width:0}
+.stage{position:relative;width:min(100%,calc((100vh - 5rem) * 16 / 9));aspect-ratio:16/9;container-type:inline-size;background:var(--bg-page);
+box-shadow:0 8px 40px rgba(0,0,0,.5);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:5cqw 6cqw 6cqw;line-height:1.35}
+.slide.is-dense p,.slide.is-dense li{font-size:2.15cqw}.slide.is-dense li{margin-bottom:.9cqw}.slide.is-dense h2{font-size:4cqw;margin-bottom:2cqw}
+.slide.is-denser p,.slide.is-denser li{font-size:1.9cqw}.slide.is-denser li{margin-bottom:.7cqw}.slide.is-denser h2{font-size:3.6cqw;margin-bottom:1.6cqw}
+.slide.current{display:flex}
+.slide-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.2cqw}
+.slide-kicker{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--supporting)}
+.slide-kicker::before{content:"";display:inline-block;width:2.2cqw;height:.5cqw;background:var(--primary);border-radius:99px;margin-right:1cqw;vertical-align:middle}
+.slide-no{font-size:1.4cqw;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.slide h2{font-size:4.6cqw;line-height:1.15;margin:0 0 2.6cqw;font-weight:700}
+.slide p,.slide li{font-size:2.5cqw;color:var(--text-primary)}
+.slide p{margin:0 0 1.6cqw}
+.slide ul{margin:0;padding-left:1.1em}
+.slide li{margin-bottom:1.3cqw}
+.slide li strong{color:var(--text-primary)}
+.slide em{color:var(--text-secondary)}
+.slide > :last-child{margin-bottom:0}
+.slide.is-title{background:var(--bg-cream);justify-content:center}
+.slide.is-title h2{font-size:7cqw}
+.slide.is-title p{color:var(--text-secondary);font-size:3cqw}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw}
+.cols h3{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 1.2cqw}
+.slide .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5cqw;margin:1.5cqw 0 2cqw;padding:0;list-style:none}
+.slide .roles li{background:var(--bg-cream);border-radius:.8cqw;padding:1.4cqw 1cqw;font-weight:700;text-align:center;margin:0;font-size:2.2cqw}
+.tpl{color:var(--text-muted);font-style:italic;border-bottom:.15cqw dashed var(--border-strong)}
+li.tpl,p.tpl{display:block;border:.15cqw dashed var(--border-strong);border-radius:.6cqw;padding:1cqw 1.5cqw;background:var(--bg-off-white);list-style:none;margin-left:-1.1em}
+.foot{position:absolute;left:6cqw;right:6cqw;bottom:1.8cqw;display:flex;justify-content:space-between;font-size:1.3cqw;color:var(--text-muted)}
+.notes{background:#1c1c1c;color:#e5e7eb;padding:1.5rem 1.6rem;overflow:auto;font-size:1.05rem;line-height:1.5;border-left:1px solid #333;display:none}
+.notes-on .notes{display:block}
+.notes h3{margin:0 0 .8rem;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#a3a3a3}
+.notes p{margin:0 0 .8rem}.notes ul{margin:0 0 .8rem;padding-left:1.2em}.notes li{margin-bottom:.35rem}
+.notes .empty{color:#777;font-style:italic}
+.notes .iv{font-size:.85rem;color:#a3a3a3;border-left:3px solid #444;padding-left:.7rem}.notes .iv a{color:#ddd}.notes code{font-family:inherit;background:#333;padding:0 .3em;border-radius:3px}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:1rem;padding:.5rem 1rem;background:#000;color:#bbb;font-size:.85rem}
+.bar button{background:#222;color:#eee;border:1px solid #444;border-radius:6px;padding:.3rem .7rem;cursor:pointer;font:inherit}
+.bar button:hover{background:#333}
+.bar .counter{font-variant-numeric:tabular-nums;min-width:4.5rem;text-align:center}
+.bar .title{margin-left:auto;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar kbd{background:#222;border:1px solid #444;border-radius:4px;padding:0 .35em;font-family:inherit}
+.printonly{display:none}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  html,body{background:#fff;height:auto}
+  .app,.bar,.notes,.stagewrap{display:none!important}
+  .printonly{display:block}
+  .page{break-after:page;display:grid;grid-template-rows:auto 1fr;gap:4mm;min-height:calc(210mm - 24mm)}
+  .page:last-child{break-after:auto}
+  .page .stage{width:190mm;aspect-ratio:16/9;box-shadow:none;border:.3mm solid #999;margin:0 auto;container-type:inline-size;position:relative;background:#fff;overflow:hidden}
+  .page .slide{display:flex}
+  .page .pnotes{font-size:10pt;line-height:1.4;color:#111;column-count:2;column-gap:8mm}
+  .page .pnotes h3{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 2mm;column-span:all}
+  .page .pnotes p{margin:0 0 2.5mm}.page .pnotes ul{margin:0 0 2.5mm;padding-left:1.2em}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="stagewrap"><div class="stage">
+<section class="slide is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 13</span></div><h2>Geopolitics and the AI race</h2><p>Week 2.</p><div class="foot"><span>AI in Business · week 2</span><span>1 / 13</span></div></section>
+<section class="slide" id="s2"><div class="slide-head"><div class="slide-kicker">Today</div><span class="slide-no">2 / 13</span></div><h2>Today's session</h2><ul><li>The course website, the Draghi report, the AI Maturity Ladder</li><li>Review your research proposals and PRDs</li><li>Assignment 1 — report writing with AI</li><li>Assignment 2 — search strategies and quality criteria</li><li>Way of working</li></ul><div class="foot"><span>AI in Business · week 2</span><span>2 / 13</span></div></section>
+<section class="slide" id="s3"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">3 / 13</span></div><h2>Before we start: any questions?</h2><ul><li><strong>The course website.</strong> Anything unclear?</li><li><strong>The Draghi report.</strong> His speech to the European Parliament — anything to revisit?</li><li><strong>The AI Maturity Ladder.</strong> Where do you think your target SME sits?</li></ul><div class="foot"><span>AI in Business · week 2</span><span>3 / 13</span></div></section>
+<section class="slide is-dense" id="s4"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">4 / 13</span></div><h2>Your research proposals</h2><ul><li><strong>Sub-questions per theme.</strong> Concrete questions that map onto your internal and external analysis — not one broad theme.</li><li><strong>A logical structure.</strong> Themes ordered so the whole thing reads as one research plan, not a list.</li><li><strong>The link forward.</strong> From structure to product — how this feeds the handbook, and the tool that will help build it.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>4 / 13</span></div></section>
+<section class="slide" id="s5"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">5 / 13</span></div><h2>Your PRDs — three things almost every draft missed</h2><p>Eight drafts, <a href="prd-criteria.html">twenty criteria</a>.</p>
+    <ul>
+      <li><strong>How you will know it works.</strong> <em>“Important claims should be traceable to their original source.”</em></li>
+      <li><strong>A hypothesis you could be wrong about.</strong> <em>“The platform should reduce repetitive research and writing work.”</em></li>
+      <li><strong>Pain points with evidence.</strong> <em>“Researching AI applications for designers and engineers is time-consuming.”</em></li>
+    </ul><div class="foot"><span>AI in Business · week 2</span><span>5 / 13</span></div></section>
+<section class="slide" id="s6"><div class="slide-head"><div class="slide-kicker">AEL · the six documents</div><span class="slide-no">6 / 13</span></div><h2>Your PRD is the first of six</h2><ul>
+      <li>PRD · blueprint · knowledge architecture · build plan · evaluation · evaluation</li>
+      <li>One a week, in your team's Teams channel</li>
+      <li>All six, with their criteria: <a href="platform-documents.html">the documents that specify your platform</a></li>
+    </ul>
+    <p>This week: the technical blueprint.</p><div class="foot"><span>AI in Business · week 2</span><span>6 / 13</span></div></section>
+<section class="slide" id="s7"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">7 / 13</span></div><h2>AI braindump, or human-reviewed?</h2><ul><li>We look at every assignment this way — and so should you.</li></ul><p>Make that visible in your own work: what did you write, what did AI draft, and what did you check?</p><div class="foot"><span>AI in Business · week 2</span><span>7 / 13</span></div></section>
+<section class="slide" id="s8"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">8 / 13</span></div><h2>Two assignments this week</h2><div class="cols"><div><h3>Assignment 1</h3><ul><li>Report writing with AI — three articles, three “winners”</li><li>Goal: see bias appear on purpose</li></ul></div><div><h3>Assignment 2</h3><ul><li>Search strategies and quality criteria — US, China, Europe</li><li>Goal: make your criteria and strategy explicit</li></ul></div></div><div class="foot"><span>AI in Business · week 2</span><span>8 / 13</span></div></section>
+<section class="slide" id="s9"><div class="slide-head"><div class="slide-kicker">Assignment 1</div><span class="slide-no">9 / 13</span></div><h2>Report writing with AI</h2><ul><li><strong>Three prompts, separately.</strong> Ask AI to argue the US dominates AI. Then, in a new conversation, that China dominates. Then Europe.</li><li><strong>Don't cross-reference.</strong> Each article should be written as if it's the only one AI is producing.</li><li><strong>Read them back to back.</strong> What do you notice?</li></ul><div class="foot"><span>AI in Business · week 2</span><span>9 / 13</span></div></section>
+<section class="slide is-dense" id="s10"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">10 / 13</span></div><h2>AI gives you what you ask for</h2><ul><li><strong>Not what's true.</strong> Ask for the US case and you get a convincing US case — same for China, same for Europe.</li><li><strong>Source diversity is the fix.</strong> That's what actually teaches you who leads — not a cleverer prompt.</li><li><strong>This matters twice.</strong> For your business judgement (informed, unbiased) and for you personally (know your own starting position).</li></ul><div class="foot"><span>AI in Business · week 2</span><span>10 / 13</span></div></section>
+<section class="slide" id="s11"><div class="slide-head"><div class="slide-kicker">Assignment 2</div><span class="slide-no">11 / 13</span></div><h2>Search strategies and quality criteria</h2><ul><li><strong>The question.</strong> Good-quality reports on the geopolitics of the AI race — US, China, Europe.</li><li><strong>Your criteria, explicit.</strong> What makes a source “good quality” here? Write it down.</li><li><strong>Your strategy, explicit.</strong> How did you search, and why?</li><li><strong>Then, AI — carefully.</strong> A first analysis of your sources with AI, with your strategy made explicit too.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>11 / 13</span></div></section>
+<section class="slide" id="s12"><div class="slide-head"><div class="slide-kicker">Way of working</div><span class="slide-no">12 / 13</span></div><h2>Peer review and the Socratic agent</h2><ul><li><strong>Partner teams.</strong> Every team pairs up with another team to review each other's work.</li><li><strong>A Socratic agent.</strong> Every team's work also gets questioned by an AI tutor — informational, not scored.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>12 / 13</span></div></section>
+<section class="slide" id="s13"><div class="slide-head"><div class="slide-kicker">Our rulebook</div><span class="slide-no">13 / 13</span></div><h2>The rules we keep, week by week</h2><p>Every time we spot a habit worth keeping, we turn it into a rule.</p><div class="cols"><div><h3>Rule 1</h3><p>Before taking a break, <strong>always</strong> set AI to work.</p></div><div><h3>Rule 2</h3><p class="tpl">Added together in the session.</p></div></div><div class="foot"><span>AI in Business · week 2</span><span>13 / 13</span></div></section>
+  </div></div>
+  <aside class="notes" aria-label="Instructor notes" data-audience="instructor" hidden>
+    <p class="iv"><strong>Instructor view.</strong> The notes show because the address carried <code>?instructor</code>. <a href="week-02-deck.html?student">Leave the instructor view</a>.</p>
+    <h3>Instructor notes</h3>
+<div class="note" id="note-s1"><p>Session of Monday 14 September, about four hours with one break, both lecturers.</p>
+<p>Sequel to week 1's Draghi discussion: that was Europe's position; this week is what a single SME depends on, and what an AI tool gives you when you ask it who leads.</p>
+<p>Goal: every team leaves paired with its peer-review partner, with both assignments understood and started, and with the way of working said out loud.</p></div>
+<div class="note" id="note-s2" hidden><p>Five parts. Suggested split, to adjust on the day:</p>
+<ul><li>Questions on the homework, 20 minutes</li><li>Review of the proposals and the PRDs, 40 minutes</li><li>Assignment 1 explained and started, 40 minutes; break</li><li>Assignment 2 explained, 20 minutes; team work time</li><li>Way of working and close, 20 minutes</li></ul>
+<p>Two minutes somewhere early on what week 1 showed and what we changed as a result. Keep it concrete; this is where the adaptive run earns its credibility.</p></div>
+<div class="note" id="note-s3" hidden><p>Open the floor before anything else. Three prompts:</p>
+<ul><li>The course website: anything unclear? The six-documents page and the week map are new since last week.</li><li>The Draghi address: anything to revisit?</li><li>The AI Maturity Ladder: ask them to have their own result at hand — they were told to keep a copy. Then: where does your target SME sit, and where do you?</li></ul></div>
+<div class="note" id="note-s4" hidden><p>What the proposals showed, as three review points:</p>
+<ul><li>Sub-questions per theme: concrete questions that map onto internal and external analysis, not one broad theme.</li><li>A logical structure: themes ordered so the whole reads as one research plan.</li><li>The link forward: from structure to product — how this feeds the handbook, and the tool that will build it.</li></ul>
+<p>Restate, before the PRDs: neither gate is scored, and neither ever will be. Students will assume otherwise now that the portfolio carries 30 %.</p></div>
+<div class="note" id="note-s5" hidden><p>Eight drafts, read against the twenty published criteria. The user journey, the users and the functional requirements were solid nearly everywhere. Three things were missing nearly everywhere too. The three quotes on the slide are from three different drafts, shortened, with nothing that names a team or a firm; each shows what the draft wrote where the criterion asks for something else.</p>
+<ul><li>How you will know it works. The quote is a quality, and a fair one, but nothing says how you would measure it or when. No draft says what it will measure, or when. Criterion C3: one measure that matters most, one about the product, one about the AI, one guardrail — each with a cadence.</li><li>A hypothesis you could be wrong about. The quote is a goal; nothing in it could be proved wrong by a week of use. Goals, yes; a falsifiable claim, no. The template: by bringing X to life, Y becomes easier, faster or more reliable for us, and we will see it in Z.</li><li>Pain points carried by evidence. The quote asserts the problem; nothing shows it. The problem is asserted in every draft. The week-1 spike's failure log and the AIBS problem analysis are the evidence; point at them.</li></ul>
+<p>And the small one: a header. Name, version, date, who wrote it, where the related documents are. Three drafts also ran past three pages; a PRD that has not chosen what matters has not finished choosing.</p>
+<p>What a good one looks like, one per issue. Say these aloud after the quotes, or write one on the board; they are invented for the course's own platform, not taken from a draft.</p>
+<ul><li><strong>How you will know it works.</strong> "North star: one published page a week that passes the peer gate without a factual correction. Product measure: hours from first source to published page, logged every week. AI measure: unconfirmable citations per page, counted at every review. Guardrail: pages published that nobody on the team read in full — zero, checked at every hand-in." Four measures, each with a cadence.</li><li><strong>A hypothesis you could be wrong about.</strong> "By giving the platform a source-appraisal step that scores publisher, date and relevance, checking a page's sources takes a researcher under an hour instead of an afternoon. We will see it in the logged review time by week 3." If review time does not fall, the hypothesis is wrong, and the team knows by when.</li><li><strong>Pain points carried by evidence.</strong> "In the week-1 spike the agent drafted a page with six sources; two links did not resolve and one quoted a figure the source does not contain (failure log, entries 3–5). The problem analysis found that three of the four of us cannot read the CBS and KvK material in Dutch, so one person did all the source work last week." A failure log entry and a problem-analysis finding, pointed at, not asserted.</li></ul>
+<p>Set the rest of the discussion from what the hand-ins showed.</p></div>
+<div class="note" id="note-s6" hidden><p>The PRD is the first of six weekly AEL documents: PRD, technical blueprint, knowledge architecture, build plan, and two evaluations. One a week, posted in the team's Teams channel, one to three pages.</p>
+<p>The site has one page for all six: the bar each must clear, its criteria, and what happens after posting. Say that part: a lecturer hands the document to the AI tutor; three to five questions come back in the channel; never a score. From this week the tutor also reads the new document beside the earlier ones and asks whether they still describe one platform.</p>
+<p>This week's document is the technical blueprint. Its criteria go up before the deadline, like the PRD's — the deadline is on the week-2 page.</p>
+<p>Say plainly: the PRD is allowed to change. When the blueprint shows it promised something it cannot deliver, revise it and say why.</p></div>
+<div class="note" id="note-s7" hidden><p>We look at every assignment this way, and so should you. Make the split visible in your own work: what did you write, what did AI draft, and what did you check?</p>
+<p>The rule underneath it, for the handbook pages: every claim needs an appraised source, and "the model said so" is not one.</p></div>
+<div class="note" id="note-s8" hidden><p>Two assignments this week, and they are one lesson in two halves. Assignment 1 makes bias appear on purpose; assignment 2 makes the antidote — criteria and strategy — explicit.</p>
+<p>Walk both briefly here; the next slides carry each in turn.</p></div>
+<div class="note" id="note-s9" hidden><p>Three prompts, three separate conversations. Ask AI to argue that the US dominates AI. In a new conversation, that China does. Then Europe.</p>
+<p>No cross-referencing: each article is written as if it were the only one being produced.</p>
+<p>Then read the three back to back. Stop here and ask what they notice before showing the next slide; the takeaway lands harder if the room says it first.</p></div>
+<div class="note" id="note-s10" hidden><p>AI gives you what you ask for, not what is true. Ask for the US case and you get a convincing US case; the same for China, the same for Europe.</p>
+<p>Source diversity is the fix, and it is what actually teaches you who leads. A cleverer prompt does not.</p>
+<p>It matters twice: for business judgement, informed and unbiased; and personally, knowing your own starting position.</p>
+<p>Bridge to dependency, from the plan for this week: who builds these systems, who funds them, who could buy them? Open weights, closed weights, hosted API, on-premise — what does each mean for a forty-person firm with no IT department? What would your target SME lose if its tool changed price, terms or European availability?</p></div>
+<div class="note" id="note-s11" hidden><p>The question: good-quality reports on the geopolitics of the AI race — US, China, Europe.</p>
+<p>Two things made explicit and written down: what makes a source good quality here, and how you searched and why.</p>
+<p>Then AI, carefully: a first analysis of your sources with AI, with your strategy made explicit too. The order matters — sources and criteria first, the model second.</p></div>
+<div class="note" id="note-s12" hidden><p>Partner teams. Pair by wall position: 1 with 2, 3 with 4, 5 with 6. An odd count makes a ring of three. Say once: this pairing holds for the rest of the run. They read everything you publish; you read theirs.</p>
+<p>The Socratic agent: an AI tutor, run by us, questions every team's thinking. It reads the page you publish and the document you post; questions come back in your Teams channel. Informational, not scored, and it never will be.</p>
+<p>Where things go: the document in your team's Teams channel; the page handed in by being published.</p>
+<p>Portfolio: the second entry is the first with the four standard questions, because there is now a page and both gates have run.</p>
+<p>Field research opens. Nobody approaches a company before the consent text is signed off, and interview material never goes through a free tier or the tutor.</p></div>
+<div class="note" id="note-s13" hidden><p>Every time we spot a habit worth keeping, we turn it into a rule. Rule 1: before taking a break, always set AI to work.</p>
+<p>Rule 2 is added together in the session. Capture it on the board and put it in the deck afterwards.</p>
+<p>After class: decision-log entry, and read the second portfolio entries — "what the gates asked and what I changed" is the evidence base for planning week 3.</p></div>
+  </aside>
+  <div class="bar">
+    <button id="prev" type="button" aria-label="Previous slide">◀</button>
+    <span class="counter" id="counter">1 / 13</span>
+    <button id="next" type="button" aria-label="Next slide">▶</button>
+    <button id="notesbtn" type="button" data-audience="instructor" hidden>Notes <kbd>N</kbd></button>
+    <button id="printbtn" type="button">Print <kbd>P</kbd></button>
+    <span><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> full screen</span>
+    <span class="title"><a href="week-02-slides.html">Geopolitics and the AI race · week 2 · one card per slide</a> · <a href="index.html">course</a></span>
+  </div>
+</div>
+<div class="printonly">
+<div class="page"><div class="stage"><section class="slide current is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 13</span></div><h2>Geopolitics and the AI race</h2><p>Week 2.</p><div class="foot"><span>AI in Business · week 2</span><span>1 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 1 / 13</h3><p>Session of Monday 14 September, about four hours with one break, both lecturers.</p>
+<p>Sequel to week 1's Draghi discussion: that was Europe's position; this week is what a single SME depends on, and what an AI tool gives you when you ask it who leads.</p>
+<p>Goal: every team leaves paired with its peer-review partner, with both assignments understood and started, and with the way of working said out loud.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s2"><div class="slide-head"><div class="slide-kicker">Today</div><span class="slide-no">2 / 13</span></div><h2>Today's session</h2><ul><li>The course website, the Draghi report, the AI Maturity Ladder</li><li>Review your research proposals and PRDs</li><li>Assignment 1 — report writing with AI</li><li>Assignment 2 — search strategies and quality criteria</li><li>Way of working</li></ul><div class="foot"><span>AI in Business · week 2</span><span>2 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 2 / 13</h3><p>Five parts. Suggested split, to adjust on the day:</p>
+<ul><li>Questions on the homework, 20 minutes</li><li>Review of the proposals and the PRDs, 40 minutes</li><li>Assignment 1 explained and started, 40 minutes; break</li><li>Assignment 2 explained, 20 minutes; team work time</li><li>Way of working and close, 20 minutes</li></ul>
+<p>Two minutes somewhere early on what week 1 showed and what we changed as a result. Keep it concrete; this is where the adaptive run earns its credibility.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s3"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">3 / 13</span></div><h2>Before we start: any questions?</h2><ul><li><strong>The course website.</strong> Anything unclear?</li><li><strong>The Draghi report.</strong> His speech to the European Parliament — anything to revisit?</li><li><strong>The AI Maturity Ladder.</strong> Where do you think your target SME sits?</li></ul><div class="foot"><span>AI in Business · week 2</span><span>3 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 3 / 13</h3><p>Open the floor before anything else. Three prompts:</p>
+<ul><li>The course website: anything unclear? The six-documents page and the week map are new since last week.</li><li>The Draghi address: anything to revisit?</li><li>The AI Maturity Ladder: ask them to have their own result at hand — they were told to keep a copy. Then: where does your target SME sit, and where do you?</li></ul></div></div>
+<div class="page"><div class="stage"><section class="slide current is-dense" id="s4"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">4 / 13</span></div><h2>Your research proposals</h2><ul><li><strong>Sub-questions per theme.</strong> Concrete questions that map onto your internal and external analysis — not one broad theme.</li><li><strong>A logical structure.</strong> Themes ordered so the whole thing reads as one research plan, not a list.</li><li><strong>The link forward.</strong> From structure to product — how this feeds the handbook, and the tool that will help build it.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>4 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 4 / 13</h3><p>What the proposals showed, as three review points:</p>
+<ul><li>Sub-questions per theme: concrete questions that map onto internal and external analysis, not one broad theme.</li><li>A logical structure: themes ordered so the whole reads as one research plan.</li><li>The link forward: from structure to product — how this feeds the handbook, and the tool that will build it.</li></ul>
+<p>Restate, before the PRDs: neither gate is scored, and neither ever will be. Students will assume otherwise now that the portfolio carries 30 %.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s5"><div class="slide-head"><div class="slide-kicker">Discuss homework</div><span class="slide-no">5 / 13</span></div><h2>Your PRDs — three things almost every draft missed</h2><p>Eight drafts, <a href="prd-criteria.html">twenty criteria</a>.</p>
+    <ul>
+      <li><strong>How you will know it works.</strong> <em>“Important claims should be traceable to their original source.”</em></li>
+      <li><strong>A hypothesis you could be wrong about.</strong> <em>“The platform should reduce repetitive research and writing work.”</em></li>
+      <li><strong>Pain points with evidence.</strong> <em>“Researching AI applications for designers and engineers is time-consuming.”</em></li>
+    </ul><div class="foot"><span>AI in Business · week 2</span><span>5 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 5 / 13</h3><p>Eight drafts, read against the twenty published criteria. The user journey, the users and the functional requirements were solid nearly everywhere. Three things were missing nearly everywhere too. The three quotes on the slide are from three different drafts, shortened, with nothing that names a team or a firm; each shows what the draft wrote where the criterion asks for something else.</p>
+<ul><li>How you will know it works. The quote is a quality, and a fair one, but nothing says how you would measure it or when. No draft says what it will measure, or when. Criterion C3: one measure that matters most, one about the product, one about the AI, one guardrail — each with a cadence.</li><li>A hypothesis you could be wrong about. The quote is a goal; nothing in it could be proved wrong by a week of use. Goals, yes; a falsifiable claim, no. The template: by bringing X to life, Y becomes easier, faster or more reliable for us, and we will see it in Z.</li><li>Pain points carried by evidence. The quote asserts the problem; nothing shows it. The problem is asserted in every draft. The week-1 spike's failure log and the AIBS problem analysis are the evidence; point at them.</li></ul>
+<p>And the small one: a header. Name, version, date, who wrote it, where the related documents are. Three drafts also ran past three pages; a PRD that has not chosen what matters has not finished choosing.</p>
+<p>What a good one looks like, one per issue. Say these aloud after the quotes, or write one on the board; they are invented for the course's own platform, not taken from a draft.</p>
+<ul><li><strong>How you will know it works.</strong> "North star: one published page a week that passes the peer gate without a factual correction. Product measure: hours from first source to published page, logged every week. AI measure: unconfirmable citations per page, counted at every review. Guardrail: pages published that nobody on the team read in full — zero, checked at every hand-in." Four measures, each with a cadence.</li><li><strong>A hypothesis you could be wrong about.</strong> "By giving the platform a source-appraisal step that scores publisher, date and relevance, checking a page's sources takes a researcher under an hour instead of an afternoon. We will see it in the logged review time by week 3." If review time does not fall, the hypothesis is wrong, and the team knows by when.</li><li><strong>Pain points carried by evidence.</strong> "In the week-1 spike the agent drafted a page with six sources; two links did not resolve and one quoted a figure the source does not contain (failure log, entries 3–5). The problem analysis found that three of the four of us cannot read the CBS and KvK material in Dutch, so one person did all the source work last week." A failure log entry and a problem-analysis finding, pointed at, not asserted.</li></ul>
+<p>Set the rest of the discussion from what the hand-ins showed.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s6"><div class="slide-head"><div class="slide-kicker">AEL · the six documents</div><span class="slide-no">6 / 13</span></div><h2>Your PRD is the first of six</h2><ul>
+      <li>PRD · blueprint · knowledge architecture · build plan · evaluation · evaluation</li>
+      <li>One a week, in your team's Teams channel</li>
+      <li>All six, with their criteria: <a href="platform-documents.html">the documents that specify your platform</a></li>
+    </ul>
+    <p>This week: the technical blueprint.</p><div class="foot"><span>AI in Business · week 2</span><span>6 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 6 / 13</h3><p>The PRD is the first of six weekly AEL documents: PRD, technical blueprint, knowledge architecture, build plan, and two evaluations. One a week, posted in the team's Teams channel, one to three pages.</p>
+<p>The site has one page for all six: the bar each must clear, its criteria, and what happens after posting. Say that part: a lecturer hands the document to the AI tutor; three to five questions come back in the channel; never a score. From this week the tutor also reads the new document beside the earlier ones and asks whether they still describe one platform.</p>
+<p>This week's document is the technical blueprint. Its criteria go up before the deadline, like the PRD's — the deadline is on the week-2 page.</p>
+<p>Say plainly: the PRD is allowed to change. When the blueprint shows it promised something it cannot deliver, revise it and say why.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s7"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">7 / 13</span></div><h2>AI braindump, or human-reviewed?</h2><ul><li>We look at every assignment this way — and so should you.</li></ul><p>Make that visible in your own work: what did you write, what did AI draft, and what did you check?</p><div class="foot"><span>AI in Business · week 2</span><span>7 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 7 / 13</h3><p>We look at every assignment this way, and so should you. Make the split visible in your own work: what did you write, what did AI draft, and what did you check?</p>
+<p>The rule underneath it, for the handbook pages: every claim needs an appraised source, and "the model said so" is not one.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s8"><div class="slide-head"><div class="slide-kicker">Assignments</div><span class="slide-no">8 / 13</span></div><h2>Two assignments this week</h2><div class="cols"><div><h3>Assignment 1</h3><ul><li>Report writing with AI — three articles, three “winners”</li><li>Goal: see bias appear on purpose</li></ul></div><div><h3>Assignment 2</h3><ul><li>Search strategies and quality criteria — US, China, Europe</li><li>Goal: make your criteria and strategy explicit</li></ul></div></div><div class="foot"><span>AI in Business · week 2</span><span>8 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 8 / 13</h3><p>Two assignments this week, and they are one lesson in two halves. Assignment 1 makes bias appear on purpose; assignment 2 makes the antidote — criteria and strategy — explicit.</p>
+<p>Walk both briefly here; the next slides carry each in turn.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s9"><div class="slide-head"><div class="slide-kicker">Assignment 1</div><span class="slide-no">9 / 13</span></div><h2>Report writing with AI</h2><ul><li><strong>Three prompts, separately.</strong> Ask AI to argue the US dominates AI. Then, in a new conversation, that China dominates. Then Europe.</li><li><strong>Don't cross-reference.</strong> Each article should be written as if it's the only one AI is producing.</li><li><strong>Read them back to back.</strong> What do you notice?</li></ul><div class="foot"><span>AI in Business · week 2</span><span>9 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 9 / 13</h3><p>Three prompts, three separate conversations. Ask AI to argue that the US dominates AI. In a new conversation, that China does. Then Europe.</p>
+<p>No cross-referencing: each article is written as if it were the only one being produced.</p>
+<p>Then read the three back to back. Stop here and ask what they notice before showing the next slide; the takeaway lands harder if the room says it first.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-dense" id="s10"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">10 / 13</span></div><h2>AI gives you what you ask for</h2><ul><li><strong>Not what's true.</strong> Ask for the US case and you get a convincing US case — same for China, same for Europe.</li><li><strong>Source diversity is the fix.</strong> That's what actually teaches you who leads — not a cleverer prompt.</li><li><strong>This matters twice.</strong> For your business judgement (informed, unbiased) and for you personally (know your own starting position).</li></ul><div class="foot"><span>AI in Business · week 2</span><span>10 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 10 / 13</h3><p>AI gives you what you ask for, not what is true. Ask for the US case and you get a convincing US case; the same for China, the same for Europe.</p>
+<p>Source diversity is the fix, and it is what actually teaches you who leads. A cleverer prompt does not.</p>
+<p>It matters twice: for business judgement, informed and unbiased; and personally, knowing your own starting position.</p>
+<p>Bridge to dependency, from the plan for this week: who builds these systems, who funds them, who could buy them? Open weights, closed weights, hosted API, on-premise — what does each mean for a forty-person firm with no IT department? What would your target SME lose if its tool changed price, terms or European availability?</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s11"><div class="slide-head"><div class="slide-kicker">Assignment 2</div><span class="slide-no">11 / 13</span></div><h2>Search strategies and quality criteria</h2><ul><li><strong>The question.</strong> Good-quality reports on the geopolitics of the AI race — US, China, Europe.</li><li><strong>Your criteria, explicit.</strong> What makes a source “good quality” here? Write it down.</li><li><strong>Your strategy, explicit.</strong> How did you search, and why?</li><li><strong>Then, AI — carefully.</strong> A first analysis of your sources with AI, with your strategy made explicit too.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>11 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 11 / 13</h3><p>The question: good-quality reports on the geopolitics of the AI race — US, China, Europe.</p>
+<p>Two things made explicit and written down: what makes a source good quality here, and how you searched and why.</p>
+<p>Then AI, carefully: a first analysis of your sources with AI, with your strategy made explicit too. The order matters — sources and criteria first, the model second.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s12"><div class="slide-head"><div class="slide-kicker">Way of working</div><span class="slide-no">12 / 13</span></div><h2>Peer review and the Socratic agent</h2><ul><li><strong>Partner teams.</strong> Every team pairs up with another team to review each other's work.</li><li><strong>A Socratic agent.</strong> Every team's work also gets questioned by an AI tutor — informational, not scored.</li></ul><div class="foot"><span>AI in Business · week 2</span><span>12 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 12 / 13</h3><p>Partner teams. Pair by wall position: 1 with 2, 3 with 4, 5 with 6. An odd count makes a ring of three. Say once: this pairing holds for the rest of the run. They read everything you publish; you read theirs.</p>
+<p>The Socratic agent: an AI tutor, run by us, questions every team's thinking. It reads the page you publish and the document you post; questions come back in your Teams channel. Informational, not scored, and it never will be.</p>
+<p>Where things go: the document in your team's Teams channel; the page handed in by being published.</p>
+<p>Portfolio: the second entry is the first with the four standard questions, because there is now a page and both gates have run.</p>
+<p>Field research opens. Nobody approaches a company before the consent text is signed off, and interview material never goes through a free tier or the tutor.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s13"><div class="slide-head"><div class="slide-kicker">Our rulebook</div><span class="slide-no">13 / 13</span></div><h2>The rules we keep, week by week</h2><p>Every time we spot a habit worth keeping, we turn it into a rule.</p><div class="cols"><div><h3>Rule 1</h3><p>Before taking a break, <strong>always</strong> set AI to work.</p></div><div><h3>Rule 2</h3><p class="tpl">Added together in the session.</p></div></div><div class="foot"><span>AI in Business · week 2</span><span>13 / 13</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 13 / 13</h3><p>Every time we spot a habit worth keeping, we turn it into a rule. Rule 1: before taking a break, always set AI to work.</p>
+<p>Rule 2 is added together in the session. Capture it on the board and put it in the deck afterwards.</p>
+<p>After class: decision-log entry, and read the second portfolio entries — "what the gates asked and what I changed" is the evidence base for planning week 3.</p></div></div>
+</div>
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('#app .stage > .slide'));
+  var app=document.getElementById('app'), counter=document.getElementById('counter');
+  var noteBoxes=[].slice.call(document.querySelectorAll('.notes .note'));
+  var i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('current',k===i)});
+    noteBoxes.forEach(function(b,k){b.hidden=(k!==i)});
+    counter.textContent=(i+1)+' / '+slides.length;
+    if(location.hash!=='#'+slides[i].id) history.replaceState(null,'','#'+slides[i].id);
+  }
+  function fromHash(){var k=slides.findIndex(function(s){return '#'+s.id===location.hash});go(k<0?0:k)}
+  var notesEl=document.querySelector('.notes');
+  function notesAllowed(){return notesEl&&!notesEl.hidden}
+  function toggleNotes(){if(!notesAllowed())return;app.classList.toggle('notes-on');try{localStorage.setItem('deck-notes',app.classList.contains('notes-on')?'1':'0')}catch(e){}}
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': go(i+1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': go(i-1); e.preventDefault(); break;
+      case 'Home': go(0); break; case 'End': go(slides.length-1); break;
+      case 'n': case 'N': toggleNotes(); break;
+      case 'f': case 'F': if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); break;
+      case 'p': case 'P': window.print(); break;
+    }
+  });
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.getElementById('notesbtn').onclick=toggleNotes;
+  document.getElementById('printbtn').onclick=function(){window.print()};
+  document.querySelector('#app .stage').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    var r=this.getBoundingClientRect(); go(e.clientX-r.left>r.width/2?i+1:i-1);
+  });
+  window.addEventListener('hashchange',fromHash);
+  var want=new URLSearchParams(location.search).get('notes');
+  try{ if(notesAllowed()&&(want==='1'||(want===null&&localStorage.getItem('deck-notes')==='1'))) app.classList.add('notes-on'); }catch(e){}
+  fromHash();
+})();
+</script>
+</body>
+</html>
