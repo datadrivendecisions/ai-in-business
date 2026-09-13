@@ -22,5 +22,5 @@ than a question, and it is about the brief, not the thinking:
 {notes}
 
 ---
-No reply is expected. Next week we read your next document, and we expect you
+No reply is expected. Next week we'll read your next document, and we expect you
 to include a section where you are returning to the open questions.
