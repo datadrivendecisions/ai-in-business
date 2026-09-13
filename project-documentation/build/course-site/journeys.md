@@ -1,7 +1,7 @@
 # Student journeys — the course site for *AI in Business*
 
-*Companion to [`prd-course-site.md`](prd-course-site.md), which specifies the site, and
-[`course-site-scorecard.md`](course-site-scorecard.md), which scores the pages against that
+*Companion to [`prd.md`](prd.md), which specifies the site, and
+[`scorecard.md`](scorecard.md), which scores the pages against that
 specification and reaches 96 %. This document asks the other question. The PRD names one primary
 user — "a student in the minor who has just enrolled" — and a single composite user is easy to
 satisfy, because a composite has no fears the page happens not to answer. Here that user is split

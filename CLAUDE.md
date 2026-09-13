@@ -19,6 +19,10 @@ of the repo — see [`work/README.md`](work/README.md) for the working agreement
 - `site/` — everything here goes live at https://datadrivendecisions.github.io/ai-in-business/
 - `work/` — drafts and exploration, staged before they reach the site
 - `project-documentation/` — internal documents (the redesign sketches, the original proposal, the LRD logbook)
+- `project-documentation/build/` — everything written to *build* the system rather than to teach the
+  course: one folder per thing built (`socratic-workflow/`, `course-site/`), each holding its PRD,
+  blueprint, build plan, design notes and build log. The code stays in `socratic_agent/`, the
+  fixtures in `test-fixtures/`. See [`project-documentation/build/README.md`](project-documentation/build/README.md).
 
 Only `site/` is published; the other two are in the repo but off the site. The repo is
 **public**, so nothing here is hidden — anything that genuinely cannot be public should

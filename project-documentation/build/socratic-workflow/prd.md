@@ -1,18 +1,18 @@
 # PRD — the Socratic gate (first draft)
 
-*Written to the same prompt the teams get in AEL week 1 ([`assignment-ael-prd.md`](assignment-ael-prd.md)),
+*Written to the same prompt the teams get in AEL week 1 ([`assignment-ael-prd.md`](../../assignment-ael-prd.md)),
 on the same 1–3 page bar. The gate is the one piece of the platform the teaching team builds
 itself (LRD §6.4, ADR-0009), so it is worth writing its requirements the way we ask students to
 write theirs — and worth judging against them.*
 
 **Not for students, and not a draft on its way to the site.** It lives in
-`project-documentation/` rather than `work/drafts/` because §3 below is the hidden rubric's
+`project-documentation/build/` rather than `work/drafts/` because §3 below is the hidden rubric's
 design, which is tier-1 instructor material: it may not enter `site/` in any form.
 
-Architecture is settled in [ADR-0014](../work/decisions/0014-socratic-gate-architecture.md); this
+Architecture is settled in [ADR-0014](../../../work/decisions/0014-socratic-gate-architecture.md); this
 document says what the thing has to do. Where the two disagree, the record wins. The agent's three
 registered fields — name, description and the instructions carrying the rubric — are in
-[`socratic-agent-config.md`](socratic-agent-config.md), which is the same tier-1 material and under
+[`agent-config.md`](agent-config.md), which is the same tier-1 material and under
 the same rule.
 
 ---

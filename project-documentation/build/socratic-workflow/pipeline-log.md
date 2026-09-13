@@ -1,7 +1,7 @@
 # Pipeline log — the document hand-in pipeline
 
 One entry per gate run and per live run of `run_documents.py`. The build plan
-(`work/drafts/buildplan-socratic-workflow.html`) puts a gate's transcript here rather than in a
+(`buildplan.html`, beside this file) puts a gate's transcript here rather than in a
 pull request, because there are no pull requests: each phase is one commit on `main`, pushed when
 its gate passed, and the next phase starts when the push has landed.
 

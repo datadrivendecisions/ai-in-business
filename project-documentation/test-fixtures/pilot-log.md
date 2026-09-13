@@ -57,7 +57,7 @@ consideration.
 
 ### Changes made
 
-In `../socratic-agent-config.md`:
+In `../build/socratic-workflow/agent-config.md`:
 
 1. A **check-the-page step** before the questions: every number and legal claim against its
    support, every source for existence, independence and whether it is the work or a summary,
@@ -130,7 +130,7 @@ the same way.
 
 ### Changes made
 
-In `../socratic-agent-config.md`:
+In `../build/socratic-workflow/agent-config.md`:
 
 5. **Source existence reframed.** A source that cannot be confirmed is unconfirmed, never genuine;
    never call one published, peer-reviewed or credible without checking; a citation's apparatus is

@@ -7,8 +7,8 @@ answer key saying what a competent report should catch.
 **Answer keys are tier-1 instructor material.** They may not enter `site/`, and a fixture must never
 be shown to students — a cohort that has read the key knows what the gate looks for, which is the one
 failure the gate has no defence against. Configuration is in
-[`../socratic-agent-config.md`](../socratic-agent-config.md); requirements in
-[`../prd-socratic-gate.md`](../prd-socratic-gate.md).
+[`../build/socratic-workflow/agent-config.md`](../build/socratic-workflow/agent-config.md); requirements in
+[`../build/socratic-workflow/prd.md`](../build/socratic-workflow/prd.md).
 
 ## How to run the test
 
@@ -240,16 +240,16 @@ rather than from evidence — the page says so, and says it is weaker for it.
 
 # Fixtures for the document pipeline
 
-The pipeline in [`../hand-in-pipeline.md`](../hand-in-pipeline.md) scores documents, not pages.
+The pipeline in [`../build/socratic-workflow/design-note.md`](../build/socratic-workflow/design-note.md) scores documents, not pages.
 Its gates run against three fixtures that are the teaching team's own documents, so they can live
 in a public repository:
 
 | Fixture | File | Used by |
 |---|---|---|
-| The PRD | [`../prd-socratic-gate.md`](../prd-socratic-gate.md) | Gate 2 (scorer), gate 3 (questioner), gate 4 (coherence) |
-| The blueprint | [`../../work/drafts/blueprint-socratic-workflow.html`](../../work/drafts/blueprint-socratic-workflow.html) | Gate 4 (coherence) |
+| The PRD | [`../build/socratic-workflow/prd.md`](../build/socratic-workflow/prd.md) | Gate 2 (scorer), gate 3 (questioner), gate 4 (coherence) |
+| The blueprint | [`../build/socratic-workflow/blueprint.html`](../build/socratic-workflow/blueprint.html) | Gate 4 (coherence) |
 | The planted finding | The blueprint's §9 trace marks one departure from the PRD: the inbox door against the PRD's *pull only* rule | Gate 4 must report it under `## FINDINGS` |
 
 Each gate builds a throw-away intake root under the scratch directory, copies the fixtures in under
 made-up team numbers, and runs the step against that. Nothing a gate writes touches the real intake
-folder. Transcripts go in [`pipeline-log.md`](pipeline-log.md).
+folder. Transcripts go in [`../build/socratic-workflow/pipeline-log.md`](../build/socratic-workflow/pipeline-log.md).

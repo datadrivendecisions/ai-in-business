@@ -12,7 +12,7 @@ no status and no clock kept anywhere else.
 
 Everything this writes goes to the intake root, a sibling of the repository and
 never inside it: the repository is public and student work is not. The design is
-in project-documentation/hand-in-pipeline.md and the two drafts beside it; this
+in project-documentation/build/socratic-workflow/ — the design note, the blueprint and the build plan; this
 file is its step 1, with the later steps arriving one phase at a time.
 
 Exit codes: 0 every team done · 1 something unscored, unconverted or failed lint,

@@ -2,8 +2,8 @@
 
 The three fields as they are entered in the Gemini Enterprise Agent Platform console, kept here so
 the agent's configuration is in the repository rather than only in one person's console. Requirements
-are in [`prd-socratic-gate.md`](prd-socratic-gate.md); architecture is
-[ADR-0014](../work/decisions/0014-socratic-gate-architecture.md).
+are in [`prd.md`](prd.md); architecture is
+[ADR-0014](../../../work/decisions/0014-socratic-gate-architecture.md).
 
 **This file may not enter `site/`.** The Instructions field below contains the hidden rubric and its
 thresholds — tier-1 instructor material under the publication rule in `CLAUDE.md`. A student who reads

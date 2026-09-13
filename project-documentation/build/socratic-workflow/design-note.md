@@ -1,7 +1,7 @@
 # The hand-in pipeline — from inbox to a message the team can be sent
 
-*Design note, 11 September 2026. Companion to [`prd-socratic-gate.md`](prd-socratic-gate.md),
-which says what the gate must do, and to [`socratic_agent/intake.py`](socratic_agent/intake.py),
+*Design note, 11 September 2026. Companion to [`prd.md`](prd.md),
+which says what the gate must do, and to [`socratic_agent/run_documents.py`](../../socratic_agent/run_documents.py),
 which already does the first step of what is described here. Nothing below is built yet beyond
 that script.*
 
@@ -50,7 +50,7 @@ Each deliverable is scored against two files, split the way the PRD's were on 11
 **scoresheet** — scale, invariants, sheet, bands and the agent's prompt — in
 `ai-in-business-intake/rubric/<id>-scoresheet.md`, outside the repository. The reading behind
 the criteria, where there is one, stays in `project-documentation/` as
-[`prd-quality-manual.md`](prd-quality-manual.md) does. Only the PRD's pair exists; the rest are
+[`prd-quality-manual.md`](../../prd-quality-manual.md) does. Only the PRD's pair exists; the rest are
 written one week ahead of the hand-in they score (§5).
 
 This is ADR-0010's spine with its harness column folded into the hand-ins: the knowledge

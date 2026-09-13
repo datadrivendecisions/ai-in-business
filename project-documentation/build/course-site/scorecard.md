@@ -1,8 +1,8 @@
 # Course-site scorecard — *AI in Business*
 
 *Scores `site/index.html` and `site/week-01.html` against the eighteen quality criteria formulated
-in [`prd-course-site.md`](prd-course-site.md) §3. Same instrument as
-[`kickoff-scorecard.md`](kickoff-scorecard.md), same scale, same target — and the same caveat:
+in [`prd.md`](prd.md) §3. Same instrument as
+[`kickoff-scorecard.md`](../../../work/drafts/kickoff-scorecard.md), same scale, same target — and the same caveat:
 self-assessed and therefore optimistic. The number is a design check, not evidence.*
 
 ## Scale

@@ -40,9 +40,9 @@ def gate_0(root=DEFAULT_ROOT):
     ok &= say(not bad, f"every roster line has team, names and channel ({len(teams)} team(s); the owner fills these in)")
 
     readme = (REPO / "project-documentation/test-fixtures/README.md").read_text(encoding="utf-8")
-    for needle in ("prd-socratic-gate.md", "blueprint-socratic-workflow.html", "pull only"):
+    for needle in ("socratic-workflow/prd.md", "socratic-workflow/blueprint.html", "pull only"):
         ok &= say(needle in readme, f"fixtures README names {needle}")
-    ok &= say((REPO / "project-documentation/test-fixtures/pipeline-log.md").exists(), "pipeline-log.md exists")
+    ok &= say((REPO / "project-documentation/build/socratic-workflow/pipeline-log.md").exists(), "pipeline-log.md exists")
     return ok
 
 
@@ -148,9 +148,9 @@ def gate_2():
     root = scratch_root()
     (root / "rubric/prd-scoresheet.md").write_bytes(real_sheet.read_bytes())
     print(f"gate 2 — scorer, scratch root {root}")
-    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/build/socratic-workflow/prd.md").read_bytes())
     (root / "inbox/team-03-blueprint.html").write_bytes(
-        (REPO / "work/drafts/blueprint-socratic-workflow.html").read_bytes())
+        (REPO / "project-documentation/build/socratic-workflow/blueprint.html").read_bytes())
     ok = True
     print("  intake")
     ok &= say(run(root, 1, "--step", "intake") == 0, "both fixtures filed and converted")
@@ -191,7 +191,7 @@ def gate_3():
     if not real_sheet.exists():
         print(f"gate 3 needs the real sheet at {real_sheet}")
         return False
-    fixture = (REPO / "project-documentation/prd-socratic-gate.md").read_text(encoding="utf-8")
+    fixture = (REPO / "project-documentation/build/socratic-workflow/prd.md").read_text(encoding="utf-8")
     ok = True
 
     def fresh():
@@ -279,9 +279,9 @@ def gate_4():
     root = scratch_root()
     for n, path in sheets.items():
         (root / "rubric" / path.name).write_bytes(path.read_bytes())
-    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    (root / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/build/socratic-workflow/prd.md").read_bytes())
     run(root, 1, "--step", "intake")
-    (root / "inbox/team-03-blueprint.html").write_bytes((REPO / "work/drafts/blueprint-socratic-workflow.html").read_bytes())
+    (root / "inbox/team-03-blueprint.html").write_bytes((REPO / "project-documentation/build/socratic-workflow/blueprint.html").read_bytes())
     run(root, 2, "--step", "intake")
 
     print("  the pair — week 2")
@@ -311,7 +311,7 @@ def gate_4():
     root1 = scratch_root()
     for n, path in sheets.items():
         (root1 / "rubric" / path.name).write_bytes(path.read_bytes())
-    (root1 / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/prd-socratic-gate.md").read_bytes())
+    (root1 / "inbox/team-03-prd.md").write_bytes((REPO / "project-documentation/build/socratic-workflow/prd.md").read_bytes())
     run(root1, 1, "--step", "intake")
     code = run(root1, 1, "--step", "coherence")
     ok &= say(code == 2 and not (root1 / "teams/team-03/week-01/owners/coherence.md").exists(), f"skipped with a reason, nothing written, exit 2 (got {code})")

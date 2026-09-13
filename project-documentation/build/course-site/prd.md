@@ -21,9 +21,9 @@ They read on a laptop between classes, or on a phone. They will come back weekly
 thing: what is due, and what happens in the next session.
 
 That primary user is a composite, and a composite has no fears the page happens not to answer.
-[`course-site-journeys.md`](course-site-journeys.md) splits them into four personas, maps each
+[`journeys.md`](journeys.md) splits them into four personas, maps each
 one's journey through the site, and scores the site once per persona — a journey-level companion
-to the page-level scoring in [`course-site-scorecard.md`](course-site-scorecard.md).
+to the page-level scoring in [`scorecard.md`](scorecard.md).
 
 **Secondary users.** The two module owners, who publish one week at a time and must be able to do
 it in minutes. Colleagues in the LRD's audience, who reach the site for the learning-requirements
