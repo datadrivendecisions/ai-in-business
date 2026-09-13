@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draw your platform — AI in Business</title>
+<style>
+/* ---------------------------------------------------------------
+   Business Data Solutions brand system — inlined, as every page in
+   this site carries it. Light only: the course site has no dark mode.
+   --------------------------------------------------------------- */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+
+  /* Verdict ramp for the wheel. Warm neutral, monotonic in lightness,
+     every step at or above 4.5:1 against its own ink. Darker means
+     "more use to you", so the wheel reads before the legend does. */
+  --v-core: #55524a;   --v-core-ink: #ffffff;
+  --v-part: #c2baa4;   --v-part-ink: #111827;
+  --v-skip: #f0ebe0;   --v-skip-ink: #4b5563;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base); line-height: 1.6;
+  color: var(--text-primary); background: var(--bg-page);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -.01em; }
+a { color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--primary);
+    text-underline-offset: 2px; text-decoration-thickness: 2px; }
+a:hover { text-decoration-color: var(--supporting); }
+
+/* Skip link + focus */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; }
+a:focus-visible, summary:focus-visible, button:focus-visible,
+input:focus-visible, [role="tab"]:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Nav — copied from index.html, because a tool without the nav is a dead end */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100; background: var(--bg-page);
+  border-bottom: 1px solid var(--border); padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto; display: flex; align-items: center;
+  justify-content: space-between; gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark { display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary); }
+.bds-wordmark-text { display: flex; flex-direction: column; line-height: 1.2; }
+.bds-wordmark-name { font-weight: 700; font-size: var(--text-base); }
+.bds-wordmark-sub { font-size: var(--text-xs); color: var(--text-muted); }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+
+/* Page layout */
+.bds-page { max-width: 880px; margin: 0 auto; padding: var(--space-12) var(--space-8) var(--space-20); }
+.kicker { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-secondary); margin: 0 0 var(--space-2); }
+h1.bds-h1 { font-size: var(--text-4xl); margin: 0 0 var(--space-4); line-height: 1.15; }
+h2.bds-part { font-size: var(--text-2xl); margin: var(--space-16) 0 var(--space-4);
+  padding-bottom: var(--space-2); border-bottom: 3px solid var(--primary); }
+h3 { font-size: var(--text-lg); margin: var(--space-8) 0 var(--space-2); }
+.lead { font-size: var(--text-lg); color: var(--text-secondary); }
+.toc { margin: 0 0 var(--space-4); padding: 0; list-style: none; display: flex;
+  flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.toc a { color: var(--text-secondary); }
+
+/* Framed blocks */
+.callout { border-left: 4px solid var(--primary); background: var(--bg-yellow);
+  padding: var(--space-4) var(--space-6); border-radius: var(--radius-sm); margin: var(--space-6) 0; }
+.callout > :first-child { margin-top: 0; } .callout > :last-child { margin-bottom: 0; }
+.aside { font-size: var(--text-sm); color: var(--text-secondary); }
+.start {
+  background: var(--bg-cream); border-radius: var(--radius-md);
+  padding: var(--space-6); margin: var(--space-8) 0;
+}
+.start dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0,1fr);
+  gap: var(--space-2) var(--space-6); }
+.start dt { font-weight: 700; font-size: var(--text-sm); }
+/* --text-muted on cream fails AA (4.26:1), so secondary it is */
+.start dd { margin: 0; color: var(--text-secondary); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4); margin: var(--space-6) 0; }
+.card { border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-6); background: var(--bg-page); box-shadow: var(--shadow-sm); }
+.card > :first-child { margin-top: 0; } .card > :last-child { margin-bottom: 0; }
+.card h4 { margin: 0 0 var(--space-2); font-size: var(--text-base); }
+.card-kicker { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-secondary); margin: 0 0 var(--space-1); }
+
+/* Figures */
+figure { margin: var(--space-8) 0; }
+figure svg { display: block; width: 100%; height: auto; max-width: 100%; }
+figcaption { font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-3); }
+.dia-box { fill: var(--bg-off-white); stroke: var(--border-strong); stroke-width: 1.5; }
+.dia-box-dark { fill: var(--supporting); stroke: var(--supporting); }
+.dia-t { font-size: 12px; fill: var(--text-primary); font-family: inherit; }
+.dia-t-light { font-size: 12px; fill: #ffffff; font-family: inherit; }
+.dia-s { font-size: 10.5px; fill: var(--text-secondary); font-family: inherit; }
+.dia-line { stroke: var(--supporting); stroke-width: 1.5; fill: none; }
+.dia-line-dash { stroke: var(--text-muted); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+.dia-forbid { stroke: #b03a2e; stroke-width: 2; fill: none; }
+
+/* The wheel */
+.wheel-layout { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: var(--space-8); align-items: start; margin: var(--space-6) 0; }
+.wheel { width: 100%; height: auto; }
+.seg path { stroke: var(--bg-page); stroke-width: 2; cursor: pointer;
+  transition: filter .15s ease; }
+.seg:hover path { filter: brightness(1.08); }
+.seg text { pointer-events: none; font-family: inherit; font-size: 11px; font-weight: 600; }
+.seg[aria-selected="true"] path { stroke: var(--supporting); stroke-width: 3.5; }
+.v-core path { fill: var(--v-core); } .v-core text { fill: var(--v-core-ink); }
+.v-part path { fill: var(--v-part); } .v-part text { fill: var(--v-part-ink); }
+.v-skip path { fill: var(--v-skip); } .v-skip text { fill: var(--v-skip-ink); }
+.hub { fill: var(--bg-cream); stroke: var(--border-strong); stroke-width: 1.5; }
+
+.legend { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: flex;
+  flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.legend li { display: flex; align-items: center; gap: var(--space-2); }
+.swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border-strong);
+  display: inline-block; flex: none; }
+.badge { display: inline-block; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; padding: 2px 8px; border-radius: var(--radius-full); }
+.badge.v-core { background: var(--v-core); color: var(--v-core-ink); }
+.badge.v-part { background: var(--v-part); color: var(--v-part-ink); }
+.badge.v-skip { background: var(--v-skip); color: var(--v-skip-ink); }
+
+#style-panel { border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-6); background: var(--bg-section); min-height: 260px; }
+#style-panel h3 { margin-top: 0; }
+#style-panel .pat { font-size: var(--text-sm); color: var(--text-secondary); }
+#style-panel .verdict { margin-bottom: 0; }
+
+/* Decisions */
+.dec { border: 1px solid var(--border); border-left: 4px solid var(--supporting);
+  border-radius: var(--radius-md); padding: var(--space-6); margin: var(--space-6) 0;
+  background: var(--bg-page); box-shadow: var(--shadow-sm); }
+.dec > :first-child { margin-top: 0; }
+.dec .q { font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-1); }
+.dec .why { color: var(--text-secondary); margin-top: 0; }
+.dec-n { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-secondary); }
+.opts { display: grid; gap: var(--space-3); margin: var(--space-4) 0 0; }
+.opt { display: grid; grid-template-columns: max-content minmax(0,1fr); gap: var(--space-3);
+  align-items: start; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4); cursor: pointer; background: var(--bg-page); }
+.opt:hover { background: var(--bg-section); }
+.opt:has(input:checked) { border-color: var(--supporting); background: var(--bg-yellow);
+  box-shadow: inset 3px 0 0 var(--primary); }
+.opt input { margin-top: 4px; accent-color: var(--supporting); }
+.opt b { display: block; }
+.opt span { font-size: var(--text-sm); color: var(--text-secondary); }
+.write { margin-top: var(--space-4); }
+.write label { display: block; font-weight: 700; font-size: var(--text-sm); margin-bottom: var(--space-1); }
+.write input { width: 100%; font: inherit; font-size: var(--text-sm); padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-page); }
+
+/* Summary */
+.summary { border: 2px solid var(--supporting); border-radius: var(--radius-md);
+  padding: var(--space-6); background: var(--bg-off-white); }
+.summary h3 { margin-top: 0; }
+#sum-out { margin: 0; white-space: pre-wrap; font-size: var(--text-sm); line-height: 1.65; }
+#sum-out .open { color: var(--text-secondary); font-style: italic; }
+.bar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+button.btn { font: inherit; font-size: var(--text-sm); font-weight: 700; cursor: pointer;
+  padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm);
+  border: 1px solid var(--supporting); background: var(--supporting); color: #fff; }
+button.btn.ghost { background: var(--bg-page); color: var(--text-primary); }
+button.btn:hover { filter: brightness(1.15); }
+.count { font-size: var(--text-sm); color: var(--text-secondary); align-self: center; }
+
+/* Glossary */
+details { border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4); margin-bottom: var(--space-2); background: var(--bg-section); }
+details summary { cursor: pointer; font-weight: 700; }
+details p { margin: var(--space-2) 0 0; }
+
+/* Footer */
+.bds-footer { border-top: 1px solid var(--border); padding: var(--space-8);
+  background: var(--bg-section); text-align: center; color: var(--text-muted); font-size: var(--text-sm); }
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+@media (max-width: 720px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-xl); }
+  .wheel-layout { grid-template-columns: minmax(0, 1fr); }
+  .start dl { grid-template-columns: minmax(0,1fr); gap: var(--space-1) 0; }
+  .start dd { margin-bottom: var(--space-3); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-02.html">Week 2</a>
+      <a href="platform-documents.html">The six documents</a>
+      <a href="#decisions">The six decisions</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <p class="kicker">AEL &middot; week 2 &middot; tool</p>
+  <h1 class="bds-h1">Draw your platform</h1>
+  <p class="lead">Your platform is a small company. It has a handful of workers, a shared desk, and a
+  door to the outside world. Something has to decide who does what next. This page shows you the
+  shapes such a company can take, and it ends in the six decisions your
+  <a href="week-02.html">technical blueprint</a> has to make.</p>
+
+  <div class="start">
+    <dl>
+      <dt>Time</dt><dd>About twenty-five minutes on your own, or the team-work hour in the session.</dd>
+      <dt>Bring</dt><dd>Your team&rsquo;s PRD, and your team. The decisions at the end are team decisions.</dd>
+      <dt>You leave with</dt><dd>Six answers and a short summary you can paste straight into your blueprint.</dd>
+      <dt>No code</dt><dd>There is none on this page and none in a blueprint. Boxes, arrows and sentences.</dd>
+      <dt>Not marked</dt><dd>Nothing here is scored, and the blueprint it feeds is not scored either.
+        It is read, and three to five questions come back. What you changed because of them belongs in
+        <a href="index.html#assessment">your portfolio</a>, and that part does carry a mark.</dd>
+      <dt>Your answers</dt><dd>Stay in this browser, on this device. Nothing is sent anywhere, and no
+        lecturer can see them.</dd>
+    </dl>
+  </div>
+
+  <p class="aside"><strong>Already comfortable with software architecture?</strong> Skim the wheel,
+  then read <a href="#stops">where the map stops</a> and go to
+  <a href="#decisions">the six decisions</a>. The first is a recap. The second is genuinely
+  unsettled: a worker that is confidently wrong appears in none of these catalogues.</p>
+
+  <ul class="toc">
+    <li><a href="#what">1. What a blueprint is</a></li>
+    <li><a href="#map">2. The map</a></li>
+    <li><a href="#altitude">3. Two altitudes</a></li>
+    <li><a href="#steal">4. Six shapes worth stealing</a></li>
+    <li><a href="#stops">5. Where the map stops</a></li>
+    <li><a href="#decisions">6. The six decisions</a></li>
+    <li><a href="#glossary">Words on this page</a></li>
+  </ul>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="what">1. What a blueprint is</h2>
+
+  <p>A blueprint is a drawing plus a few sentences. It says what the parts of your platform are,
+  what passes between them, and where the line runs that nothing may cross. One to three pages.
+  The developer holds the pen and the whole team reads it, because the promises it has to carry
+  are the PRD&rsquo;s.</p>
+
+  <p>It is the second of <a href="platform-documents.html">six documents</a>, and each one needs
+  the one before it.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 150" role="img" aria-labelledby="fig-chain-t">
+      <title id="fig-chain-t">The PRD promises something, the blueprint gives each promise a part,
+      and the build plan turns each part into tasks.</title>
+      <defs><marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker></defs>
+      <rect class="dia-box" x="10" y="30" width="180" height="76" rx="10"/>
+      <text class="dia-t" x="100" y="58" text-anchor="middle" font-weight="700">Week 1 &middot; PRD</text>
+      <text class="dia-s" x="100" y="78" text-anchor="middle">what it is for,</text>
+      <text class="dia-s" x="100" y="93" text-anchor="middle">and what it promises</text>
+
+      <rect class="dia-box-dark" x="270" y="30" width="180" height="76" rx="10"/>
+      <text class="dia-t-light" x="360" y="58" text-anchor="middle" font-weight="700">Week 2 &middot; Blueprint</text>
+      <text class="dia-t-light" x="360" y="78" text-anchor="middle" opacity=".85" font-size="10.5">every promise</text>
+      <text class="dia-t-light" x="360" y="93" text-anchor="middle" opacity=".85" font-size="10.5">lands in a part</text>
+
+      <rect class="dia-box" x="530" y="30" width="180" height="76" rx="10"/>
+      <text class="dia-t" x="620" y="58" text-anchor="middle" font-weight="700">Week 4 &middot; Build plan</text>
+      <text class="dia-s" x="620" y="78" text-anchor="middle">every part becomes</text>
+      <text class="dia-s" x="620" y="93" text-anchor="middle">tasks and tests</text>
+
+      <path class="dia-line" d="M195 68 H262" marker-end="url(#ah1)"/>
+      <path class="dia-line" d="M455 68 H522" marker-end="url(#ah1)"/>
+      <text class="dia-s" x="228" y="58" text-anchor="middle">promises</text>
+      <text class="dia-s" x="488" y="58" text-anchor="middle">parts</text>
+      <path class="dia-line-dash" d="M360 112 V130 H100 V112" marker-end="url(#ah1)"/>
+      <text class="dia-s" x="230" y="145" text-anchor="middle">a promise the parts cannot carry sends you back to revise the PRD</text>
+    </svg>
+    <figcaption>The chain runs forwards and backwards. Suppose drawing the parts is hard because your
+    team cannot agree what the platform is for. That is the PRD telling you it is still vague.</figcaption>
+  </figure>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="map">2. The map</h2>
+
+  <p>People have been arranging software into parts for fifty years, and the arrangements that keep
+  working have names. Two words are worth separating first.</p>
+
+  <p>A <strong>style</strong> is the overall shape of a system &mdash; how it is divided up, at the
+  largest scale. A <strong>pattern</strong> is a worked solution to one problem inside that shape.
+  Styles are the broad strokes; patterns are the detail.</p>
+
+  <p>Below are ten styles. The colour is our verdict for <em>this</em> platform, in <em>these</em>
+  six weeks. Select one to read what it is and what it would cost you.</p>
+
+  <div class="wheel-layout">
+    <div>
+      <svg class="wheel" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg"
+           role="tablist" aria-label="Ten architecture styles" id="wheel">
+        <circle class="hub" cx="210" cy="210" r="92"/>
+        <text class="dia-t" x="210" y="200" text-anchor="middle" font-weight="700">Ten</text>
+        <text class="dia-t" x="210" y="218" text-anchor="middle" font-weight="700">architecture</text>
+        <text class="dia-t" x="210" y="236" text-anchor="middle" font-weight="700">styles</text>
+      </svg>
+      <ul class="legend">
+        <li><span class="swatch" style="background:var(--v-core)"></span> Use it</li>
+        <li><span class="swatch" style="background:var(--v-part)"></span> Borrow one idea</li>
+        <li><span class="swatch" style="background:var(--v-skip)"></span> Not this time</li>
+      </ul>
+      <p class="aside" style="margin-top:var(--space-4)">Use the arrow keys to move round the wheel.</p>
+    </div>
+
+    <div id="style-panel" role="tabpanel" tabindex="0" aria-live="polite" aria-labelledby="wheel">
+      <!-- filled by script; the no-script content below is the first style -->
+      <h3>Select a style</h3>
+      <p>Choose a segment of the wheel. It tells you what the style is, which patterns sit inside
+      it, and whether it earns a place in your blueprint.</p>
+    </div>
+  </div>
+
+  <p class="aside">The wheel is our redrawing of the <em>Software Architecture Styles</em> cheatsheet
+  by Love Sharma, published in ByteByteGo System Design Alliance
+  (<a href="https://bit.ly/architect-cheatsheet" target="_blank" rel="noopener">the original poster</a>).
+  His version also names the patterns on an outer ring. Ours puts them in the panel, and adds a
+  verdict that is ours alone.</p>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="altitude">3. Two altitudes</h2>
+
+  <p>Here is the mistake to avoid. The same platform has two true pictures, and most first
+  blueprints draw only one.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-labelledby="fig-alt-t">
+      <title id="fig-alt-t">Left: the company, an editor agent directing four role agents around a
+      shared store. Right: the production line, six stages in a row with a file passing between each.</title>
+      <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker></defs>
+
+      <text class="dia-t" x="20" y="20" font-weight="700">The company &mdash; who does what</text>
+      <rect class="dia-box-dark" x="115" y="40" width="130" height="40" rx="8"/>
+      <text class="dia-t-light" x="180" y="65" text-anchor="middle">editor</text>
+      <rect class="dia-box" x="20" y="120" width="90" height="38" rx="8"/>
+      <text class="dia-s" x="65" y="144" text-anchor="middle">researcher</text>
+      <rect class="dia-box" x="125" y="120" width="90" height="38" rx="8"/>
+      <text class="dia-s" x="170" y="144" text-anchor="middle">appraiser</text>
+      <rect class="dia-box" x="230" y="120" width="90" height="38" rx="8"/>
+      <text class="dia-s" x="275" y="144" text-anchor="middle">writer</text>
+      <path class="dia-line" d="M160 82 L75 116" marker-end="url(#ah2)"/>
+      <path class="dia-line" d="M180 82 L172 114" marker-end="url(#ah2)"/>
+      <path class="dia-line" d="M205 82 L268 116" marker-end="url(#ah2)"/>
+      <rect class="dia-box" x="60" y="210" width="220" height="46" rx="8" style="fill:var(--bg-cream)"/>
+      <text class="dia-t" x="170" y="230" text-anchor="middle" font-weight="700">the shared desk</text>
+      <text class="dia-s" x="170" y="247" text-anchor="middle">sources, drafts, house rules</text>
+      <path class="dia-line-dash" d="M65 160 V206"/>
+      <path class="dia-line-dash" d="M170 160 V206"/>
+      <path class="dia-line-dash" d="M275 160 V206"/>
+
+      <line x1="360" y1="10" x2="360" y2="290" stroke="#e5e7eb" stroke-width="2"/>
+
+      <text class="dia-t" x="400" y="20" font-weight="700">The production line &mdash; what follows what</text>
+      <g>
+        <rect class="dia-box" x="400" y="45" width="96" height="36" rx="8"/>
+        <text class="dia-s" x="448" y="68" text-anchor="middle">add source</text>
+        <rect class="dia-box" x="400" y="105" width="96" height="36" rx="8"/>
+        <text class="dia-s" x="448" y="128" text-anchor="middle">appraise</text>
+        <rect class="dia-box" x="400" y="165" width="96" height="36" rx="8"/>
+        <text class="dia-s" x="448" y="188" text-anchor="middle">translate</text>
+        <rect class="dia-box" x="400" y="225" width="96" height="36" rx="8"/>
+        <text class="dia-s" x="448" y="248" text-anchor="middle">draft</text>
+        <rect class="dia-box" x="560" y="225" width="96" height="36" rx="8"/>
+        <text class="dia-s" x="608" y="248" text-anchor="middle">check</text>
+        <rect class="dia-box-dark" x="560" y="105" width="96" height="36" rx="8"/>
+        <text class="dia-t-light" x="608" y="128" text-anchor="middle">publish</text>
+        <path class="dia-line" d="M448 83 V101" marker-end="url(#ah2)"/>
+        <path class="dia-line" d="M448 143 V161" marker-end="url(#ah2)"/>
+        <path class="dia-line" d="M448 203 V221" marker-end="url(#ah2)"/>
+        <path class="dia-line" d="M498 243 H552" marker-end="url(#ah2)"/>
+        <path class="dia-line" d="M608 221 V145" marker-end="url(#ah2)"/>
+        <text class="dia-s" x="618" y="190">page.md</text>
+        <text class="dia-s" x="470" y="98" >source.md</text>
+        <text class="dia-s" x="470" y="158">appraised.md</text>
+        <text class="dia-s" x="470" y="218">claims.md</text>
+      </g>
+    </svg>
+    <figcaption>Both are your platform. The left one answers <em>who decides and who is
+    accountable</em>; the right one answers <em>what has to happen before what, and what is handed
+    over</em>. A blueprint with only the left has no contracts in it. A blueprint with only the right
+    has nobody in charge when a step fails.</figcaption>
+  </figure>
+
+  <div class="callout">
+    <p><strong>Say which altitude you are at, on the drawing.</strong> Two students arguing about a
+    blueprint are usually standing at different altitudes and have not noticed. It costs you a
+    label and saves you an hour.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="steal">4. Six shapes worth stealing</h2>
+
+  <p>Out of the ten styles, six earn a place. Each answers a question you actually have.</p>
+
+  <div class="cards">
+    <div class="card">
+      <p class="card-kicker">From service-oriented architecture</p>
+      <h4>1. Parts are roles</h4>
+      <p>Give each part a job you could write on a business card: finds sources, appraises them,
+      drafts, checks, publishes. One sentence each. If the sentence needs an &ldquo;and&rdquo;,
+      it is two parts.</p>
+      <p class="aside">Resist slicing into twenty tiny parts. A company of twenty agents is not a
+      company, it is a crowd &mdash; and you have four people and six weeks to run it.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Orchestration or choreography</p>
+      <h4>2. One boss, or a wire</h4>
+      <p>Either one part decides what happens next and calls the others, or parts react to things
+      that happened &mdash; <em>source appraised</em>, <em>draft ready</em> &mdash; with no centre.</p>
+      <p class="aside">For six weeks and four people: start with one boss. When a page fails to come
+      out on Monday there is one place to look.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">From data-centric architecture</p>
+      <h4>3. The shared desk</h4>
+      <p>Agents have no corridor. They overhear nothing and remember nothing unless you write it
+      down. Put the target SME, the quality criteria and the house style in one place every part
+      reads.</p>
+      <p class="aside">This is the failure nobody sees coming: two parts quietly working from two
+      versions of the house style, and six pages that do not cohere.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Hexagonal, or ports and adapters</p>
+      <h4>4. One door to the outside</h4>
+      <p>Model services, the open web, your partner firm, the published site: all outside. Put the
+      traffic through named doors, and the rule about what may pass becomes something you can
+      point at on the drawing.</p>
+      <p class="aside">It also buys you the manual fallback for free. A door with two ways through
+      it &mdash; the automatic one and a person &mdash; is the same door.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Microkernel and plug-ins</p>
+      <h4>5. A small core, and hires</h4>
+      <p>Keep a small centre that does not change: the runner, the shared desk, the house rules.
+      Everything you add in weeks 3 to 6 arrives beside it rather than inside it.</p>
+      <p class="aside">This is what stops week 4 being a rewrite of week 2. Adding a capability
+      should feel like hiring, not like founding the company again.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Pipeline, or pipe and filter</p>
+      <h4>6. A line with files between</h4>
+      <p>Each stage takes a file and produces a file, and that file is the contract. Two of you
+      can then build two stages at once, because you agreed the file before anything else.</p>
+      <p class="aside">And any stage can be done by a person instead, because the handover is a
+      file rather than a function call. Your manual fallback stops being extra work.</p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 268" role="img" aria-labelledby="fig-hex-t">
+      <title id="fig-hex-t">A hexagon holding the platform, with four doors in its wall. Sources and
+      the published page pass through three of them. Interview material travels through the platform
+      and is stopped at the fourth, the door to a model service.</title>
+      <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker></defs>
+      <polygon points="285,40 435,40 500,130 435,220 285,220 220,130"
+               style="fill:var(--bg-cream);stroke:var(--supporting);stroke-width:2.5"/>
+      <text class="dia-t" x="360" y="112" text-anchor="middle" font-weight="700">your platform</text>
+      <text class="dia-s" x="360" y="132" text-anchor="middle">parts, shared desk, house rules</text>
+
+      <rect class="dia-box" x="30" y="65" width="140" height="40" rx="8"/>
+      <text class="dia-s" x="100" y="89" text-anchor="middle">the open web</text>
+      <rect class="dia-box" x="30" y="155" width="140" height="40" rx="8"/>
+      <text class="dia-s" x="100" y="172" text-anchor="middle">interview recordings</text>
+      <text class="dia-s" x="100" y="186" text-anchor="middle">from your partner firm</text>
+      <rect class="dia-box-dark" x="550" y="65" width="140" height="40" rx="8"/>
+      <text class="dia-t-light" x="620" y="89" text-anchor="middle">the published page</text>
+      <rect class="dia-box" x="550" y="155" width="140" height="40" rx="8"/>
+      <text class="dia-s" x="620" y="179" text-anchor="middle">a model service</text>
+
+      <path class="dia-line" d="M175 85 H243" marker-end="url(#ah3)"/>
+      <path class="dia-line" d="M175 175 H243" marker-end="url(#ah3)"/>
+      <path class="dia-line" d="M476 85 H544" marker-end="url(#ah3)"/>
+      <path class="dia-line" d="M476 175 H544" marker-end="url(#ah3)"/>
+
+      <path class="dia-line-dash" d="M262 175 H436" style="stroke:#b03a2e"/>
+      <text class="dia-s" x="350" y="166" text-anchor="middle" style="fill:#b03a2e">interview material</text>
+      <path class="dia-forbid" d="M438 164 L456 186 M456 164 L438 186"/>
+      <text class="dia-s" x="416" y="201" text-anchor="middle" style="fill:#b03a2e">the line</text>
+
+      <circle cx="252" cy="85" r="7" style="fill:var(--primary);stroke:var(--supporting);stroke-width:1.5"/>
+      <circle cx="252" cy="175" r="7" style="fill:var(--primary);stroke:var(--supporting);stroke-width:1.5"/>
+      <circle cx="467" cy="85" r="7" style="fill:var(--primary);stroke:var(--supporting);stroke-width:1.5"/>
+      <circle cx="467" cy="175" r="7" style="fill:var(--primary);stroke:var(--supporting);stroke-width:1.5"/>
+
+      <circle cx="36" cy="240" r="7" style="fill:var(--primary);stroke:var(--supporting);stroke-width:1.5"/>
+      <text class="dia-s" x="52" y="244">a door in the wall, and the rule about what may pass through it</text>
+    </svg>
+    <figcaption>Our line: interview material never reaches a model service. The recordings are
+    allowed inside &mdash; they are your team&rsquo;s own material. They are stopped at the one door
+    they may not leave by. A line drawn at a door is checked in one place. A line written only in a
+    sentence is checked nowhere. Yours will have an equivalent.</figcaption>
+  </figure>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="stops">5. Where the map stops</h2>
+
+  <p>Now the honest part. That catalogue was written for ordinary software, where a part given the
+  same input returns the same answer and can be tested. Your parts are not like that. They are
+  workers with judgement, they fail unpredictably, and &mdash; the awkward one &mdash; they fail
+  <em>plausibly</em>. A wrong answer arrives in the same confident prose as a right one.</p>
+
+  <p>Three things a company of agents needs that none of the ten styles names.</p>
+
+  <div class="cards">
+    <div class="card">
+      <p class="card-kicker">Week 4 and 5 &middot; evaluation</p>
+      <h4>Who checks the work</h4>
+      <p>Something has to hold the output against the criteria your PRD set, before it goes out.
+      A part, a person, or both.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Week 5 &middot; monitoring</p>
+      <h4>What happens when it is wrong</h4>
+      <p>Not <em>if</em>. Does the work stop, go back a stage, or reach a person? Silence is also
+      an answer, and it is the one that publishes the mistake.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Week 6 &middot; skills and memory</p>
+      <h4>What is carried, and what is looked up</h4>
+      <p>What does every part know by default, what does it fetch when needed, and what does it
+      forget on purpose?</p>
+    </div>
+  </div>
+
+  <p>So the map gets you through weeks 2 and 3 and then stops, precisely where weeks 4, 5 and 6
+  begin. The parts of your platform that make it a company of agents rather than a program are the
+  parts the tradition has no vocabulary for. That is not a gap in your reading &mdash; it is where
+  the subject currently ends, and it is why this module exists.</p>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="decisions">6. The six decisions</h2>
+
+  <p>Everything above is preparation for these. Answer them as a team, out loud, in this order.
+  Each one contributes a sentence to a summary at the foot of the page that you can paste into
+  your blueprint and then improve.</p>
+
+  <p><strong>Leaving one open is allowed.</strong> An open question you name, with the reason it is
+  open, is worth more in this document than a filled section that asserts. Anything you leave blank
+  appears in the summary as an open question, which is exactly where it belongs.</p>
+
+  <form id="decisions-form">
+
+    <div class="dec">
+      <p class="dec-n">Decision 1 &middot; the parts</p>
+      <p class="q">What is a part, in your platform?</p>
+      <p class="why">This decides every other box on the drawing, so settle it first.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d1" value="roles">
+          <span><b>A role &mdash; who does the job</b>
+          <span>Researcher, appraiser, writer, checker. You are drawing an organisation chart.
+          Best when the parts have judgement and may work at the same time.</span></span></label>
+        <label class="opt"><input type="radio" name="d1" value="stages">
+          <span><b>A stage &mdash; a step on the path</b>
+          <span>Add, appraise, translate, draft, check, publish. You are drawing a production line.
+          Best when the order is fixed and each step hands on a file.</span></span></label>
+        <label class="opt"><input type="radio" name="d1" value="both">
+          <span><b>Roles that own stages</b>
+          <span>Both drawings, and a line between them saying which role owns which stage.
+          More work now, and the one that survives contact with week 4.</span></span></label>
+      </div>
+    </div>
+
+    <div class="dec">
+      <p class="dec-n">Decision 2 &middot; control</p>
+      <p class="q">Who decides what happens next?</p>
+      <p class="why">This is your management structure, and it is the decision teams most often
+      leave implicit.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d2" value="orchestrator">
+          <span><b>One part decides &mdash; an orchestrator</b>
+          <span>A managing-editor part calls the others in order and handles what comes back.
+          One place to look when Monday&rsquo;s page did not appear. Recommended for week 2.</span></span></label>
+        <label class="opt"><input type="radio" name="d2" value="events">
+          <span><b>Parts react to events &mdash; choreography</b>
+          <span>No centre: each part watches for what it cares about and acts. Flexible, and
+          genuinely hard to debug when two things go wrong at once.</span></span></label>
+        <label class="opt"><input type="radio" name="d2" value="human">
+          <span><b>A person decides, this week</b>
+          <span>You run each step by hand and automate later. A legitimate week-2 answer, and an
+          honest one &mdash; as long as the blueprint says which part takes over, and when.</span></span></label>
+      </div>
+    </div>
+
+    <div class="dec">
+      <p class="dec-n">Decision 3 &middot; the contract</p>
+      <p class="q">What passes between two parts?</p>
+      <p class="why">Name one seam and its contract. One is enough for this week, and it is what
+      lets two of you build two parts at once.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d3" value="file">
+          <span><b>A file with a fixed shape</b>
+          <span>Named, with named fields. It can be read, checked, rebuilt and written by hand when
+          the automatic part fails.</span></span></label>
+        <label class="opt"><input type="radio" name="d3" value="folder">
+          <span><b>An agreed folder</b>
+          <span>Both parts know where things live but not what is inside them. Workable early;
+          it will drift by week 4.</span></span></label>
+        <label class="opt"><input type="radio" name="d3" value="chat">
+          <span><b>Text in a chat window</b>
+          <span>Nothing fixed. Fast on Monday, and there is nothing to test, nothing to hand to
+          a teammate, and nothing to fall back on.</span></span></label>
+      </div>
+      <div class="write">
+        <label for="seam">Name the seam &mdash; from which part to which, and the file</label>
+        <input id="seam" name="seam" type="text" autocomplete="off"
+               placeholder="appraiser &rarr; writer, as claims.md">
+      </div>
+      <div class="callout">
+        <p><strong>The seam most teams here will need.</strong> Your best sources on a regional
+        manufacturer are in Dutch &mdash; the Chamber of Commerce, the sector bodies, the regional
+        press. Your handbook is in English. Somewhere a Dutch source becomes an English claim with
+        its meaning and its attribution intact.</p>
+        <p>Which part does that, and what does it hand on? Name it, and a fact about your team
+        stops being a problem about who is in it. It becomes the clearest thing your platform
+        is for.</p>
+      </div>
+    </div>
+
+    <div class="dec">
+      <p class="dec-n">Decision 4 &middot; shared memory</p>
+      <p class="q">Where does the shared context live?</p>
+      <p class="why">Your target SME, your quality criteria, what is out of scope, your house style.
+      Every part needs them and no part can overhear them.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d4" value="context">
+          <span><b>One context file every part reads</b>
+          <span>The first box most teams draw, and the cheapest good decision on this page.
+          Change it once and every part changes.</span></span></label>
+        <label class="opt"><input type="radio" name="d4" value="repo">
+          <span><b>A folder with a structure</b>
+          <span>Sources, drafts, published pages, decisions. More capable, and it is really week
+          3&rsquo;s knowledge architecture arriving early.</span></span></label>
+        <label class="opt"><input type="radio" name="d4" value="prompts">
+          <span><b>Inside each part&rsquo;s own instructions</b>
+          <span>Honest if that is where you are. Say so in the blueprint, because it is the thing
+          that quietly produces six pages that do not agree with each other.</span></span></label>
+      </div>
+    </div>
+
+    <div class="dec">
+      <p class="dec-n">Decision 5 &middot; the line</p>
+      <p class="q">Who is allowed to talk to the outside world?</p>
+      <p class="why">Every blueprint this week must carry one sentence about a line that nothing
+      crosses. This decides where that sentence can be enforced.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d5" value="gateway">
+          <span><b>One part, and only that part</b>
+          <span>Everything outward goes through one door. The line is checked in one place, and
+          you can swap a vendor by changing one part.</span></span></label>
+        <label class="opt"><input type="radio" name="d5" value="any">
+          <span><b>Any part may, under the rule</b>
+          <span>Simpler to build and the rule now lives in every part at once. Which means it
+          lives nowhere, the first time someone is in a hurry.</span></span></label>
+        <label class="opt"><input type="radio" name="d5" value="person">
+          <span><b>A person carries anything sensitive</b>
+          <span>The material never enters the platform at all. The strongest guarantee available
+          to you, and the slowest.</span></span></label>
+      </div>
+      <div class="write">
+        <label for="line">Write your line &mdash; one sentence, in the form &ldquo;X never reaches Y&rdquo;</label>
+        <input id="line" name="line" type="text" autocomplete="off"
+               placeholder="Interview material never reaches a model service.">
+      </div>
+    </div>
+
+    <div class="dec">
+      <p class="dec-n">Decision 6 &middot; being wrong</p>
+      <p class="q">What happens when a part is confidently wrong?</p>
+      <p class="why">This is the one the architecture books do not answer for you. It will happen
+      in week 3, so decide it in week 2.</p>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d6" value="checker">
+          <span><b>A checking part reads it first</b>
+          <span>Output is held against the criteria your PRD set before it moves on. A claim
+          without a source does not pass.</span></span></label>
+        <label class="opt"><input type="radio" name="d6" value="person">
+          <span><b>A named person reads it before it is published</b>
+          <span>Slow, reliable, and it does not scale past one page a week &mdash; which happens
+          to be exactly what you publish.</span></span></label>
+        <label class="opt"><input type="radio" name="d6" value="unknown">
+          <span><b>Nothing yet &mdash; and we say so</b>
+          <span>Fair for week 2, if the blueprint names it as the open question it is, with whose
+          job it is to close it.</span></span></label>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="summary">Your blueprint, so far</h2>
+
+  <div class="summary">
+    <h3>Six sentences to paste and improve</h3>
+    <p class="aside">This is a skeleton and it is nobody&rsquo;s finished document. Paste it into
+    your blueprint, put your own words over it, and add the drawing &mdash; which is the part that
+    actually does the work.</p>
+    <p id="sum-out" aria-live="polite"></p>
+    <div class="bar">
+      <button type="button" class="btn" id="copy">Copy to clipboard</button>
+      <button type="button" class="btn ghost" id="reset">Clear my answers</button>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Then hand it in.</strong> One to three pages, in your team&rsquo;s channel, by the
+    start of the next session. The file itself, or a link to a single page. It goes to the Socratic
+    tutor, which reads it beside your PRD and asks whether they still describe one platform.
+    Three to five questions come back. No mark ever does.</p>
+    <p class="aside" style="margin-bottom:0">The criteria your blueprint is read against are
+    published on this site before the deadline, as the <a href="prd-criteria.html">PRD&rsquo;s
+    were</a>. Hold your draft against them yourself before anyone else does.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2 class="bds-part" id="glossary">Words on this page</h2>
+
+  <details name="gloss">
+    <summary>Part</summary>
+    <p>One piece of your platform with one job, which you can describe in a single sentence.
+    Drawn as a box. It might be an agent, a script, or a person following a checklist.</p>
+  </details>
+  <details name="gloss">
+    <summary>Contract</summary>
+    <p>What two parts have agreed to hand over: a named file with named fields, or a message with
+    a known shape. The agreement is the contract, not the code that keeps it.</p>
+  </details>
+  <details name="gloss">
+    <summary>Seam</summary>
+    <p>The join between two parts &mdash; the place a contract sits. Naming one seam properly is
+    worth more than naming six vaguely.</p>
+  </details>
+  <details name="gloss">
+    <summary>Orchestrator</summary>
+    <p>A part whose job is deciding what happens next and calling the other parts in order.
+    A managing editor.</p>
+  </details>
+  <details name="gloss">
+    <summary>Port and adapter</summary>
+    <p>A door in the edge of your system (the port), and the particular thing plugged into it
+    today (the adapter). Swapping a model vendor should mean changing the adapter and nothing else.</p>
+  </details>
+  <details name="gloss">
+    <summary>Manual fallback</summary>
+    <p>A way for a person to do, by hand, what an automatic part normally does &mdash; without the
+    rest of the platform noticing the difference. A course rule, and a design property you get
+    almost free if your contracts are files.</p>
+  </details>
+  <details name="gloss">
+    <summary>Style and pattern</summary>
+    <p>A style is the overall shape of a system. A pattern is a worked solution to one problem
+    inside that shape. Layered is a style; clean architecture is a pattern within it.</p>
+  </details>
+
+  <p class="aside" style="margin-top:var(--space-8)">Your answers are kept in this browser, on this
+  device, and are sent nowhere. Clearing your browser data clears them. Nothing on this page reports
+  anything about you to the teaching team.</p>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+<script>
+/* ------------------------------------------------------------------
+   Two small behaviours, no dependencies, nothing sent anywhere.
+   1. the wheel: an ARIA tablist drawn as a donut
+   2. the six decisions: radio buttons composing a paste-able summary,
+      remembered in this browser only
+   ------------------------------------------------------------------ */
+(function () {
+  'use strict';
+
+  /* ---------- 1. the wheel ---------- */
+
+  var STYLES = [
+    { key: 'layered', name: 'Layered', label: ['Layered'], verdict: 'part',
+      what: 'Stack the system in layers, each talking only to the one below: what the user sees, what the system decides, where things are stored.',
+      pats: 'Layered (n-tier), Clean or Onion.',
+      you: 'The tiers describe a web application and will not describe your platform. Borrow one idea from clean architecture: put your house rules and quality criteria in the middle, and vendors at the edge, so that which model you bought this month cannot change your editorial standards.' },
+    { key: 'component', name: 'Component-based', label: ['Component-','based'], verdict: 'core',
+      what: 'Build the system out of loosely joined, reusable pieces that can be swapped without disturbing their neighbours.',
+      pats: 'Object-oriented, microkernel, plug-in.',
+      you: 'Take the microkernel: a small core that does not change, plus a plug-in for each thing you add in weeks 3 to 6. This is what stops week 4 from being a rewrite of week 2.' },
+    { key: 'soa', name: 'Service-oriented', label: ['Service-','oriented'], verdict: 'core',
+      what: 'Divide the system into self-contained services, each of which performs one recognisable business function and can be used by the others.',
+      pats: 'SOA, broker, microservices, serverless.',
+      you: 'This is the closest thing in the catalogue to an organisation chart, and it is your main structure. Keep the grain coarse: a handful of substantial roles. Microservices is the same shape sliced far finer than four people can staff.' },
+    { key: 'distributed', name: 'Distributed system', label: ['Distributed','system'], verdict: 'skip',
+      what: 'Spread the system over many machines that pass messages and appear to the user as one thing.',
+      pats: 'Space-based, peer-to-peer.',
+      you: 'Not this time. These answer scale and failure problems — thousands of users, machines dying mid-request — that six weeks and one team do not have.' },
+    { key: 'ddd', name: 'Domain-driven', label: ['Domain-','driven'], verdict: 'core',
+      what: 'Shape the system around the subject it serves, and around one shared vocabulary that the technical and the non-technical people both use.',
+      pats: 'Hexagonal (ports and adapters), domain-driven design.',
+      you: 'Take hexagonal for your doors to the outside, and it gives you your line and your manual fallback at once. Take one more thing: the shared vocabulary. If source, claim, appraisal and page do not mean exactly one thing to every part, handovers rot silently. Leave the rest of domain-driven design: for a subject this size it is overkill, and the article says so too.' },
+    { key: 'event', name: 'Event-driven', label: ['Event-','driven'], verdict: 'part',
+      what: 'Parts announce that something happened, and whoever cares reacts. Nobody calls anybody directly.',
+      pats: 'Event-driven, publish-subscribe.',
+      you: 'Powerful and hard to debug — the article lists exactly that. Keep it for one seam later in the run, once the orchestrated version works. The record of what was announced, in order, is also a useful history of what your platform did.' },
+    { key: 'soc', name: 'Separation of concern', label: ['Separation','of concern'], verdict: 'part',
+      what: 'Divide a system so that each section handles one kind of thing and only that.',
+      pats: 'MVC, MVP, MVVM.',
+      you: 'Take the principle and use its failure as a test: mixing concerns and no clear boundaries. That is the diagnosis for a platform that is really one enormous prompt. The three named patterns are about screens, and you have no screens.' },
+    { key: 'interpreter', name: 'Interpreter', label: ['Interpreter'], verdict: 'skip',
+      what: 'Run instructions written in some language by reading and executing them directly.',
+      pats: 'Interpreter.',
+      you: 'Not this time. It is about building languages. Interesting; irrelevant to you this term.' },
+    { key: 'concurrency', name: 'Concurrency', label: ['Concurrency'], verdict: 'core',
+      what: 'Several independent tasks running at the same time — and, in this catalogue, the ways of coordinating them.',
+      pats: 'Pipeline (pipe and filter), primary-secondary, orchestration, choreography.',
+      you: 'The name is misleading for you: take these for composition and control rather than for speed. Pipeline gives you file contracts and a manual fallback. Orchestration and choreography are your management structure. Primary-secondary is what you already did by hand in the session, when three separate conversations were read back to back and reconciled.' },
+    { key: 'data', name: 'Data-centric', label: ['Data-','centric'], verdict: 'part',
+      what: 'Put the store at the centre and let the parts interact through it rather than with each other.',
+      pats: 'CQRS, event sourcing, Kappa, Lambda.',
+      you: 'Take the shape and leave the machinery. Your store is a folder of sources, drafts and decisions, and it is the shared desk your parts work at. The four named patterns are for data at a volume you will not reach. One idea is worth stealing from event sourcing: keep an append-only record of what changed and why — which is your decision log from week 3.' }
+  ];
+
+  var GEO = [
+    ['M210.0 34.0A176 176 0 0 1 313.5 67.6L266.4 132.3A96 96 0 0 0 210.0 114.0Z', 252.0, 80.7],
+    ['M313.5 67.6A176 176 0 0 1 377.4 155.6L301.3 180.3A96 96 0 0 0 266.4 132.3Z', 320.0, 130.1],
+    ['M377.4 155.6A176 176 0 0 1 377.4 264.4L301.3 239.7A96 96 0 0 0 301.3 180.3Z', 346.0, 210.0],
+    ['M377.4 264.4A176 176 0 0 1 313.5 352.4L266.4 287.7A96 96 0 0 0 301.3 239.7Z', 320.0, 289.9],
+    ['M313.5 352.4A176 176 0 0 1 210.0 386.0L210.0 306.0A96 96 0 0 0 266.4 287.7Z', 252.0, 339.3],
+    ['M210.0 386.0A176 176 0 0 1 106.5 352.4L153.6 287.7A96 96 0 0 0 210.0 306.0Z', 168.0, 339.3],
+    ['M106.5 352.4A176 176 0 0 1 42.6 264.4L118.7 239.7A96 96 0 0 0 153.6 287.7Z', 100.0, 289.9],
+    ['M42.6 264.4A176 176 0 0 1 42.6 155.6L118.7 180.3A96 96 0 0 0 118.7 239.7Z', 74.0, 210.0],
+    ['M42.6 155.6A176 176 0 0 1 106.5 67.6L153.6 132.3A96 96 0 0 0 118.7 180.3Z', 100.0, 130.1],
+    ['M106.5 67.6A176 176 0 0 1 210.0 34.0L210.0 114.0A96 96 0 0 0 153.6 132.3Z', 168.0, 80.7]
+  ];
+
+  var VERDICT_TEXT = { core: 'Use it', part: 'Borrow one idea', skip: 'Not this time' };
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var wheel = document.getElementById('wheel');
+  var panel = document.getElementById('style-panel');
+  var segs = [];
+
+  function el(name, attrs) {
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) { n.setAttribute(k, attrs[k]); }
+    return n;
+  }
+
+  STYLES.forEach(function (s, i) {
+    var g = el('g', {
+      'class': 'seg v-' + s.verdict, 'role': 'tab', 'tabindex': i === 0 ? '0' : '-1',
+      'aria-selected': 'false', 'aria-controls': 'style-panel', 'id': 'tab-' + s.key
+    });
+    g.appendChild(el('path', { d: GEO[i][0] }));
+    var t = el('text', { x: GEO[i][1], y: GEO[i][2], 'text-anchor': 'middle' });
+    var dy = s.label.length > 1 ? -4 : 4;
+    s.label.forEach(function (line, j) {
+      var ts = el('tspan', { x: GEO[i][1], dy: j === 0 ? dy : 14 });
+      ts.textContent = line;
+      t.appendChild(ts);
+    });
+    g.appendChild(t);
+    var title = el('title', {});
+    title.textContent = s.name + ' — ' + VERDICT_TEXT[s.verdict];
+    g.appendChild(title);
+    wheel.appendChild(g);
+    segs.push(g);
+    g.addEventListener('click', function () { select(i, true); });
+    g.addEventListener('keydown', function (e) {
+      var k = e.key, n = null;
+      if (k === 'ArrowRight' || k === 'ArrowDown') { n = (i + 1) % STYLES.length; }
+      if (k === 'ArrowLeft' || k === 'ArrowUp') { n = (i - 1 + STYLES.length) % STYLES.length; }
+      if (k === 'Home') { n = 0; }
+      if (k === 'End') { n = STYLES.length - 1; }
+      if (k === 'Enter' || k === ' ') { select(i, true); e.preventDefault(); return; }
+      if (n !== null) { select(n, true); e.preventDefault(); }
+    });
+  });
+
+  function select(i, focus) {
+    segs.forEach(function (g, j) {
+      g.setAttribute('aria-selected', j === i ? 'true' : 'false');
+      g.setAttribute('tabindex', j === i ? '0' : '-1');
+    });
+    var s = STYLES[i];
+    panel.setAttribute('aria-labelledby', 'tab-' + s.key);
+    panel.innerHTML = '';
+    var h = document.createElement('h3');
+    h.textContent = s.name;
+    var badge = document.createElement('p');
+    badge.innerHTML = '<span class="badge v-' + s.verdict + '">' + VERDICT_TEXT[s.verdict] + '</span>';
+    badge.style.margin = '0 0 var(--space-4)';
+    var what = document.createElement('p');
+    what.textContent = s.what;
+    var pats = document.createElement('p');
+    pats.className = 'pat';
+    pats.innerHTML = '<strong>Patterns inside it:</strong> ' + s.pats;
+    var you = document.createElement('p');
+    you.className = 'verdict';
+    you.innerHTML = '<strong>For your platform.</strong> ' + s.you;
+    panel.appendChild(h); panel.appendChild(badge); panel.appendChild(what);
+    panel.appendChild(pats); panel.appendChild(you);
+    if (focus) { segs[i].focus(); }
+  }
+
+  select(2, false);   /* service-oriented: the one their platform most looks like */
+
+  /* ---------- 2. the six decisions ---------- */
+
+  var KEY = 'aib-blueprint-decisions-v1';
+  var form = document.getElementById('decisions-form');
+  var out = document.getElementById('sum-out');
+  var count = document.getElementById('count');
+
+  var SENTENCES = {
+    d1: {
+      roles: 'Our parts are roles: each one has a job we can write in a single sentence.',
+      stages: 'Our parts are stages on the path from a source to a published page.',
+      both: 'Our parts are roles, and each role owns one or more stages of the path to a published page.'
+    },
+    d2: {
+      orchestrator: 'One part decides what happens next and calls the others in order.',
+      events: 'No part is in charge: each one reacts to events the others announce.',
+      human: 'This week a person decides what happens next, and the blueprint names the part that will take that over.'
+    },
+    d3: {
+      file: 'Parts hand over a file with a fixed, named shape, which is the contract between them.',
+      folder: 'Parts hand over through an agreed folder, and we have not yet fixed what is inside the files.',
+      chat: 'Parts hand over as free text today, which we know we cannot test or repeat, and we intend to fix it.'
+    },
+    d4: {
+      context: 'Every part reads one shared context file: our target SME, our quality criteria, and what is out of scope.',
+      repo: 'Shared context lives in a structured folder of sources, drafts, published pages and decisions, which every part reads.',
+      prompts: 'Shared context currently lives inside each part separately, which we know risks drift, and week 3 will fix it.'
+    },
+    d5: {
+      gateway: 'One part is the only one that talks to the outside world, and the line is enforced there.',
+      any: 'Any part may talk to the outside world, under a rule each of them has to honour.',
+      person: 'Anything sensitive is carried by a person and never enters the platform at all.'
+    },
+    d6: {
+      checker: 'A checking part holds output against the criteria in our PRD before it moves on.',
+      person: 'A named person reads the output before anything is published.',
+      unknown: 'We have not decided what happens when a part is confidently wrong. It is our open question for week 3.'
+    }
+  };
+
+  var HEADINGS = {
+    d1: 'Parts', d2: 'Control', d3: 'Contracts', d4: 'Shared context',
+    d5: 'The line', d6: 'Being wrong'
+  };
+  var OPEN = {
+    d1: 'we have not settled what counts as a part.',
+    d2: 'we have not settled who decides what happens next.',
+    d3: 'we have not named a seam or its contract.',
+    d4: 'we have not decided where shared context lives.',
+    d5: 'we have not decided who may talk to the outside world.',
+    d6: 'we have not decided what happens when a part is wrong.'
+  };
+
+  function read() {
+    var v = {};
+    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'].forEach(function (n) {
+      var c = form.querySelector('input[name="' + n + '"]:checked');
+      v[n] = c ? c.value : '';
+    });
+    v.seam = form.querySelector('#seam').value.trim();
+    v.line = form.querySelector('#line').value.trim();
+    return v;
+  }
+
+  function render() {
+    var v = read();
+    var done = 0;
+    out.innerHTML = '';
+    ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'].forEach(function (n) {
+      var line = document.createElement('span');
+      var txt;
+      if (v[n]) {
+        done++;
+        txt = SENTENCES[n][v[n]];
+        if (n === 'd3' && v.seam) { txt += ' The seam we have named is ' + v.seam + '.'; }
+        if (n === 'd5' && v.line) { txt += ' Our line: ' + v.line; }
+        line.textContent = HEADINGS[n] + '. ' + txt;
+      } else {
+        line.className = 'open';
+        line.textContent = HEADINGS[n] + '. Open question: ' + OPEN[n];
+      }
+      out.appendChild(line);
+      out.appendChild(document.createTextNode('\n\n'));
+    });
+    count.textContent = done + ' of 6 decided' + (done < 6 ? ' · the rest are listed as open questions' : '');
+    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* private window: fine */ }
+  }
+
+  function restore() {
+    var v;
+    try { v = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { v = {}; }
+    Object.keys(v).forEach(function (n) {
+      if (!v[n]) { return; }
+      if (n === 'seam' || n === 'line') {
+        var f = form.querySelector('#' + n);
+        if (f) { f.value = v[n]; }
+        return;
+      }
+      var r = form.querySelector('input[name="' + n + '"][value="' + v[n] + '"]');
+      if (r) { r.checked = true; }
+    });
+  }
+
+  restore();
+  render();
+  form.addEventListener('change', render);
+  form.addEventListener('input', render);
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  document.getElementById('copy').addEventListener('click', function (e) {
+    var btn = e.currentTarget, text = out.innerText;
+    var say = function (m) { btn.textContent = m; setTimeout(function () { btn.textContent = 'Copy to clipboard'; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { say('Copied'); },
+        function () { say('Select the text and copy'); });
+    } else {
+      say('Select the text and copy');
+    }
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    form.reset();
+    try { localStorage.removeItem(KEY); } catch (e) { /* nothing to do */ }
+    render();
+  });
+}());
+</script>
+</body>
+</html>
