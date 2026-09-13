@@ -204,6 +204,12 @@ def step_intake(root, week, only_team=None):
     if not inbox.is_dir():
         return [], [f"no inbox at {inbox}"]
 
+    # one folder per roster team, always present, so a file dropped into it
+    # needs nothing else to say whose it is; recreated if one goes missing
+    for r in read_tsv(root / "roster.tsv", ["team", "names", "channel"]):
+        if re.fullmatch(r"team-\d{2}", r["team"].strip()):
+            (inbox / r["team"].strip()).mkdir(exist_ok=True)
+
     known = {r["file"]: r for r in read_tsv(manifest_path, MANIFEST_HEADER)}
     # loose files, and files one level down in a folder named after the team:
     # inbox/team-02/anything.pdf needs no manifest line to say whose it is.
