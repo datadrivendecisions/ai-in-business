@@ -23,4 +23,4 @@ than a question, and it is about the brief, not the thinking:
 
 ---
 No reply is expected. Next week we read your next document, and we expect you
-to come back to the open questions.
+to include a section where you are returning to the open questions.
