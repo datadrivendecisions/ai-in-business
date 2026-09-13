@@ -325,7 +325,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
 
   <section id="status">
     <h2 class="bds-part">2 · Build status</h2>
-    <p>Ticked by editing this page when a phase's gate has passed and its commit is on the remote, so the page is the status and git is its history. Every box beside a task below is kept the same way. Last updated <strong>11 September 2026</strong>.</p>
+    <p>Ticked by editing this page when a phase's gate has passed and its commit is on the remote, so the page is the status and git is its history. Every box beside a task below is kept the same way. Last updated <strong>13 September 2026</strong>.</p>
     <div class="tbl-wrap">
       <table class="status-table">
         <thead><tr><th>Phase</th><th>Gate</th><th>Pushed as</th><th>Open</th></tr></thead>
@@ -335,6 +335,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 2 · Scorer</td><td>passed</td><td><code>25fd7b7</code></td><td>the sheet's author reads the variance note in the pipeline log</td></tr>
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 3 · Questioner</td><td>passed, after the lint was narrowed twice</td><td><code>dad9f4e</code></td><td><input class="done" type="checkbox" disabled aria-label="not yet"> the week-1 run, on the cohort's PRDs</td></tr>
           <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 4 · Coherence</td><td>passed</td><td><code>6c3fde0</code></td><td>the public coherence section (no blueprint criteria page yet); <input class="done" type="checkbox" disabled aria-label="not yet"> the week-2 run</td></tr>
+          <tr><td><input class="done" type="checkbox" checked disabled aria-label="done"> Phase 6 · Handling</td><td>passed</td><td>see the pipeline log</td><td>added after the first live run: team folders in the inbox, withdraw, redo, status, sent</td></tr>
           <tr><td><input class="done" type="checkbox" disabled aria-label="not yet"> Phase 5 · Handover</td><td>not run</td><td>—</td><td>the runbook is written and the invariant policy decided; the second owner's store and the two decision-log entries are the owners' decisions</td></tr>
         </tbody>
       </table>
@@ -359,7 +360,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
     <h2 class="bds-part">4 · The order, as a graph</h2>
     <p>Top to bottom is time. A phase begins only when the previous phase's gate has passed and its commit has been pushed. Inside a phase, boxes on one row run in sequence and rows stacked on each other run in parallel — each row is one agent's lane. The yellow boxes are the gate scripts, written in their own lane by an agent that did not write the code they test.</p>
     <div class="tbl-wrap">
-<svg viewBox="0 0 846 1372" width="846" height="1372" role="img" aria-labelledby="graph-title graph-desc" style="max-width:100%;height:auto;font-family:inherit;font-size:12px">
+<svg viewBox="0 0 846 1648" width="846" height="1648" role="img" aria-labelledby="graph-title graph-desc" style="max-width:100%;height:auto;font-family:inherit;font-size:12px">
 <title id="graph-title">Phases and tasks of the build, in order</title>
 <desc id="graph-desc">Six phases from top to bottom, each ending in a gate and a push. Inside a phase, boxes in one row run in sequence; rows stacked in a phase run in parallel, one per agent. Yellow boxes are gate scripts.</desc>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--text-secondary)"/></marker></defs>
@@ -476,22 +477,39 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
 <text x="423.0" y="1068" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 4 · commit · push · week-2 run</text>
 <line x1="423.0" y1="1076" x2="423.0" y2="1090" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
 <rect x="4" y="1096" width="838" height="226" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
-<text x="16" y="1118" style="font-weight:600;fill:var(--text)">Phase 5</text>
-<text x="16" y="1136" style="fill:var(--text-secondary);font-size:12px">Handover</text>
+<text x="16" y="1118" style="font-weight:600;fill:var(--text)">Phase 6</text>
+<text x="16" y="1136" style="fill:var(--text-secondary);font-size:12px">Handling</text>
 <text x="16" y="1312" style="fill:var(--text-secondary);font-size:11px">5 lanes in parallel</text>
 <rect x="130" y="1110" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
-<text x="138" y="1129" style="font-size:11.5px;fill:var(--text)">5.1 runbook</text>
+<text x="138" y="1129" style="font-size:11.5px;fill:var(--text)">6.1 inbox/team-NN/ names the team</text>
 <rect x="130" y="1152" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
-<text x="138" y="1171" style="font-size:11.5px;fill:var(--text)">5.2 second owner's store (decision)</text>
+<text x="138" y="1171" style="font-size:11.5px;fill:var(--text)">6.2 --withdraw → archive/, reversible</text>
 <rect x="130" y="1194" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
-<text x="138" y="1213" style="font-size:11.5px;fill:var(--text)">5.3 invariant-failure policy → sheet</text>
+<text x="138" y="1213" style="font-size:11.5px;fill:var(--text)">6.3 --redo step → attempts/, register restored</text>
 <rect x="130" y="1236" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
-<text x="138" y="1255" style="font-size:11.5px;fill:var(--text)">5.4 two decision-log entries</text>
-<rect x="130" y="1278" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
-<text x="138" y="1297" style="font-size:11.5px;fill:var(--text)">5.5 pipeline log</text>
+<text x="138" y="1255" style="font-size:11.5px;fill:var(--text)">6.4 --status · --sent</text>
+<rect x="130" y="1278" width="210" height="30" rx="4" style="fill:var(--bg-yellow);stroke:var(--border)"/>
+<text x="138" y="1297" style="font-size:11.5px;fill:var(--text)">gate-6 script, no model</text>
 <rect x="4" y="1328" width="838" height="24" rx="4" style="fill:var(--supporting)"/>
-<text x="423.0" y="1344" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 5 · commit · push</text>
+<text x="423.0" y="1344" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 6 · commit · push</text>
 <line x1="423.0" y1="1352" x2="423.0" y2="1366" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
+<rect x="4" y="1372" width="838" height="226" rx="8" style="fill:var(--bg-cream);stroke:var(--border)"/>
+<text x="16" y="1394" style="font-weight:600;fill:var(--text)">Phase 5</text>
+<text x="16" y="1412" style="fill:var(--text-secondary);font-size:12px">Handover</text>
+<text x="16" y="1588" style="fill:var(--text-secondary);font-size:11px">5 lanes in parallel</text>
+<rect x="130" y="1386" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1405" style="font-size:11.5px;fill:var(--text)">5.1 runbook</text>
+<rect x="130" y="1428" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1447" style="font-size:11.5px;fill:var(--text)">5.2 second owner's store (decision)</text>
+<rect x="130" y="1470" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1489" style="font-size:11.5px;fill:var(--text)">5.3 invariant-failure policy → sheet</text>
+<rect x="130" y="1512" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1531" style="font-size:11.5px;fill:var(--text)">5.4 two decision-log entries</text>
+<rect x="130" y="1554" width="210" height="30" rx="4" style="fill:#fff;stroke:var(--border)"/>
+<text x="138" y="1573" style="font-size:11.5px;fill:var(--text)">5.5 pipeline log</text>
+<rect x="4" y="1604" width="838" height="24" rx="4" style="fill:var(--supporting)"/>
+<text x="423.0" y="1620" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">Gate 5 · commit · push</text>
+<line x1="423.0" y1="1628" x2="423.0" y2="1642" marker-end="url(#a)" style="stroke:var(--text-secondary)"/>
 </svg>
     </div>
   </section>
@@ -514,6 +532,7 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
           <tr><td>2</td><td>The criteria-page extractor, the provenance header and the gate-2 script are three independent scripts. Each is a function with an input and an output and no model in it.</td><td>The assembly needs the extractor; the call needs the assembly and the header.</td></tr>
           <tr><td>3</td><td>Four lanes at once: the register's file I/O, the two-column extraction, the document variant of the questioner's instructions, and the lint. Plus the gate-3 lane with its doctored fixture.</td><td>The assembly needs the first three; the output parsing needs the assembly's format and the lint.</td></tr>
           <tr><td>4</td><td>Code in one lane; the two pieces of writing — the coherence sheet and its public section — in two more. The writing is the owner's and the slower.</td><td>The call needs the sheet; the questioner's new input needs the call's output.</td></tr>
+          <tr><td>6</td><td>All four commands are independent scripts on the same folders, plus the gate lane.</td><td>Nothing — but it comes before phase 5, because the runbook has to describe them.</td></tr>
           <tr><td>5</td><td>All five: none depends on another. Three are writing, one is a decision, one is a log.</td><td>The second owner's gate run, which needs all five done.</td></tr>
         </tbody>
       </table>
@@ -605,6 +624,22 @@ input.done { width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: -0.1e
       <p><strong>Gate 4.</strong> On the fixture pair — the gate's PRD and the workflow blueprint — <code>coherence.md</code> has both headings; <code>## TRACE</code> has one row per line of the PRD's "what it must let a user do" table; <code>## FINDINGS</code> names the planted departure, checked by grep for the inbox door against the PRD's pull-only rule. With the blueprint fixture removed, the step skips with a named reason and exit 0. The questioner, run after it, produces at least one question tagged <em>coherence</em> in the register.</p>
     </div>
     <p><strong>Run.</strong> One commit, with the transcript and the <code>## FINDINGS</code> of the fixture pair in the pipeline log — our own documents, so publishable. Push. Then the week-2 run.</p>
+  </section>
+
+  <section id="phase-6">
+    <h2 class="bds-part">Phase 6 · Handling</h2>
+    <p class="phase-meta">Builds blueprint §4 (the flow, its reversals) and §5 (archive/, attempts/, inbox/team-NN/) · added 13 September 2026 after the first live run · half a day</p>
+    <p>The first live week showed four things the lecturer does by hand that the folder logic should do for them: name a team without editing a manifest, take a wrong file out again without losing it, run one step again without deleting its outputs by hand, and see where every team stands without listing folders. Nothing here talks to a model, and nothing here deletes.</p>
+    <ol>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> A folder in the inbox named after the team names the team: <code>inbox/team-02/anything.pdf</code> needs no manifest line. Loose files still work as before.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <code>--withdraw</code>, with <code>--team</code>: the week's folder moves whole to <code>archive/</code> with a timestamp, the team's tables are copied beside it, <code>documents.tsv</code> loses the week's line and the register goes back to its snapshot. An original dropped from the archive into the inbox files again. Nothing is deleted, ever.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <code>--redo score|coherence|question</code>: that step's outputs move into <code>week-NN/attempts/</code> and the normal run generates them again. A redone question step restores the register from the snapshot the step keeps in <code>owners/register-before.tsv</code>.</li>
+      <li><input class="done" type="checkbox" checked disabled aria-label="done"> <code>--status</code>: one line per team for the week — filed, scored, coherence, questions, sent — and what waits in the inbox. <code>--sent</code> writes the marker the status shows.</li>
+    </ol>
+    <div class="gate">
+      <p><strong>Gate 6.</strong> Without a model: a PDF in <code>inbox/team-04/</code> files as team 4 with no manifest; a withdrawn week is in <code>archive/</code> with its original, score and register copy, the team's tables are as before the week, and the archived original files again as a fresh v1; a redone question step has moved <code>team/</code> into <code>attempts/</code> and restored the register; status shows the row and the empty inbox; sent refuses without a message and shows once there is one.</p>
+    </div>
+    <p><strong>Run.</strong> One commit, transcript in the pipeline log. Push.</p>
   </section>
 
   <section id="phase-5">

@@ -302,7 +302,7 @@ pre.tree {
       <table>
         <tbody>
           <tr><th>Document</th><td>Technical blueprint — the Socratic workflow for document hand-ins</td></tr>
-          <tr><th>Version</th><td>0.1, 11 September 2026</td></tr>
+          <tr><th>Version</th><td>0.2, 13 September 2026</td></tr>
           <tr><th>Implements</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/prd-socratic-gate.md" target="_blank" rel="noopener">PRD — the Socratic gate</a>, extended by one door (§9)</td></tr>
           <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0013-hand-in-routes.md" target="_blank" rel="noopener">ADR-0013</a> (where hand-ins go), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0014-socratic-gate-architecture.md" target="_blank" rel="noopener">ADR-0014</a> (the gate pulls a published page), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0010-ael-arc.md" target="_blank" rel="noopener">ADR-0010</a> (the six documents), and the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/hand-in-pipeline.md" target="_blank" rel="noopener">pipeline design note</a></td></tr>
           <tr><th>Owner</th><td>The two module owners; the AEL owner runs it</td></tr>
@@ -360,6 +360,7 @@ pre.tree {
       <li><strong>A document with no scoresheet is reported, not scored.</strong> The scorer does not improvise criteria; <em>unscored: no sheet for blueprint</em> is the whole output, and next week's fix is to write the sheet.</li>
       <li><strong>The questioner runs last, and only once every score due this week exists.</strong> Its questions are shaped by what the scorer found, which is the design — but it is handed the findings, never the numbers (§6).</li>
       <li><strong>A second hand-in of the same document in the same week is a new version</strong>, <code>-v2</code>, never an overwrite. Later steps take the highest.</li>
+      <li><strong>Every reversal keeps what it reverses.</strong> <code>--withdraw</code> moves a team's week to <code>archive/</code>; <code>--redo</code> moves a step's outputs to <code>attempts/</code> and the run makes them again; both put the register back to the snapshot the question step keeps. Nothing in the pipeline deletes a file. <code>--status</code> shows where every team stands, and <code>--sent</code> records that the lecturer sent the message.</li>
     </ol>
   </section>
 
@@ -373,11 +374,16 @@ pre.tree {
     prd-scoresheet.md                  one sheet per deliverable id, read at runtime, never copied
     coherence-scoresheet.md
   inbox/
+    team-02/                           a folder named after the team names the team; loose files also work
+  archive/
+    team-07/week-01-20260911-1312/     a withdrawn week, whole, with copies of the team's tables — never deleted
   teams/
     team-03/
       documents.tsv                    the current version of each deliverable, and where it is
       register.tsv                     every question ever asked, one line each
       week-01/
+        attempts/20260913-0910-question/   a redone step's earlier outputs, kept
+        owners/register-before.tsv     the register as it was before this week; what --redo and --withdraw restore
         team-03-week-01-prd-original.pdf
         team-03-week-01-prd.txt
         owners/score-prd.md            never leaves owners/
@@ -520,7 +526,7 @@ ai-in-business/                        ← the public repository
     <h2 class="bds-part">Where this comes from, and how it is judged</h2>
     <p>The design behind this page is the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/hand-in-pipeline.md" target="_blank" rel="noopener">pipeline design note</a>, and the PRD it implements is the <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/project-documentation/prd-socratic-gate.md" target="_blank" rel="noopener">PRD for the Socratic gate</a>. Both are in the repository, off the site, because the PRD carries the design of a rubric.</p>
     <p>This blueprint will be read against the criteria for the week-2 blueprint, which are published before that hand-in, on this site, beside the assignment — the same criteria yours is read against. Until they exist, this page is a draft in the repository's <code>work/drafts/</code> folder, which is where every page waits before it is fit to be read by students.</p>
-    <p class="chapter-meta">Version 0.1 · 11 September 2026 · draft</p>
+    <p class="chapter-meta">Version 0.2 · 13 September 2026 · draft — §4 and §5 gained the reversals and the folders they use</p>
   </section>
 
 </main>

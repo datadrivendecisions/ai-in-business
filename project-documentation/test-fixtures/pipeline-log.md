@@ -236,3 +236,41 @@ PASSED
 
 Also on this run: the questioner's first message for team 2 failed the lint on the word
 *scoring*, used outside a quotation, and the second attempt passed. The retry is the design.
+
+## Gate 6 — 13 September 2026 — handling
+
+Added after the first live run, from four things the lecturer did by hand that week: a file with
+no team in its name needed a manifest edit; a wrong file was taken out with a plain delete and
+could not be brought back; redoing one step meant deleting its outputs by hand and the register
+with them; and seeing where a team stood meant listing folders. Nothing in this phase talks to a
+model, and nothing in it deletes.
+
+```
+$ python3 project-documentation/socratic_agent/gates.py 6
+gate 6 — handling
+  a team folder in the inbox
+  ok   filed as team-04 from the folder name, no manifest needed
+  ok   no manifest left behind
+  ok   log records the inbox path
+  withdraw, and file again from the archive
+  ok   week folder moved whole to archive/
+  ok   original and score travelled with it
+  ok   the register as it was is kept beside it
+  ok   documents.tsv has no week-1 line
+  ok   register restored to its snapshot (empty)
+  ok   log records the withdrawal
+  ok   the archived original files again as a fresh v1
+  redo question
+  ok   question outputs moved into attempts/
+  ok   team/ is gone, so the step will run again
+  ok   register restored: the old question open again, this week's gone
+  ok   the document itself untouched
+  status and sent
+  ok   status shows the team's row and the empty inbox
+  ok   sent refuses when there is no message yet
+  ok   sent writes the marker and status shows it
+PASSED
+exit 0
+$ python3 project-documentation/socratic_agent/gates.py 1
+PASSED
+```

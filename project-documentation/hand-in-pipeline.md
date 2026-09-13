@@ -81,7 +81,8 @@ Outside the repository, as a sibling of it — `intake.py`'s default already:
     prd-scoresheet.md             one scoresheet per deliverable id; read at runtime, never copied
     coherence-scoresheet.md
   roster.tsv                      team-NN → first names, Teams channel; the only file that links the two
-  inbox/                          the lecturer drops files here
+  inbox/                          the lecturer drops files here, loose or in a folder named after the team
+  archive/                        withdrawn weeks, whole; nothing is ever deleted
   teams/
     team-03/
       register.tsv                the question ledger, one line per question ever asked
@@ -140,6 +141,12 @@ there is no queue and no status to keep anywhere else.
 
 The week is given explicitly (`--week 2`). Deriving it from the date against the module
 calendar would save an argument and cost a wrong week now and then, which is worse.
+
+Four handling commands, added after the first live run (13 September 2026), none of which
+deletes anything: `--withdraw` moves a team's week to `archive/` and restores the team's tables;
+`--redo score|coherence|question` moves a step's outputs to `week-NN/attempts/` so the run
+makes them again, restoring the register for a redone question step; `--status` shows where
+every team stands; `--sent` records that the message went out.
 
 ### Step 1 — intake: inbox → the team's week folder
 

@@ -205,13 +205,17 @@ def step_intake(root, week, only_team=None):
         return [], [f"no inbox at {inbox}"]
 
     known = {r["file"]: r for r in read_tsv(manifest_path, MANIFEST_HEADER)}
-    files = sorted(p for p in inbox.iterdir()
+    # loose files, and files one level down in a folder named after the team:
+    # inbox/team-02/anything.pdf needs no manifest line to say whose it is.
+    files = sorted(p for p in list(inbox.iterdir()) + [q for d in inbox.iterdir() if d.is_dir() for q in d.iterdir()]
                    if p.is_file() and not p.name.startswith(".") and p.name != manifest_path.name)
     done, problems, still = [], [], []
 
     for src in files:
-        row = known.get(src.name, {"team": "", "deliverable": "", "file": src.name, "note": ""})
-        team = row["team"].strip() or guess_team(src.name)
+        rel = src.relative_to(inbox).as_posix()
+        folder_team = src.parent.name if src.parent != inbox and re.fullmatch(r"team-\d{2}", src.parent.name) else ""
+        row = known.get(rel, {"team": "", "deliverable": "", "file": rel, "note": ""})
+        team = row["team"].strip() or folder_team or guess_team(src.name)
         deliv = row["deliverable"].strip() or guess_deliverable(src.name)
         if deliv and deliv not in DELIVERABLES:
             row["note"] = f"unknown deliverable '{deliv}'; one of {', '.join(DELIVERABLES)}"
@@ -224,7 +228,7 @@ def step_intake(root, week, only_team=None):
             row["note"] = row["note"] or ("fill in " + " and ".join(
                 k for k, v in (("team", team), ("deliverable", deliv)) if not v))
             still.append(row)
-            problems.append(f"{src.name}: {row['note']} (stays in inbox)")
+            problems.append(f"{rel}: {row['note']} (stays in inbox)")
             continue
 
         # move, with the hash as the test that the bytes arrived
@@ -239,7 +243,7 @@ def step_intake(root, week, only_team=None):
             continue
         append_tsv(root / "log.tsv", LOG_HEADER, {
             "when": now(), "team": team, "week": week, "deliverable": deliv,
-            "from": src.name, "to": str(dst.relative_to(root)), "sha256": before})
+            "from": rel, "to": str(dst.relative_to(root)), "sha256": before})
 
         # convert from the team folder, never from the inbox
         txt = week_dir / (f"{stem}.txt" if version == 1 else f"{stem}-v{version}.txt")
@@ -689,6 +693,12 @@ def step_question(root, week, only_team=None):
             (week_dir / "owners" / "message-rejected.md").write_text(composed, encoding="utf-8")
             continue
 
+        snap = week_dir / "owners" / "register-before.tsv"
+        if not snap.exists():  # the register as it was before this week touched it; --redo and --withdraw restore it
+            if reg_path.exists():
+                shutil.copy2(reg_path, snap)
+            else:
+                write_tsv(snap, REGISTER_HEADER, [])
         write_tsv(reg_path, REGISTER_HEADER, [by_id[k] for k in by_id],
                   comment="every question ever asked; status open/partly/ducked come back next week")
         out_q.parent.mkdir(parents=True, exist_ok=True)
@@ -749,6 +759,122 @@ def step_coherence(root, week, only_team=None):
     return done, problems
 
 
+# ----------------------------------------------------------------------------
+# handling: nothing is ever deleted — withdrawn weeks go to archive/, redone
+# attempts to week-NN/attempts/ — and a status view so nobody has to ls
+# ----------------------------------------------------------------------------
+
+def stamp():
+    return dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+
+def restore_register(root, team, week, snap):
+    """Put the register back as it was before `week` touched it: from the
+    snapshot the question step keeps, or, failing that, by dropping the week's
+    own questions and reopening what the week closed."""
+    reg_path = root / "teams" / team / "register.tsv"
+    if snap and snap.exists():
+        shutil.copy2(snap, reg_path)
+        return "register restored from its snapshot"
+    rows = [r for r in read_tsv(reg_path, REGISTER_HEADER) if r["asked"] != str(week)]
+    for r in rows:
+        if r["resolved"] == str(week):
+            r["status"], r["resolved"] = "open", ""
+    if reg_path.exists():
+        write_tsv(reg_path, REGISTER_HEADER, rows,
+                  comment="every question ever asked; status open/partly/ducked come back next week")
+    return "register rebuilt without this week's lines"
+
+
+def withdraw(root, week, team):
+    """Move a team's week out of the way, reversibly. The folder goes whole to
+    archive/, the team's tables are copied beside it, and documents.tsv and the
+    register are put back as they were before the week. Nothing is deleted."""
+    week_dir = root / "teams" / team / f"week-{week:02d}"
+    if not week_dir.is_dir():
+        return [], [f"{team}: nothing filed for week {week}"]
+    dest = root / "archive" / team / f"week-{week:02d}-{stamp()}"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    for name in ("documents.tsv", "register.tsv"):
+        src = root / "teams" / team / name
+        if src.exists():
+            shutil.copy2(src, week_dir / f"{name}.before-withdraw")
+    shutil.move(str(week_dir), str(dest))
+    docs_path = root / "teams" / team / "documents.tsv"
+    docs = [r for r in read_tsv(docs_path, DOCUMENTS_HEADER) if int(r["week"] or 0) != week]
+    if docs_path.exists():
+        write_tsv(docs_path, DOCUMENTS_HEADER, docs,
+                  comment="the current version of each deliverable; rewritten by intake, read by the later steps")
+    how = restore_register(root, team, week, dest / "owners" / "register-before.tsv")
+    append_tsv(root / "log.tsv", LOG_HEADER, {
+        "when": now(), "team": team, "week": week, "deliverable": "*",
+        "from": str(week_dir.relative_to(root)), "to": str(dest.relative_to(root)), "sha256": "withdrawn"})
+    return [f"{team} week {week} → {dest.relative_to(root)} ({how}); "
+            f"drop an original from there into inbox/{team}/ to file it again"], []
+
+
+REDO_OUTPUTS = {
+    "score": ["owners/score-*.md"],
+    "coherence": ["owners/coherence.md"],
+    "question": ["team", "owners/question-input.md", "owners/message-rejected.md"],
+}
+
+
+def redo(root, week, step, only_team=None):
+    """Move one step's outputs for the week aside, into week-NN/attempts/, so
+    the normal run generates them again. A redone question step also puts the
+    register back as it was before the week."""
+    done = []
+    for team in teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        if not week_dir.is_dir():
+            continue
+        found = [p for pat in REDO_OUTPUTS[step] for p in week_dir.glob(pat)]
+        if not found:
+            continue
+        dest = week_dir / "attempts" / f"{stamp()}-{step}"
+        dest.mkdir(parents=True, exist_ok=True)
+        for p in found:
+            shutil.move(str(p), str(dest / p.name))
+        note = ""
+        if step == "question":
+            note = "; " + restore_register(root, team, week, week_dir / "owners" / "register-before.tsv")
+        done.append(f"{team}: {step} outputs → {dest.relative_to(root)}{note}")
+    return done
+
+
+def mark_sent(root, week, team):
+    week_dir = root / "teams" / team / f"week-{week:02d}"
+    msg = week_dir / "team" / "message.md"
+    if not msg.exists():
+        return [], [f"{team}: no message.md for week {week} to mark as sent"]
+    (week_dir / "team" / "sent.txt").write_text(f"sent {now()}\n", encoding="utf-8")
+    return [f"{team}: week {week} message marked as sent"], []
+
+
+def status(root, week, only_team=None):
+    """One line per team for the week, and what is still in the inbox."""
+    inbox = root / "inbox"
+    pending = [p.relative_to(inbox).as_posix() for p in inbox.rglob("*")
+               if p.is_file() and not p.name.startswith(".") and p.name != "manifest.tsv"] if inbox.is_dir() else []
+    print(f"week {week} — {len(pending)} file(s) waiting in the inbox" + (": " + ", ".join(pending) if pending else ""))
+    print(f"{'team':<9} {'filed':<28} {'scored':<20} {'coherence':<10} {'questions':<10} sent")
+    for team in teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        if not week_dir.is_dir():
+            print(f"{team:<9} —")
+            continue
+        texts = latest_texts(week_dir, team, week)
+        filed = ", ".join(f"{d} v{v}" for d, (v, _) in sorted(texts.items())) or "—"
+        scored = ", ".join(d for d in sorted(texts) if (week_dir / "owners" / f"score-{d}.md").exists()) or "—"
+        coh = "yes" if (week_dir / "owners" / "coherence.md").exists() else "—"
+        q = "yes" if (week_dir / "team" / "questions.md").exists() else \
+            ("rejected" if (week_dir / "owners" / "message-rejected.md").exists() else "—")
+        sent = (week_dir / "team" / "sent.txt").read_text(encoding="utf-8").strip() if (week_dir / "team" / "sent.txt").exists() else "—"
+        print(f"{team:<9} {filed:<28} {scored:<20} {coh:<10} {q:<10} {sent}")
+    return 0
+
+
 STEPS = [
     ("intake", step_intake),
     ("score", step_score),
@@ -764,11 +890,32 @@ def main():
     ap.add_argument("--root", type=pathlib.Path, default=DEFAULT_ROOT)
     ap.add_argument("--team", help="only this team, e.g. team-03")
     ap.add_argument("--step", choices=[n for n, _ in STEPS] + ["all"], default="all")
+    ap.add_argument("--status", action="store_true", help="show where every team stands this week, then stop")
+    ap.add_argument("--sent", action="store_true", help="with --team: record that this week's message was sent")
+    ap.add_argument("--withdraw", action="store_true", help="with --team: move this week's folder to archive/, reversibly, then stop")
+    ap.add_argument("--redo", choices=["score", "coherence", "question"],
+                    help="move that step's outputs aside into attempts/ and run again")
     a = ap.parse_args()
 
     if not a.root.is_dir():
         print(f"no intake root at {a.root}", file=sys.stderr)
         return 2
+    if a.status:
+        return status(a.root, a.week, a.team)
+    if a.sent or a.withdraw:
+        if not a.team:
+            print("--sent and --withdraw need --team", file=sys.stderr)
+            return 2
+        done, problems = mark_sent(a.root, a.week, a.team) if a.sent else withdraw(a.root, a.week, a.team)
+        for line in done:
+            print(f"  {line}")
+        for line in problems:
+            print(f"  ! {line}")
+        return 1 if problems else 0
+    if a.redo:
+        print(f"redo {a.redo}")
+        for line in redo(a.root, a.week, a.redo, a.team):
+            print(f"  {line}")
 
     all_done, all_problems = [], []
     for name, fn in STEPS:

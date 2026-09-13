@@ -318,7 +318,79 @@ def gate_4():
     return ok
 
 
-GATES = {0: gate_0, 1: gate_1, 2: gate_2, 3: gate_3, 4: gate_4}
+def gate_6():
+    """Handling, without a model: a team folder in the inbox names the team; a
+    withdrawn week goes to archive/ and can be filed again from there; a redone
+    question step moves its outputs aside and restores the register; status
+    and sent read and write what the lecturer needs to see."""
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import run_documents as rd
+    root = scratch_root()
+    print(f"gate 6 — handling, scratch root {root}")
+    ok = True
+
+    print("  a team folder in the inbox")
+    (root / "inbox/team-04").mkdir()
+    (root / "inbox/team-04/Our PRD final.pdf").write_bytes(mini_pdf(["Team four PRD", "Problem: nobody reads the manual."]))
+    code = run(root, 1, "--step", "intake")
+    wk = root / "teams/team-04/week-01"
+    ok &= say(code == 0 and (wk / "team-04-week-01-prd.txt").exists(), "filed as team-04 from the folder name, no manifest needed")
+    ok &= say(not (root / "inbox/manifest.tsv").exists(), "no manifest left behind")
+    ok &= say("team-04/Our PRD final.pdf" in (root / "log.tsv").read_text(), "log records the inbox path")
+
+    print("  withdraw, and file again from the archive")
+    (wk / "owners").mkdir(exist_ok=True); (wk / "team").mkdir(exist_ok=True)
+    (wk / "owners/score-prd.md").write_text("---\nteam: team-04\n---\n\n## INVARIANTS\n## SCORESHEET\n## BEFORE V1\n")
+    rd.write_tsv(root / "teams/team-04/register.tsv", rd.REGISTER_HEADER,
+                 [{"id": "team-04-w01-q1", "asked": "1", "about": "prd", "question": "Why?", "status": "open", "resolved": "", "evidence": ""}])
+    rd.write_tsv(wk / "owners/register-before.tsv", rd.REGISTER_HEADER, [])
+    code = run(root, 1, "--team", "team-04", "--withdraw")
+    arch = list((root / "archive/team-04").glob("week-01-*"))
+    ok &= say(code == 0 and not wk.exists() and len(arch) == 1, "week folder moved whole to archive/")
+    ok &= say(arch and (arch[0] / "team-04-week-01-prd-original.pdf").exists() and (arch[0] / "owners/score-prd.md").exists(), "original and score travelled with it")
+    ok &= say(arch and (arch[0] / "register.tsv.before-withdraw").exists(), "the register as it was is kept beside it")
+    ok &= say(not rd.read_tsv(root / "teams/team-04/documents.tsv", rd.DOCUMENTS_HEADER), "documents.tsv has no week-1 line")
+    ok &= say(not rd.read_tsv(root / "teams/team-04/register.tsv", rd.REGISTER_HEADER), "register restored to its snapshot (empty)")
+    ok &= say("withdrawn" in (root / "log.tsv").read_text(), "log records the withdrawal")
+    import shutil
+    shutil.copy2(arch[0] / "team-04-week-01-prd-original.pdf", root / "inbox/team-04/prd-again.pdf")
+    code = run(root, 1, "--step", "intake")
+    ok &= say(code == 0 and (wk / "team-04-week-01-prd-original.pdf").exists() and (wk / "team-04-week-01-prd.txt").exists(), "the archived original files again as a fresh v1")
+
+    print("  redo question")
+    (wk / "team").mkdir(exist_ok=True); (wk / "owners").mkdir(exist_ok=True)
+    (wk / "team/questions.md").write_text("1. Why?\n"); (wk / "team/message.md").write_text("Why?\n")
+    (wk / "owners/question-input.md").write_text("input\n")
+    rd.write_tsv(wk / "owners/register-before.tsv", rd.REGISTER_HEADER,
+                 [{"id": "team-04-w00-q1", "asked": "0", "about": "prd", "question": "Old?", "status": "open", "resolved": "", "evidence": ""}])
+    rd.write_tsv(root / "teams/team-04/register.tsv", rd.REGISTER_HEADER,
+                 [{"id": "team-04-w00-q1", "asked": "0", "about": "prd", "question": "Old?", "status": "answered", "resolved": "1", "evidence": "q"},
+                  {"id": "team-04-w01-q1", "asked": "1", "about": "prd", "question": "Why?", "status": "open", "resolved": "", "evidence": ""}])
+    code = run(root, 1, "--team", "team-04", "--redo", "question", "--step", "intake")
+    att = list((wk / "attempts").glob("*-question"))
+    ok &= say(len(att) == 1 and (att[0] / "team/message.md").exists() and (att[0] / "question-input.md").exists(), "question outputs moved into attempts/")
+    ok &= say(not (wk / "team").exists(), "team/ is gone, so the step will run again")
+    reg = rd.read_tsv(root / "teams/team-04/register.tsv", rd.REGISTER_HEADER)
+    ok &= say(len(reg) == 1 and reg[0]["status"] == "open" and reg[0]["id"] == "team-04-w00-q1", "register restored: the old question open again, this week's gone")
+    ok &= say((wk / "team-04-week-01-prd.txt").exists(), "the document itself untouched")
+
+    print("  status and sent")
+    import subprocess
+    out = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name("run_documents.py")),
+                          "--week", "1", "--root", str(root), "--status"], capture_output=True, text=True).stdout
+    ok &= say("team-04" in out and "prd v1" in out and "0 file(s) waiting" in out, "status shows the team's row and the empty inbox")
+    code = run(root, 1, "--team", "team-04", "--sent")
+    ok &= say(code == 1, "sent refuses when there is no message yet")
+    (wk / "team").mkdir(exist_ok=True); (wk / "team/message.md").write_text("Why?\n")
+    code = run(root, 1, "--team", "team-04", "--sent")
+    out = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name("run_documents.py")),
+                          "--week", "1", "--root", str(root), "--status"], capture_output=True, text=True).stdout
+    ok &= say(code == 0 and "sent 20" in out, "sent writes the marker and status shows it")
+    print("    " + out.strip().replace("\n", "\n    "))
+    return ok
+
+
+GATES = {0: gate_0, 1: gate_1, 2: gate_2, 3: gate_3, 4: gate_4, 6: gate_6}
 
 
 def main():
