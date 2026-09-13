@@ -185,6 +185,72 @@ def convert(src, dst):
     return ""
 
 
+# ----------------------------------------------------------------------------
+# link files: a small Markdown or text file in the inbox that holds a URL, for
+# a document the team keeps on GitHub or elsewhere. The document is fetched
+# and filed as the original; the link file is filed beside it as provenance.
+# ----------------------------------------------------------------------------
+
+URL_RE = re.compile(r"https?://[^\s<>()\[\]\"']+")
+CONTENT_TYPES = {"text/markdown": ".md", "text/x-markdown": ".md", "text/html": ".html",
+                 "application/pdf": ".pdf", "text/plain": ".txt"}
+
+
+def link_file_urls(path):
+    """The URLs in a link file, or [] when the file is a document in its own
+    right. A link file is short and is nothing but its links: strip the URLs
+    and Markdown link syntax, and fewer than 60 characters of prose remain."""
+    if path.suffix.lower() not in (".md", ".markdown", ".txt", ".url") or path.stat().st_size > 2000:
+        return []
+    text = path.read_text(encoding="utf-8", errors="replace")
+    urls = [u.rstrip(".,;") for u in URL_RE.findall(text)]
+    if not urls:
+        return []
+    rest = URL_RE.sub("", text)
+    rest = re.sub(r"[\[\]()<>#*_`\-\s]+", "", rest)
+    return urls if len(rest) < 60 else []
+
+
+def raw_url(url):
+    """A GitHub page URL for a file, rewritten to the raw file it shows. Other
+    URLs are returned as they are."""
+    m = re.match(r"https?://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+)$", url)
+    if m:
+        return f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2)}/{m.group(3)}/{m.group(4)}"
+    return url
+
+
+def fetch_link(url, into, stem):
+    """Fetch the document behind a URL into the inbox folder `into`, named
+    after the link file. Returns (path, "") or (None, reason)."""
+    import urllib.request
+    import urllib.parse
+    target = raw_url(url)
+    if re.match(r"https?://github\.com/[^/]+/[^/]+/?$", url):
+        return None, "the link is a repository, not a file — link the document's own page"
+    if "docs.google.com" in url or "drive.google.com" in url:
+        return None, "Google Docs and Drive links cannot be fetched — export the file and drop it in"
+    try:
+        req = urllib.request.Request(target, headers={"User-Agent": "ai-in-business-intake"})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = resp.read(20_000_000)
+            ctype = (resp.headers.get("Content-Type") or "").split(";")[0].strip().lower()
+    except Exception as e:  # noqa: BLE001 — the reason is what matters
+        return None, f"fetch failed: {type(e).__name__}: {e}"
+    name = pathlib.Path(urllib.parse.urlparse(target).path).name
+    ext = pathlib.Path(name).suffix.lower()
+    if ext not in CONVERTERS:
+        ext = CONTENT_TYPES.get(ctype, "")
+    if not ext:
+        return None, f"cannot tell what kind of document this is ({ctype or 'no content type'})"
+    out = into / f"{stem}__{pathlib.Path(name).stem or 'document'}{ext}"
+    out.write_bytes(data)
+    if not data.strip():
+        out.unlink()
+        return None, "fetched an empty document"
+    return out, ""
+
+
 def next_original(week_dir, stem, ext):
     """`<stem>-original<ext>`, or `-v2`, `-v3`… when a version already exists.
     Versions are counted across extensions: a PDF followed by a Markdown file of
@@ -217,12 +283,35 @@ def step_intake(root, week, only_team=None):
                    if p.is_file() and not p.name.startswith(".") and p.name != manifest_path.name)
     done, problems, still = [], [], []
 
+    # link files first: fetch what they point at into the same folder, and
+    # remember which link file each fetched document came from
+    came_from = {}
+    for src in list(files):
+        urls = link_file_urls(src)
+        if not urls:
+            continue
+        files.remove(src)
+        if len(urls) > 1:
+            problems.append(f"{src.relative_to(inbox).as_posix()}: {len(urls)} links in one file; one document per link file (stays in inbox)")
+            continue
+        fetched, reason = fetch_link(urls[0], src.parent, src.stem)
+        if reason:
+            problems.append(f"{src.relative_to(inbox).as_posix()}: {reason} (stays in inbox)")
+            continue
+        came_from[fetched] = (src, urls[0])
+        files.append(fetched)
+    files.sort()
+
     for src in files:
         rel = src.relative_to(inbox).as_posix()
+        if src in came_from:
+            rel = f"{came_from[src][0].relative_to(inbox).as_posix()} → {came_from[src][1]}"
         folder_team = src.parent.name if src.parent != inbox and re.fullmatch(r"team-\d{2}", src.parent.name) else ""
-        row = known.get(rel, {"team": "", "deliverable": "", "file": rel, "note": ""})
-        team = row["team"].strip() or folder_team or guess_team(src.name)
-        deliv = row["deliverable"].strip() or guess_deliverable(src.name)
+        link_name = came_from[src][0].name if src in came_from else ""
+        row = known.get(link_name and came_from[src][0].relative_to(inbox).as_posix() or rel,
+                        {"team": "", "deliverable": "", "file": rel, "note": ""})
+        team = row["team"].strip() or folder_team or guess_team(src.name) or guess_team(link_name)
+        deliv = row["deliverable"].strip() or guess_deliverable(src.name) or guess_deliverable(link_name)
         if deliv and deliv not in DELIVERABLES:
             row["note"] = f"unknown deliverable '{deliv}'; one of {', '.join(DELIVERABLES)}"
             deliv = ""
@@ -230,6 +319,9 @@ def step_intake(root, week, only_team=None):
             still.append({**row, "team": team, "deliverable": deliv})
             continue
         if not team or not deliv:
+            if src in came_from:  # leave the link file, not the fetched copy, for the lecturer to place
+                src.unlink()
+                row["file"] = came_from[src][0].relative_to(inbox).as_posix()
             row.update(team=team, deliverable=deliv)
             row["note"] = row["note"] or ("fill in " + " and ".join(
                 k for k, v in (("team", team), ("deliverable", deliv)) if not v))
@@ -250,6 +342,10 @@ def step_intake(root, week, only_team=None):
         append_tsv(root / "log.tsv", LOG_HEADER, {
             "when": now(), "team": team, "week": week, "deliverable": deliv,
             "from": rel, "to": str(dst.relative_to(root)), "sha256": before})
+        if src in came_from:  # the link file is filed beside the original, as the record of where it came from
+            link_src = came_from[src][0]
+            link_dst = dst.with_name(dst.name.replace("-original", "-source").rsplit(".", 1)[0] + ".md")
+            shutil.move(str(link_src), str(link_dst))
 
         # convert from the team folder, never from the inbox
         txt = week_dir / (f"{stem}.txt" if version == 1 else f"{stem}-v{version}.txt")

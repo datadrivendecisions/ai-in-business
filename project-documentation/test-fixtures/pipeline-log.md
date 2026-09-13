@@ -274,3 +274,29 @@ exit 0
 $ python3 project-documentation/socratic_agent/gates.py 1
 PASSED
 ```
+
+## Gate 6 again — 13 September 2026 — link files
+
+Some teams keep their document on GitHub, so the inbox now takes a link: a Markdown file holding
+one URL. Gate 6 gained a scenario that serves a document from a local web server, drops a link to
+it in a team folder, and checks that the document is fetched and filed as the original, that the
+link file is filed beside it as `-source.md`, that the log records the URL, that a Markdown file
+which merely contains a link is not treated as one, and that a link to a repository rather than a
+file is named and stays in the inbox. The first run of the gate used a `file://` URL and passed
+the wrong way — the link file was filed as a five-word document — which is why the gate now uses
+`http://`, the only scheme the pipeline accepts.
+
+```
+$ python3 project-documentation/socratic_agent/gates.py 6
+  ok   a GitHub page URL is rewritten to its raw file
+  ok   the document behind the link is fetched and filed as the original
+  ok   the link file is filed beside it as the source
+  ok   the link file has left the inbox
+  ok   the log records the URL
+  ok   a document that merely contains a link is not a link file
+  ok   a link to a repository rather than a file is named and stays in the inbox
+  … (the earlier scenarios unchanged)
+PASSED
+$ python3 project-documentation/socratic_agent/gates.py 1
+PASSED
+```

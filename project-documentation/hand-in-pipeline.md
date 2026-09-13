@@ -161,6 +161,10 @@ For each file in `inbox/`:
    `-vN` if one already exists. A move on one filesystem is atomic, so the move is its own
    test; a hash before and after is the belt to that pair of braces, and cheap. Append a line
    to `log.tsv` and update `documents.tsv`.
+   A Markdown file that holds only a URL is a link file: the document behind it is fetched
+   (a GitHub page link rewritten to its raw file), filed as the original, and the link file
+   filed beside it as `-source.md`. One link per file; a repository or Google Docs link is
+   named and stays in the inbox.
 3. Convert the moved file to `.txt` **from the team folder**, not from the inbox. `intake.py`
    currently regenerates `text/` from `inbox/`, which stops working the moment the inbox is
    emptied; that is the one change the script needs.

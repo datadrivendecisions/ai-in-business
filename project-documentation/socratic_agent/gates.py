@@ -374,6 +374,35 @@ def gate_6():
     ok &= say(len(reg) == 1 and reg[0]["status"] == "open" and reg[0]["id"] == "team-04-w00-q1", "register restored: the old question open again, this week's gone")
     ok &= say((wk / "team-04-week-01-prd.txt").exists(), "the document itself untouched")
 
+    print("  a link file in a team folder")
+    ok &= say(rd.raw_url("https://github.com/mpuzirik/ai-business-handbook/blob/main/ael-prd.md") ==
+              "https://raw.githubusercontent.com/mpuzirik/ai-business-handbook/main/ael-prd.md", "a GitHub page URL is rewritten to its raw file")
+    # a local web server stands in for GitHub, so the gate needs no network
+    import http.server, threading, functools
+    served = root / "served"; served.mkdir()
+    doc = served / "ael-prd.md"
+    doc.write_text("# Team six PRD\n\nProblem: the owner cannot tell hype from help.\n")
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(served)))
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{httpd.server_address[1]}/ael-prd.md"
+    (root / "inbox/team-06").mkdir(exist_ok=True)
+    (root / "inbox/team-06/prd-link.md").write_text(f"Our PRD is here: <{url}>\n")
+    (root / "inbox/team-06/notes.md").write_text("# Notes\n\nThese are real notes with a link inside, https://example.org/x, and plenty of prose around it so that it is not a link file at all.\n")
+    code = run(root, 1, "--step", "intake")
+    wk6 = root / "teams/team-06/week-01"
+    ok &= say((wk6 / "team-06-week-01-prd-original.md").exists() and "Team six" in (wk6 / "team-06-week-01-prd.txt").read_text(), "the document behind the link is fetched and filed as the original")
+    ok &= say((wk6 / "team-06-week-01-prd-source.md").exists() and url in (wk6 / "team-06-week-01-prd-source.md").read_text(), "the link file is filed beside it as the source")
+    ok &= say(not (root / "inbox/team-06/prd-link.md").exists(), "the link file has left the inbox")
+    ok &= say(f" → {url}" in (root / "log.tsv").read_text(), "the log records the URL")
+    httpd.shutdown()
+    ok &= say((root / "inbox/team-06/notes.md").exists() and not rd.link_file_urls(root / "inbox/team-06/notes.md"), "a document that merely contains a link is not a link file")
+    (root / "inbox/team-06/dead-link.md").write_text("https://github.com/nobody/nothing\n")
+    code = run(root, 1, "--step", "intake")
+    ok &= say(code == 1 and (root / "inbox/team-06/dead-link.md").exists(), "a link to a repository rather than a file is named and stays in the inbox")
+    (root / "inbox/team-06/dead-link.md").unlink(); (root / "inbox/team-06/notes.md").unlink()
+    if (root / "inbox/manifest.tsv").exists():
+        (root / "inbox/manifest.tsv").unlink()
+
     print("  status and sent")
     import subprocess
     out = subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name("run_documents.py")),
