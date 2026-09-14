@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PRD: the bias experiment tool — AI in Business</title>
+<meta name="description" content="Product requirements for the browser tool that runs the week 3 in-class experiment on biased information seeking, with the screens a student would see." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+pre.screen { background: var(--bg-off-white); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); padding: var(--space-4); overflow-x: auto;
+  font-size: 0.78rem; line-height: 1.35; color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+@media (max-width: 640px) { pre.screen { font-size: 0.62rem; } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="https://datadrivendecisions.github.io/ai-in-business/index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html">Course</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/week-01.html">Week 1</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">Week 3 &middot; product requirements &middot; first draft</div>
+    <h1 class="bds-h1">PRD: the bias experiment tool</h1>
+    <blockquote class="lead-quote"><em>The tool counts what a student chose to read. It never tells them what that means.</em></blockquote>
+    <p class="lead">The browser tool that runs the week&nbsp;3 in-class experiment on biased information seeking. This document says what it has to do and shows the screens; the <a href="blueprint.html">blueprint</a> holds the rules and the <a href="buildplan.html">build plan</a> holds the route.</p>
+  </header>
+
+  <section id="provenance">
+    <h2 class="bds-part">Provenance</h2>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><th>Document</th><td>Product requirements &mdash; the bias experiment tool</td></tr>
+      <tr><th>Version</th><td>0.2, 14 September 2026</td></tr>
+      <tr><th>Owner</th><td>The two module owners; the AIBS owner runs the session</td></tr>
+      <tr><th>Serves</th><td>The experiment protocol in <code>work/drafts/week-03-information-seeking-experiment.md</code></td></tr>
+      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored) and the tool rules in <code>CLAUDE.md</code></td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="problem">
+    <h2 class="bds-part">1 &middot; Problem and users</h2>
+    <p>Week&nbsp;3 runs an experiment on the students themselves: does an AI devil&rsquo;s advocate reduce <strong>biased information seeking</strong> &mdash; the habit of reading the things that agree with you? The design is within-person and counterbalanced, so every student does the task twice, once with the agent and once without.</p>
+    <p>Run on paper, the session collapses. Someone has to shuffle sixteen cards differently for each of thirty-two students, enforce a budget of eight, time each choice, collect two rounds of answers, and get thirty-two results into one place before the room loses interest. None of that is interesting work and all of it is error-prone.</p>
+    <p><strong>Three users, wanting different things.</strong></p>
+    <ul>
+      <li><strong>The student</strong> wants to get through it without being confused about what they are allowed to do, and to leave understanding what happened to them.</li>
+      <li><strong>The lecturer</strong> wants thirty-two results in one place, a paired comparison on screen, and no laptop admin during a 240-minute block.</li>
+      <li><strong>The module owners</strong> want data that survives being questioned: randomisation recorded, a fixed codebook, nothing invented after the fact.</li>
+    </ul>
+    <p>A fourth party matters and is not a user: <strong>the student as participant</strong>. They consent, they may withdraw, and nothing they type may leave their own browser.</p>
+  </section>
+
+  <section id="screens">
+    <h2 class="bds-part">2 &middot; What it must let a user do</h2>
+    <p>The screens below follow <strong>one student, in order, from start to finish</strong>. This student is in the half of the room that meets the agent in round&nbsp;1; the other half meets it in round&nbsp;2, and that is the only difference between them.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>&nbsp;</th><th>Round 1</th><th>Round 2</th></tr></thead>
+      <tbody>
+        <tr><th>Teams 1&ndash;4 &mdash; the student below</th><td>claim 1, <strong>with</strong> the agent &mdash; 5 steps</td><td>claim 2, no agent &mdash; 4 steps</td></tr>
+        <tr><th>Teams 5&ndash;8</th><td>claim 1, no agent &mdash; 4 steps</td><td>claim 2, <strong>with</strong> the agent &mdash; 5 steps</td></tr>
+      </tbody>
+    </table></div>
+    <p>A round is: position &rarr; <em>agent, if this is the agent round</em> &rarr; source menu &rarr; final position &rarr; closing questions. The round without the agent simply drops that one screen, which is why it has four steps rather than five.</p>
+
+    <h3>2.1 Before anything &mdash; consent, and what happens to your typing</h3>
+    <p>Consent comes before the first question, not buried in a footer. The honest selling point is that the tool has nowhere to send anything.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  AI in Business · Week 3                                       │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  You are about to take part in a small experiment about how    │
+│  people choose what to read.                                   │
+│                                                                │
+│  · It takes about 50 minutes, in two rounds.                   │
+│  · Nothing you type leaves this browser. There is no server.   │
+│  · Nothing here is marked, and it cannot affect your grade.    │
+│  · At the end you get one line of text. Handing it in is how   │
+│    you take part. If you would rather not, close the tab and   │
+│    nothing is recorded anywhere.                               │
+│  · We will tell you at the end what we were testing.           │
+│                                                                │
+│  Pick a code only you know (not your name):  [ ______ ]        │
+│  Team:  [ 1 v ]                                                │
+│                                                                │
+│                                      [ I understand — begin ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.2 Round 1, step 1 &mdash; your position, before you read anything</h3>
+    <p>The claim, and one sentence committing to a side. This is the anchor everything is measured against, so it is written before a single source is seen.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Round 1 of 2                                      Step 1 of 5 │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  THE CLAIM                                                     │
+│  &quot;A manufacturing SME of 50 staff should put an AI assistant   │
+│   in front of its customers before it puts one behind its own  │
+│   processes.&quot;                                                  │
+│                                                                │
+│  Where do you stand, right now, before reading anything?       │
+│                                                                │
+│     ( ) I agree      ( ) I disagree                            │
+│                                                                │
+│  In one sentence, why?                                         │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                                                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                │
+│                                                [ Lock it in ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.3 Round 1, step 2 &mdash; the agent, and why it comes here</h3>
+    <p><strong>The order is the experiment.</strong> What is measured is which sources a student chooses to open, so the agent has to arrive while that choice is still ahead of them. An agent appearing after the menu could not move the measurement at all &mdash; both rounds would produce the same number by construction.</p>
+    <p>The agent itself is modelled on the randomised trial in <a href="https://doi.org/10.1145/3640543.3645199" target="_blank" rel="noopener">Chiang et al. 2024</a>, where 350 participants in 120 groups met an LLM devil&rsquo;s advocate under five conditions. Two of its findings shape this design: the variant that objected to <em>the recommendation</em> rather than to the group&rsquo;s majority produced the higher decision accuracy, so ours objects to the position and never to the person; and the interactive variant beat the one that spoke once, which we cannot have, since a page that makes no network request cannot hold a conversation. What we keep is the target; what we give up is the interactivity, and it is the stronger half we are giving up. The case for using a machine at all rather than a colleague is in <a href="https://doi.org/10.1287/stsc.2024.0190" target="_blank" rel="noopener">Csaszar et al. 2024</a> &sect;2.3: a human devil&rsquo;s advocate costs days of skilled work and carries social inhibition about contradicting a senior person, and a model carries neither &mdash; an argument first made about human advocates in <a href="https://doi.org/10.1111/j.1467-6486.1984.tb00230.x" target="_blank" rel="noopener">Schwenk 1984</a>.</p>
+    <p>It follows that the prompt carries the claim and the student&rsquo;s own locked sentence, and no sources, because none have been read yet.</p>
+    <p><strong>The prompt describes the position in the third person and asks for questions in the second.</strong> That is deliberate. Models preserve the asker&rsquo;s face 45 percentage points more often than humans do on advice queries, and affirm both sides of a conflicting position in 48% of cases depending on who is asking (<a href="https://arxiv.org/abs/2505.13995" target="_blank" rel="noopener">Cheng et al. 2025</a>) &mdash; so a prompt saying <em>&ldquo;ask me about my position&rdquo;</em> hands the model a face to protect. <em>&ldquo;A student wrote this&rdquo;</em> gives it less of one, while asking for questions addressed to <em>you</em> keeps them usable by the person reading them.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Round 1 of 2                                      Step 2 of 5 │
+├────────────────────────────────────────────────────────────────┤
+│  One voice before you start looking.                           │
+│                                                                │
+│  1 · Copy this into your own AI assistant.                     │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ A student wrote the position below, before reading       │  │
+│  │ anything at all about this claim.                        │  │
+│  │                                                          │  │
+│  │ Claim:     &quot;&lt;the claim&gt;&quot;                                 │  │
+│  │ Position:  &quot;&lt;their own sentence&gt;&quot;                        │  │
+│  │                                                          │  │
+│  │ Write three questions that challenge that position,      │  │
+│  │ addressed to them as &quot;you&quot;. Quote their own words back.  │  │
+│  │ Do not say whether they are right. Do not tell them      │  │
+│  │ what to read.                                            │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                               [ Copy prompt ]  │
+│                                                                │
+│  2 · Paste what it asked you.                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                                                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                │
+│                                       [ Continue to sources ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+    <p class="aside">The tool cannot call a model &mdash; a <code>tool-*.html</code> page makes no network requests &mdash; so it hands over the prompt and takes back what the student&rsquo;s own assistant said. That seam is worth keeping: the student watches the questions arrive rather than having them arrive invisibly.</p>
+
+    <h3>2.4 Round 1, step 3 &mdash; the source menu, the screen that is the experiment</h3>
+    <p>Sixteen cards, one at a time, in an order shuffled for this student alone. Eight opens. No going back. The position stays on screen, because the measurement is about <em>this</em> position.</p>
+    <p><strong>One at a time is a choice, not a limitation of the screen.</strong> Information presented sequentially produces a stronger preference for supporting material than the same information presented all at once, because each step focuses attention back on the decision already made (<a href="https://pubmed.ncbi.nlm.nih.gov/11316221/" target="_blank" rel="noopener">Jonas et al. 2001</a>). Real searching is sequential, so the realistic condition is also the one where the effect is largest. The effect being looked for is itself well established: a meta-analysis of selective-exposure studies put the preference for congenial over uncongenial information at <em>d</em> = 0.36 (<a href="https://doi.org/10.1037/a0015701" target="_blank" rel="noopener">Hart et al. 2009</a>).</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Round 1 of 2                  Step 3 of 5   ·   opened 3 of 8 │
+├────────────────────────────────────────────────────────────────┤
+│  You said: &quot;Customer-facing first — that is where the money    │
+│  is.&quot; (agree)                                                  │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Card 7 of 16                                                  │
+│                                                                │
+│    Journal of Business Research · 2021                         │
+│    Too small to do it all? A meta-analysis of exploration,     │
+│    exploitation and ambidexterity across 5,488 SMEs            │
+│                                                                │
+│                                                                │
+│         [  Open this one  ]        [  Skip  ]                  │
+│                                                                │
+│    Opening costs one of your eight. A card you skip does       │
+│    not come back.                                              │
+└────────────────────────────────────────────────────────────────┘</pre>
+    <p>Opening a card spends one of the eight and reveals an extract plus the link to the real document:</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Card 7 of 16 — opened                           opened 4 of 8 │
+├────────────────────────────────────────────────────────────────┤
+│    Journal of Business Research · 2021                         │
+│    Too small to do it all? ...                                 │
+│                                                                │
+│    &quot;Meta-analytical evidence from 5,488 SMEs across 34         │
+│     studies suggests that ambidexterity has a less positive    │
+│     relationship with SME performance than both exploration    │
+│     and exploitation.&quot;                                         │
+│                                                                │
+│    Read the original →                                         │
+│                                                                │
+│                                                 [ Next card ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.5 Round 1, step 4 &mdash; your position again</h3>
+    <p>The same two controls as step 1, with the original sentence shown but not editable. What is recorded is whether it moved.</p>
+
+    <h3>2.6 Round 1, step 5 &mdash; closing questions, asked per round</h3>
+    <p><strong>Per round, not once at the end.</strong> The comparison that makes this session memorable is between how well a round went and how it felt, and a single set of answers at the finish cannot be attributed to either condition. Six workload items and two perception items, each time.</p>
+    <p>The comparison is worth building for because it has been found three times over four decades. Groups with the interactive devil&rsquo;s advocate had the <em>highest</em> decision accuracy and the <em>lowest</em> self-perceived performance and perceived teamwork quality (<a href="https://doi.org/10.1145/3640543.3645199" target="_blank" rel="noopener">Chiang et al. 2024</a>). Dialectical inquiry and devil&rsquo;s advocacy beat consensus on decision quality while their participants reported less satisfaction and less acceptance of the outcome (<a href="https://doi.org/10.5465/255859" target="_blank" rel="noopener">Schweiger et al. 1986</a>). And an LLM devil&rsquo;s advocate raised satisfaction but through presence rather than content, with cognitive load edging up (<a href="https://doi.org/10.1145/3706599.3719792" target="_blank" rel="noopener">Lee et al. 2025</a>). If the room reproduces any of that on its own data, nobody will need convincing.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Round 1 of 2                                      Step 5 of 5 │
+├────────────────────────────────────────────────────────────────┤
+│  That round only. You will be asked again after the next one.  │
+│                                                                │
+│  How hard did you have to work?        low  1 2 3 4 5 6 7  high│
+│  How rushed did you feel?              low  1 2 3 4 5 6 7  high│
+│              ... four more ...                                 │
+│                                                                │
+│  How good was the reading you did?     poor 1 2 3 4 5 6 7  good│
+│  How sure are you of your answer?      low  1 2 3 4 5 6 7  high│
+│                                                                │
+│                                             [ On to round 2 ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.7 Round 2 &mdash; what it is for, and what changes</h3>
+    <p><strong>Round 2 is not a repeat. It is the other half of the measurement.</strong> Each student is their own control, and the comparison that matters is between a student&rsquo;s two rounds rather than between one student and another. Without a second round there is no experiment at all &mdash; only a description of how thirty-two people read once.</p>
+    <p>That design choice is what makes eight teams workable. Comparing students against each other would mean absorbing every difference in reading habit, confidence and prior knowledge as noise. Comparing a student against themselves removes all of it.</p>
+
+    <h4>What changes</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>&nbsp;</th><th>Round 1</th><th>Round 2</th></tr></thead>
+      <tbody>
+        <tr><th>Claim</th><td>Claim 1</td><td><strong>Claim 2</strong> &mdash; never claim 1 again</td></tr>
+        <tr><th>Cards</th><td>Deck 1, its own 16</td><td><strong>Deck 2</strong>, its own 16, crossed 4/4/4/4 the same way</td></tr>
+        <tr><th>Order</th><td>Shuffled for this student</td><td>Shuffled again, independently</td></tr>
+        <tr><th>Agent (teams 1&ndash;4)</th><td>Present &mdash; 5 steps</td><td><strong>Absent &mdash; 4 steps</strong></td></tr>
+        <tr><th>Agent (teams 5&ndash;8)</th><td>Absent &mdash; 4 steps</td><td><strong>Present &mdash; 5 steps</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>The claim has to change, and that is not a preference.</strong> A student who has just read eight sources on claim 1 and committed to a position on it would, on meeting it again, be searching their memory rather than searching the menu. The second round would measure recall and tell us nothing about information seeking.</p>
+
+    <h4>What must not change</h4>
+    <p>Everything the measurement rests on is held identical, or the two rounds are not comparable and the paired difference means nothing:</p>
+    <ul>
+      <li>The budget of eight opens, and the rule that a passed card does not come back.</li>
+      <li>The position locked before the first card, in the same words on screen.</li>
+      <li>The same closing questions, in the same order.</li>
+      <li>The wording of every instruction, down to the sentence about what opening costs.</li>
+    </ul>
+
+    <h4>What the student is told between the rounds</h4>
+    <p>As little as possible, and nothing about the agent. A student who works out that the assistant is the thing being tested will behave differently in whichever round it appears &mdash; which is the one threat to this design that no amount of counterbalancing repairs.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Round 2 of 2                                                  │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  A different claim, and sixteen different sources.             │
+│                                                                │
+│  Everything else works the same way: say where you stand       │
+│  before you read, then open up to eight of the sixteen.        │
+│                                                                │
+│                                             [ Begin round 2 ]  │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h4>What it delivers</h4>
+    <p>A second round block in the result line, carrying its own counts, its own timing, its own movement flag and its own subjective scores:</p>
+    <pre class="screen">|r2:none:c2:op8:cong6:sopp1:s142:moved0:tlx38:q9</pre>
+    <p>Two blocks make one paired observation. The difference is always taken as <strong>agent round minus no-agent round</strong>, which means it is subtracted in opposite directions for the two halves of the room:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>&nbsp;</th><th>Agent round</th><th>Paired difference for that student</th></tr></thead>
+      <tbody>
+        <tr><th>Teams 1&ndash;4</th><td>Round 1</td><td>r1 &minus; r2</td></tr>
+        <tr><th>Teams 5&ndash;8</th><td>Round 2</td><td>r2 &minus; r1</td></tr>
+      </tbody>
+    </table></div>
+    <p>A negative number means the student read less one-sidedly in the round where the agent spoke. Averaging the two halves this way also cancels two things at once: the effect of claim&nbsp;2 being a different question from claim&nbsp;1, and the effect of simply being further into the session. Both fall out of the arithmetic because each is added to one half and subtracted from the other.</p>
+    <p class="aside"><strong>One thing it does not cancel.</strong> A student who met the devil&rsquo;s advocate in round 1 carries it into round 2 &mdash; they may read more even-handedly the second time <em>because of</em> the first. Counterbalancing removes the average effect of that carryover but not its interaction with the agent, and nothing in the design can. It belongs in the write-up as a stated limitation rather than a solved problem.</p>
+
+    <h3>2.8 The end &mdash; one line, handed over by choice</h3>
+    <p>Two round blocks, each carrying its own counts, its own timing and its own subjective scores.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Done. Nothing you typed has left this browser.                │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Your result line:                                             │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ v1|kite|t3                                               │  │
+│  │ |r1:ask:c1:op8:cong4:sopp3:s188:moved1:tlx47:q11         │  │
+│  │ |r2:none:c2:op8:cong6:sopp1:s142:moved0:tlx38:q9         │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                              [ Copy my line ]  │
+│                                                                │
+│  Hand this line in and you are in the dataset. Prefer not      │
+│  to? Close the tab — there is no copy anywhere else.           │
+└────────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>2.9 The lecturer&rsquo;s screen</h3>
+    <p>Same page, a different door. Thirty-two lines in, the paired comparison out &mdash; <strong>and a question rather than a verdict</strong>, because the conclusion is the thing the students came to write.</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  Lecturer view                32 pasted · 32 read · 0 rejected │
+├────────────────────────────────────────────────────────────────┤
+│  Congeniality index — higher means more one-sided reading      │
+│                                                                │
+│    no agent   ████████████████████░░░░░░  0.52                 │
+│    with agent ███████████████░░░░░░░░░░░  0.38                 │
+│                                                                │
+│    paired difference          −0.14                            │
+│    95% interval        −0.31  to  +0.03                        │
+│    n = 32 students in 8 teams                                  │
+│                                                                │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ The interval crosses zero.                               │  │
+│  │ What would you have to believe to call this an effect?   │  │
+│  │                                                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                │
+│  Smallest effect 32 paired observations could have detected    │
+│  at 80% power:  d ≈ 0.51                    [ show working ]   │
+└────────────────────────────────────────────────────────────────┘</pre>
+  </section>
+
+  <section id="qualities">
+    <h2 class="bds-part">3 &middot; Output qualities &mdash; what good data looks like</h2>
+    <h3>3a. Invariants &mdash; every student, every round, pass/fail</h3>
+    <ul>
+      <li>The card order shown is recorded, not just the choices. Without it, position effects and stance effects cannot be told apart.</li>
+      <li>The position sentence is locked before the agent speaks and before the first card appears, and cannot be edited afterwards.</li>
+      <li>Workload and perception are recorded once per round, so each set of answers belongs to a known condition.</li>
+      <li>Exactly eight opens, or fewer if the student runs out of cards; never nine.</li>
+      <li>The result line identifies a self-chosen code and a team, and carries no name.</li>
+      <li>The counts reconcile: opened = congenial + uncongenial.</li>
+    </ul>
+    <h3>3b. Qualities &mdash; judged on the class as a whole</h3>
+    <ul>
+      <li><strong>Comparability.</strong> Every student met the same sixteen cards. Any difference between them is about them, not about what they were handed.</li>
+      <li><strong>Reconstructability.</strong> From the thirty-two lines alone, a second person can recompute every number the lecturer screen displayed.</li>
+      <li><strong>Legibility under doubt.</strong> A student who asks &ldquo;how do you know I was biased?&rdquo; can be shown their own line and the codebook, and follow the arithmetic.</li>
+    </ul>
+  </section>
+
+  <section id="constraints">
+    <h2 class="bds-part">4 &middot; Known constraints</h2>
+    <ul>
+      <li><strong>No network calls.</strong> The tool rules in <code>CLAUDE.md</code> allow JavaScript on a <code>tool-*.html</code> page only if it is self-contained: no build step, no framework, no requests. That rules out hosting the model, and it rules out a server collecting results.</li>
+      <li><strong><code>localStorage</code> is per-browser.</strong> Thirty-two laptops means thirty-two islands. Aggregation is a deliberate manual step &mdash; copy a line, paste thirty-two &mdash; not an oversight.</li>
+      <li><strong>The site is public.</strong> The sixteen cards are in the page source, so the stance and quality labels <em>cannot</em> be, or the experiment is readable before it is run.</li>
+      <li><strong>One 240-minute block</strong>, shared with the rest of week 3. The tool gets perhaps 150 minutes.</li>
+      <li><strong>Light only, brand system, sticky nav and footer</strong>, copied from <code>index.html</code> like every other tool.</li>
+      <li><strong><code>--text-muted</code> on <code>--bg-cream</code> is 4.26:1</strong> and fails AA. Not that pair, anywhere.</li>
+    </ul>
+  </section>
+
+  <section id="scope">
+    <h2 class="bds-part">5 &middot; Out of scope (for now)</h2>
+    <ul>
+      <li><strong>Calling a model.</strong> The agent runs in the student&rsquo;s own assistant, from a prompt the tool supplies.</li>
+      <li><strong>Writing the conclusion.</strong> The tool displays numbers and asks about them. Stating a finding would put the verdict-giving behaviour the experiment is testing inside the instrument that measures it &mdash; and would take from students the one thing the session exists to give them. There is evidence for the narrow claim too: across six studies the presence of a <strong>conclusive recommendation consistently amplified confirmation bias</strong> while its absence mitigated it, and the source of the information mattered far less than its structure (<a href="https://www.sciencedirect.com/science/article/pii/S2451958826001211" target="_blank" rel="noopener">Computers in Human Behavior: Artificial Humans, 2026</a>). A tool that graded rather than asked would also be unreliable at it &mdash; human&ndash;LLM agreement on student essays scored against a four-criterion rubric was non-significant, worst on exactly the interpretive criteria a project rubric uses (<a href="https://arxiv.org/abs/2508.02442" target="_blank" rel="noopener">Gaggioli et al. 2025</a>) &mdash; and the order of presentation alone can flip an LLM judge&rsquo;s verdict (<a href="https://aclanthology.org/2024.acl-long.511/" target="_blank" rel="noopener">Wang et al. 2024</a>).</li>
+      <li><strong>Scoring anyone.</strong> ADR-0011 keeps the week&rsquo;s gates informational and unscored; this is not a back door.</li>
+      <li><strong>Cross-device or cross-session sync.</strong> A student who closes the tab has withdrawn.</li>
+      <li><strong>A general-purpose survey builder.</strong> Two claims, sixteen cards each, hard-coded.</li>
+      <li><strong>Keeping the data.</strong> Nothing persists past the session by design.</li>
+    </ul>
+  </section>
+
+  <section id="open">
+    <h2 class="bds-part">6 &middot; Open questions and assumptions</h2>
+    <ul>
+      <li><strong>Where do the stance and quality labels live?</strong> They cannot sit in the published page. Either the lecturer view holds the codebook and it is pasted in at analysis time, or the labels stay out of <code>site/</code> entirely and are applied to the lines afterwards in a spreadsheet. <em>Owner: the module owners, before the menu is built.</em></li>
+      <li><strong>What happens if a student passes over more than eight cards?</strong> They reach the end with budget unspent. Assumed acceptable, since the index is a proportion of what was opened &mdash; but worth confirming that a student with three opens is not silently compared with one who opened eight.</li>
+      <li><strong>Moving the agent forward costs a measure.</strong> With the agent before the menu, it can no longer be observed changing a student&rsquo;s final conclusion. That was a secondary outcome and the trade was made deliberately; if the owners want it back, the agent would have to appear twice, which lengthens the session and confounds the two touches.</li>
+      <li><strong>Two claims are needed and neither is chosen</strong>, and this is where most of the risk in the build sits. What they have to satisfy is now written down as the <a href="blueprint.html#cl-1">CL rules</a> in the blueprint, and how to find them &mdash; draft in comparison form, pilot for the split, start with the hardest cell &mdash; is phase 0 of the <a href="buildplan.html#p0">build plan</a>. The single criterion most easily missed: a claim of the form <em>&ldquo;X before Y&rdquo;</em> has commercial advocates on both sides, where <em>&ldquo;adopt X&rdquo;</em> has them on only one, and the weak-opposing cell then cannot be filled. Four candidates drawn from the AI Wiki are written up in <code>work/drafts/week-03-candidate-claims.md</code>. <em>Owner: the AIBS owner.</em></li>
+      <li><strong>Is the extract enough, or must they open the original?</strong> Assumed the extract is enough for the clock; the link is there for anyone who wants it. If reading the original matters, the session does not fit.</li>
+    </ul>
+  </section>
+
+  <section id="reading">
+    <h2 class="bds-part">7 &middot; The reading behind the design</h2>
+    <p>Every design decision above that could have gone another way, and what sent it the way it went. Nothing here is cited from memory; each was read or checked against its publisher record.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Source</th><th>What it decided here</th></tr></thead>
+      <tbody>
+        <tr><th>Chiang, C.-W., Lu, Z., Li, Z., &amp; Yin, M. (2024). Enhancing AI-Assisted Group Decision Making through LLM-Powered Devil&rsquo;s Advocate. <em>IUI &rsquo;24</em>, 103&ndash;119. <a href="https://doi.org/10.1145/3640543.3645199" target="_blank" rel="noopener">10.1145/3640543.3645199</a></th><td>The whole shape of the intervention. Its 2&times;2 gave us the target of objection (the position, not the person); its accuracy-versus-perception result is why &sect;2.6 asks the closing questions per round; its deliberately biased model is the precedent for a deck whose answer key exists before anyone sits down.</td></tr>
+        <tr><th>Lee, S., Hwang, S., Kim, D., &amp; Lee, K. (2025). Conversational Agents as Catalysts for Critical Thinking. <em>CHI EA &rsquo;25</em>. <a href="https://doi.org/10.1145/3706599.3719792" target="_blank" rel="noopener">10.1145/3706599.3719792</a></th><td>Two warnings. The agent&rsquo;s effect was mostly <em>indirect</em> &mdash; presence changed the climate more than content changed minds &mdash; and participants reported diminishing utility as a session wore on. Hence one intervention, early, rather than a stream of them.</td></tr>
+        <tr><th>Csaszar, F. A., Ketkar, H., &amp; Kim, H. (2024). Artificial Intelligence and Strategic Decision-Making. <em>Strategy Science</em> 9(4): 322&ndash;345. <a href="https://doi.org/10.1287/stsc.2024.0190" target="_blank" rel="noopener">10.1287/stsc.2024.0190</a></th><td>&sect;2.3 is the argument for a machine advocate rather than a human one: a human costs days of skilled work and hesitates to contradict a senior person; a model does neither.</td></tr>
+        <tr><th>Schwenk, C. R. (1984). Devil&rsquo;s Advocacy in Managerial Decision-Making. <em>Journal of Management Studies</em> 21(2): 153&ndash;168.</th><td>The lineage, and one directional prediction worth testing: Schwenk &amp; Thomas (1982), reported there, found devil&rsquo;s advocacy <em>reduced the tendency to collect too much information</em>. That is why the number of cards opened is recorded as well as which ones.</td></tr>
+        <tr><th>Schweiger, D. M., Sandberg, W. R., &amp; Ragan, J. W. (1986). Group Approaches for Improving Strategic Decision Making. <em>Academy of Management Journal</em> 29(1): 51&ndash;71. <a href="https://doi.org/10.5465/255859" target="_blank" rel="noopener">10.5465/255859</a></th><td>The 1986 half of the &ldquo;better but feels worse&rdquo; pairing: structured dissent beat consensus on decision quality while costing satisfaction and acceptance.</td></tr>
+        <tr><th>Hart, W., Albarrac&iacute;n, D., Eagly, A. H., Brechan, I., Lindberg, M. J., &amp; Merrill, L. (2009). Feeling Validated Versus Being Correct. <em>Psychological Bulletin</em> 135(4): 555&ndash;588. <a href="https://doi.org/10.1037/a0015701" target="_blank" rel="noopener">10.1037/a0015701</a></th><td>Establishes that the thing being measured exists and how big it is: <em>d</em> = 0.36 for the preference for congenial information. The benchmark the room&rsquo;s own number is read against.</td></tr>
+        <tr><th>Jonas, E., Schulz-Hardt, S., Frey, D., &amp; Thelen, N. (2001). Confirmation bias in sequential information search after preliminary decisions. <em>JPSP</em> 80(4): 557. <a href="https://pubmed.ncbi.nlm.nih.gov/11316221/" target="_blank" rel="noopener">PubMed 11316221</a></th><td>Why the cards come one at a time rather than as a list. Sequential presentation strengthens the preference for supporting material, so the realistic condition is also the sensitive one.</td></tr>
+        <tr><th>Cheng, M., Yu, S., Lee, C., Khadpe, P., Ibrahim, L., &amp; Jurafsky, D. (2025). ELEPHANT: Measuring and understanding social sycophancy in LLMs. <a href="https://arxiv.org/abs/2505.13995" target="_blank" rel="noopener">arXiv:2505.13995</a> <em>(preprint)</em></th><td>Why the prompt talks about the student in the third person: 45 percentage points more face-preservation than humans, and both sides affirmed in 48% of cases depending on who asks.</td></tr>
+        <tr><th>Confirmation bias in the age of AI: Examining the role of information source and conclusive recommendations (2026). <em>Computers in Human Behavior: Artificial Humans</em>. <a href="https://www.sciencedirect.com/science/article/pii/S2451958826001211" target="_blank" rel="noopener">S2451958826001211</a></th><td>The single most load-bearing finding for this tool. Conclusive recommendations amplify confirmation bias and their absence mitigates it; the source matters far less than the structure. It is why the agent asks, and why the lecturer screen ends in a question.</td></tr>
+        <tr><th>Gaggioli, A., et al. (2025). Assessing the Reliability and Validity of Large Language Models for Automated Assessment of Student Essays. <a href="https://arxiv.org/abs/2508.02442" target="_blank" rel="noopener">arXiv:2508.02442</a> <em>(preprint)</em></th><td>Why no part of this scores anything: human&ndash;LLM agreement was non-significant, and worst on the interpretive criteria a project rubric leans on.</td></tr>
+        <tr><th>Wang, P., et al. (2024). Large Language Models are not Fair Evaluators. <em>ACL 2024</em>. <a href="https://aclanthology.org/2024.acl-long.511/" target="_blank" rel="noopener">2024.acl-long.511</a></th><td>Order alone can flip an LLM judge&rsquo;s verdict, which is the second reason the tool does not judge.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="aside">Four of these were read as PDFs kept in <code>archive-local/</code>, which is git-ignored &mdash; they are not in the repository and must not be committed. Cite them by DOI, as above.</p>
+    <p>The wider reading behind the session itself &mdash; the devil&rsquo;s advocacy meta-analyses, the netnography and sampling literature, and the work on structured analytic techniques that <em>failed</em> to show a benefit &mdash; is in <a href="https://github.com/datadrivendecisions/ai-in-business/issues/13" target="_blank" rel="noopener">issue&nbsp;#13</a> and the protocol draft, not repeated here.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

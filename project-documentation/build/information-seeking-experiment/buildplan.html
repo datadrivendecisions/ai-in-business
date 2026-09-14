@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Build plan: the bias experiment tool — AI in Business</title>
+<meta name="description" content="The phased build plan for the week 3 bias experiment tool. The document is the state: every phase ends in something a person can try." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="https://datadrivendecisions.github.io/ai-in-business/index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html">Course</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/week-01.html">Week 1</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">Week 3 &middot; build plan &middot; this document is the state</div>
+    <h1 class="bds-h1">Build plan: the bias experiment tool</h1>
+    <blockquote class="lead-quote"><em>Every phase ends in something a person can sit down and try. Nothing is &ldquo;done&rdquo; because the code compiles.</em></blockquote>
+    <p class="lead">The route to the thing described in the <a href="blueprint.html">blueprint</a>. Tick the boxes here as work lands; there is no second tracker to fall out of step with this one.</p>
+    <p class="tpl-notice"><strong>The target state is not repeated here.</strong> Rules are cited by identifier &mdash; <code>SM-3</code>, <code>AN-2</code> &mdash; and live in the blueprint. If this plan and that document disagree, the blueprint is the intent.</p>
+  </header>
+
+  <section id="overview">
+    <h2 class="bds-part">Overview</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Done</th><th>Phase</th><th>What a person can try at the end of it</th></tr></thead>
+      <tbody>
+        <tr><td>&#9744;</td><td><a href="#p0">0 &mdash; The deck and the codebook</a></td><td>Read all 32 cards and check the cells balance 4/4/4/4</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p1">1 &mdash; One round, no agent</a></td><td>Take claim 1 end to end and reach the finish</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p2">2 &mdash; Measurement and the result line</a></td><td>Make known choices, hand-check every number in the line</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p3">3 &mdash; The second round and the agent</a></td><td>Run both rounds, meet the agent in one of them</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p4">4 &mdash; Closing questions and timing</a></td><td>Finish a full session and get a complete line</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p5">5 &mdash; The lecturer view</a></td><td>Paste 32 lines, see the comparison and the question</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p6">6 &mdash; Brand, access, publication</a></td><td>Open it on a phone, tab through it, follow it from the landing page</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="exists">
+    <h2 class="bds-part">What already exists</h2>
+    <p>Read out of the code, not remembered. The greps behind each line are worth re-running before starting, because this section ages.</p>
+    <ul>
+      <li><strong>A storage pattern to copy, twice over.</strong> <code>site/tool-ai-worker-maturity.html</code> carries <code>loadState()</code>, <code>saveState()</code> and <code>clearState()</code> at lines 711&ndash;713, each wrapping <code>localStorage</code> in a <code>try/catch</code>; <code>site/tool-architecture-blueprint.html</code> does the same at lines 1072&ndash;1109 with the comment <em>&ldquo;private window: fine&rdquo;</em>. Do not invent a third.</li>
+      <li><strong>Two worked tool pages.</strong> Script blocks of 485 and 266 lines respectively &mdash; the size of thing this repository already carries.</li>
+      <li><strong>No network call anywhere in <code>site/</code>.</strong> A grep for <code>fetch(</code>, <code>XMLHttpRequest</code> and <code>WebSocket</code> across every page returns nothing. <code>AG-1</code> is true before a line is written; the job is keeping it true.</li>
+      <li><strong>An instructor-view block that already works.</strong> <code>data-audience="instructor"</code> appears in <code>site/index.html</code>, <code>site/week-01-deck.html</code> and <code>site/week-02-deck.html</code>. The lecturer view can reuse it verbatim rather than inventing a way to hide a screen.</li>
+      <li><strong>The publication gate.</strong> <code>.github/scripts/check-links.sh</code> fails the build if a relative link escapes <code>site/</code>. Every card link is external and absolute, so this is a constraint on the card data, not on the code.</li>
+      <li><strong>Nothing of the tool itself.</strong> No <code>site/tool-bias-experiment.html</code> exists.</li>
+    </ul>
+  </section>
+
+  <section id="p0">
+    <h2 class="bds-part">Phase 0 &mdash; The deck and the codebook</h2>
+    <p><strong>Goal.</strong> Two claims survive the CL rules, and thirty-two real sources exist, each with a stance and a quality settled by two people who agreed.</p>
+    <p class="aside"><strong>Most of the risk in this whole build is here.</strong> A claim that fails cannot be rescued by better cards, and the failure usually shows up as difficulty finding the fourth source in a cell. When that happens the difficulty is the evidence telling you the claim is lopsided &mdash; discard the claim rather than lowering the bar for the card.</p>
+    <p><strong>What the tester does.</strong> Opens a plain listing of all 32 cards, counts four in every cell, follows three links at random and finds the quoted extract actually in the document.</p>
+    <p><strong>Spec.</strong> <code>CL-1</code>&ndash;<code>CL-10</code>, <code>SM-5</code>, <code>SM-6</code>, <code>SM-7</code>, <code>SM-10</code>, <code>SM-11</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 0.1 Draft 3&ndash;4 candidate claims &mdash; <strong>four drawn from the AI Wiki are already written up in <code>work/drafts/week-03-candidate-claims.md</code>, with what is settled and what the pilot must settle</strong> &mdash; each in the form <em>&ldquo;an SME should do X before Y&rdquo;</em> rather than <em>&ldquo;an SME should do X&rdquo;</em>. The comparison form is what makes <code>CL-3</code> satisfiable: almost nobody publishes marketing material arguing against buying software, so a proposition has an easy weak-supporting cell and a near-impossible weak-opposing one, while X and Y each have their own vendors selling against the other.</li>
+      <li>&#9744; 0.2 Check each candidate against <code>CL-8</code> (not a team&rsquo;s own handbook topic) and <code>CL-9</code> (professional judgement, not personal values). Discard failures now; they get more expensive later.</li>
+      <li>&#9744; 0.3 Pilot each survivor on &ge; 10 people: read the claim, commit to a side, hands up. Record the split and how long people took. Discard anything that splits worse than 70/30 (<code>CL-1</code>) or that people cannot answer inside a minute (<code>CL-10</code>).</li>
+      <li>&#9744; 0.4 Of what is left, pick the two whose splits are closest to each other (<code>CL-7</code>) and which share no subject matter (<code>CL-6</code>).</li>
+      <li>&#9744; 0.5 Write the codebook rules: what makes a source count as supporting, and what makes it strong. One paragraph each, in <code>work/drafts/</code>.</li>
+      <li>&#9744; 0.6 Find 16 real sources for claim 1: 4 per cell. Every one openable, free, readable in 3 minutes. <strong>Start with the hardest cell</strong> &mdash; usually the weak sources opposing the claim. If the fourth one will not come, go back to 0.4 and take the next claim.</li>
+      <li>&#9744; 0.7 For each, record title, outlet, year, teaser (&le; 25 words), extract (&le; 150 words, quoted), link.</li>
+      <li>&#9744; 0.8 Two people code all 16 independently against 0.5. Compute Cohen&rsquo;s kappa. This is the instrument kappa &mdash; the data rests on it. Disagreement on more than one card in sixteen means the claim has more than one axis (<code>CL-5</code>), not that the coders were careless.</li>
+      <li>&#9744; 0.9 Replace any card the two coders could not agree on. Do not negotiate it into a cell.</li>
+      <li>&#9744; 0.10 Repeat 0.6&ndash;0.9 for claim 2.</li>
+      <li>&#9744; 0.11 Pick 8 cards from a coded deck, balanced 4 supporting / 4 opposing, as the set students code in the debrief.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; Pilot split recorded for both claims, neither worse than 70/30 (<code>CL-1</code>, demonstration)</li>
+      <li>&#9744; The two splits within 15 points of each other (<code>CL-7</code>, demonstration)</li>
+      <li>&#9744; 0 sources shared between the two decks (<code>CL-6</code>, inspection)</li>
+      <li>&#9744; Neither claim is a team&rsquo;s topic, checked against all 8 (<code>CL-8</code>, inspection)</li>
+      <li>&#9744; 4 cards in each of 4 cells, both decks (<code>SM-6</code>, <code>CL-2</code>, <code>CL-3</code>, by test against the codebook)</li>
+      <li>&#9744; Every link resolves; every extract found verbatim in its source (<code>SM-7</code>, by inspection)</li>
+      <li>&#9744; Kappa recorded for both decks, with the matrix, not just the number; &ge; 15 of 16 stances agreed (<code>CL-5</code>, test)</li>
+      <li>&#9744; Tester steps above completed by someone who did not build the deck</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p1">
+    <h2 class="bds-part">Phase 1 &mdash; One round, no agent</h2>
+    <p><strong>Goal.</strong> A student can take claim 1 from consent to a final position.</p>
+    <p><strong>What the tester does.</strong> Opens <code>site/tool-bias-experiment.html</code>, consents, picks a code, locks a position, works through 16 cards opening 8, writes a final position, and reaches a finish screen. Then reloads mid-way and finds their place kept.</p>
+    <p><strong>Spec.</strong> <code>SM-1</code>, <code>SM-2</code>, <code>SM-3</code>, <code>SM-4</code>, <code>SM-9</code>, <code>DA-1</code>, <code>DA-2</code>, <code>DA-4</code>, <code>DA-5</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 1.1 Create the file; copy the token block, <code>bds-nav</code> and <code>bds-footer</code> from <code>site/index.html</code>.</li>
+      <li>&#9744; 1.2 Copy <code>loadState/saveState/clearState</code> from <code>tool-ai-worker-maturity.html</code>. One key.</li>
+      <li>&#9744; 1.3 Embed deck 1 as data. No stance or quality fields in the file.</li>
+      <li>&#9744; 1.4 Consent screen, with the storage sentence and a code field. No name field.</li>
+      <li>&#9744; 1.5 Position screen; lock the sentence once submitted.</li>
+      <li>&#9744; 1.6 Shuffle the 16 cards; store the order.</li>
+      <li>&#9744; 1.7 Card screen: open or pass, a counter, no way back to a passed card.</li>
+      <li>&#9744; 1.8 Refuse the 9th open.</li>
+      <li>&#9744; 1.9 Final position screen and a finish screen.</li>
+      <li>&#9744; 1.10 A single control that erases everything.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 20 fresh sessions give &ge; 19 distinct orders (<code>SM-2</code>, test)</li>
+      <li>&#9744; The shown order is in stored state, 20 of 20 (<code>SM-9</code>, test)</li>
+      <li>&#9744; The 9th open refused, 100 of 100 (<code>SM-3</code>, test)</li>
+      <li>&#9744; 0 paths back to a passed card (<code>SM-4</code>, test)</li>
+      <li>&#9744; 1 storage key, 0 cookies (<code>DA-1</code>, test)</li>
+      <li>&#9744; Consent is the 1st screen (<code>DA-2</code>, inspection)</li>
+      <li>&#9744; Storage statement present, &le; 60 words (<code>DA-5</code>, inspection)</li>
+      <li>&#9744; Tester steps above, by someone who did not write the code</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p2">
+    <h2 class="bds-part">Phase 2 &mdash; Measurement and the result line</h2>
+    <p><strong>Goal.</strong> The numbers exist and are right.</p>
+    <p><strong>What the tester does.</strong> Runs a session opening a written-down set of cards, then checks every figure in the result line by hand against the codebook. The line is the only artefact; if it is wrong, nothing downstream can be right.</p>
+    <p><strong>Spec.</strong> <code>MS-1</code>, <code>MS-2</code>, <code>MS-3</code>, <code>MS-4</code>, <code>DA-3</code>, <code>SM-8</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 2.1 Hold the codebook outside the page; map card ids to cells at analysis time, not at run time.</li>
+      <li>&#9744; 2.2 Count opens, congenial opens and strong-opposing opens from the recorded choices.</li>
+      <li>&#9744; 2.3 Compute the congeniality index.</li>
+      <li>&#9744; 2.4 Record whether the final position text differs from the locked one.</li>
+      <li>&#9744; 2.5 Emit the result line in the contract&rsquo;s shape, with a version token.</li>
+      <li>&#9744; 2.6 A copy button, and the sentence about closing the tab.</li>
+      <li>&#9744; 2.7 Ten fixture sessions with known choices and hand-computed expected numbers.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; Index matches hand computation on 10 fixtures to 3 dp (<code>MS-1</code>, test)</li>
+      <li>&#9744; Strong-opposing count correct on the same 10 (<code>MS-2</code>, test)</li>
+      <li>&#9744; opened = congenial + uncongenial in all 10</li>
+      <li>&#9744; 0 stance or quality labels in the shipped file (<code>SM-8</code>, test by grep)</li>
+      <li>&#9744; 0 identity fields in the line (<code>DA-3</code>, inspection)</li>
+      <li>&#9744; Tester hand-check completed</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p3">
+    <h2 class="bds-part">Phase 3 &mdash; The second round and the agent</h2>
+    <p><strong>Goal.</strong> Both rounds run, and the agent appears in exactly one of them.</p>
+    <p><strong>What the tester does.</strong> Runs as team 3 and meets the agent in round 2; runs as team 6 and meets it in round 1. In both cases the agent appears <em>before</em> the first card. Copies the prompt into a real assistant, pastes the reply back, and gets past the screen only with something in the box.</p>
+    <p><strong>Spec.</strong> <code>AG-1</code>, <code>AG-2</code>, <code>AG-3</code>, <code>AG-4</code>, <code>AG-5</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 3.1 Embed deck 2; chain round 2 after round 1 with a fresh shuffle.</li>
+      <li>&#9744; 3.2 Assign the agent round from the team number, half and half. The agent screen comes after the position is locked and before the first card.</li>
+      <li>&#9744; 3.3 Build the prompt from the claim and the locked position. No sources &mdash; none have been read. Third person about the position, second person in the questions it asks for.</li>
+      <li>&#9744; 3.4 Copy button, paste box, and a block on continuing while it is empty.</li>
+      <li>&#9744; 3.5 Store the pasted reply in state.</li>
+      <li>&#9744; 3.6 Check the prompt against the verdict word list.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 0 network requests across 1 full two-round session (<code>AG-1</code>, test with the network panel open)</li>
+      <li>&#9744; Prompt asks for &ge; 3 questions (<code>AG-2</code>, inspection)</li>
+      <li>&#9744; Prompt contains 0 verdict phrases (<code>AG-4</code>, inspection)</li>
+      <li>&#9744; Prompt uses 0 first-person possessives for the position (<code>AG-5</code>, inspection)</li>
+      <li>&#9744; 0 ways past an empty paste box (<code>AG-3</code>, test)</li>
+      <li>&#9744; Teams 1&ndash;4 and 5&ndash;8 get opposite agent rounds, checked for all 8</li>
+      <li>&#9744; In 8 of 8 runs the agent screen precedes card 1 of that round</li>
+      <li>&#9744; Tester steps above, using their own assistant</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p4">
+    <h2 class="bds-part">Phase 4 &mdash; Closing questions and timing</h2>
+    <p><strong>Goal.</strong> The subjective measures and the clock are captured <em>per round</em>, so the &ldquo;better but feels worse&rdquo; comparison is possible at all. Asked once at the finish they would belong to neither condition and the comparison would be impossible.</p>
+    <p><strong>What the tester does.</strong> Completes a whole session and gets a result line carrying a workload total and both timings.</p>
+    <p><strong>Spec.</strong> <code>MS-5</code>, <code>MS-6</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 4.1 Six workload items and two perception items, 7-point &mdash; shown at the end of <em>each</em> round, not once at the finish.</li>
+      <li>&#9744; 4.2 Total the workload to 0&ndash;100.</li>
+      <li>&#9744; 4.3 Time each card and each menu; add seconds per round to the line.</li>
+      <li>&#9744; 4.4 Extend the line format so each round block carries its own timing, movement flag and scores. Bump the version token if the shape changes.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 8 items present, 7 points each, asked 2 times per session (<code>MS-6</code>, inspection)</li>
+      <li>&#9744; Card timings within 100 ms of wall clock over 5 cards (<code>MS-5</code>, test)</li>
+      <li>&#9744; A complete line parses under the phase 5 parser once it exists</li>
+      <li>&#9744; Tester completes one session unaided and in under 25 minutes</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p5">
+    <h2 class="bds-part">Phase 5 &mdash; The lecturer view</h2>
+    <p><strong>Goal.</strong> Thirty-two lines become one paired comparison, and a question.</p>
+    <p><strong>What the tester does.</strong> Opens the page with <code>?instructor</code>, pastes 32 fixture lines plus 2 broken ones, sees 32 accepted and 2 listed as rejected, reads the difference and the interval, and finds a question on screen where a conclusion would be.</p>
+    <p><strong>Spec.</strong> <code>AN-1</code>, <code>AN-2</code>, <code>AN-3</code>, <code>AN-4</code>, <code>AN-5</code>, <code>AN-6</code>, <code>AN-7</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 5.1 Copy the instructor-view block from <code>site/index.html</code> verbatim; mark the lecturer section <code>data-audience="instructor"</code>. Add nothing to the block.</li>
+      <li>&#9744; 5.2 Paste box; parse lines; report accepted and rejected, listing every rejection.</li>
+      <li>&#9744; 5.3 Take the codebook as pasted input and apply it to the card ids.</li>
+      <li>&#9744; 5.4 Compute the two means, the paired difference and a 95% interval.</li>
+      <li>&#9744; 5.5 Draw the two bars.</li>
+      <li>&#9744; 5.6 Show the smallest detectable effect for the n entered.</li>
+      <li>&#9744; 5.7 Put a question and a writing box where a conclusion would go.</li>
+      <li>&#9744; 5.8 A kappa box: four cell counts in, kappa out, with observed and chance agreement shown beside it. Used by students in the debrief, not by the analysis.</li>
+      <li>&#9744; 5.9 Five fixture datasets with values from a reference implementation.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 32 good lines &rarr; 32 accepted (<code>AN-1</code>, test)</li>
+      <li>&#9744; 2 malformed lines &rarr; 2 listed, 0 silent drops (<code>AN-6</code>, test)</li>
+      <li>&#9744; Difference and interval match the reference on 5 datasets to 3 dp (<code>AN-2</code>, test)</li>
+      <li>&#9744; 0 concluding sentences on screen, &ge; 1 question (<code>AN-3</code>, inspection by someone who did not write it)</li>
+      <li>&#9744; Detectable effect within 0.02 of a reference value (<code>AN-4</code>, analysis)</li>
+      <li>&#9744; Kappa matches hand computation on 4 matrices (<code>AN-5</code>, test), each shown with its 2&times;2 and chance figure (<code>AN-7</code>, inspection)</li>
+      <li>&#9744; Without <code>?instructor</code>, the lecturer section is not visible</li>
+      <li>&#9744; Tester steps above</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p6">
+    <h2 class="bds-part">Phase 6 &mdash; Brand, access, publication</h2>
+    <p><strong>Goal.</strong> It looks like the rest of the site and can be reached from it.</p>
+    <p><strong>What the tester does.</strong> Opens it on a phone, completes a round without scrolling sideways, tabs through every control, and finds it from the landing page&rsquo;s course-tools section.</p>
+    <p><strong>Spec.</strong> <code>PR-1</code>, <code>PR-2</code>, <code>PR-3</code>, <code>PR-4</code>, <code>PR-5</code>, <code>PR-6</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 6.1 Diff the token block against <code>site/index.html</code>; make them identical.</li>
+      <li>&#9744; 6.2 Check every text/background pair for contrast; remove any muted-on-cream.</li>
+      <li>&#9744; 6.3 Tab order over every control; no traps.</li>
+      <li>&#9744; 6.4 Test at 400 px.</li>
+      <li>&#9744; 6.5 Add the tool card to <code>site/index.html</code>, stating where answers are stored.</li>
+      <li>&#9744; 6.6 Run <code>./.github/scripts/check-links.sh</code>.</li>
+      <li>&#9744; 6.7 Run <code>aiprose.py</code> over the page with the A-codes.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; Token block byte-identical to <code>index.html</code> (<code>PR-1</code>, inspection)</li>
+      <li>&#9744; 1 <code>bds-nav</code> (<code>PR-5</code>) and 1 <code>bds-footer</code> with the credit (<code>PR-6</code>, inspection)</li>
+      <li>&#9744; Contrast &ge; 4.5:1 throughout; 0 muted-on-cream (<code>PR-3</code>, analysis)</li>
+      <li>&#9744; 0 horizontal scroll at 400 px (<code>PR-2</code>, demonstration)</li>
+      <li>&#9744; 0 keyboard traps (<code>PR-4</code>, demonstration)</li>
+      <li>&#9744; Link check green</li>
+      <li>&#9744; Tester steps above, on a real phone</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="parallel">
+    <h2 class="bds-part">What can run in parallel</h2>
+    <p>Derived from which files a phase writes to, because merge conflicts are a file-level matter and have nothing to do with how independent two phases feel.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Phase</th><th>Writes to</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td><code>work/drafts/</code> &mdash; the decks and the codebook</td></tr>
+        <tr><td>1, 2, 3, 4, 5</td><td><code>site/tool-bias-experiment.html</code> &mdash; all of them, the same file</td></tr>
+        <tr><td>6</td><td><code>site/tool-bias-experiment.html</code> and <code>site/index.html</code></td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Phase 0 is the only thing that can run beside anything else</strong>, because it is the only phase that does not touch the tool. That is convenient, since it is also the slowest and the one that needs two people: one person hunts sources while the other builds phases 1&ndash;2.</p>
+    <p>Phases 1&ndash;6 share one file and must run in order. Two people editing the same tool page concurrently will spend longer merging than they saved.</p>
+    <p class="aside">One interface has to be fixed before phases 2 and 5 can be worked on by different people: the <strong>result line format</strong>. It is the contract between the student&rsquo;s session and the lecturer&rsquo;s analysis. Settle its shape in phase 2 and do not change it afterwards without bumping the version token.</p>
+  </section>
+
+  <section id="notdoing">
+    <h2 class="bds-part">What this plan does not do</h2>
+    <ul>
+      <li><strong>It does not write the session plan.</strong> How the 150 minutes are run is <code>project-documentation/session-plan-week-03.md</code>, which does not exist yet.</li>
+      <li><strong>It does not obtain consent.</strong> The tool shows a consent screen; the agreement covering the experiment is the owners&rsquo; business, not the code&rsquo;s.</li>
+      <li><strong>It does not analyse the results.</strong> The tool computes and displays; the conclusion is written by people in the room.</li>
+      <li><strong>It does not build an agent.</strong> The prompt is supplied; the assistant is the student&rsquo;s own.</li>
+      <li><strong>It does not cover the second cohort.</strong> Two claims, one run.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

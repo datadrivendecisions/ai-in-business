@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blueprint: the bias experiment tool — AI in Business</title>
+<meta name="description" content="Technical blueprint for the browser tool that runs the week 3 experiment on biased information seeking — target state, rules and contracts." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="https://datadrivendecisions.github.io/ai-in-business/index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html">Course</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/week-01.html">Week 1</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">Week 3 &middot; technical blueprint &middot; target state</div>
+    <h1 class="bds-h1">Blueprint: the bias experiment tool</h1>
+    <blockquote class="lead-quote"><em>A reader can tell what each part does, what passes between the parts, and where the line is that nothing may cross.</em></blockquote>
+    <p class="lead">The browser tool that runs the week&nbsp;3 in-class experiment on biased information seeking: sixteen source cards, a budget of eight, two rounds, one line of result per student, and a lecturer view that aggregates thirty-two of them into a paired comparison.</p>
+    <p class="tpl-notice"><strong>This document describes the finished thing only.</strong> It carries no order of work, no phases and no record of what is built &mdash; those belong to the <a href="buildplan.html">build plan</a>, which is the state. When the two disagree, this document is the intent and the code is the backlog.</p>
+  </header>
+
+  <section id="provenance">
+    <h2 class="bds-part">1 &middot; Header and provenance</h2>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><th>Document</th><td>Technical blueprint &mdash; the bias experiment tool</td></tr>
+      <tr><th>Version</th><td>0.1, 14 September 2026</td></tr>
+      <tr><th>Implements</th><td><a href="prd.html">PRD &mdash; the bias experiment tool</a></td></tr>
+      <tr><th>Serves</th><td>The experiment protocol in <code>work/drafts/week-03-information-seeking-experiment.md</code></td></tr>
+      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored) and the tool rules in <code>CLAUDE.md</code></td></tr>
+      <tr><th>Owner</th><td>The two module owners; the AIBS owner runs the session</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="goal">
+    <h2 class="bds-part">2 &middot; The goal</h2>
+    <p><strong>One two-round experiment runs end to end for 32 students inside a 150-minute block, on the students&rsquo; own laptops, with every card choice and the order it was shown in recorded, no request leaving any browser, and 32 result lines turned into one paired comparison in under 10 minutes.</strong></p>
+    <p>Every rule below serves some part of that sentence, and every part of that sentence is covered by a rule. The trace is in &sect;8.</p>
+  </section>
+
+  <section id="parts">
+    <h2 class="bds-part">3 &middot; The parts</h2>
+    <p>One HTML file, four things inside it.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Part</th><th>Does</th><th>Knows nothing about</th></tr></thead>
+      <tbody>
+        <tr><th>Card deck</th><td>Holds 32 cards as data: 2 claims &times; 16. Title, outlet, year, teaser, extract, link.</td><td>Which cell a card belongs to. The deck in the published page carries no stance or quality label.</td></tr>
+        <tr><th>Session runner</th><td>Consent, position, shuffle, the budget of 8, the agent step, the closing questions. Writes one result line.</td><td>What the numbers mean. It counts; it does not judge.</td></tr>
+        <tr><th>Result line</th><td>The only thing that crosses between a student and the class. One line of text, copied by hand.</td><td>Who the student is. It carries a self-chosen code.</td></tr>
+        <tr><th>Lecturer view</th><td>Takes pasted lines, applies the codebook, computes the paired difference and interval, draws the comparison, asks a question.</td><td>How to state a conclusion. It has no sentence that concludes.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="aside">The codebook &mdash; which card is congenial, which is strong &mdash; is <strong>not</strong> in the card deck. <code>site/</code> is a public URL from a public repository, so a label in the page is a label a student can read before the session. The lecturer view takes the codebook as pasted input at analysis time.</p>
+  </section>
+
+  <section id="flow">
+    <h2 class="bds-part">4 &middot; The flow of one student&rsquo;s session</h2>
+    <pre class="tree">consent + code + team
+      &darr;
+ROUND 1 ── claim A ── position (locked) ── [agent?] ── 16 cards shuffled ── open &le; 8
+                   ── final position ── closing questions
+      &darr;
+ROUND 2 ── claim B ── position (locked) ── [agent?] ── 16 cards shuffled ── open &le; 8
+                   ── final position ── closing questions
+      &darr;
+one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  paired comparison + a question</pre>
+    <p>The agent appears in exactly one of the two rounds. Which one depends on the team number, so that half the room meets it first and half meets it second.</p>
+    <p class="aside"><strong>The agent sits between the locked position and the first card, and that placement is load-bearing.</strong> What is measured is which sources a student opens, so the agent has to speak while that choice is still ahead of them. Placed after the menu it could not move the measurement at all.</p>
+  </section>
+
+  <section id="contracts">
+    <h2 class="bds-part">5 &middot; Contracts</h2>
+    <h3>The card record</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th>Shape</th><th>Seen before opening</th></tr></thead>
+      <tbody>
+        <tr><th><code>id</code></th><td><code>c1-07</code> &mdash; claim, then position in the deck</td><td>no</td></tr>
+        <tr><th><code>title</code></th><td>text</td><td>yes</td></tr>
+        <tr><th><code>outlet</code></th><td>text &mdash; journal, magazine, company</td><td>yes</td></tr>
+        <tr><th><code>year</code></th><td>4 digits</td><td>yes</td></tr>
+        <tr><th><code>teaser</code></th><td>&le; 25 words</td><td>yes</td></tr>
+        <tr><th><code>extract</code></th><td>&le; 150 words, quoted from the source</td><td>no</td></tr>
+        <tr><th><code>href</code></th><td>absolute URL to the real document</td><td>no</td></tr>
+      </tbody>
+    </table></div>
+    <h3>The result line</h3>
+    <pre class="tree">v1|kite|t3
+|r1:ask:c1:op8:cong4:sopp3:s188:moved1:tlx47:q11
+|r2:none:c2:op8:cong6:sopp1:s142:moved0:tlx38:q9</pre>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Token</th><th>Means</th></tr></thead>
+      <tbody>
+        <tr><th><code>v1</code></th><td>Line format version. A lecturer view that meets <code>v2</code> says so rather than guessing.</td></tr>
+        <tr><th><code>kite</code></th><td>The student&rsquo;s own code. Never a name.</td></tr>
+        <tr><th><code>t3</code></th><td>Team, 1&ndash;8.</td></tr>
+        <tr><th><code>r1:ask:c1</code></th><td>Round 1, agent present, claim 1. <code>none</code> where it was absent.</td></tr>
+        <tr><th><code>op8</code> <code>cong6</code> <code>sopp1</code></th><td>Opened 8; 6 of them congenial; 1 was a strong opposing card.</td></tr>
+        <tr><th><code>s188</code></th><td>Seconds spent in that round&rsquo;s menu.</td></tr>
+        <tr><th><code>moved1</code></th><td>That round&rsquo;s final position sentence differs from its locked one.</td></tr>
+        <tr><th><code>tlx47</code> <code>q11</code></th><td>That round&rsquo;s workload total (0&ndash;100) and its two perception items summed (2&ndash;14). <strong>Per round, because a single score at the finish belongs to no condition.</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p class="aside">The line is deliberately readable. A student who wants to know what they are handing over can read it, which is what makes consent to hand it over meaningful.</p>
+  </section>
+
+  <section id="rules">
+    <h2 class="bds-part">6 &middot; Rules</h2>
+    <p>Obligation is the product&rsquo;s obligation, not the order of work. Every criterion carries a number and a unit; every rule names how it is shown to hold. <strong>One rule, one obligation, one way to fail</strong> &mdash; a rule that could fail for two unrelated reasons has been split rather than reworded, and new rules are appended to their group so that an identifier never changes meaning.</p>
+
+    <h3>SM &mdash; the source menu</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="sm-1"><strong>SM-1</strong></td><td>A round shall present 16 cards.</td><td>Must</td><td>Exactly 16 distinct cards, 0 repeats.</td><td>Test</td></tr>
+        <tr><td id="sm-2"><strong>SM-2</strong></td><td>Card order shall be shuffled for each session.</td><td>Must</td><td>Across 20 fresh sessions, &ge; 19 distinct orders.</td><td>Test</td></tr>
+        <tr><td id="sm-3"><strong>SM-3</strong></td><td>A student shall open at most 8 cards in a round.</td><td>Must</td><td>The 9th open is refused in 100 of 100 attempts.</td><td>Test</td></tr>
+        <tr><td id="sm-4"><strong>SM-4</strong></td><td>A card that has been passed over shall not become reachable again.</td><td>Must</td><td>0 navigation paths return to a passed card.</td><td>Test</td></tr>
+        <tr><td id="sm-5"><strong>SM-5</strong></td><td>An unopened card shall show title, outlet, year and a teaser.</td><td>Must</td><td>4 fields present.</td><td>Inspection</td></tr>
+        <tr><td id="sm-6"><strong>SM-6</strong></td><td>A deck shall hold 4 cards in each of the 4 stance&times;quality cells.</td><td>Must</td><td>4 per cell &times; 4 cells = 16, checked against the codebook.</td><td>Test</td></tr>
+        <tr><td id="sm-7"><strong>SM-7</strong></td><td>An opened card should show an extract quoted from the source.</td><td>Should</td><td>Extract &le; 150 words, found verbatim in the source.</td><td>Inspection</td></tr>
+        <tr><td id="sm-8"><strong>SM-8</strong></td><td>The published page shall not contain the stance or quality label of any card.</td><td>Must</td><td>0 occurrences of the label vocabulary in the shipped file.</td><td>Test</td></tr>
+        <tr><td id="sm-9"><strong>SM-9</strong></td><td>The order in which cards were shown shall be recorded.</td><td>Must</td><td>The shown order appears in stored state in 20 of 20 sessions.</td><td>Test</td></tr>
+        <tr><td id="sm-10"><strong>SM-10</strong></td><td>A teaser shall be short enough to read at a glance.</td><td>Must</td><td>&le; 25 words, all 32 cards.</td><td>Inspection</td></tr>
+        <tr><td id="sm-11"><strong>SM-11</strong></td><td>An opened card should offer a link to the original document.</td><td>Should</td><td>1 link, resolving, all 32 cards.</td><td>Test</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>CL &mdash; the claims</h3>
+    <p>A deck is only as good as the claim it is built around, and a claim that fails these cannot be rescued by better cards.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="cl-1"><strong>CL-1</strong></td><td>A claim shall divide opinion before anyone reads about it.</td><td>Must</td><td>In a pilot of &ge; 10 people, neither side takes more than 70%.</td><td>Demonstration</td></tr>
+        <tr><td id="cl-2"><strong>CL-2</strong></td><td>A claim shall have strong published evidence on both sides.</td><td>Must</td><td>4 strong sources supporting and 4 opposing, found without relaxing the quality rule.</td><td>Inspection</td></tr>
+        <tr><td id="cl-3"><strong>CL-3</strong></td><td>A claim shall have advocates on both sides who are selling something.</td><td>Must</td><td>4 weak sources supporting and 4 opposing.</td><td>Inspection</td></tr>
+        <tr><td id="cl-4"><strong>CL-4</strong></td><td>A claim should name two alternatives rather than propose one course of action.</td><td>Should</td><td>2 named alternatives in the claim sentence.</td><td>Inspection</td></tr>
+        <tr><td id="cl-5"><strong>CL-5</strong></td><td>A claim shall turn on a single axis.</td><td>Must</td><td>2 independent coders assign the same stance to &ge; 15 of 16 cards.</td><td>Test</td></tr>
+        <tr><td id="cl-6"><strong>CL-6</strong></td><td>The two claims shall not share subject matter.</td><td>Must</td><td>0 sources appear in both decks.</td><td>Inspection</td></tr>
+        <tr><td id="cl-7"><strong>CL-7</strong></td><td>The two claims should divide opinion to a similar degree.</td><td>Should</td><td>Pilot splits within 15 percentage points of each other.</td><td>Demonstration</td></tr>
+        <tr><td id="cl-8"><strong>CL-8</strong></td><td>Neither claim shall be a team&rsquo;s own handbook topic.</td><td>Must</td><td>0 of 8 teams.</td><td>Inspection</td></tr>
+        <tr><td id="cl-9"><strong>CL-9</strong></td><td>A claim should be answerable from professional judgement rather than personal values.</td><td>Should</td><td>2 owners classify it independently; 2 of 2 agree it is professional.</td><td>Inspection</td></tr>
+        <tr><td id="cl-10"><strong>CL-10</strong></td><td>A claim should be answerable without specialist knowledge.</td><td>Should</td><td>In the pilot, &ge; 9 of 10 commit to a side within 60 seconds.</td><td>Demonstration</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>MS &mdash; what is measured</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="ms-1"><strong>MS-1</strong></td><td>The congeniality index shall be (congenial &minus; uncongenial) &divide; opened.</td><td>Must</td><td>Matches a hand-computed value on 10 fixture sessions to 3 decimal places.</td><td>Test</td></tr>
+        <tr><td id="ms-2"><strong>MS-2</strong></td><td>The count of opened strong-opposing cards shall be recorded.</td><td>Must</td><td>Integer 0&ndash;4, correct on 10 fixture sessions.</td><td>Test</td></tr>
+        <tr><td id="ms-3"><strong>MS-3</strong></td><td>The number of cards opened before committing should be recorded.</td><td>Should</td><td>Integer 0&ndash;8, correct on 10 fixtures.</td><td>Test</td></tr>
+        <tr><td id="ms-4"><strong>MS-4</strong></td><td>Whether the final position differs from the locked one should be recorded for each round.</td><td>Should</td><td>2 booleans per session, correct on 10 fixtures.</td><td>Test</td></tr>
+        <tr><td id="ms-5"><strong>MS-5</strong></td><td>Time on each card could be recorded.</td><td>Could</td><td>Milliseconds per card, &plusmn; 100 ms of wall clock.</td><td>Test</td></tr>
+        <tr><td id="ms-6"><strong>MS-6</strong></td><td>Closing questions should be asked once per round.</td><td>Should</td><td>6 workload items + 2 perception items, 7-point, asked 2 times per session.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>AG &mdash; the agent step</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="ag-1"><strong>AG-1</strong></td><td>The tool shall issue no network request after the page has loaded.</td><td>Must</td><td>0 requests observed across 1 complete two-round session.</td><td>Test</td></tr>
+        <tr><td id="ag-2"><strong>AG-2</strong></td><td>The supplied prompt shall request questions about the locked position.</td><td>Must</td><td>&ge; 3 questions requested.</td><td>Inspection</td></tr>
+        <tr><td id="ag-3"><strong>AG-3</strong></td><td>The agent round should require the assistant&rsquo;s reply to be pasted before continuing.</td><td>Should</td><td>0 ways past an empty box.</td><td>Test</td></tr>
+        <tr><td id="ag-4"><strong>AG-4</strong></td><td>The supplied prompt shall state no view on the student&rsquo;s position.</td><td>Must</td><td>0 phrases from the verdict list.</td><td>Inspection</td></tr>
+        <tr><td id="ag-5"><strong>AG-5</strong></td><td>The supplied prompt should describe the position in the third person.</td><td>Should</td><td>0 first-person possessives attached to the position; questions requested in the second person.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>DA &mdash; data and the participant</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="da-1"><strong>DA-1</strong></td><td>All state shall live in 1 <code>localStorage</code> key.</td><td>Must</td><td>1 key written; 0 cookies; 0 other storage.</td><td>Test</td></tr>
+        <tr><td id="da-2"><strong>DA-2</strong></td><td>A consent screen shall precede the first question.</td><td>Must</td><td>Consent is the 1st screen; 0 questions asked before it.</td><td>Inspection</td></tr>
+        <tr><td id="da-3"><strong>DA-3</strong></td><td>The result line shall carry no name.</td><td>Must</td><td>0 free-text identity fields; 1 self-chosen code.</td><td>Inspection</td></tr>
+        <tr><td id="da-4"><strong>DA-4</strong></td><td>A student should be able to erase everything in 1 action.</td><td>Should</td><td>1 control removes the key; 0 residue.</td><td>Test</td></tr>
+        <tr><td id="da-5"><strong>DA-5</strong></td><td>The consent screen shall state where what the student types is stored.</td><td>Must</td><td>Statement present, &le; 60 words.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>AN &mdash; the lecturer view</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="an-1"><strong>AN-1</strong></td><td>Pasted result lines shall be parsed.</td><td>Must</td><td>32 well-formed lines &rarr; 32 accepted.</td><td>Test</td></tr>
+        <tr><td id="an-2"><strong>AN-2</strong></td><td>The paired difference and its 95% interval shall be computed.</td><td>Must</td><td>Matches a reference implementation on 5 fixture datasets to 3 decimal places.</td><td>Test</td></tr>
+        <tr><td id="an-3"><strong>AN-3</strong></td><td>The results screen shall display no sentence that states a finding.</td><td>Must</td><td>0 concluding sentences; &ge; 1 question put to the reader.</td><td>Inspection</td></tr>
+        <tr><td id="an-4"><strong>AN-4</strong></td><td>The smallest detectable effect for the n entered should be shown.</td><td>Should</td><td>Computed at 80% power, &alpha; = .05, two-tailed; within 0.02 of a reference value.</td><td>Analysis</td></tr>
+        <tr><td id="an-5"><strong>AN-5</strong></td><td>Cohen&rsquo;s kappa for 2 coders should be computed from a 2&times;2 they enter.</td><td>Should</td><td>Matches a hand-computed kappa on 4 fixture matrices to 3 decimal places.</td><td>Test</td></tr>
+        <tr><td id="an-7"><strong>AN-7</strong></td><td>The kappa display shall show the 2&times;2 and the chance-agreement figure beside the result.</td><td>Should</td><td>4 cell counts, 1 observed-agreement figure and 1 chance-agreement figure shown with every kappa.</td><td>Inspection</td></tr>
+        <tr><td id="an-6"><strong>AN-6</strong></td><td>A line that cannot be parsed shall be listed back to the reader.</td><td>Must</td><td>2 malformed lines &rarr; 2 listed; 0 silent drops.</td><td>Test</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>PR &mdash; presentation</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="pr-1"><strong>PR-1</strong></td><td>The page shall carry the brand token block.</td><td>Must</td><td>Token block byte-identical to the one in <code>index.html</code>.</td><td>Inspection</td></tr>
+        <tr><td id="pr-2"><strong>PR-2</strong></td><td>The page should work at phone width.</td><td>Should</td><td>Usable at 400 px with 0 horizontal scroll.</td><td>Demonstration</td></tr>
+        <tr><td id="pr-3"><strong>PR-3</strong></td><td>Body text shall meet WCAG AA.</td><td>Must</td><td>Contrast &ge; 4.5:1 throughout; 0 instances of <code>--text-muted</code> on <code>--bg-cream</code>.</td><td>Analysis</td></tr>
+        <tr><td id="pr-4"><strong>PR-4</strong></td><td>Every control should be reachable by keyboard.</td><td>Should</td><td>0 keyboard traps; all controls in tab order.</td><td>Demonstration</td></tr>
+        <tr><td id="pr-5"><strong>PR-5</strong></td><td>The page shall carry the sticky navigation bar.</td><td>Must</td><td>1 <code>bds-nav</code>, matching <code>index.html</code>.</td><td>Inspection</td></tr>
+        <tr><td id="pr-6"><strong>PR-6</strong></td><td>The page shall carry the footer credit line.</td><td>Must</td><td>1 <code>bds-footer</code> containing 1 <code>bds-credit</code> pointing at the colophon.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="enforced">
+    <h2 class="bds-part">7 &middot; What the wiring enforces</h2>
+    <p>Three properties hold because of how the parts are arranged, not because anyone remembers them.</p>
+    <ul>
+      <li><strong>Nothing can leak.</strong> The tool makes no request, so there is no path by which a student&rsquo;s typing reaches anyone. Withdrawal is closing a tab.</li>
+      <li><strong>The experiment cannot be read in advance.</strong> The stance and quality labels are not in the file that ships, so a student who opens the source sees sixteen cards and no answer key.</li>
+      <li><strong>The tool cannot conclude.</strong> It holds no sentence that states a finding, so the conclusion has to be written by a person.</li>
+    </ul>
+  </section>
+
+  <section id="trace">
+    <h2 class="bds-part">8 &middot; Trace to the goal</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Part of the goal</th><th>Rules that carry it</th></tr></thead>
+      <tbody>
+        <tr><td>32 students, two rounds, end to end</td><td>SM-1, SM-3, SM-6, AG-3</td></tr>
+        <tr><td>Inside a 150-minute block</td><td>SM-7, MS-6</td></tr>
+        <tr><td>On the students&rsquo; own laptops</td><td>DA-1, PR-2, PR-4</td></tr>
+        <tr><td>Every choice and its shown order recorded</td><td>SM-2, SM-9, MS-1, MS-2, MS-3, MS-4, MS-5</td></tr>
+        <tr><td>No request leaving the browser</td><td>AG-1, DA-1, DA-3, DA-4</td></tr>
+        <tr><td>32 lines to one comparison in under 10 minutes</td><td>AN-1, AN-2, AN-4, AN-6</td></tr>
+        <tr><td>&mdash; and the comparison means something</td><td>CL-1, CL-5, CL-6, CL-7, CL-8, CL-10</td></tr>
+        <tr><td>&mdash; and the deck can be built honestly</td><td>CL-2, CL-3, CL-4, CL-9, SM-6</td></tr>
+        <tr><td>&mdash; and the conclusion stays with the student</td><td>AN-3, AG-2, AG-4, AG-5</td></tr>
+        <tr><td>The room can audit the instrument</td><td>AN-5, AN-7</td></tr>
+        <tr><td>Readable, accessible, on-brand</td><td>PR-1, PR-3, PR-5, PR-6, SM-5, SM-10, SM-11, DA-2, DA-5, SM-8</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="exclusions">
+    <h2 class="bds-part">9 &middot; Deliberate exclusions</h2>
+    <p>Not &ldquo;not yet&rdquo; &mdash; never, unless this document changes.</p>
+    <ul>
+      <li><strong>Calling a model.</strong> The agent runs in the student&rsquo;s own assistant.</li>
+      <li><strong>Writing the conclusion.</strong> Stating a finding would put the verdict-giving behaviour the experiment is testing inside the instrument that measures it.</li>
+      <li><strong>Scoring a student.</strong> ADR-0011 keeps the week&rsquo;s gates unscored, and this is not a way round that.</li>
+      <li><strong>A server, an account, or sync between devices.</strong></li>
+      <li><strong>Retaining data after the session.</strong></li>
+      <li><strong>A general survey builder.</strong> Two claims, sixteen cards each.</li>
+    </ul>
+  </section>
+
+  <section id="open">
+    <h2 class="bds-part">10 &middot; Open questions</h2>
+    <ul>
+      <li><strong>Where the codebook lives at analysis time.</strong> SM-8 keeps the labels out of the page; the lecturer view therefore needs them pasted, held in a separate file, or applied afterwards in a spreadsheet. <em>Owner: the module owners.</em></li>
+      <li><strong>The floor on opens.</strong> A student who passes over nine cards reaches the end with budget unspent. Whether an index computed over three opens is comparable with one over eight is unresolved. <em>Owner: the AIBS owner.</em></li>
+      <li><strong>Both claims are unchosen.</strong> The CL rules say what they must satisfy; finding two that do is the open work. <em>Owner: the AIBS owner.</em></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
