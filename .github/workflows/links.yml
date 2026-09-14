@@ -11,6 +11,13 @@ name: Check links
 # change to README.md, CLAUDE.md or work/ is checked at all — those paths do not
 # trigger pages.yml, and they should not: editing a README must never publish
 # the handbook.
+#
+# The pull_request trigger is deliberately unfiltered while the push trigger
+# keeps its paths. The branch ruleset on main requires this job, and a required
+# check that never starts leaves a pull request waiting forever — a site/-only
+# change would have been unmergeable. Running the script on every pull request
+# costs seconds and makes the gate real; the script checks the whole repo
+# anyway, so there is nothing it would have skipped.
 
 on:
   push:
@@ -22,12 +29,6 @@ on:
       - '.github/scripts/check-links.sh'
       - '.github/workflows/links.yml'
   pull_request:
-    paths:
-      - 'README.md'
-      - 'CLAUDE.md'
-      - 'work/**'
-      - '.github/scripts/check-links.sh'
-      - '.github/workflows/links.yml'
   workflow_dispatch:
 
 permissions:

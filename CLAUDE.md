@@ -79,13 +79,36 @@ further workflows check things that are never published and therefore never depl
 | Push to `main` touching `site/` | Link check → deploy |
 | PR touching `site/` | Link check → downloadable `site-preview` artifact, no deploy |
 | Push or PR touching `work/decisions/` | ADR check — [`decisions.yml`](.github/workflows/decisions.yml) — plus the doc link check. Never deploys |
-| Push or PR touching `README.md`, `CLAUDE.md` or `work/` | Link check — [`links.yml`](.github/workflows/links.yml). Never deploys |
-| Anything else | No run at all |
+| Push to `main` touching `README.md`, `CLAUDE.md` or `work/` | Link check — [`links.yml`](.github/workflows/links.yml). Never deploys |
+| **Any pull request** | Link check, unfiltered. The ruleset on `main` requires it, and a required check that never starts leaves a PR unmergeable forever |
+| Any other push | No run at all |
 
 Pages is configured with `build_type: workflow`, not deploy-from-branch. Do not switch it back:
 the legacy branch build serves the repo root, which no longer holds `index.html`, so it would
 404 every handbook URL. `actions/configure-pages` does **not** set this by itself when Pages is
 already enabled — it was set once via `gh api -X PUT repos/datadrivendecisions/ai-in-business/pages -f build_type=workflow`.
+
+## Working with two people
+
+Witek (`witusj`) and Meike (`meikenb`) both write here. Which one you are talking to shows in
+`git config user.email`. Meike has not worked with git before — her session does the git work,
+she judges the course material. Do not expect her to interpret a message from git: explain what
+it says, or stop.
+
+[`SAMENWERKEN.md`](SAMENWERKEN.md) is the same agreement written for a human, in Dutch. Change
+anything here and change that file too.
+
+- **Start every session with `git fetch` and `git status`.** Work built on a stale `main`
+  collides later.
+- **Never commit on `main`.** Branch, then open a pull request. A ruleset on `main` rejects a
+  direct push, and no admin bypasses it — that is deliberate, so do not reach for `--no-verify`
+  or an API call to get around it.
+- **Say at the end of every turn whether work is uncommitted or unpushed.** With two people,
+  invisible work is a hazard: the other one builds on something they cannot see.
+- **A merge conflict is not hers to resolve.** In Meike's session, stop, name the files that
+  clash, and point her at Witek.
+- **Merging is allowed without the other's approval**, but only once the link check is green.
+  A red check means a broken link would have shipped to a public site.
 
 ## Content architecture
 
