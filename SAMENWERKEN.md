@@ -56,7 +56,8 @@ iedereen ze gewoon lezen. Wat echt niet openbaar mag, hoort hier helemaal niet.
 
 | Wat je ziet | Wat het betekent | Wat je doet |
 |---|---|---|
-| De push wordt geweigerd, met iets over „protected branch" | Je stond nog op `main` | Maak een tak en push opnieuw. Je werk is niet weg. |
+| `GH013: Repository rule violations found` en „Changes must be made through a pull request" | Je stond nog op `main` | Maak een tak en push opnieuw. Je werk is niet weg. |
+| „Required status check … is expected" in diezelfde melding | Hetzelfde: zonder pull request draait die controle nooit | Idem — een tak en een pull request, dan draait hij vanzelf |
 | Rood kruisje op je pull request | Er is een link kapot | Klik op het kruisje; er staat welke. Repareer hem en push opnieuw. |
 | VSCode meldt „merge conflict" | Jullie zaten in hetzelfde bestand | Stop, en laat het Witek weten. Niet zelf uitproberen. |
 | `<<<<<<<` en `>>>>>>>` in een bestand | Hetzelfde, maar dan al in het bestand | Sla niets op, en stuur een berichtje. |
