@@ -31,6 +31,11 @@ stops changing — you supersede it rather than edit it, and
    and attaches a downloadable preview of the site.
 4. Merge to `main` → it deploys.
 
+A PR is not optional: a ruleset on `main` rejects a direct push, and the link check
+must be green before the merge button works. Neither of those needs the other person's
+approval — you merge your own PR once it is green.
+[`SAMENWERKEN.md`](../SAMENWERKEN.md) walks through the same steps in Dutch, in VSCode.
+
 Step 3 is the staging gate: if a page in `site/` still links to something left
 behind here, the build fails rather than shipping a dead link.
 
