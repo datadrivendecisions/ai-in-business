@@ -105,10 +105,19 @@ anything here and change that file too.
   or an API call to get around it.
 - **Say at the end of every turn whether work is uncommitted or unpushed.** With two people,
   invisible work is a hazard: the other one builds on something they cannot see.
-- **A merge conflict is not hers to resolve.** In Meike's session, stop, name the files that
-  clash, and point her at Witek.
+- **Resolve merge conflicts; do not hand them back.** The two of them write the same documents
+  every week, so conflicts are routine rather than a sign of trouble. In Meike's session, do the
+  mechanics yourself and put the editorial choice to her in plain Dutch — quote both versions of
+  the passage and ask which one stays, or whether they belong one after the other. That split is
+  the point: she can judge the sentence and not the markers, and you are the other way round.
+  Escalate to Witek only for a clash she cannot weigh — contradicting tables, anything under
+  `.github/`.
 - **Merging is allowed without the other's approval**, but only once the link check is green.
   A red check means a broken link would have shipped to a public site.
+- **Keep the branch short and pull `main` into it while it is open.** Conflict size grows with
+  how long a branch stands apart, not with how much work is in it. The repository has
+  *Update branch* and auto-merge enabled for the same reason; use them rather than saving
+  everything for one merge at the end of the week.
 
 ## Content architecture
 

@@ -59,18 +59,40 @@ iedereen ze gewoon lezen. Wat echt niet openbaar mag, hoort hier helemaal niet.
 | `GH013: Repository rule violations found` en „Changes must be made through a pull request" | Je stond nog op `main` | Maak een tak en push opnieuw. Je werk is niet weg. |
 | „Required status check … is expected" in diezelfde melding | Hetzelfde: zonder pull request draait die controle nooit | Idem — een tak en een pull request, dan draait hij vanzelf |
 | Rood kruisje op je pull request | Er is een link kapot | Klik op het kruisje; er staat welke. Repareer hem en push opnieuw. |
-| VSCode meldt „merge conflict" | Jullie zaten in hetzelfde bestand | Stop, en laat het Witek weten. Niet zelf uitproberen. |
-| `<<<<<<<` en `>>>>>>>` in een bestand | Hetzelfde, maar dan al in het bestand | Sla niets op, en stuur een berichtje. |
+| VSCode meldt „merge conflict" | Jullie hebben allebei dezelfde plek aangepast | Zeg tegen Claude: *„los dit conflict op en laat me kiezen"*. Zie hieronder. |
+| `<<<<<<<` en `>>>>>>>` in een bestand | Hetzelfde, maar dan al zichtbaar in de tekst | Niets weghalen. Zelfde zin tegen Claude; die ruimt de tekens op. |
 
 Bij twijfel: niets forceren. Er gaat in git bijna nooit iets echt verloren, behalve als
 iemand met veel overtuiging iets forceert.
 
-## Uit elkaar blijven
+## Tegelijk in hetzelfde document
 
-Het conflictrisico is hier klein, want elke week heeft zijn eigen bestand
-(`site/week-01.html`, `site/week-02.html`, …). Spreek af wie welke week doet, dan komen
-jullie elkaar bijna nooit tegen. Twee pagina's deelt iedereen: `site/index.html` en `CLAUDE.md`.
-Meld het even voordat je daarin gaat zitten.
+Jullie werken elke week aan dezelfde documenten. Conflicten hóren daarbij; ze betekenen
+niet dat er iets stuk is. Ze betekenen dat jullie allebei dezelfde alinea hebben aangeraakt
+en dat git niet kan weten wie gelijk heeft.
 
-En houd een tak kort. Liefst dezelfde dag samengevoegd. Hoe langer je tak los staat, hoe
-verder de cursus onder je vandaan schuift.
+**De techniek is niet aan jou; de inhoudelijke keuze wel.** Zeg tegen Claude Code:
+*„los dit conflict op en laat me kiezen"*. Je krijgt dan een vraag terug, geen git:
+
+> Op deze plek staan twee versies van dezelfde zin.
+> Witek schreef: „…"
+> Jij schreef: „…"
+> Welke houden we — of zetten we ze achter elkaar?
+
+Die vraag kun jij beantwoorden en Claude niet; met de tekens en de commit eromheen is het
+andersom. Soms kun je niet overzien wat goed is: twee tabellen die elkaar tegenspreken,
+of iets in `.github/`. Stuur dat door naar Witek.
+
+## Wat conflicten klein houdt
+
+Afspreken wie welk bestand bezit heeft hier geen zin; jullie zitten overal samen aan. Wat
+wel helpt is de tijd verkorten dat jullie tegelijk in dezelfde tekst zitten.
+
+- **Zeg even waar je bezig bent** voordat je begint. Eén berichtje.
+- **Houd een tak kort.** Liefst samengevoegd in dezelfde zitting. De kans op een conflict
+  groeit met de tijd dat je tak los staat, niet met de hoeveelheid werk erin.
+- **Gebruik de knop „Update branch"** op je pull request zodra hij verschijnt. Die haalt het
+  werk van de ander in jouw tak. Zo krijg je drie kleine conflicten verspreid over de week
+  in plaats van één grote op vrijdag.
+- **Zet „Auto-merge" aan** als je klaar bent maar de controle nog draait. Dan gaat hij vanzelf
+  samen zodra het vinkje groen is, en staat je werk niet onnodig open.
