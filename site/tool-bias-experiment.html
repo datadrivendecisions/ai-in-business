@@ -581,10 +581,17 @@ var CLAIM2 = "An SME's first AI project should make its existing staff faster ra
 
    Every extract is checked back against the AI Wiki's own capture of the
    source by check-deck.py in project-documentation/build/, which fails
-   if a quotation cannot be found. Cards are ordered by a hash of their
-   source, so the order here reveals nothing about the cells: the
-   codebook that maps a card id to its cell lives in work/drafts/ and is
-   deliberately not in this repository's published directory.
+   if a quotation cannot be found.
+
+   The order of the cards is built in two steps. A hash of each source
+   decides which card comes first out of each cell, so the ordering is
+   unrelated to the coding; the walk through them then never takes two
+   cards from the same cell in a row. The second step is there because
+   the first, left alone, happened to put all four of one cell's cards
+   next to each other -- an ordering can be independent of the cells and
+   still cluster them, and a cluster is a pattern a reader of this file
+   could work with. The codebook that maps a card id to its cell lives
+   in work/drafts/ and is deliberately not in the published directory.
 
    DECK2 is data only until phase 3 builds the second-round screen. */
 var DECK1 = [
@@ -598,22 +605,6 @@ var DECK1 = [
   },
   {
     id: "c1-02",
-    title: "How Well Can AI Do Strategy? Empirical Benchmarking Using Strategy Simulations",
-    ref: "Allen, R. T., & McDonald, R. M. (2026). How well can AI do strategy? Empirical benchmarking using strategy simulations. Strategy Science, 11(1), 93-117. https://doi.org/10.1287/stsc.2025.0444",
-    teaser: "Twenty-one proprietary and thirteen open-source models were run through the same business-strategy simulation under identical conditions, and scored against past MBA cohorts.",
-    extract: "Finally, to compare proprietary models with open-source alternatives, we also ran the simulation using prominent open-source models, including DeepSeek, Gemma, Qwen, Llama (from Meta), and GPT-OSS. Each run was conducted under the same conditions as the main analyses, with masked terms, default instructions, and Advanced mode. [...] As shown in the figures, open-source models generally exhibited substantially lower performance on the BBB benchmark compared with proprietary systems. Their performance appears less systematically correlated with release date, and although we do not observe the clear decline seen in the latest proprietary models, open-source results seem to have plateaued at a markedly lower level of performance.",
-    href: "https://doi.org/10.1287/stsc.2025.0444"
-  },
-  {
-    id: "c1-03",
-    title: "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs",
-    ref: "Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. In Proceedings of the 34th USENIX Security Symposium (pp. 3687-3706). USENIX Association. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen",
-    teaser: "Sixteen code-generating models were measured for how often they invent software packages that do not exist, across two programming languages.",
-    extract: "Using 16 popular LLMs for code generation and two unique prompt datasets, we generate 576,000 code samples in two programming languages that we analyze for package hallucinations. Our findings reveal that that the average percentage of hallucinated packages is at least 5.2% for commercial models and 21.7% for open-source models, including a staggering 205,474 unique examples of hallucinated package names, further underscoring the severity and pervasiveness of this threat.",
-    href: "https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen"
-  },
-  {
-    id: "c1-04",
     title: "Small Language Models are the Future of Agentic AI",
     ref: "Belcak, P., Heinrich, G., Diao, S., Fu, Y., Dong, X., Muralidharan, S., Lin, Y. C., & Molchanov, P. (2025). Small language models are the future of agentic AI (arXiv:2506.02153). arXiv. https://arxiv.org/abs/2506.02153",
     teaser: "A position paper from a chip maker's research lab arguing that small models, not frontier ones, should run most agent work.",
@@ -621,12 +612,28 @@ var DECK1 = [
     href: "https://arxiv.org/abs/2506.02153"
   },
   {
-    id: "c1-05",
+    id: "c1-03",
+    title: "How Well Can AI Do Strategy? Empirical Benchmarking Using Strategy Simulations",
+    ref: "Allen, R. T., & McDonald, R. M. (2026). How well can AI do strategy? Empirical benchmarking using strategy simulations. Strategy Science, 11(1), 93-117. https://doi.org/10.1287/stsc.2025.0444",
+    teaser: "Twenty-one proprietary and thirteen open-source models were run through the same business-strategy simulation under identical conditions, and scored against past MBA cohorts.",
+    extract: "Finally, to compare proprietary models with open-source alternatives, we also ran the simulation using prominent open-source models, including DeepSeek, Gemma, Qwen, Llama (from Meta), and GPT-OSS. Each run was conducted under the same conditions as the main analyses, with masked terms, default instructions, and Advanced mode. [...] As shown in the figures, open-source models generally exhibited substantially lower performance on the BBB benchmark compared with proprietary systems. Their performance appears less systematically correlated with release date, and although we do not observe the clear decline seen in the latest proprietary models, open-source results seem to have plateaued at a markedly lower level of performance.",
+    href: "https://doi.org/10.1287/stsc.2025.0444"
+  },
+  {
+    id: "c1-04",
     title: "How Companies Are Building Their Own Intelligence",
     ref: "Sequoia Capital. (2026, August 11). How companies are building their own intelligence | Sonya Huang, Sequoia Capital [Video]. YouTube. https://www.youtube.com/watch?v=bMMv0bZzONg",
     teaser: "An investor's keynote to her own portfolio, opening an event about owning your models rather than renting them.",
     extract: "I hereby present the AI version of this meme. Not your weights, not your product. Um, I think that for a product to be truly yours, I think it's reasonable to think that you need to be able to control control and custody your own weights.",
     href: "https://www.youtube.com/watch?v=bMMv0bZzONg"
+  },
+  {
+    id: "c1-05",
+    title: "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs",
+    ref: "Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. In Proceedings of the 34th USENIX Security Symposium (pp. 3687-3706). USENIX Association. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen",
+    teaser: "Sixteen code-generating models were measured for how often they invent software packages that do not exist, across two programming languages.",
+    extract: "Using 16 popular LLMs for code generation and two unique prompt datasets, we generate 576,000 code samples in two programming languages that we analyze for package hallucinations. Our findings reveal that that the average percentage of hallucinated packages is at least 5.2% for commercial models and 21.7% for open-source models, including a staggering 205,474 unique examples of hallucinated package names, further underscoring the severity and pervasiveness of this threat.",
+    href: "https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen"
   },
   {
     id: "c1-06",
@@ -662,30 +669,6 @@ var DECK1 = [
   },
   {
     id: "c1-10",
-    title: "A Leader's Guide to Advanced Team Structures in an Agentic World",
-    ref: "AWS Events. (2026, June 12). A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=O7u6myBRsns",
-    teaser: "A cloud vendor's executive-forum talk setting out the cost curves for building a model against renting one.",
-    extract: "But when you b weigh the benefits of operating a small language model against the cost of building one, the economics paint the different picture. Training costs are rising 2.4x per year. At the same time, inference costs are falling 10x per year. The gap between those two curves, the pricing scissors is opening by 12 to 24x per year. What does that mean practically? It means that the cost to create a frontier model is now approaching the billions. Only a handful of companies can afford it, but the cost to use one is collapsing towards zero.",
-    href: "https://www.youtube.com/watch?v=O7u6myBRsns"
-  },
-  {
-    id: "c1-11",
-    title: "Agent Harnesses Explained: Inside the Stack Behind Antigravity, Claude Code and Cursor",
-    ref: "Google Cloud Tech. (2026, September 14). Agent harnesses explained: Inside the stack behind Antigravity, Claude Code & Cursor [Video]. In The Agent Factory. YouTube. https://www.youtube.com/watch?v=F8EZJAm9iO8",
-    teaser: "A cloud vendor's series recommending which model tier to run an agent loop on, with no measurements attached.",
-    extract: "And my daily driver this week has been Gemini 3.8 Flash. Now your initial reaction might be why Flash. [...] Agents don't work like traditional single turn prompt boxes. They run in continuous loops, so an agent might inspect a directory, update a function, execute unit tests, and then repeat that sequence 20, 40, or even 60 times just to finish one task. [...] So a fast, cost effective model isn't a downgrade. It is the exact thing that makes real time agentic loops practical and responsive.",
-    href: "https://www.youtube.com/watch?v=F8EZJAm9iO8"
-  },
-  {
-    id: "c1-12",
-    title: "Amazon CEO Andy Jassy on Agility, AI Strategy, and the Changing Role of Managers",
-    ref: "Harvard Business Review. (2025, May 6). Amazon CEO Andy Jassy on agility, AI strategy, and the changing role of managers [Video]. YouTube. https://www.youtube.com/watch?v=Nl-PpoKtxc4",
-    teaser: "The chief executive of the company that sells the middle layer he describes, on how firms should assemble AI.",
-    extract: "At that middle layer is for people that don't want to have to build their own models. They want to leverage an existing frontier model. They want to customize it with their own data. And then they actually want lots of features that make it easier to build a high-quality generative AI application.",
-    href: "https://www.youtube.com/watch?v=Nl-PpoKtxc4"
-  },
-  {
-    id: "c1-13",
     title: "Hugging Face's CEO on Why Companies Are Done Renting Their AI",
     ref: "TechCrunch. (2026, July 10). Hugging Face's CEO on why companies are done renting their AI [Audio podcast episode]. In Equity. https://www.youtube.com/watch?v=MqdEHMJFlSI",
     teaser: "The chief executive of a company selling open-model infrastructure, interviewed about why firms are moving away from rented models.",
@@ -693,7 +676,15 @@ var DECK1 = [
     href: "https://www.youtube.com/watch?v=MqdEHMJFlSI"
   },
   {
-    id: "c1-14",
+    id: "c1-11",
+    title: "A Leader's Guide to Advanced Team Structures in an Agentic World",
+    ref: "AWS Events. (2026, June 12). A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=O7u6myBRsns",
+    teaser: "A cloud vendor's executive-forum talk setting out the cost curves for building a model against renting one.",
+    extract: "But when you b weigh the benefits of operating a small language model against the cost of building one, the economics paint the different picture. Training costs are rising 2.4x per year. At the same time, inference costs are falling 10x per year. The gap between those two curves, the pricing scissors is opening by 12 to 24x per year. What does that mean practically? It means that the cost to create a frontier model is now approaching the billions. Only a handful of companies can afford it, but the cost to use one is collapsing towards zero.",
+    href: "https://www.youtube.com/watch?v=O7u6myBRsns"
+  },
+  {
+    id: "c1-12",
     title: "The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models",
     ref: "Patil, S. G., Mao, H., Yan, F., Ji, C. C.-J., Suresh, V., Stoica, I., & Gonzalez, J. E. (2025). The Berkeley Function Calling Leaderboard (BFCL): From tool use to agentic evaluation of large language models. Proceedings of Machine Learning Research, 267, 48371-48392. https://proceedings.mlr.press/v267/patil25a.html",
     teaser: "A benchmark that re-tested open models on 2,251 real function-calling tasks drawn from over 67,000 community submissions, to see which scores survive novel queries.",
@@ -701,12 +692,28 @@ var DECK1 = [
     href: "https://proceedings.mlr.press/v267/patil25a.html"
   },
   {
-    id: "c1-15",
+    id: "c1-13",
+    title: "Agent Harnesses Explained: Inside the Stack Behind Antigravity, Claude Code and Cursor",
+    ref: "Google Cloud Tech. (2026, September 14). Agent harnesses explained: Inside the stack behind Antigravity, Claude Code & Cursor [Video]. In The Agent Factory. YouTube. https://www.youtube.com/watch?v=F8EZJAm9iO8",
+    teaser: "A cloud vendor's series recommending which model tier to run an agent loop on, with no measurements attached.",
+    extract: "And my daily driver this week has been Gemini 3.8 Flash. Now your initial reaction might be why Flash. [...] Agents don't work like traditional single turn prompt boxes. They run in continuous loops, so an agent might inspect a directory, update a function, execute unit tests, and then repeat that sequence 20, 40, or even 60 times just to finish one task. [...] So a fast, cost effective model isn't a downgrade. It is the exact thing that makes real time agentic loops practical and responsive.",
+    href: "https://www.youtube.com/watch?v=F8EZJAm9iO8"
+  },
+  {
+    id: "c1-14",
     title: "Why The Harness Matters More Than The Model (YC Paper Club)",
     ref: "Y Combinator. (2026, September 7). Why the harness matters more than the model | YC Paper Club [Video]. YouTube. https://www.youtube.com/watch?v=n9xKblqyQ28",
     teaser: "A conference talk presenting a Stanford project that optimises a local model once using a cloud model, then runs it locally.",
     extract: "The local LLMs are finally good enough to actually run a lot of these queries that people care about. And so we see that the current LLMs of today are only 6 to 12 months behind whatever is the state-of-the-art frontier models of before. So you see LLMs today such as Qwen 3.8 27B that achieve roughly the same performance as like Claude 4.6 Opus back in the day. [...] While there remains many tasks for which local-size LLMs are not enough, the gap is surprisingly closing month after month as these LLMs become better distilled, more effective and also we get better accelerators for running them. And so even with LLMs of today, we can get 800x lower cost in terms of actually running them as well as a significant reduction in latency.",
     href: "https://www.youtube.com/watch?v=n9xKblqyQ28"
+  },
+  {
+    id: "c1-15",
+    title: "Amazon CEO Andy Jassy on Agility, AI Strategy, and the Changing Role of Managers",
+    ref: "Harvard Business Review. (2025, May 6). Amazon CEO Andy Jassy on agility, AI strategy, and the changing role of managers [Video]. YouTube. https://www.youtube.com/watch?v=Nl-PpoKtxc4",
+    teaser: "The chief executive of the company that sells the middle layer he describes, on how firms should assemble AI.",
+    extract: "At that middle layer is for people that don't want to have to build their own models. They want to leverage an existing frontier model. They want to customize it with their own data. And then they actually want lots of features that make it easier to build a high-quality generative AI application.",
+    href: "https://www.youtube.com/watch?v=Nl-PpoKtxc4"
   },
   {
     id: "c1-16",
@@ -729,14 +736,6 @@ var DECK2 = [
   },
   {
     id: "c2-02",
-    title: "Hoe AI de sectoren IT en zakelijke dienstverlening verandert",
-    ref: "Van Kampen, M., Koelewijn, R., Groenewegen, J., & Sander, F. J. (2026, June 25). Hoe AI de sectoren IT en zakelijke dienstverlening verandert. RaboResearch. https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert",
-    teaser: "A Dutch bank's sector research estimating how much of the work in IT and business services can be automated at all.",
-    extract: "De potentie is groot en concreet: 86% van de taken in de IT en 64% van de taken in de zakelijke dienstverlening heeft (hoog) automatiseringspotentieel. Vooral taken in de softwareontwikkeling, marketing, boekhouding en administratieve processen lenen zich hiervoor, net als delen van consultancy en juridische analyse.",
-    href: "https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert"
-  },
-  {
-    id: "c2-03",
     title: "How Lyft Uses Claude for Faster, More Human Customer Support",
     ref: "Claude. (2026, February 18). How Lyft uses Claude for faster, more human customer support [Video]. YouTube. https://www.youtube.com/watch?v=sZHGbRYQti4",
     teaser: "A vendor-published customer story about a ride-hailing firm's support queues, chosen by the vendor because it worked.",
@@ -744,20 +743,28 @@ var DECK2 = [
     href: "https://www.youtube.com/watch?v=sZHGbRYQti4"
   },
   {
-    id: "c2-04",
-    title: "Navigating the Jagged Technological Frontier",
-    ref: "Dell'Acqua, F., McFowland, E., III, Mollick, E., Lifshitz, H., Kellogg, K. C., Rajendran, S., Krayer, L., Candelon, F., & Lakhani, K. R. (2026). Navigating the jagged technological frontier: Field experimental evidence of the effects of artificial intelligence on knowledge worker productivity and quality. Organization Science. https://doi.org/10.1287/orsc.2025.21838",
-    teaser: "A field experiment with consultants, comparing a task inside the AI's capabilities against one deliberately placed outside them.",
-    extract: "Significantly improved performance and quality for every model specification, increasing speed by more than 25%, performance by more than 30%, and task completion by more than 12%. However, for a task outside the frontier, subjects using AI were 19 percentage points less likely to produce correct solutions. Although this design highlights a single outside-the-frontier task-an inherent limitation-it underscores that even a single complex challenge beyond AI's current capabilities can disproportionately reduce overall performance if users rely too heavily on AI's output.",
-    href: "https://doi.org/10.1287/orsc.2025.21838"
+    id: "c2-03",
+    title: "Hoe AI de sectoren IT en zakelijke dienstverlening verandert",
+    ref: "Van Kampen, M., Koelewijn, R., Groenewegen, J., & Sander, F. J. (2026, June 25). Hoe AI de sectoren IT en zakelijke dienstverlening verandert. RaboResearch. https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert",
+    teaser: "A Dutch bank's sector research estimating how much of the work in IT and business services can be automated at all.",
+    extract: "De potentie is groot en concreet: 86% van de taken in de IT en 64% van de taken in de zakelijke dienstverlening heeft (hoog) automatiseringspotentieel. Vooral taken in de softwareontwikkeling, marketing, boekhouding en administratieve processen lenen zich hiervoor, net als delen van consultancy en juridische analyse.",
+    href: "https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert"
   },
   {
-    id: "c2-05",
+    id: "c2-04",
     title: "Generative AI at Work",
     ref: "Brynjolfsson, E., Li, D., & Raymond, L. (2025). Generative AI at work. The Quarterly Journal of Economics. https://doi.org/10.1093/qje/qjae044",
     teaser: "A study of 5,172 customer-support agents whose AI assistant only suggested replies, leaving each agent free to ignore them.",
     extract: "Importantly, the AI system we study is designed to augment (rather than replace) human agents. The output is shown only to the agent, who has full discretion over which, if any, AI suggestions to accept. [...] First, AI assistance increases worker productivity, resulting in a 15% increase in the number of chats that an agent successfully resolves per hour.",
     href: "https://doi.org/10.1093/qje/qjae044"
+  },
+  {
+    id: "c2-05",
+    title: "Navigating the Jagged Technological Frontier",
+    ref: "Dell'Acqua, F., McFowland, E., III, Mollick, E., Lifshitz, H., Kellogg, K. C., Rajendran, S., Krayer, L., Candelon, F., & Lakhani, K. R. (2026). Navigating the jagged technological frontier: Field experimental evidence of the effects of artificial intelligence on knowledge worker productivity and quality. Organization Science. https://doi.org/10.1287/orsc.2025.21838",
+    teaser: "A field experiment with consultants, comparing a task inside the AI's capabilities against one deliberately placed outside them.",
+    extract: "Significantly improved performance and quality for every model specification, increasing speed by more than 25%, performance by more than 30%, and task completion by more than 12%. However, for a task outside the frontier, subjects using AI were 19 percentage points less likely to produce correct solutions. Although this design highlights a single outside-the-frontier task-an inherent limitation-it underscores that even a single complex challenge beyond AI's current capabilities can disproportionately reduce overall performance if users rely too heavily on AI's output.",
+    href: "https://doi.org/10.1287/orsc.2025.21838"
   },
   {
     id: "c2-06",
@@ -769,19 +776,19 @@ var DECK2 = [
   },
   {
     id: "c2-07",
-    title: "The Anthropic Economic Index Report: Learning Curves",
-    ref: "Massenkoff, M., Lyubich, E., McCrory, P., Appel, R., & Heller, R. (2026). The Anthropic Economic Index report: Learning curves. Anthropic. https://www.anthropic.com/research/economic-index-march-2026-report",
-    teaser: "An index built from millions of conversations, classifying each as automation or augmentation and tracking how that split moves over time.",
-    extract: "Since our first report, we have classified conversations into one of five interaction types-directive, feedback loop, task iteration, validation, and learning-which we group into two broader categories: automation and augmentation. Figure 1.3 shows that augmentation in Claude.ai increased slightly. This was driven by small bumps in validation and learning patterns. In Appendix Figure A.3, we show that automation decreased sharply in the 1P API data.",
-    href: "https://www.anthropic.com/research/economic-index-march-2026-report"
-  },
-  {
-    id: "c2-08",
     title: "Replit's CEO on the Only Two Jobs Left in the Company of the Future",
     ref: "Y Combinator. (2026, April 25). Replit's CEO on the only two jobs left in the company of the future - Amjad Masad at YC Founder Firesides [Video]. YouTube. https://www.youtube.com/watch?v=kMYeTRqzAfc",
     teaser: "A founder narrating his own product's history of removing successive layers of work from building software.",
     extract: "Then what was left is like the coding part was still very intimidating for people. And September 2024, Replit became the first like what's called vibe coding product where uh we abstracted away code",
     href: "https://www.youtube.com/watch?v=kMYeTRqzAfc"
+  },
+  {
+    id: "c2-08",
+    title: "The Anthropic Economic Index Report: Learning Curves",
+    ref: "Massenkoff, M., Lyubich, E., McCrory, P., Appel, R., & Heller, R. (2026). The Anthropic Economic Index report: Learning curves. Anthropic. https://www.anthropic.com/research/economic-index-march-2026-report",
+    teaser: "An index built from millions of conversations, classifying each as automation or augmentation and tracking how that split moves over time.",
+    extract: "Since our first report, we have classified conversations into one of five interaction types-directive, feedback loop, task iteration, validation, and learning-which we group into two broader categories: automation and augmentation. Figure 1.3 shows that augmentation in Claude.ai increased slightly. This was driven by small bumps in validation and learning patterns. In Appendix Figure A.3, we show that automation decreased sharply in the 1P API data.",
+    href: "https://www.anthropic.com/research/economic-index-march-2026-report"
   },
   {
     id: "c2-09",
@@ -809,19 +816,19 @@ var DECK2 = [
   },
   {
     id: "c2-12",
-    title: "Harness Engineering: How to Build Software When Humans Steer and Agents Execute",
-    ref: "AI Native Dev. (2026, June 19). Ryan Lopopolo - Harness engineering: How to build software when humans steer and agents execute [Video]. YouTube. https://www.youtube.com/watch?v=c8bE0cj7vHY",
-    teaser: "A practitioner talk from inside a success case, on where its author wants the human checkpoints to end up.",
-    extract: "how we can get to a world where we're more and more headless, less human, interrupt dependent, and able to trust the agent to do more and more complex things helplessly.",
-    href: "https://www.youtube.com/watch?v=c8bE0cj7vHY"
-  },
-  {
-    id: "c2-13",
     title: "GDPval: Evaluating AI Model Performance on Real-World Economically Valuable Tasks",
     ref: "Patwardhan, T., Dias, R., Proehl, E., Kim, G., Wang, M., Watkins, O., Posada Fishman, S., Aljubeh, M., Thacker, P., Fauconnet, L., Kim, N. S., Chao, P., Miserendino, S., Chabot, G., Li, D., Sharman, M., Barr, A., Glaese, A., & Tworek, J. (2025). GDPval: Evaluating AI model performance on real-world economically valuable tasks (arXiv:2510.04374). arXiv. https://arxiv.org/abs/2510.04374",
     teaser: "A benchmark of 1,320 real work deliverables across 44 occupations, graded blind by industry experts against model output.",
     extract: "We find that frontier model performance on GDPval is improving roughly linearly over time, and that the current best frontier models are approaching industry experts in deliverable quality. We analyze the potential for frontier models, when paired with human oversight, to perform GDPval tasks cheaper and faster than unaided experts.",
     href: "https://arxiv.org/abs/2510.04374"
+  },
+  {
+    id: "c2-13",
+    title: "Harness Engineering: How to Build Software When Humans Steer and Agents Execute",
+    ref: "AI Native Dev. (2026, June 19). Ryan Lopopolo - Harness engineering: How to build software when humans steer and agents execute [Video]. YouTube. https://www.youtube.com/watch?v=c8bE0cj7vHY",
+    teaser: "A practitioner talk from inside a success case, on where its author wants the human checkpoints to end up.",
+    extract: "how we can get to a world where we're more and more headless, less human, interrupt dependent, and able to trust the agent to do more and more complex things helplessly.",
+    href: "https://www.youtube.com/watch?v=c8bE0cj7vHY"
   },
   {
     id: "c2-14",
@@ -833,19 +840,19 @@ var DECK2 = [
   },
   {
     id: "c2-15",
-    title: "Khan Academy CEO: The Real AI Opportunity Is in Boring Industries",
-    ref: "Silicon Valley Girl. (2026, July 14). Khan Academy CEO: The real AI opportunity is in boring industries | Sal Khan [Video]. YouTube. https://www.youtube.com/watch?v=s-Iz-lLAhdg",
-    teaser: "The chief executive of one education non-profit, stating his own organisation's policy on what AI will and will not be used for.",
-    extract: "If we could do three times more with the same resources, we will do three times more. So that would never be the catalyst for layoffs.",
-    href: "https://www.youtube.com/watch?v=s-Iz-lLAhdg"
-  },
-  {
-    id: "c2-16",
     title: "Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI",
     ref: "Koppelaar, T. (2026, May 27). Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI: 'Elke kantoorbaan voor een scherm verdwijnt'. De Ondernemer. https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt",
     teaser: "A Dutch printing firm's founder, interviewed about a rebuild he chose himself; no firm that tried the same and failed appears in the piece.",
     extract: "En dus, ondanks dat HelloPrint afgelopen jaar zo'n 80 miljoen euro omzet haalde, dwingt Hans zichzelf te denken alsof dat succes er niet is. Ik heb mezelf de vraag gesteld: wat nou als ik mijn huidige bedrijf op dag een opnieuw zou moeten bouwen, wat zou ik dan doen? Dat gedachte-experiment vormt de basis voor de transformatie. Niet door bestaande afdelingen te optimaliseren, maar door eerst te bepalen hoe waardecreatie eruitziet als technologie een groot deel van het werk kan overnemen.",
     href: "https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt"
+  },
+  {
+    id: "c2-16",
+    title: "Khan Academy CEO: The Real AI Opportunity Is in Boring Industries",
+    ref: "Silicon Valley Girl. (2026, July 14). Khan Academy CEO: The real AI opportunity is in boring industries | Sal Khan [Video]. YouTube. https://www.youtube.com/watch?v=s-Iz-lLAhdg",
+    teaser: "The chief executive of one education non-profit, stating his own organisation's policy on what AI will and will not be used for.",
+    extract: "If we could do three times more with the same resources, we will do three times more. So that would never be the catalyst for layoffs.",
+    href: "https://www.youtube.com/watch?v=s-Iz-lLAhdg"
   }
 ];
 
