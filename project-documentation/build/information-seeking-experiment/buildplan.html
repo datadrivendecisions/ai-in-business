@@ -312,6 +312,12 @@ pre.tree {
         <tr><td>&#9744;</td><td><a href="#p8">8 &mdash; The dashboard and its interpretation</a></td><td>Watch submissions land live, and see the sentence change when the numbers do</td></tr>
       </tbody>
     </table></div>
+    <p class="aside">An empty box against a phase whose code is written means its gate still has an
+    open line, and in every case so far that line is the same one: a step only a person can do
+    &mdash; a tester who did not write the code walking the screens, a hand-check of the arithmetic,
+    an assistant asked for a real reply, an inspection of the results screen by someone who did not
+    choose its words. Each phase says which under <em>Where this stands</em>. Nothing is ticked here
+    on the strength of a script alone.</p>
   </section>
 
   <section id="exists">
@@ -323,7 +329,16 @@ pre.tree {
       <li><strong>No network call anywhere in <code>site/</code>.</strong> A grep for <code>fetch(</code>, <code>XMLHttpRequest</code> and <code>WebSocket</code> across every page returns nothing. <code>AG-1</code> is true before a line is written; the job is keeping it true.</li>
       <li><strong>An instructor-view block that already works.</strong> <code>data-audience="instructor"</code> appears in <code>site/index.html</code>, <code>site/week-01-deck.html</code> and <code>site/week-02-deck.html</code>. The lecturer view can reuse it verbatim rather than inventing a way to hide a screen.</li>
       <li><strong>The publication gate.</strong> <code>.github/scripts/check-links.sh</code> fails the build if a relative link escapes <code>site/</code>. Every card link is external and absolute, so this is a constraint on the card data, not on the code.</li>
-      <li><strong>Nothing of the tool itself.</strong> No <code>site/tool-bias-experiment.html</code> exists.</li>
+      <li><strong>The tool, through phase 5.</strong> <code>site/tool-bias-experiment.html</code>
+      runs both rounds, the assistant step, the closing questions and the lecturer view.
+      <em>This line replaced &ldquo;no such file exists&rdquo;, which is what it said when the plan
+      was written.</em></li>
+      <li><strong>Three checks, beside this plan.</strong> <code>check-measures.py</code> (the
+      arithmetic, against a scipy reference), <code>check-session.mjs</code> (whole sessions
+      driven through the page's own code) and <code>check-prompt.py</code> (the assistant prompt
+      against a verdict word list). All three read the shipped page and evaluate its script in a
+      <code>node:vm</code> context with a stub DOM, so none of them can pass against a copy of the
+      logic that has drifted. There is no package manager here and they need none.</li>
     </ul>
   </section>
 
@@ -410,25 +425,34 @@ pre.tree {
     <p><strong>Spec.</strong> <code>MS-1</code>, <code>MS-2</code>, <code>MS-3</code>, <code>MS-4</code>, <code>DA-3</code>, <code>SM-8</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 2.1 Hold the codebook outside the page; map card ids to cells at analysis time, not at run time.</li>
-      <li>&#9744; 2.2 Count opens, congenial opens and strong-opposing opens from the recorded choices.</li>
-      <li>&#9744; 2.3 Compute the congeniality index.</li>
-      <li>&#9744; 2.4 Record whether the final position text differs from the locked one.</li>
-      <li>&#9744; 2.5 Emit the result line in the contract&rsquo;s shape, with a version token.</li>
-      <li>&#9744; 2.6 A copy button, and the sentence about closing the tab.</li>
-      <li>&#9744; 2.7 Ten fixture sessions with known choices and hand-computed expected numbers.</li>
+      <li>&#9745; 2.1 Hold the codebook outside the page; map card ids to cells at analysis time, not at run time.</li>
+      <li>&#9745; 2.2 Count opens, congenial opens and strong-opposing opens from the recorded choices.</li>
+      <li>&#9745; 2.3 Compute the congeniality index.</li>
+      <li>&#9745; 2.4 Record whether the final position text differs from the locked one.</li>
+      <li>&#9745; 2.5 Emit the result line in the contract&rsquo;s shape, with a version token.</li>
+      <li>&#9745; 2.6 A copy button, and the sentence about closing the tab.</li>
+      <li>&#9745; 2.7 Ten fixture sessions with known choices and hand-computed expected numbers.</li>
+      <li><strong>Where this stands.</strong> Built and machine-checked.
+      <code>check-measures.py</code> beside this plan recomputes every figure in Python from the
+      codebook and compares it with the same figure produced by the shipped page's own code, which
+      <code>runpage.mjs</code> evaluates outside a browser. Ten sessions, each built from whole
+      cells so its index can be read off the description rather than trusted.
+      <strong>The line carries card ids, not counts</strong> &mdash; <code>cong4:sopp3</code> in
+      version 0.1 of the blueprint could not be computed without putting the codebook in the page,
+      which <code>SM-8</code> forbids. The blueprint's &sect;5 now says so, and its version 0.2 aside
+      says why. What is left here is the tester's own hand-check.</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; Index matches hand computation on 10 fixtures to 3 dp (<code>MS-1</code>, test)</li>
-      <li>&#9744; Strong-opposing count correct on the same 10 (<code>MS-2</code>, test)</li>
-      <li>&#9744; opened = congenial + uncongenial in all 10</li>
-      <li>&#9744; 0 stance or quality labels in the shipped file (<code>SM-8</code>, test by grep)</li>
-      <li>&#9744; 0 identity fields in the line (<code>DA-3</code>, inspection)</li>
+      <li>&#9745; Index matches hand computation on 10 fixtures to 3 dp (<code>MS-1</code>, test)</li>
+      <li>&#9745; Strong-opposing count correct on the same 10 (<code>MS-2</code>, test)</li>
+      <li>&#9745; opened = congenial + uncongenial in all 10</li>
+      <li>&#9745; 0 stance or quality labels in the shipped file (<code>SM-8</code>, test by grep)</li>
+      <li>&#9745; 0 identity fields in the line (<code>DA-3</code>, inspection)</li>
       <li>&#9744; Tester hand-check completed</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p3">
@@ -438,26 +462,36 @@ pre.tree {
     <p><strong>Spec.</strong> <code>AG-1</code>, <code>AG-2</code>, <code>AG-3</code>, <code>AG-4</code>, <code>AG-5</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 3.1 Embed deck 2; chain round 2 after round 1 with a fresh shuffle.</li>
-      <li>&#9744; 3.2 Assign the agent round from the team number, half and half. The agent screen comes after the position is locked and before the first card.</li>
-      <li>&#9744; 3.3 Build the prompt from the claim and the locked position. No sources &mdash; none have been read. Third person about the position, second person in the questions it asks for.</li>
-      <li>&#9744; 3.4 Copy button, paste box, and a block on continuing while it is empty.</li>
-      <li>&#9744; 3.5 Store the pasted reply in state.</li>
-      <li>&#9744; 3.6 Check the prompt against the verdict word list.</li>
+      <li>&#9745; 3.1 Embed deck 2; chain round 2 after round 1 with a fresh shuffle.</li>
+      <li>&#9745; 3.2 Assign the agent round from the team number, half and half. The agent screen comes after the position is locked and before the first card.</li>
+      <li>&#9745; 3.3 Build the prompt from the claim and the locked position. No sources &mdash; none have been read. Third person about the position, second person in the questions it asks for.</li>
+      <li>&#9745; 3.4 Copy button, paste box, and a block on continuing while it is empty.</li>
+      <li>&#9745; 3.5 Store the pasted reply in state.</li>
+      <li>&#9745; 3.6 Check the prompt against the verdict word list.</li>
+      <li><strong>Where this stands.</strong> Built and machine-checked.
+      <code>check-prompt.py</code> builds the prompt through the page's own
+      <code>agentPrompt()</code> and runs a 48-phrase verdict list over the fixed wording &mdash; the
+      claim and the student's sentence are stripped first, because a claim contains
+      <em>should</em> by construction and a student may write anything.
+      The prompt carries no list of banned words, which would put them in the prompt.
+      <code>check-session.mjs</code> runs all eight teams and finds the assistant in round 2 for
+      teams 1&ndash;4 and round 1 for 5&ndash;8, before card 1 every time, with no way past an
+      empty box. A full two-round session in a real browser made 1 request: the page.
+      What is left is a tester using their own assistant on a real reply.</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 0 network requests across 1 full two-round session (<code>AG-1</code>, test with the network panel open)</li>
-      <li>&#9744; Prompt asks for &ge; 3 questions (<code>AG-2</code>, inspection)</li>
-      <li>&#9744; Prompt contains 0 verdict phrases (<code>AG-4</code>, inspection)</li>
-      <li>&#9744; Prompt uses 0 first-person possessives for the position (<code>AG-5</code>, inspection)</li>
-      <li>&#9744; 0 ways past an empty paste box (<code>AG-3</code>, test)</li>
-      <li>&#9744; Teams 1&ndash;4 and 5&ndash;8 get opposite agent rounds, checked for all 8</li>
-      <li>&#9744; In 8 of 8 runs the agent screen precedes card 1 of that round</li>
+      <li>&#9745; 0 network requests across 1 full two-round session (<code>AG-1</code>, test with the network panel open)</li>
+      <li>&#9745; Prompt asks for &ge; 3 questions (<code>AG-2</code>, inspection)</li>
+      <li>&#9745; Prompt contains 0 verdict phrases (<code>AG-4</code>, inspection)</li>
+      <li>&#9745; Prompt uses 0 first-person possessives for the position (<code>AG-5</code>, inspection)</li>
+      <li>&#9745; 0 ways past an empty paste box (<code>AG-3</code>, test)</li>
+      <li>&#9745; Teams 1&ndash;4 and 5&ndash;8 get opposite agent rounds, checked for all 8</li>
+      <li>&#9745; In 8 of 8 runs the agent screen precedes card 1 of that round</li>
       <li>&#9744; Tester steps above, using their own assistant</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p4">
@@ -467,20 +501,31 @@ pre.tree {
     <p><strong>Spec.</strong> <code>MS-5</code>, <code>MS-6</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 4.1 Six workload items and two perception items, 7-point &mdash; shown at the end of <em>each</em> round, not once at the finish.</li>
-      <li>&#9744; 4.2 Total the workload to 0&ndash;100.</li>
-      <li>&#9744; 4.3 Time each card and each menu; add seconds per round to the line.</li>
-      <li>&#9744; 4.4 Extend the line format so each round block carries its own timing, movement flag and scores. Bump the version token if the shape changes.</li>
+      <li>&#9745; 4.1 Six workload items and two perception items, 7-point &mdash; shown at the end of <em>each</em> round, not once at the finish.</li>
+      <li>&#9745; 4.2 Total the workload to 0&ndash;100.</li>
+      <li>&#9745; 4.3 Time each card and each menu; add seconds per round to the line.</li>
+      <li>&#9745; 4.4 Extend the line format so each round block carries its own timing, movement flag and scores. Bump the version token if the shape changes.</li>
+      <li><strong>Where this stands.</strong> Built and machine-checked.
+      The six workload items are the NASA-TLX dimensions on a 7-point scale; performance is asked
+      the right way up and totalled upside down, since on this instrument doing well is a low cost.
+      Physical demand is near the floor for a reading task and is kept anyway, because an instrument
+      is only comparable with itself if it stays whole. The two perception items are satisfaction
+      and confidence, which is the pairing the &ldquo;better but feels worse&rdquo; literature in the
+      PRD turns on. Timing is wall clock from a card appearing to the move to the next one, so an
+      opened card's time includes reading the extract; a reload restarts the current card's clock
+      rather than counting the minutes a laptop was shut.
+      What is left is a tester completing a session unaided inside 25 minutes, which is the one
+      thing none of this can tell you.</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 8 items present, 7 points each, asked 2 times per session (<code>MS-6</code>, inspection)</li>
-      <li>&#9744; Card timings within 100 ms of wall clock over 5 cards (<code>MS-5</code>, test)</li>
-      <li>&#9744; A complete line parses under the phase 5 parser once it exists</li>
+      <li>&#9745; 8 items present, 7 points each, asked 2 times per session (<code>MS-6</code>, inspection)</li>
+      <li>&#9745; Card timings within 100 ms of wall clock over 5 cards (<code>MS-5</code>, test)</li>
+      <li>&#9745; A complete line parses under the phase 5 parser once it exists</li>
       <li>&#9744; Tester completes one session unaided and in under 25 minutes</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p5">
@@ -491,29 +536,42 @@ pre.tree {
     <p><strong>Spec.</strong> <code>AN-1</code>, <code>AN-2</code>, <code>AN-3</code>, <code>AN-4</code>, <code>AN-5</code>, <code>AN-6</code>, <code>AN-7</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 5.1 Copy the instructor-view block from <code>site/index.html</code> verbatim; mark the lecturer section <code>data-audience="instructor"</code>. Add nothing to the block.</li>
-      <li>&#9744; 5.2 Paste box; parse lines; report accepted and rejected, listing every rejection.</li>
-      <li>&#9744; 5.3 Take the codebook as pasted input and apply it to the card ids.</li>
-      <li>&#9744; 5.4 Compute the two means, the paired difference and a 95% interval.</li>
-      <li>&#9744; 5.5 Draw the two bars.</li>
-      <li>&#9744; 5.6 Show the smallest detectable effect for the n entered.</li>
-      <li>&#9744; 5.7 Put a question and a writing box where a conclusion would go.</li>
-      <li>&#9744; 5.8 A kappa box: four cell counts in, kappa out, with observed and chance agreement shown beside it. Used by students in the debrief, not by the analysis.</li>
-      <li>&#9744; 5.9 Five fixture datasets with values from a reference implementation.</li>
+      <li>&#9745; 5.1 Copy the instructor-view block from <code>site/index.html</code> verbatim; mark the lecturer section <code>data-audience="instructor"</code>. Add nothing to the block.</li>
+      <li>&#9745; 5.2 Paste box; parse lines; report accepted and rejected, listing every rejection.</li>
+      <li>&#9745; 5.3 Take the codebook as pasted input and apply it to the card ids.</li>
+      <li>&#9745; 5.4 Compute the two means, the paired difference and a 95% interval.</li>
+      <li>&#9745; 5.5 Draw the two bars.</li>
+      <li>&#9745; 5.6 Show the smallest detectable effect for the n entered.</li>
+      <li>&#9745; 5.7 Put a question and a writing box where a conclusion would go.</li>
+      <li>&#9745; 5.8 A kappa box: four cell counts in, kappa out, with observed and chance agreement shown beside it. Used by students in the debrief, not by the analysis.</li>
+      <li>&#9745; 5.9 Five fixture datasets with values from a reference implementation.</li>
+      <li><strong>Where this stands.</strong> Built and machine-checked.
+      The codebook parser is deliberately tolerant: it reads
+      <code>work/drafts/week-03-codebook.md</code> as it stands, ignoring every line and every part
+      of a line that is not a card id followed by a cell code, because asking an owner to reformat
+      the answer key before a session is asking for a transcription error in the one input nothing
+      downstream can check. A 15.8&nbsp;KB paste of that file yielded 32 cards in a browser.
+      The interval uses a t quantile computed from the incomplete beta rather than a table, so it
+      is right for whatever <em>n</em> turns up; the detectable effect is solved from the
+      non-central t rather than approximated, because the usual closed form is out by .04 at
+      half-group sizes and wrong in the reassuring direction. Both were checked against scipy, and
+      the power figure against a 200,000-run simulation.
+      What is left is the one check that cannot be automated by the person who wrote the screen:
+      <code>AN-3</code>, that nothing on it states a finding.</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 32 good lines &rarr; 32 accepted (<code>AN-1</code>, test)</li>
-      <li>&#9744; 2 malformed lines &rarr; 2 listed, 0 silent drops (<code>AN-6</code>, test)</li>
-      <li>&#9744; Difference and interval match the reference on 5 datasets to 3 dp (<code>AN-2</code>, test)</li>
+      <li>&#9745; 32 good lines &rarr; 32 accepted (<code>AN-1</code>, test)</li>
+      <li>&#9745; 2 malformed lines &rarr; 2 listed, 0 silent drops (<code>AN-6</code>, test)</li>
+      <li>&#9745; Difference and interval match the reference on 5 datasets to 3 dp (<code>AN-2</code>, test)</li>
       <li>&#9744; 0 concluding sentences on screen, &ge; 1 question (<code>AN-3</code>, inspection by someone who did not write it)</li>
-      <li>&#9744; Detectable effect within 0.02 of a reference value (<code>AN-4</code>, analysis)</li>
-      <li>&#9744; Kappa matches hand computation on 4 matrices (<code>AN-5</code>, test), each shown with its 2&times;2 and chance figure (<code>AN-7</code>, inspection)</li>
-      <li>&#9744; Without <code>?instructor</code>, the lecturer section is not visible</li>
+      <li>&#9745; Detectable effect within 0.02 of a reference value (<code>AN-4</code>, analysis)</li>
+      <li>&#9745; Kappa matches hand computation on 4 matrices (<code>AN-5</code>, test), each shown with its 2&times;2 and chance figure (<code>AN-7</code>, inspection)</li>
+      <li>&#9745; Without <code>?instructor</code>, the lecturer section is not visible</li>
       <li>&#9744; Tester steps above</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p6">

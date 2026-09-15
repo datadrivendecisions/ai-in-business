@@ -279,6 +279,157 @@ input[type="text"] { max-width: 18rem; }
   .btn { width: 100%; }
   .btn-row { flex-direction: column; align-items: stretch; }
 }
+
+/* ================================================================
+   Phases 2-5 additions.
+   ================================================================ */
+
+/* ---- the agent step ---- */
+.prompt-box {
+  background: var(--bg-cream-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.step-list { margin: var(--space-4) 0; padding-left: var(--space-6); }
+.step-list li { margin-bottom: var(--space-2); }
+
+/* ---- the closing questions ---- */
+/* A radio scale, not a slider: a slider has a default position, and a
+   default position is the instrument answering its own question. */
+.likert { margin: 0 0 var(--space-6); padding: 0; border: 0; }
+.likert legend {
+  font-weight: 600;
+  font-size: var(--text-base);
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+.likert .anchors {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.scale { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.scale label {
+  flex: 1 1 2.5rem;
+  min-width: 2.5rem;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  background: var(--bg-page);
+}
+.scale label:hover { background: var(--bg-section); }
+.scale label:has(input:checked) {
+  background: var(--supporting);
+  color: var(--bg-page);
+  border-color: var(--supporting);
+  font-weight: 600;
+}
+.scale input { position: absolute; opacity: 0; width: 0; height: 0; }
+.scale label:has(input:focus-visible) { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+/* ---- the result line ---- */
+.line-box {
+  background: var(--supporting);
+  color: #f5f5f5;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.copied { font-size: var(--text-sm); color: var(--text-secondary); margin-left: var(--space-3); }
+
+/* ---- the lecturer view ---- */
+/* Marked data-audience="instructor" and hidden until ?instructor. That
+   is signposting, not access control: it holds no answer key, only the
+   arithmetic. The codebook is pasted in, never shipped. */
+.lecturer {
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 3px solid var(--supporting);
+}
+.aside {
+  background: var(--bg-cream);
+  border-left: 4px solid var(--primary);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.lecturer textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-xs);
+  min-height: 9rem;
+}
+.tally { display: flex; flex-wrap: wrap; gap: var(--space-6); margin: var(--space-4) 0; }
+.tally div { min-width: 7rem; }
+.tally .n { font-size: var(--text-3xl); font-weight: 700; line-height: 1.1; display: block; }
+.tally .k { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-secondary); }
+
+.reject-list { font-size: var(--text-sm); }
+.reject-list li { margin-bottom: var(--space-1); overflow-wrap: anywhere; }
+.reject-list code { background: var(--bg-cream-2); padding: 0 .25em; border-radius: 3px; }
+
+/* Two bars on one shared scale. The index runs -1 to +1, so the axis is
+   drawn at the middle and a bar grows either way from it. */
+.bars { margin: var(--space-6) 0; }
+.bar-row { display: grid; grid-template-columns: 8rem 1fr 4.5rem; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3); }
+.bar-label { font-size: var(--text-sm); font-weight: 600; }
+.bar-track {
+  position: relative;
+  height: 2rem;
+  background: var(--bg-cream-2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.bar-zero { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--border-strong); }
+.bar-fill { position: absolute; top: 4px; bottom: 4px; background: var(--supporting); border-radius: 2px; }
+.bar-value { font-size: var(--text-sm); font-variant-numeric: tabular-nums; text-align: right; }
+.bar-scale { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-secondary); padding-left: calc(8rem + var(--space-3)); padding-right: calc(4.5rem + var(--space-3)); }
+
+.stat-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+.stat-table th, .stat-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+.stat-table th { font-weight: 600; width: 55%; }
+.stat-table td { font-variant-numeric: tabular-nums; }
+
+.kappa-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 9rem)); gap: var(--space-3); margin: var(--space-3) 0; }
+/* Two of the four labels wrap to a second line, so the boxes are pushed to
+   the bottom of their cell rather than left to sit at different heights. */
+.kappa-grid > div { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-1); }
+.kappa-grid label { font-size: var(--text-xs); display: block; }
+.kappa-grid input { width: 100%; }
+
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 1fr; gap: var(--space-1); }
+  .bar-scale { padding: 0; }
+  .bar-value { text-align: left; }
+}
+input[type="number"] {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
 </style>
 </head>
 <body>
@@ -321,10 +472,10 @@ input[type="text"] { max-width: 18rem; }
   <header class="bds-page-header">
     <p class="bds-eyebrow">Week 3 &middot; in the session</p>
     <h1 class="bds-h1">The source menu</h1>
-    <p class="lead">You will be shown sixteen sources, one at a time. You may open eight of them. Before that, you write down where you stand; afterwards, you write it down again.</p>
+    <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not finished.</strong> The claim and its sixteen sources are real: every extract is quoted from the document it names, and every link goes to that document. What is still missing is the second round on a different claim, the step where an assistant argues with the position you locked, and the one line of result you hand in. You can walk this round through today and see what it asks of you.</p>
+  <p class="tpl-notice"><strong>Not finished.</strong> Both rounds run and both decks are real: every extract is quoted from the document it names, and every link goes to that document. At the end you get one line of result to hand in by copying it. What is still missing is the button that sends it &mdash; today you copy the line yourself &mdash; and the owners&rsquo; live dashboard.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -332,7 +483,7 @@ input[type="text"] { max-width: 18rem; }
   <section class="screen" id="s-consent" aria-labelledby="h-consent">
     <h2 id="h-consent">Before you start</h2>
 
-    <p>This is a class exercise about how people look for evidence. It records which sources you chose to open and the order you saw them in. You can stop at any point and erase everything.</p>
+    <p>This is a class exercise about how people look for evidence. It records which sources you chose to open, the order you saw them in, how long you spent, and how the round felt. You can stop at any point and erase everything.</p>
 
     <div class="warn">
       <p id="storage-statement">What you type stays in this browser. It is saved in your own browser&rsquo;s storage so a reload does not lose your place, and it is sent nowhere. No name is asked for. At the end you get one line of numbers to hand in yourself. Erase everything at any time with the button below.</p>
@@ -347,7 +498,7 @@ input[type="text"] { max-width: 18rem; }
 
     <div class="field">
       <label for="f-team">Your team number
-        <span class="hint">The number on your team&rsquo;s card.</span>
+        <span class="hint">The number on your team&rsquo;s card. It decides which of your two rounds has the assistant in it &mdash; nothing else.</span>
       </label>
       <select id="f-team">
         <option value="">Choose&hellip;</option>
@@ -369,11 +520,12 @@ input[type="text"] { max-width: 18rem; }
        2 · The position, locked once submitted.
        ============================================================ -->
   <section class="screen" id="s-position" aria-labelledby="h-position" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-position"></p>
     <h2 id="h-position">Where do you stand?</h2>
 
     <div class="claim-box">
       <p class="bds-eyebrow">The claim</p>
-      <p class="claim-text" id="claim-1"></p>
+      <p class="claim-text" id="claim-position"></p>
     </div>
 
     <!-- Two controls, in this order: the side, then the reason for it. The
@@ -406,14 +558,54 @@ input[type="text"] { max-width: 18rem; }
     </div>
 
     <div class="btn-row" style="margin-top:var(--space-6)">
-      <button type="button" class="btn" id="b-position">Lock it and see the first source</button>
+      <button type="button" class="btn" id="b-position">Lock it and go on</button>
     </div>
   </section>
 
   <!-- ============================================================
-       3 · The runner. One card at a time, eight opens, no way back.
+       3 · The agent step. One of the two rounds only, and always
+       between the locked position and the first card — what is being
+       measured is which sources get opened, so the assistant has to
+       speak while that choice is still ahead.
+       ============================================================ -->
+  <section class="screen" id="s-agent" aria-labelledby="h-agent" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-agent"></p>
+    <h2 id="h-agent">Before you read anything, put it to an assistant</h2>
+
+    <p>Copy the text below into whichever assistant you use &mdash; ChatGPT, Claude, Gemini, Copilot, it does not matter which. Paste back what it says. Nothing here talks to a model for you; this page sends nothing anywhere, so the round trip is yours to make.</p>
+
+    <ol class="step-list">
+      <li>Press <strong>Copy the prompt</strong>.</li>
+      <li>Open your assistant in another tab and paste it.</li>
+      <li>Copy its whole reply and paste it into the box below.</li>
+    </ol>
+
+    <div class="prompt-box" id="agent-prompt"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-copy-prompt">Copy the prompt</button>
+      <span class="copied" id="m-copied-prompt" hidden>Copied.</span>
+    </div>
+
+    <div class="field" style="margin-top:var(--space-6)">
+      <label for="f-agent-reply">Paste the assistant&rsquo;s reply
+        <span class="hint">All of it, as it came. You are not asked to answer its questions in writing &mdash; read them, then go on to the sources.</span>
+      </label>
+      <textarea id="f-agent-reply" aria-errormessage="e-agent"></textarea>
+    </div>
+
+    <p class="err" id="e-agent" role="alert" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-agent">See the first source</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4 · The runner. One card at a time, eight opens, no way back.
        ============================================================ -->
   <section class="screen" id="s-card" aria-labelledby="h-card" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-card"></p>
     <h2 id="h-card" class="bds-eyebrow" style="font-size:var(--text-xs)">Source menu</h2>
 
     <div class="runner-bar">
@@ -429,7 +621,7 @@ input[type="text"] { max-width: 18rem; }
          the navigation costs a phone most of its screen. -->
     <div class="claim-box claim-box-compact">
       <p class="bds-eyebrow">The claim</p>
-      <p class="claim-text" id="claim-1c"></p>
+      <p class="claim-text" id="claim-card"></p>
     </div>
 
     <div class="locked">
@@ -470,14 +662,15 @@ input[type="text"] { max-width: 18rem; }
   </section>
 
   <!-- ============================================================
-       4 · The final position.
+       5 · The final position.
        ============================================================ -->
   <section class="screen" id="s-final" aria-labelledby="h-final" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-final"></p>
     <h2 id="h-final">Where do you stand now?</h2>
 
     <div class="claim-box">
       <p class="bds-eyebrow">The claim</p>
-      <p class="claim-text" id="claim-1b"></p>
+      <p class="claim-text" id="claim-final"></p>
     </div>
 
     <div class="locked">
@@ -511,21 +704,78 @@ input[type="text"] { max-width: 18rem; }
     <p class="err" id="e-final" role="alert" hidden></p>
 
     <div class="btn-row">
-      <button type="button" class="btn" id="b-final">Finish</button>
+      <button type="button" class="btn" id="b-final">Go on to the last questions</button>
     </div>
   </section>
 
   <!-- ============================================================
-       5 · Finish.
+       6 · The closing questions. Asked at the end of each round, not
+       once at the finish: a single set of answers at the end would
+       belong to neither condition, and the comparison the session is
+       built on is between how a round went and how it felt.
+       ============================================================ -->
+  <section class="screen" id="s-questions" aria-labelledby="h-questions" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-questions"></p>
+    <h2 id="h-questions">How was that round?</h2>
+
+    <p>Eight questions about the round you have just finished, not about the claim. There is no right answer and nothing here is scored.</p>
+
+    <div id="q-items"></div>
+
+    <p class="err" id="e-questions" role="alert" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-questions">Done with this round</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7 · Between the rounds.
+       ============================================================ -->
+  <section class="screen" id="s-bridge" aria-labelledby="h-bridge" hidden>
+    <h2 id="h-bridge">That is round one</h2>
+    <p>Round two works exactly the same way, on a different claim with a different sixteen sources. Nothing you did in round one carries over, and the two decks share no source.</p>
+    <p class="note">Wait here if your lecturer has asked you to.</p>
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-bridge">Start round two</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8 · Finish, and the one line of result.
        ============================================================ -->
   <section class="screen" id="s-done" aria-labelledby="h-done" hidden>
-    <h2 id="h-done">That is the end of the round</h2>
+    <h2 id="h-done">That is the whole exercise</h2>
 
-    <p>You opened <strong id="d-opened">0</strong> of the sixteen sources. Your choices are saved in this browser.</p>
+    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. It is the only thing that leaves this browser, and it leaves it because you copy it.</p>
 
-    <p class="tpl">More is still to come on this page. A second round, on a different claim. A step where an assistant argues with the position you locked. The questions asked at the end of each round. And the one line of result you hand in. Today, stop here.</p>
+    <div class="line-box" id="d-line" tabindex="0" role="region" aria-label="Your result line"></div>
 
-    <p class="note">Keep this tab open until your lecturer says otherwise.</p>
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-copy-line">Copy my result line</button>
+      <span class="copied" id="m-copied-line" hidden>Copied.</span>
+    </div>
+
+    <p class="note">Hand it in the way your lecturer asks. <strong>Keep this tab open until you have.</strong> Closing the tab does not delete the line &mdash; it is saved in this browser &mdash; but erasing does, and so does a borrowed laptop being wiped.</p>
+
+    <details style="margin-top:var(--space-6)">
+      <summary>What every part of that line means</summary>
+      <table class="stat-table">
+        <tr><th><code>v1</code></th><td>The format of the line. A reader that only knows another version says so rather than guessing.</td></tr>
+        <tr><th><code>kite</code></th><td>The code you chose. Never a name.</td></tr>
+        <tr><th><code>t3</code></th><td>Your team number.</td></tr>
+        <tr><th><code>r1:ask</code> / <code>r1:none</code></th><td>Round one, with the assistant or without it.</td></tr>
+        <tr><th><code>c1</code></th><td>Which claim that round used.</td></tr>
+        <tr><th><code>posa</code> / <code>posd</code></th><td>The side you locked before reading: agree or disagree.</td></tr>
+        <tr><th><code>op6</code></th><td>How many sources you opened.</td></tr>
+        <tr><th><code>ids=&hellip;</code></th><td>Which ones, in the order you opened them. Whether a source agreed with you is not in this page at all. That list is held separately and applied afterwards, so someone can show you the arithmetic behind your own number.</td></tr>
+        <tr><th><code>s188</code></th><td>Seconds spent on the sources in that round.</td></tr>
+        <tr><th><code>enda</code> / <code>endd</code></th><td>The side you ended on.</td></tr>
+        <tr><th><code>moved1</code></th><td>Whether your closing sentence differs from your locked one.</td></tr>
+        <tr><th><code>tlx47</code></th><td>Your six workload answers, totalled to a 0&ndash;100 scale.</td></tr>
+        <tr><th><code>q9</code></th><td>Your two answers about how the round felt, added together.</td></tr>
+      </table>
+    </details>
   </section>
 
   <!-- ============================================================
@@ -537,6 +787,122 @@ input[type="text"] { max-width: 18rem; }
       <button type="button" class="btn btn-secondary" id="b-erase">Erase everything and start again</button>
     </div>
   </div>
+
+  <!-- ============================================================
+       The lecturer view. Hidden unless the address carries ?instructor.
+       It holds no answer key: the codebook is pasted in at analysis
+       time, which is the whole reason the published page can be read
+       by a student in advance without spoiling the exercise.
+       ============================================================ -->
+  <section class="lecturer" id="an" data-audience="instructor" aria-labelledby="h-an" hidden>
+    <h2 id="h-an">The class result</h2>
+
+    <p class="aside"><strong>Instructor view.</strong> This section is hidden on the ordinary page and is showing because the address carries <code>?instructor</code>. <a href="tool-bias-experiment.html?student">Leave the instructor view</a>.</p>
+
+    <p>Paste the codebook and the class&rsquo;s result lines. Everything is computed here in this browser; nothing is sent anywhere, and nothing is stored.</p>
+
+    <div class="field">
+      <label for="f-codebook">The codebook
+        <span class="hint">Paste the two tables from <code>work/drafts/week-03-codebook.md</code> as they stand. Any line carrying a card id followed by its cell code is read. Every other line is ignored, and so is everything else on a line that has both. No worked example is given here, on purpose. A real card beside its real cell would be the answer key this page exists not to carry.</span>
+      </label>
+      <textarea id="f-codebook" spellcheck="false"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="f-lines">The result lines
+        <span class="hint">One per student, one per line. Blank lines are skipped; anything else that will not parse is listed back rather than dropped.</span>
+      </label>
+      <textarea id="f-lines" spellcheck="false"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-analyse">Work it out</button>
+      <button type="button" class="btn btn-secondary" id="b-demo">Load a fixture</button>
+    </div>
+
+    <p class="err" id="e-an" role="alert" hidden></p>
+
+    <div id="an-out" hidden>
+      <h3>What came in</h3>
+      <div class="tally">
+        <div><span class="n" id="an-cards">0</span><span class="k">cards coded</span></div>
+        <div><span class="n" id="an-ok">0</span><span class="k">lines accepted</span></div>
+        <div><span class="n" id="an-bad">0</span><span class="k">lines rejected</span></div>
+        <div><span class="n" id="an-paired">0</span><span class="k">complete pairs</span></div>
+      </div>
+
+      <div id="an-rejects" hidden>
+        <h4>Rejected, and why</h4>
+        <ul class="reject-list" id="an-reject-list"></ul>
+      </div>
+
+      <h3>The two conditions</h3>
+      <p class="note">Congeniality index per round: (sources opened that agreed with the position locked &minus; sources opened that did not) &divide; sources opened. It runs from &minus;1 to +1. Higher means more one-sided reading.</p>
+
+      <div class="bars" id="an-bars">
+        <div class="bar-row">
+          <span class="bar-label">With the assistant</span>
+          <span class="bar-track"><span class="bar-zero"></span><span class="bar-fill" id="bar-ask"></span></span>
+          <span class="bar-value" id="val-ask">&mdash;</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Without it</span>
+          <span class="bar-track"><span class="bar-zero"></span><span class="bar-fill" id="bar-none"></span></span>
+          <span class="bar-value" id="val-none">&mdash;</span>
+        </div>
+        <p class="bar-scale"><span>&minus;1</span><span>0</span><span>+1</span></p>
+      </div>
+
+      <table class="stat-table">
+        <tr><th>Mean index, with the assistant</th><td id="s-ask">&mdash;</td></tr>
+        <tr><th>Mean index, without it</th><td id="s-none">&mdash;</td></tr>
+        <tr><th>Paired difference (with &minus; without)</th><td id="s-diff">&mdash;</td></tr>
+        <tr><th>95% interval on that difference</th><td id="s-ci">&mdash;</td></tr>
+        <tr><th>Smallest difference this many pairs could have detected</th><td id="s-mde">&mdash;</td></tr>
+        <tr><th>Strong opposing sources opened, with the assistant</th><td id="s-sopp-ask">&mdash;</td></tr>
+        <tr><th>Strong opposing sources opened, without it</th><td id="s-sopp-none">&mdash;</td></tr>
+        <tr><th>Seconds on the sources, with / without</th><td id="s-secs">&mdash;</td></tr>
+        <tr><th>Workload 0&ndash;100, with / without</th><td id="s-tlx">&mdash;</td></tr>
+        <tr><th>How the round felt, 2&ndash;14, with / without</th><td id="s-q">&mdash;</td></tr>
+        <tr><th>Changed their closing sentence, with / without</th><td id="s-moved">&mdash;</td></tr>
+        <tr><th>Changed sides, with / without</th><td id="s-flip">&mdash;</td></tr>
+      </table>
+
+      <h3>Now say what it means</h3>
+      <!-- There is no sentence on this page that states a finding. Writing
+           one would put the verdict-giving the experiment is testing
+           inside the instrument that measures it. What the page can do is
+           put the numbers up and ask. -->
+      <div class="warn">
+        <p id="an-question"></p>
+      </div>
+      <div class="field">
+        <label for="f-reading">Write the room&rsquo;s answer here
+          <span class="hint">This box is a scratchpad. It is not saved and it is not sent anywhere; it is here so the sentence gets written by the people who saw the session.</span>
+        </label>
+        <textarea id="f-reading"></textarea>
+      </div>
+    </div>
+
+    <h3>Kappa, for the debrief</h3>
+    <p class="note">Two coders, one 2&times;2. Used by students on the eight-card debrief set, not by the analysis above.</p>
+    <div class="kappa-grid">
+      <div><label for="k-a">Both said supporting</label><input type="number" id="k-a" min="0" step="1" value="0"></div>
+      <div><label for="k-b">A supporting, B opposing</label><input type="number" id="k-b" min="0" step="1" value="0"></div>
+      <div><label for="k-c">A opposing, B supporting</label><input type="number" id="k-c" min="0" step="1" value="0"></div>
+      <div><label for="k-d">Both said opposing</label><input type="number" id="k-d" min="0" step="1" value="0"></div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-kappa">Compute kappa</button>
+    </div>
+    <table class="stat-table" id="k-out" hidden>
+      <tr><th>Pairs coded</th><td id="k-n">&mdash;</td></tr>
+      <tr><th>Agreement observed</th><td id="k-po">&mdash;</td></tr>
+      <tr><th>Agreement expected by chance</th><td id="k-pe">&mdash;</td></tr>
+      <tr><th>Cohen&rsquo;s kappa</th><td id="k-k">&mdash;</td></tr>
+    </table>
+    <p class="err" id="e-kappa" role="alert" hidden></p>
+  </section>
 
 </main>
 
@@ -857,6 +1223,41 @@ var DECK2 = [
 ];
 
 var BUDGET = 8;
+var LINE_VERSION = 1;
+
+/* Round 1 takes claim 1 and deck 1, round 2 claim 2 and deck 2. Nothing
+   else differs between them except which one has the assistant in it. */
+var ROUNDS = {
+  1: { claim: "c1", text: CLAIM1, deck: DECK1 },
+  2: { claim: "c2", text: CLAIM2, deck: DECK2 }
+};
+
+/* ---------------- the closing questions ---------------- */
+/* Six workload items and two about how the round felt, asked at the end
+   of each round rather than once at the finish. A single set of answers
+   at the finish would belong to neither condition, and the comparison
+   this session is built on is between how a round went and how it felt.
+
+   The six are the NASA-TLX dimensions on a 7-point scale. Physical
+   demand is near the floor for a reading task and is kept anyway: the
+   instrument is only comparable with itself if it stays whole, and a
+   floor is a finding rather than a fault.
+
+   `flip: true` marks the one item scored the other way up. On the TLX,
+   performance is asked as "how well did you do" and totalled as a cost,
+   so a 7 there is a 1 in the total. */
+var TLX = [
+  { id: "mental",  q: "How much mental effort did that round take?",                     lo: "Very little",  hi: "A great deal" },
+  { id: "physical",q: "How physically demanding was it?",                                lo: "Not at all",   hi: "Very" },
+  { id: "temporal",q: "How hurried or rushed did you feel?",                             lo: "Not at all",   hi: "Very" },
+  { id: "perform", q: "How well do you think you did at working out what is true here?", lo: "Very poorly",  hi: "Very well", flip: true },
+  { id: "effort",  q: "How hard did you have to work to get there?",                     lo: "Hardly at all",hi: "Very hard" },
+  { id: "frustr",  q: "How irritated or frustrated did you feel?",                       lo: "Not at all",   hi: "Very" }
+];
+var PERCEPTION = [
+  { id: "satisf",  q: "How satisfied are you with how that round went?",                 lo: "Not at all",   hi: "Very" },
+  { id: "confid",  q: "How confident are you in the position you ended on?",             lo: "Not at all",   hi: "Very" }
+];
 
 /* ---------------- storage (best effort) ---------------- */
 /* One key. The try/catch is not tidiness: localStorage throws outright
@@ -868,10 +1269,14 @@ function saveState(a){ try{ localStorage.setItem(LKEY, JSON.stringify(a)); }catc
 function clearState(){ try{ localStorage.removeItem(LKEY); }catch(e){} }
 
 /* ---------------- state ---------------- */
-function freshState(){ return { v: 1, screen: "consent", consented: false }; }
+/* Version 2 added the second round, the agent step, the timings and the
+   closing questions. A session stored under version 1 is discarded
+   rather than migrated: nothing has been run with it, and a half-filled
+   round would sit in the data as a complete one. */
+function freshState(){ return { v: 2, screen: "consent", consented: false, round: 1, rounds: {} }; }
 
 var S = loadState();
-if (!S || S.v !== 1) S = freshState();
+if (!S || S.v !== 2) S = freshState();
 
 /* Nothing is written until the student has agreed to it. Until then the
    state lives in memory only, so a visitor who reads the consent screen
@@ -883,28 +1288,43 @@ function save(){ if (S.consented) saveState(S); }
 /* ---------------- helpers ---------------- */
 function $(id){ return document.getElementById(id); }
 
-var SCREENS = ["consent", "position", "card", "final", "done"];
+var SCREENS = ["consent", "position", "agent", "card", "final", "questions", "bridge", "done"];
 
 function show(name){
   S.screen = name;
   SCREENS.forEach(function(s){ $("s-" + s).hidden = (s !== name); });
   save();
+  window.scrollTo(0, 0);
   var h = $("s-" + name).querySelector("h2");
   if (h){ h.setAttribute("tabindex", "-1"); h.focus(); }
 }
 
+function R(){ return S.rounds[S.round]; }
+function conf(){ return ROUNDS[S.round]; }
+
+/* The round tag is the only place the page says which round is running.
+   It does not say which round has the assistant in it: a student who
+   knows they are in the "treated" half reads differently, and that is
+   the one thing the design cannot let the interface give away. */
+function tagRounds(){
+  var t = "Round " + S.round + " of 2";
+  ["position", "agent", "card", "final", "questions"].forEach(function(s){
+    var el = $("tag-" + s);
+    if (el) el.textContent = t;
+  });
+}
+
 /* ---------------- the side ---------------- */
 /* A radio group has no value of its own, so these two read and write it.
-   pickSide returns "" when nothing is chosen, which is what the position
-   screen refuses to accept. */
+   pickedSide returns "" when nothing is chosen, which is what the
+   position screen refuses to accept. */
 function pickedSide(name){
   var el = document.querySelector('input[name="' + name + '"]:checked');
   return el ? el.value : "";
 }
-function restoreSide(name, value){
-  if (!value) return;
-  var el = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
-  if (el) el.checked = true;
+function setSide(name, value){
+  var all = document.querySelectorAll('input[name="' + name + '"]');
+  for (var i = 0; i < all.length; i++) all[i].checked = (value ? all[i].value === value : false);
 }
 /* The badge is hidden rather than blank when there is no side, so a
    session started before the sides existed still renders. */
@@ -925,6 +1345,39 @@ function clearFail(id, fieldId){
   if (fieldId) $(fieldId).removeAttribute("aria-invalid");
 }
 
+/* Copying to the clipboard has two implementations because the modern
+   one needs a secure context, and a lecturer previewing the page over
+   plain http on a laptop is not in one. */
+function copyText(text, flagId){
+  function flag(){
+    var f = $(flagId);
+    if (!f) return;
+    f.hidden = false;
+    window.setTimeout(function(){ f.hidden = true; }, 2500);
+  }
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flag, function(){ legacyCopy(text); flag(); });
+      return;
+    }
+  } catch (e) {}
+  legacyCopy(text);
+  flag();
+}
+function legacyCopy(text){
+  try {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  } catch (e) {}
+}
+
 /* Fisher-Yates. A fresh order every session, and the order is kept,
    because which card came up when is half of what is being measured. */
 function shuffled(deck){
@@ -937,8 +1390,65 @@ function shuffled(deck){
 }
 
 function cardById(id){
-  for (var i = 0; i < DECK1.length; i++){ if (DECK1[i].id === id) return DECK1[i]; }
+  var deck = conf().deck;
+  for (var i = 0; i < deck.length; i++){ if (deck[i].id === id) return deck[i]; }
   return null;
+}
+
+/* Which round carries the assistant, from the team number. Half the room
+   meets it first and half meets it second, so anything that is really
+   just "the second round is quicker" shows up as an order effect rather
+   than as the assistant's doing. */
+function agentRoundFor(team){ return team <= 4 ? 2 : 1; }
+
+function newRound(n){
+  return {
+    claim: ROUNDS[n].claim,
+    agent: agentRoundFor(S.team) === n,
+    order: shuffled(ROUNDS[n].deck),
+    idx: 0,
+    opens: 0,
+    choices: [],
+    side: "",
+    locked: "",
+    agentReply: "",
+    finalSide: "",
+    final: "",
+    answers: null
+  };
+}
+
+/* ---------------- the agent prompt ---------------- */
+/* Built here rather than stored as a string with holes in it, so the
+   claim and the locked sentence go in exactly as the student wrote
+   them.
+
+   Three things about the wording are load-bearing and are checked by
+   check-prompt.py beside the build plan. It asks for questions and
+   nothing else. It says nothing about whether the position holds up —
+   the point of the step is that the student does that work. And it
+   speaks about the position in the third person while addressing its
+   questions to the student, because "your position" invites the model
+   to have a view about it. */
+function agentPrompt(claimText, side, locked){
+  return [
+    "Below is a claim from a business course, and the position one student has taken on it before reading any sources.",
+    "",
+    "CLAIM: " + claimText,
+    "",
+    "THE POSITION TAKEN: " + (side === "agree" ? "agrees with the claim" : "disagrees with the claim"),
+    "REASON GIVEN: " + locked,
+    "",
+    "Ask this student four questions that would help them examine the position above. Number them 1 to 4.",
+    "",
+    "How to answer:",
+    "- Ask questions. Offer no view of your own on the position, and no assessment of it.",
+    "- Address the student directly as \"you\".",
+    "- Let one question ask what evidence would change your mind.",
+    "- Let one question ask what the case on the other side rests on.",
+    "- Let one question ask what would have to hold for the position to survive contact with a real company.",
+    "- Write nothing before question 1 and nothing after question 4."
+  ].join("\n");
 }
 
 /* ---------------- consent ---------------- */
@@ -946,31 +1456,28 @@ $("b-consent").addEventListener("click", function(){
   var code = $("f-code").value.trim();
   var team = $("f-team").value;
   if (!code){ fail("e-consent", "Choose a code first — any word you will remember."); $("f-code").focus(); return; }
+  if (/[|:,]/.test(code)){ fail("e-consent", "A code cannot contain | : or , — those separate the parts of your result line."); $("f-code").focus(); return; }
   if (!team){ fail("e-consent", "Choose your team number."); $("f-team").focus(); return; }
   clearFail("e-consent");
 
   S.consented = true;
   S.code = code;
   S.team = Number(team);
-  S.r1 = {
-    claim: "c1",
-    order: shuffled(DECK1),
-    idx: 0,
-    opens: 0,
-    choices: [],
-    locked: "",
-    final: ""
-  };
+  S.round = 1;
+  S.rounds = { 1: newRound(1) };
   save();
   toPosition();
 });
 
+/* ---------------- position ---------------- */
 function toPosition(){
-  $("claim-1").textContent = CLAIM1;
+  tagRounds();
+  $("claim-position").textContent = conf().text;
+  setSide("side", R().side);
+  $("f-position").value = R().locked || "";
   show("position");
 }
 
-/* ---------------- position ---------------- */
 $("b-position").addEventListener("click", function(){
   var side = pickedSide("side");
   var t = $("f-position").value.trim();
@@ -985,26 +1492,70 @@ $("b-position").addEventListener("click", function(){
     return;
   }
   clearFail("e-position", "f-position");
-  S.r1.side = side;
-  S.r1.locked = t;
+  R().side = side;
+  R().locked = t;
+  save();
+  afterPosition();
+});
+
+/* The assistant, when this round has it, sits between the locked
+   position and the first card. That placement is the whole of the
+   manipulation: what is measured is which sources get opened, so an
+   assistant speaking after the menu could not move the measurement at
+   all. */
+function afterPosition(){
+  if (R().agent) toAgent(); else toCard();
+}
+
+/* ---------------- the agent step ---------------- */
+function toAgent(){
+  tagRounds();
+  $("agent-prompt").textContent = agentPrompt(conf().text, R().side, R().locked);
+  $("f-agent-reply").value = R().agentReply || "";
+  show("agent");
+}
+
+$("b-copy-prompt").addEventListener("click", function(){
+  copyText($("agent-prompt").textContent, "m-copied-prompt");
+});
+
+$("b-agent").addEventListener("click", function(){
+  var t = $("f-agent-reply").value.trim();
+  if (!t){
+    fail("e-agent", "Paste the assistant's reply before you go on. The questions it asks are the point of this step.", "f-agent-reply");
+    $("f-agent-reply").focus();
+    return;
+  }
+  clearFail("e-agent", "f-agent-reply");
+  R().agentReply = t;
   save();
   toCard();
 });
 
 /* ---------------- the runner ---------------- */
+/* When the card on screen went up. Per-card time is wall clock between
+   that moment and the move to the next card, so an opened card's time
+   includes reading the extract, which is what it is meant to include. A
+   reload restarts this card's clock: the alternative is carrying a
+   start time through storage and counting the minutes a shut laptop
+   was closed for. */
+var tCard = 0;
+
 function toCard(){
-  $("claim-1c").textContent = CLAIM1;
-  $("m-locked").textContent = S.r1.locked;
-  showSide("m-side", S.r1.side);
+  tagRounds();
+  $("claim-card").textContent = conf().text;
+  $("m-locked").textContent = R().locked;
+  showSide("m-side", R().side);
   renderCard();
   show("card");
 }
 
 function renderCard(){
-  var r = S.r1;
+  var r = R();
   if (r.idx >= r.order.length){ toFinal(); return; }
 
   var c = cardById(r.order[r.idx]);
+  tCard = Date.now();
   $("m-index").textContent = String(r.idx + 1);
   $("m-budget").textContent = String(BUDGET - r.opens);
 
@@ -1061,14 +1612,14 @@ function revealExtract(c){
 }
 
 $("b-open").addEventListener("click", function(){
-  var r = S.r1;
+  var r = R();
   /* The budget is refused here as well as on the button. Disabling a
      control hides an action; this one has to be genuinely unavailable. */
   if (r.opens >= BUDGET) return;
   if (r.choices.length > r.idx) return;
 
   r.opens += 1;
-  r.choices.push({ id: r.order[r.idx], open: true });
+  r.choices.push({ id: r.order[r.idx], open: true, ms: 0 });
   save();
 
   $("m-budget").textContent = String(BUDGET - r.opens);
@@ -1076,9 +1627,9 @@ $("b-open").addEventListener("click", function(){
 });
 
 $("b-pass").addEventListener("click", function(){
-  var r = S.r1;
+  var r = R();
   if (r.choices.length > r.idx) return;
-  r.choices.push({ id: r.order[r.idx], open: false });
+  r.choices.push({ id: r.order[r.idx], open: false, ms: 0 });
   advance();
 });
 
@@ -1087,17 +1638,23 @@ $("b-next").addEventListener("click", advance);
 /* The only way through the deck. It counts up and never down, which is
    the whole of "a card you passed does not come back". */
 function advance(){
-  S.r1.idx += 1;
+  var r = R();
+  var here = r.choices[r.idx];
+  if (here && tCard) here.ms = (here.ms || 0) + (Date.now() - tCard);
+  r.idx += 1;
   save();
-  if (S.r1.idx >= S.r1.order.length){ toFinal(); return; }
+  if (r.idx >= r.order.length){ toFinal(); return; }
   renderCard();
 }
 
 /* ---------------- the final position ---------------- */
 function toFinal(){
-  $("claim-1b").textContent = CLAIM1;
-  $("f-locked").textContent = S.r1.locked;
-  showSide("f-side-was", S.r1.side);
+  tagRounds();
+  $("claim-final").textContent = conf().text;
+  $("f-locked").textContent = R().locked;
+  showSide("f-side-was", R().side);
+  setSide("fside", R().finalSide);
+  $("f-final").value = R().final || "";
   show("final");
 }
 
@@ -1110,21 +1667,163 @@ $("b-final").addEventListener("click", function(){
     return;
   }
   if (!t){
-    fail("e-final", "Write one sentence before you finish.", "f-final");
+    fail("e-final", "Write one sentence before you go on.", "f-final");
     $("f-final").focus();
     return;
   }
   clearFail("e-final", "f-final");
-  S.r1.finalSide = side;
-  S.r1.final = t;
+  R().finalSide = side;
+  R().final = t;
   save();
-  toDone();
+  toQuestions();
 });
 
+/* ---------------- the closing questions ---------------- */
+function questionItems(){ return TLX.concat(PERCEPTION); }
+
+function buildQuestions(){
+  var box = $("q-items");
+  box.textContent = "";
+  questionItems().forEach(function(item, n){
+    var fs = document.createElement("fieldset");
+    fs.className = "likert";
+
+    var lg = document.createElement("legend");
+    lg.textContent = (n + 1) + ". " + item.q;
+    fs.appendChild(lg);
+
+    var anch = document.createElement("div");
+    anch.className = "anchors";
+    var lo = document.createElement("span"); lo.textContent = "1 — " + item.lo;
+    var hi = document.createElement("span"); hi.textContent = "7 — " + item.hi;
+    anch.appendChild(lo); anch.appendChild(hi);
+    fs.appendChild(anch);
+
+    var scale = document.createElement("div");
+    scale.className = "scale";
+    for (var v = 1; v <= 7; v++){
+      var lab = document.createElement("label");
+      var inp = document.createElement("input");
+      inp.type = "radio";
+      inp.name = "q-" + item.id;
+      inp.value = String(v);
+      lab.appendChild(inp);
+      lab.appendChild(document.createTextNode(String(v)));
+      scale.appendChild(lab);
+    }
+    fs.appendChild(scale);
+    box.appendChild(fs);
+  });
+}
+
+function toQuestions(){
+  tagRounds();
+  buildQuestions();
+  var saved = R().answers;
+  if (saved){
+    questionItems().forEach(function(item){
+      if (saved[item.id]) setSide("q-" + item.id, String(saved[item.id]));
+    });
+  }
+  show("questions");
+}
+
+$("b-questions").addEventListener("click", function(){
+  var answers = {};
+  var missing = null;
+  questionItems().forEach(function(item){
+    var v = pickedSide("q-" + item.id);
+    if (!v){ if (!missing) missing = item; return; }
+    answers[item.id] = Number(v);
+  });
+  if (missing){
+    fail("e-questions", "Answer every question before you go on. The first one still blank is “" + missing.q + "”.");
+    var el = document.querySelector('input[name="q-' + missing.id + '"]');
+    if (el) el.focus();
+    return;
+  }
+  clearFail("e-questions");
+  R().answers = answers;
+  save();
+
+  if (S.round === 1){
+    S.round = 2;
+    S.rounds[2] = newRound(2);
+    save();
+    show("bridge");
+  } else {
+    toDone();
+  }
+});
+
+$("b-bridge").addEventListener("click", function(){ toPosition(); });
+
+/* ---------------- the result line ---------------- */
+/* The one thing that crosses from a student to the class. It carries no
+   name, and it carries no judgement of any card: which sources agreed
+   with the position is worked out afterwards, from a codebook that is
+   not in this page. That is why the list of card ids is in the line at
+   all — with it a student can be shown the arithmetic that produced
+   their own number instead of being asked to take it. */
+function sideLetter(s){ return s === "agree" ? "a" : "d"; }
+
+function roundSeconds(r){
+  var ms = 0;
+  r.choices.forEach(function(c){ ms += (c.ms || 0); });
+  return Math.round(ms / 1000);
+}
+
+/* Six items on a 7-point scale total 6 to 42. Rescaled to 0–100 so the
+   number means the same thing as every other workload total anyone will
+   compare it with. Performance is asked the right way up and counted
+   upside down: on this instrument doing well is a low cost. */
+function tlxTotal(answers){
+  var raw = 0;
+  TLX.forEach(function(item){
+    var v = answers[item.id];
+    raw += item.flip ? (8 - v) : v;
+  });
+  return Math.round((raw - TLX.length) / (TLX.length * 6) * 100);
+}
+function perceptionTotal(answers){
+  var raw = 0;
+  PERCEPTION.forEach(function(item){ raw += answers[item.id]; });
+  return raw;
+}
+
+function roundBlock(n, r){
+  var opened = r.choices.filter(function(c){ return c.open; }).map(function(c){ return c.id; });
+  return [
+    "r" + n,
+    r.agent ? "ask" : "none",
+    r.claim,
+    "pos" + sideLetter(r.side),
+    "op" + opened.length,
+    "ids=" + opened.join(","),
+    "s" + roundSeconds(r),
+    "end" + sideLetter(r.finalSide),
+    "moved" + (r.final.trim() === r.locked.trim() ? "0" : "1"),
+    "tlx" + tlxTotal(r.answers),
+    "q" + perceptionTotal(r.answers)
+  ].join(":");
+}
+
+function resultLine(){
+  return ["v" + LINE_VERSION, S.code, "t" + S.team,
+          roundBlock(1, S.rounds[1]), roundBlock(2, S.rounds[2])].join("|");
+}
+
 function toDone(){
-  $("d-opened").textContent = String(S.r1.opens);
+  var total = 0;
+  [1, 2].forEach(function(n){ total += S.rounds[n].opens; });
+  $("d-opened").textContent = String(total);
+  $("d-line").textContent = resultLine();
   show("done");
 }
+
+$("b-copy-line").addEventListener("click", function(){
+  copyText($("d-line").textContent, "m-copied-line");
+});
 
 /* ---------------- erase ---------------- */
 $("b-erase").addEventListener("click", function(){
@@ -1134,30 +1833,620 @@ $("b-erase").addEventListener("click", function(){
   window.location.reload();
 });
 
+/* ==================================================================
+   The arithmetic.
+
+   Everything below is a pure function of its arguments: no DOM, no
+   storage, no clock. That is what lets the same code serve the lecturer
+   view here and a test harness outside the browser, and it is why the
+   five fixture datasets can be checked against a reference
+   implementation at all.
+
+   None of it knows the codebook. The codebook arrives as an argument,
+   pasted in at analysis time, because a card's cell in this file would
+   be an answer key on a public URL.
+   ================================================================== */
+
+/* ---------------- the codebook ---------------- */
+/* Tolerant on purpose: the owners' copy is a markdown table, and asking
+   them to reformat it before a session is asking for a transcription
+   error in the one input nothing downstream can check. Any line holding
+   a card id followed by a cell code is read; everything else on the
+   line, and every line without both, is ignored. */
+function parseCodebook(text){
+  var map = {}, n = 0, dup = [];
+  String(text || "").split(/\r?\n/).forEach(function(line){
+    var idm = line.match(/\b(c[12]-\d{2})\b/);
+    if (!idm) return;
+    var rest = line.slice(idm.index + idm[0].length);
+    var cm = rest.match(/\b(NA|A)(S|W)\d*\b/);
+    if (!cm) return;
+    if (map[idm[1]]) dup.push(idm[1]);
+    map[idm[1]] = { stance: cm[1], quality: cm[2] };
+    n++;
+  });
+  return { map: map, n: Object.keys(map).length, rows: n, duplicates: dup };
+}
+
+/* ---------------- the result line ---------------- */
+/* A line is either accepted whole or listed back with a reason. There is
+   no third outcome: a line quietly dropped is a student who took part
+   and does not appear in the total, and nobody would ever find it. */
+var ROUND_SHAPE = [
+  { key: "round",  re: /^r([12])$/ },
+  { key: "agent",  re: /^(ask|none)$/ },
+  { key: "claim",  re: /^(c[12])$/ },
+  { key: "side",   re: /^pos([ad])$/ },
+  { key: "opened", re: /^op(\d+)$/ },
+  { key: "ids",    re: /^ids=(.*)$/ },
+  { key: "secs",   re: /^s(\d+)$/ },
+  { key: "endSide",re: /^end([ad])$/ },
+  { key: "moved",  re: /^moved([01])$/ },
+  { key: "tlx",    re: /^tlx(\d+)$/ },
+  { key: "q",      re: /^q(\d+)$/ }
+];
+
+function parseRound(block){
+  var tok = block.split(":");
+  if (tok.length !== ROUND_SHAPE.length){
+    return { error: "a round block has " + tok.length + " parts, not " + ROUND_SHAPE.length + " (" + block.slice(0, 40) + ")" };
+  }
+  var out = {};
+  for (var i = 0; i < ROUND_SHAPE.length; i++){
+    var m = tok[i].match(ROUND_SHAPE[i].re);
+    if (!m) return { error: "“" + tok[i] + "” is not a " + ROUND_SHAPE[i].key + " token" };
+    out[ROUND_SHAPE[i].key] = m[1];
+  }
+  out.round = Number(out.round);
+  out.opened = Number(out.opened);
+  out.secs = Number(out.secs);
+  out.tlx = Number(out.tlx);
+  out.q = Number(out.q);
+  out.moved = out.moved === "1";
+  out.agent = out.agent === "ask";
+  out.side = out.side === "a" ? "agree" : "disagree";
+  out.endSide = out.endSide === "a" ? "agree" : "disagree";
+  out.ids = out.ids === "" ? [] : out.ids.split(",");
+  /* op and the id list say the same thing twice, so they can disagree.
+     When they do the line is wrong somewhere and guessing which half to
+     believe is worse than refusing it. */
+  if (out.ids.length !== out.opened){
+    return { error: "says op" + out.opened + " but lists " + out.ids.length + " sources" };
+  }
+  if (out.opened > 8) return { error: "claims " + out.opened + " opens, and the budget is 8" };
+  for (var j = 0; j < out.ids.length; j++){
+    if (!/^c[12]-\d{2}$/.test(out.ids[j])) return { error: "“" + out.ids[j] + "” is not a source id" };
+  }
+  if (out.tlx > 100) return { error: "workload " + out.tlx + " is above 100" };
+  if (out.q < 2 || out.q > 14) return { error: "perception total " + out.q + " is outside 2–14" };
+  return { round: out };
+}
+
+function parseLine(raw){
+  var line = String(raw || "").trim();
+  if (!line) return { error: "blank" };
+  var f = line.split("|");
+  if (f.length !== 5) return { error: "has " + f.length + (f.length === 1 ? " part" : " parts") + " separated by | , not 5" };
+
+  var vm = f[0].match(/^v(\d+)$/);
+  if (!vm) return { error: "does not start with a version token" };
+  if (Number(vm[1]) !== 1) return { error: "was written by version " + vm[1] + " of the tool; this reader knows v1" };
+
+  if (!/^[^|:,]{1,20}$/.test(f[1])) return { error: "the code “" + f[1] + "” is empty or holds a separator" };
+  var tm = f[2].match(/^t([1-8])$/);
+  if (!tm) return { error: "“" + f[2] + "” is not a team number 1–8" };
+
+  var r1 = parseRound(f[3]);
+  if (r1.error) return { error: "round 1: " + r1.error };
+  var r2 = parseRound(f[4]);
+  if (r2.error) return { error: "round 2: " + r2.error };
+  if (r1.round.round !== 1 || r2.round.round !== 2) return { error: "the two round blocks are not r1 then r2" };
+  if (r1.round.agent === r2.round.agent){
+    return { error: "the assistant is marked " + (r1.round.agent ? "present" : "absent") + " in both rounds; it belongs to exactly one" };
+  }
+  if (r1.round.claim === r2.round.claim) return { error: "both rounds ran the same claim" };
+
+  return { rec: { code: f[1], team: Number(tm[1]), rounds: [r1.round, r2.round] } };
+}
+
+/* ---------------- one round's index ---------------- */
+/* Congenial means the source took the side the student had already
+   taken. Strong means the source carries a denominator — it includes
+   the cases that did the same thing and failed — which is the one
+   distinction the whole codebook rests on. */
+function congenial(cell, side){
+  return (side === "agree" && cell.stance === "A") || (side === "disagree" && cell.stance === "NA");
+}
+
+function roundIndex(round, book){
+  var cong = 0, unknown = [];
+  var sopp = 0;
+  round.ids.forEach(function(id){
+    var cell = book[id];
+    if (!cell){ unknown.push(id); return; }
+    if (congenial(cell, round.side)) cong++;
+    else if (cell.quality === "S") sopp++;
+  });
+  if (unknown.length) return { unknown: unknown };
+  var opened = round.ids.length;
+  return {
+    opened: opened,
+    congenial: cong,
+    uncongenial: opened - cong,
+    strongOpposing: sopp,
+    index: opened === 0 ? null : (cong - (opened - cong)) / opened
+  };
+}
+
+/* ---------------- the paired comparison ---------------- */
+function pairUp(records, book){
+  var pairs = [], dropped = [];
+  records.forEach(function(rec){
+    var ask = null, none = null, bad = null;
+    rec.rounds.forEach(function(r){
+      var m = roundIndex(r, book);
+      if (m.unknown){ bad = "no codebook entry for " + m.unknown.join(", "); return; }
+      var slot = { m: m, r: r };
+      if (r.agent) ask = slot; else none = slot;
+    });
+    if (bad){ dropped.push({ code: rec.code, why: bad }); return; }
+    if (!ask || !none){ dropped.push({ code: rec.code, why: "only one round usable" }); return; }
+    if (ask.m.index === null || none.m.index === null){
+      dropped.push({ code: rec.code, why: "opened no sources in one round, so that round has no index" });
+      return;
+    }
+    pairs.push({ code: rec.code, ask: ask, none: none, d: ask.m.index - none.m.index });
+  });
+  return { pairs: pairs, dropped: dropped };
+}
+
+function mean(xs){ if (!xs.length) return null; var s = 0; xs.forEach(function(x){ s += x; }); return s / xs.length; }
+function sd(xs){
+  if (xs.length < 2) return null;
+  var m = mean(xs), s = 0;
+  xs.forEach(function(x){ s += (x - m) * (x - m); });
+  return Math.sqrt(s / (xs.length - 1));
+}
+
+/* Student's t, by way of the regularised incomplete beta. A lookup table
+   would do for the one df this session produces, but the lecturer view
+   has to be right for whatever n turns up on the day, including the
+   afternoon half the room is missing. */
+function gammln(x){
+  var cof = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+             -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  var y = x, tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  var ser = 1.000000000190015;
+  for (var j = 0; j < 6; j++){ y += 1; ser += cof[j] / y; }
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+function betacf(a, b, x){
+  var MAXIT = 300, EPS = 3e-15, FPMIN = 1e-300;
+  var qab = a + b, qap = a + 1, qam = a - 1;
+  var c = 1, d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  var h = d;
+  for (var m = 1; m <= MAXIT; m++){
+    var m2 = 2 * m;
+    var aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    var del = d * c; h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+function betai(a, b, x){
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  var bt = Math.exp(gammln(a + b) - gammln(a) - gammln(b) + a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) return bt * betacf(a, b, x) / a;
+  return 1 - bt * betacf(b, a, 1 - x) / b;
+}
+function tcdf(t, df){
+  var p = 0.5 * betai(df / 2, 0.5, df / (df + t * t));
+  return t > 0 ? 1 - p : p;
+}
+function tinv(p, df){
+  var lo = -400, hi = 400;
+  for (var i = 0; i < 120; i++){
+    var mid = (lo + hi) / 2;
+    if (tcdf(mid, df) < p) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* The smallest standardised difference a paired design of this many
+   pairs would catch four times in five at the conventional threshold.
+
+   This is solved rather than approximated. The usual closed form,
+   (z_a + z_b) / sqrt(n), is out by about .04 at the sizes a half-group
+   produces, and the whole reason this figure is on screen is that it is
+   larger than people expect — a number that is wrong in the reassuring
+   direction, for the smallest rooms, would be worse than no number.
+
+   What is solved is the power of a paired t test: the difference d for
+   which the non-central t puts 80% of its mass past the critical value.
+   The non-central t has no closed form either, so it is integrated: a
+   t with df degrees of freedom and non-centrality nc is (Z + nc) / U,
+   where U is the square root of a chi-square over its df, which leaves
+   one well-behaved integral over U of the normal CDF. */
+var ALPHA = 0.05;
+var POWER = 0.80;
+
+/* erfc to full double precision, Chebyshev-style. The normal CDF is
+   built on it rather than on the incomplete gamma above because this
+   runs a few hundred thousand times per press of the button. */
+var ERFC_COF = [
+  -1.3026537197817094, 6.4196979235649026e-1, 1.9476473204185836e-2,
+  -9.561514786808631e-3, -9.46595344482036e-4, 3.66839497852761e-4,
+  4.2523324806907e-5, -2.0278578112534e-5, -1.624290004647e-6,
+  1.303655835580e-6, 1.5626441722e-8, -8.5238095915e-8,
+  6.529054439e-9, 5.059343495e-9, -9.91364156e-10, -2.27365122e-10,
+  9.6467911e-11, 2.394038e-12, -6.886027e-12, 8.94487e-13,
+  3.13092e-13, -1.12708e-13, 3.81e-16, 7.106e-15
+];
+function erfc(x){
+  var z = Math.abs(x), t = 2 / (2 + z), ty = 4 * t - 2;
+  var d = 0, dd = 0, tmp;
+  for (var j = ERFC_COF.length - 1; j > 0; j--){
+    tmp = d; d = ty * d - dd + ERFC_COF[j]; dd = tmp;
+  }
+  var ans = t * Math.exp(-z * z + 0.5 * (ERFC_COF[0] + ty * d) - dd);
+  return x >= 0 ? ans : 2 - ans;
+}
+function normCdf(z){ return 0.5 * erfc(-z / Math.SQRT2); }
+
+/* Simpson over u, the square root of a chi-square over its df. Its mean
+   is 1 and its spread is about 1/sqrt(2 df), so the range below holds
+   everything the density has; outside it the integrand is past e^-70. */
+function nctCdf(t, df, nc){
+  var hi = 1 + 15 / Math.sqrt(2 * df);
+  if (hi < 2) hi = 2;
+  var steps = 2000;
+  var h = hi / steps;
+  var logK = Math.log(2) + (df / 2) * Math.log(df / 2) - gammln(df / 2);
+  function f(u){
+    if (u <= 0) return 0;
+    var logg = logK + (df - 1) * Math.log(u) - df * u * u / 2;
+    if (logg < -700) return 0;
+    return normCdf(t * u - nc) * Math.exp(logg);
+  }
+  var sum = f(0) + f(hi);
+  for (var i = 1; i < steps; i++){
+    sum += f(i * h) * (i % 2 ? 4 : 2);
+  }
+  return sum * h / 3;
+}
+
+function pairedPower(d, n){
+  var df = n - 1;
+  var crit = tinv(1 - ALPHA / 2, df);
+  var nc = d * Math.sqrt(n);
+  var upper = 1 - nctCdf(crit, df, nc);
+  var lower = nctCdf(-crit, df, nc);
+  if (!isFinite(lower)) lower = 0;
+  return upper + lower;
+}
+
+function detectableEffect(n){
+  if (n < 2) return null;
+  var lo = 1e-6, hi = 5;
+  if (pairedPower(hi, n) < POWER) return null;
+  for (var i = 0; i < 60; i++){
+    var mid = (lo + hi) / 2;
+    if (pairedPower(mid, n) < POWER) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+function summarise(pairs){
+  var n = pairs.length;
+  if (n < 2) return { n: n };
+  var ds = pairs.map(function(p){ return p.d; });
+  var ask = pairs.map(function(p){ return p.ask.m.index; });
+  var none = pairs.map(function(p){ return p.none.m.index; });
+  var md = mean(ds), sdd = sd(ds);
+  var se = sdd / Math.sqrt(n);
+  var t = tinv(0.975, n - 1);
+  var dz = detectableEffect(n);
+  function avg(side, f){ return mean(pairs.map(function(p){ return f(p[side]); })); }
+  return {
+    n: n,
+    meanAsk: mean(ask),
+    meanNone: mean(none),
+    diff: md,
+    sdDiff: sdd,
+    se: se,
+    tcrit: t,
+    lo: md - t * se,
+    hi: md + t * se,
+    dz: dz,
+    mdeUnits: dz === null ? null : dz * sdd,
+    soppAsk: avg("ask", function(s){ return s.m.strongOpposing; }),
+    soppNone: avg("none", function(s){ return s.m.strongOpposing; }),
+    secsAsk: avg("ask", function(s){ return s.r.secs; }),
+    secsNone: avg("none", function(s){ return s.r.secs; }),
+    tlxAsk: avg("ask", function(s){ return s.r.tlx; }),
+    tlxNone: avg("none", function(s){ return s.r.tlx; }),
+    qAsk: avg("ask", function(s){ return s.r.q; }),
+    qNone: avg("none", function(s){ return s.r.q; }),
+    movedAsk: avg("ask", function(s){ return s.r.moved ? 1 : 0; }),
+    movedNone: avg("none", function(s){ return s.r.moved ? 1 : 0; }),
+    flipAsk: avg("ask", function(s){ return s.r.side !== s.r.endSide ? 1 : 0; }),
+    flipNone: avg("none", function(s){ return s.r.side !== s.r.endSide ? 1 : 0; })
+  };
+}
+
+/* ---------------- Cohen's kappa ---------------- */
+/* Shown with the 2×2 it came from and with chance agreement beside it,
+   because a kappa on its own is a number students have no way to argue
+   with, and arguing with it is the exercise. */
+function kappa2x2(a, b, c, d){
+  var n = a + b + c + d;
+  if (n <= 0) return { error: "no pairs entered" };
+  var po = (a + d) / n;
+  var pe = ((a + b) * (a + c) + (c + d) * (b + d)) / (n * n);
+  if (pe >= 1) return { n: n, po: po, pe: pe, kappa: null,
+                        note: "every pair falls in one category, so chance agreement is total and kappa is undefined" };
+  return { n: n, po: po, pe: pe, kappa: (po - pe) / (1 - pe) };
+}
+
+/* Exposed so the fixtures can be run against this exact code from
+   outside a browser. Nothing here is a codebook and nothing here is
+   state; it is arithmetic. */
+window.BXP = {
+  parseCodebook: parseCodebook, parseLine: parseLine, roundIndex: roundIndex,
+  pairUp: pairUp, summarise: summarise, kappa2x2: kappa2x2,
+  detectableEffect: detectableEffect, pairedPower: pairedPower,
+  nctCdf: nctCdf, normCdf: normCdf, tinv: tinv, tcdf: tcdf,
+  mean: mean, sd: sd, agentPrompt: agentPrompt, tlxTotal: tlxTotal,
+  perceptionTotal: perceptionTotal, roundBlock: roundBlock, TLX: TLX,
+  PERCEPTION: PERCEPTION
+};
+
+/* ==================================================================
+   The lecturer view. Wiring only — every number it shows comes from the
+   pure functions above.
+
+   Since ADR-0016 this is the fallback path rather than the primary one:
+   what happens when the service is down. It is built first because it
+   is the arithmetic the dashboard will also need, and because it can be
+   tested without any infrastructure at all.
+   ================================================================== */
+
+function fmt(x, dp){
+  if (x === null || x === undefined || !isFinite(x)) return "—";
+  return (x < 0 ? "−" : "") + Math.abs(x).toFixed(dp === undefined ? 3 : dp);
+}
+function pct(x){ return x === null ? "—" : Math.round(x * 100) + "%"; }
+function pair(a, b, dp){ return fmt(a, dp) + " / " + fmt(b, dp); }
+
+function drawBar(id, valueId, v){
+  var fill = $(id);
+  var half = Math.max(-1, Math.min(1, v)) * 50;
+  fill.style.left = (half >= 0 ? 50 : 50 + half) + "%";
+  fill.style.width = Math.abs(half) + "%";
+  $(valueId).textContent = fmt(v, 3);
+}
+
+$("b-analyse").addEventListener("click", function(){
+  clearFail("e-an");
+  var book = parseCodebook($("f-codebook").value);
+  if (book.n === 0){
+    /* No worked example here either: naming a card beside a cell would be
+       the answer key, on the one page that must not hold it. */
+    fail("e-an", "No card codes found. A line is read when it carries a card id and then that card's cell code — which is what every row of the codebook's two tables does.");
+    $("f-codebook").focus();
+    return;
+  }
+  if (book.duplicates.length){
+    fail("e-an", "These cards are coded more than once, and the last one wins: " + book.duplicates.join(", ") + ". Check the paste before you read anything below.");
+  }
+
+  var accepted = [], rejected = [];
+  $("f-lines").value.split(/\r?\n/).forEach(function(raw, i){
+    if (!raw.trim()) return;
+    var out = parseLine(raw);
+    if (out.error) rejected.push({ n: i + 1, why: out.error, text: raw.trim() });
+    else accepted.push(out.rec);
+  });
+
+  var up = pairUp(accepted, book.map);
+  up.dropped.forEach(function(d){ rejected.push({ n: null, why: d.why, text: d.code }); });
+
+  $("an-cards").textContent = String(book.n);
+  $("an-ok").textContent = String(accepted.length);
+  $("an-bad").textContent = String(rejected.length);
+  $("an-paired").textContent = String(up.pairs.length);
+
+  var rl = $("an-reject-list");
+  rl.textContent = "";
+  rejected.forEach(function(r){
+    var li = document.createElement("li");
+    var where = document.createElement("strong");
+    where.textContent = r.n ? ("Line " + r.n + ": ") : ("Code " + r.text + ": ");
+    li.appendChild(where);
+    li.appendChild(document.createTextNode(r.why));
+    if (r.n){
+      li.appendChild(document.createTextNode(" — "));
+      var code = document.createElement("code");
+      code.textContent = r.text.length > 90 ? r.text.slice(0, 90) + "…" : r.text;
+      li.appendChild(code);
+    }
+    rl.appendChild(li);
+  });
+  $("an-rejects").hidden = (rejected.length === 0);
+
+  $("an-out").hidden = false;
+
+  var st = summarise(up.pairs);
+  if (st.n < 2){
+    ["s-ask","s-none","s-diff","s-ci","s-mde","s-sopp-ask","s-sopp-none","s-secs","s-tlx","s-q","s-moved","s-flip"]
+      .forEach(function(id){ $(id).textContent = "—"; });
+    drawBar("bar-ask", "val-ask", 0);
+    drawBar("bar-none", "val-none", 0);
+    $("an-question").textContent = "Two pairs are the fewest this can work with, and there are " + st.n + ". What would you need before the room could read anything off a comparison at all?";
+    return;
+  }
+
+  drawBar("bar-ask", "val-ask", st.meanAsk);
+  drawBar("bar-none", "val-none", st.meanNone);
+
+  $("s-ask").textContent = fmt(st.meanAsk, 3);
+  $("s-none").textContent = fmt(st.meanNone, 3);
+  $("s-diff").textContent = fmt(st.diff, 3);
+  $("s-ci").textContent = fmt(st.lo, 3) + " to " + fmt(st.hi, 3) + "  (n = " + st.n + ", t = " + fmt(st.tcrit, 3) + ")";
+  $("s-mde").textContent = fmt(st.dz, 3) + " standard deviations, which on these answers is " + fmt(st.mdeUnits, 3) + " index points";
+  $("s-sopp-ask").textContent = fmt(st.soppAsk, 2) + " of 8 on average";
+  $("s-sopp-none").textContent = fmt(st.soppNone, 2) + " of 8 on average";
+  $("s-secs").textContent = pair(st.secsAsk, st.secsNone, 0) + " seconds";
+  $("s-tlx").textContent = pair(st.tlxAsk, st.tlxNone, 1);
+  $("s-q").textContent = pair(st.qAsk, st.qNone, 2);
+  $("s-moved").textContent = pct(st.movedAsk) + " / " + pct(st.movedNone);
+  $("s-flip").textContent = pct(st.flipAsk) + " / " + pct(st.flipNone);
+
+  /* AN-3. There is one sentence's worth of text here and it is a
+     question, twice over. The two numbers it turns on are written into
+     it rather than sat beside it, so neither can go missing. */
+  $("an-question").textContent =
+    "The interval on the difference runs from " + fmt(st.lo, 3) + " to " + fmt(st.hi, 3) +
+    ", and the smallest difference " + st.n + " pairs could have caught four times in five is " +
+    fmt(st.mdeUnits, 3) + " index points. Two questions for the room. Which of the values inside that interval " +
+    "would have changed the advice you would give an SME? And if more than one of them would, what would this " +
+    "session have to do differently to tell those values apart?";
+});
+
+/* ---------------- kappa ---------------- */
+$("b-kappa").addEventListener("click", function(){
+  clearFail("e-kappa");
+  var v = ["k-a", "k-b", "k-c", "k-d"].map(function(id){ return Number($(id).value); });
+  for (var i = 0; i < 4; i++){
+    if (!isFinite(v[i]) || v[i] < 0 || v[i] !== Math.floor(v[i])){
+      fail("e-kappa", "All four cells need a whole number of pairs, 0 or more.");
+      return;
+    }
+  }
+  var k = kappa2x2(v[0], v[1], v[2], v[3]);
+  if (k.error){ fail("e-kappa", k.error); $("k-out").hidden = true; return; }
+  $("k-n").textContent = String(k.n);
+  $("k-po").textContent = fmt(k.po, 3) + "  (" + (v[0] + v[3]) + " of " + k.n + ")";
+  $("k-pe").textContent = fmt(k.pe, 3);
+  $("k-k").textContent = k.kappa === null ? k.note : fmt(k.kappa, 3);
+  $("k-out").hidden = false;
+});
+
+/* ---------------- a fixture, for a dry run ---------------- */
+/* Thirty-two lines built from a fixed seed, so the same button always
+   produces the same room. It is here to rehearse the ten minutes
+   between the last student finishing and the comparison going up, which
+   is the part of the session that has no slack in it. The real fixtures
+   with their reference values live beside the build plan; this one
+   exists so an owner can see the screen fill up. */
+function seeded(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+$("b-demo").addEventListener("click", function(){
+  var rnd = seeded(20260915);
+  var words = ["kite","pumice","bramble","gannet","quartz","lintel","mallow","osprey","tundra","verger",
+               "willow","yarrow","zephyr","alder","birch","cedar","damson","elder","fennel","gorse",
+               "hazel","ilex","juniper","kelp","larch","medlar","nettle","oleander","privet","quince",
+               "rowan","sorrel"];
+  var lines = [];
+  for (var i = 0; i < 32; i++){
+    var team = (i % 8) + 1;
+    var agentRound = team <= 4 ? 2 : 1;
+    var blocks = [];
+    for (var n = 1; n <= 2; n++){
+      var deck = n === 1 ? DECK1 : DECK2;
+      var side = rnd() < 0.5 ? "a" : "d";
+      var ids = deck.map(function(c){ return c.id; });
+      for (var k = ids.length - 1; k > 0; k--){
+        var j = Math.floor(rnd() * (k + 1));
+        var tmp = ids[k]; ids[k] = ids[j]; ids[j] = tmp;
+      }
+      var opened = ids.slice(0, 6 + Math.floor(rnd() * 3));
+      if (opened.length > 8) opened = opened.slice(0, 8);
+      var end = rnd() < 0.15 ? (side === "a" ? "d" : "a") : side;
+      blocks.push([
+        "r" + n,
+        agentRound === n ? "ask" : "none",
+        "c" + n,
+        "pos" + side,
+        "op" + opened.length,
+        "ids=" + opened.join(","),
+        "s" + (90 + Math.floor(rnd() * 200)),
+        "end" + end,
+        "moved" + (rnd() < 0.4 ? 1 : 0),
+        "tlx" + (25 + Math.floor(rnd() * 45)),
+        "q" + (4 + Math.floor(rnd() * 9))
+      ].join(":"));
+    }
+    lines.push(["v1", words[i], "t" + team, blocks[0], blocks[1]].join("|"));
+  }
+  $("f-lines").value = lines.join("\n");
+  if (!$("f-codebook").value.trim()){
+    fail("e-an", "Thirty-two lines loaded. The codebook is still empty — paste the two tables from work/drafts/week-03-codebook.md above, then press Work it out.");
+    $("f-codebook").focus();
+  }
+});
+
 /* ---------------- resume ---------------- */
 /* A reload in the middle of a round puts the student back where they
-   were, on the card they were looking at, with the opens they had left. */
+   were, on the card they were looking at, with the opens they had left.
+   The screen recorded in state is the truth about where they are; the
+   round's own counters are the fallback for a state written before that
+   screen existed. */
 (function resume(){
-  $("claim-1").textContent = CLAIM1;
-  $("claim-1b").textContent = CLAIM1;
-
-  if (!S.consented || !S.r1 || !S.code){ show("consent"); return; }
+  if (!S.consented || !S.rounds || !S.rounds[1] || !S.code){ show("consent"); return; }
 
   $("f-code").value = S.code || "";
   $("f-team").value = S.team ? String(S.team) : "";
+  if (!S.rounds[S.round]) S.round = 1;
 
-  /* A locked position is locked, so the controls that produced it are put
-     back as they were rather than left empty behind the student. */
-  restoreSide("side", S.r1.side);
-  restoreSide("fside", S.r1.finalSide);
+  var r = R();
+  tagRounds();
 
-  if (S.screen === "done" && S.r1.final){ toDone(); return; }
-  if (S.screen === "final" || S.r1.idx >= S.r1.order.length){
-    $("f-position").value = S.r1.locked;
-    toFinal(); return;
-  }
-  if (S.r1.locked){ $("f-position").value = S.r1.locked; toCard(); return; }
+  if (S.screen === "done" && S.rounds[2] && S.rounds[2].answers){ toDone(); return; }
+  if (S.screen === "bridge"){ show("bridge"); return; }
+  if (S.screen === "questions" && r.final){ toQuestions(); return; }
+  if (S.screen === "final" || (r.locked && r.idx >= r.order.length)){ toFinal(); return; }
+  if (S.screen === "agent" && r.locked && r.agent && !r.agentReply){ toAgent(); return; }
+  if (r.locked){ toCard(); return; }
   toPosition();
+})();
+</script>
+
+<!-- Instructor view. ?instructor reveals every [data-audience="instructor"] section and
+     sticks for the rest of the visit; ?student turns it off again. This is signposting, not
+     access control: the markup is public either way, so nothing whose worth depends on a
+     student not having read it belongs in site/ at all. See CLAUDE.md. -->
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
 })();
 </script>
 
