@@ -6,6 +6,9 @@
 __pycache__/
 .pytest_cache/
 
+# Agent worktrees — checkouts of branches that are in the repository already
+.claude/worktrees/
+
 # Secrets — this repository is public
 .env
 .env.*
