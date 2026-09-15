@@ -320,7 +320,7 @@ pre.tree {
     <div class="tbl-wrap"><table>
       <thead><tr><th>Part</th><th>Does</th><th>Knows nothing about</th></tr></thead>
       <tbody>
-        <tr><th>Card deck</th><td>Holds 32 cards as data: 2 claims &times; 16. Title, outlet, year, teaser, extract, link.</td><td>Which cell a card belongs to. The deck in the published page carries no stance or quality label.</td></tr>
+        <tr><th>Card deck</th><td>Holds 32 cards as data: 2 claims &times; 16. Title, APA reference, teaser, extract, link.</td><td>Which cell a card belongs to. The deck in the published page carries no stance or quality label.</td></tr>
         <tr><th>Session runner</th><td>Consent, position, shuffle, the budget of 8, the agent step, the closing questions. Writes one result line.</td><td>What the numbers mean. It counts; it does not judge.</td></tr>
         <tr><th>Result line</th><td>The only thing that crosses between a student and the class. One line of text, copied by hand.</td><td>Who the student is. It carries a self-chosen code.</td></tr>
         <tr><th>Service</th><td>Takes one submission of numbers, stores it for the day, aggregates on request. Two routes and nothing else.</td><td>Anything a student wrote. No sentence ever reaches it.</td></tr>
@@ -355,8 +355,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
       <tbody>
         <tr><th><code>id</code></th><td><code>c1-07</code> &mdash; claim, then position in the deck</td><td>no</td></tr>
         <tr><th><code>title</code></th><td>text</td><td>yes</td></tr>
-        <tr><th><code>outlet</code></th><td>text &mdash; journal, magazine, company</td><td>yes</td></tr>
-        <tr><th><code>year</code></th><td>4 digits</td><td>yes</td></tr>
+        <tr><th><code>ref</code></th><td>the source in APA form &mdash; authors, year, title, outlet, DOI or URL</td><td>yes</td></tr>
         <tr><th><code>teaser</code></th><td>&le; 25 words</td><td>yes</td></tr>
         <tr><th><code>extract</code></th><td>&le; 150 words, quoted from the source</td><td>no</td></tr>
         <tr><th><code>href</code></th><td>absolute URL to the real document</td><td>no</td></tr>

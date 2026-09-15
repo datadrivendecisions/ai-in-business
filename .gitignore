@@ -20,3 +20,7 @@ __pycache__/
 # Local archive of old material, kept out of the public repo
 archive/
 archive-local/
+
+# Text extracted from the wiki's PDF captures, so check-deck.py can verify a
+# quotation against it. Derived from the wiki, regenerated on demand.
+.deck-pdf-text/

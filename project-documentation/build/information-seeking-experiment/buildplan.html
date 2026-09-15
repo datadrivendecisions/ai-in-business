@@ -339,12 +339,20 @@ pre.tree {
       <li>&#9744; 0.2 Check each candidate against <code>CL-8</code> (not a team&rsquo;s own handbook topic) and <code>CL-9</code> (professional judgement, not personal values). Discard failures now; they get more expensive later.</li>
       <li>&#9744; 0.3 Pilot each survivor on &ge; 10 people: read the claim, commit to a side, hands up. Record the split and how long people took. Discard anything that splits worse than 70/30 (<code>CL-1</code>) or that people cannot answer inside a minute (<code>CL-10</code>).</li>
       <li>&#9744; 0.4 Of what is left, pick the two whose splits are closest to each other (<code>CL-7</code>) and which share no subject matter (<code>CL-6</code>).</li>
-      <li>&#9744; 0.5 Write the codebook rules: what makes a source count as supporting, and what makes it strong. One paragraph each, in <code>work/drafts/</code>.</li>
+      <li>&#9745; 0.5 Write the codebook rules: what makes a source count as supporting, and what makes it strong. One paragraph each, in <code>work/drafts/</code>. &mdash; <em>Done: &ldquo;How S and W were coded&rdquo; in <code>week-03-candidate-claims.md</code>, resting on the denominator rule rather than on genre.</em></li>
       <li>&#9744; 0.6 Find 16 real sources for claim 1: 4 per cell. Every one openable, free, readable in 3 minutes. <strong>Start with the hardest cell</strong> &mdash; usually the weak sources opposing the claim. If the fourth one will not come, go back to 0.4 and take the next claim.</li>
-      <li>&#9744; 0.7 For each, record title, outlet, year, teaser (&le; 25 words), extract (&le; 150 words, quoted), link.</li>
+      <li>&#9745; 0.7 For each, record title, outlet, year, teaser (&le; 25 words), extract (&le; 150 words, quoted), link.</li>
       <li>&#9744; 0.8 Two people code all 16 independently against 0.5. Compute Cohen&rsquo;s kappa. This is the instrument kappa &mdash; the data rests on it. Disagreement on more than one card in sixteen means the claim has more than one axis (<code>CL-5</code>), not that the coders were careless.</li>
       <li>&#9744; 0.9 Replace any card the two coders could not agree on. Do not negotiate it into a cell.</li>
       <li>&#9744; 0.10 Repeat 0.6&ndash;0.9 for claim 2.</li>
+      <li><strong>Where this stands.</strong> Deck&nbsp;1 is candidate claim&nbsp;2 (<em>own or rent</em>)
+      and deck&nbsp;2 is candidate claim&nbsp;3 (<em>augment or automate</em>) &mdash; the pair that shares
+      no sources, so <code>CL-6</code> holds by construction. All 32 cards are written and every extract is
+      checked back against the wiki's own capture of its source by
+      <code>check-deck.py</code> beside this plan. Still open in this phase: the pilot (0.2&ndash;0.4),
+      the two-coder kappa (0.8&ndash;0.9), the eight-card debrief set (0.11), and one openability check
+      &mdash; the De&nbsp;Ondernemer article behind deck&nbsp;2's sharpest card may be metered, which is why
+      0.6 is not ticked.</li>
       <li>&#9744; 0.11 Pick 8 cards from a coded deck, balanced 4 supporting / 4 opposing, as the set students code in the debrief.</li>
     </ul>
     <h3>Test gate</h3>
@@ -353,7 +361,7 @@ pre.tree {
       <li>&#9744; The two splits within 15 points of each other (<code>CL-7</code>, demonstration)</li>
       <li>&#9744; 0 sources shared between the two decks (<code>CL-6</code>, inspection)</li>
       <li>&#9744; Neither claim is a team&rsquo;s topic, checked against all 8 (<code>CL-8</code>, inspection)</li>
-      <li>&#9744; 4 cards in each of 4 cells, both decks (<code>SM-6</code>, <code>CL-2</code>, <code>CL-3</code>, by test against the codebook)</li>
+      <li>&#9745; 4 cards in each of 4 cells, both decks (<code>SM-6</code>, <code>CL-2</code>, <code>CL-3</code>, by test against the codebook)</li>
       <li>&#9744; Every link resolves; every extract found verbatim in its source (<code>SM-7</code>, by inspection)</li>
       <li>&#9744; Kappa recorded for both decks, with the matrix, not just the number; &ge; 15 of 16 stances agreed (<code>CL-5</code>, test)</li>
       <li>&#9744; Tester steps above completed by someone who did not build the deck</li>
@@ -371,7 +379,7 @@ pre.tree {
     <ul class="checks">
       <li>&#9745; 1.1 Create the file; copy the token block, <code>bds-nav</code> and <code>bds-footer</code> from <code>site/index.html</code>.</li>
       <li>&#9745; 1.2 Copy <code>loadState/saveState/clearState</code> from <code>tool-ai-worker-maturity.html</code>. One key.</li>
-      <li>&#9744; 1.3 Embed deck 1 as data. No stance or quality fields in the file.</li>
+      <li>&#9745; 1.3 Embed deck 1 as data. No stance or quality fields in the file. Both decks are embedded; <code>DECK2</code> is data only until phase 3 builds the second round.</li>
       <li>&#9745; 1.4 Consent screen, with the storage sentence and a code field. No name field.</li>
       <li>&#9745; 1.5 Position screen; lock the sentence once submitted.</li>
       <li>&#9745; 1.6 Shuffle the 16 cards; store the order.</li>

@@ -156,6 +156,53 @@ textarea { min-height: 5.5rem; resize: vertical; }
 select { max-width: 12rem; }
 input[type="text"] { max-width: 18rem; }
 
+/* The side, committed before the sentence. Native radios tinted with
+   accent-color rather than replaced by custom controls: a hand-built
+   control would have to re-earn the keyboard behaviour and the
+   screen-reader semantics the browser gives away, and this page has no
+   framework to lean on. Where accent-color is not supported the radio
+   still draws its own checked dot, so the chosen side is never carried
+   by the border alone. */
+.sides { border: 0; padding: 0; margin: 0 0 var(--space-6); }
+.sides legend { display: block; font-weight: 600; padding: 0; }
+.sides .hint {
+  font-weight: 400; font-size: var(--text-sm);
+  color: var(--text-secondary); margin: var(--space-1) 0 var(--space-3);
+}
+.side-row { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+.side-option {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  font-weight: 600; cursor: pointer; accent-color: var(--supporting);
+  background: var(--bg-page);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+}
+.side-option:hover { background: var(--bg-cream-2); }
+/* inset shadow rather than a thicker border, so choosing a side does not
+   shift the row it sits in */
+.side-option:has(input:checked) {
+  border-color: var(--supporting); box-shadow: inset 0 0 0 1px var(--supporting);
+}
+.side-option input { margin: 0; width: 1.1rem; height: 1.1rem; }
+
+/* the side, quoted back on later screens */
+.side-badge {
+  display: inline-block; margin-left: var(--space-2);
+  font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em;
+  font-weight: 700; color: var(--bg-page); background: var(--supporting);
+  border-radius: var(--radius-sm); padding: 1px var(--space-2);
+}
+.side-badge[hidden] { display: none; }
+
+/* The claim above a card is a reminder, not the headline it is on the
+   position screen, so it is set smaller there. */
+.claim-box-compact { padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+.claim-box-compact .claim-text { font-size: var(--text-base); line-height: 1.45; }
+
+/* An eyebrow is --text-muted, which on cream is 4.26:1 and below AA. The
+   cream blocks therefore override it, as the handbook's .handin does. */
+.locked .bds-eyebrow, .claim-box .bds-eyebrow { color: var(--text-secondary); }
+
 .btn {
   font: inherit; font-weight: 600; cursor: pointer;
   border: 2px solid var(--supporting); border-radius: var(--radius-sm);
@@ -189,8 +236,8 @@ input[type="text"] { max-width: 18rem; }
   background: var(--bg-page);
 }
 .card-title { font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-2); line-height: 1.3; }
-.card-meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0 0 var(--space-4); }
-.card-teaser { margin: 0; }
+.card-meta { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-3) 0 0; }
+.card-teaser { margin: 0 0 var(--space-1); }
 .card-extract {
   border-left: 4px solid var(--primary);
   padding-left: var(--space-4); margin: var(--space-6) 0 var(--space-4);
@@ -277,7 +324,7 @@ input[type="text"] { max-width: 18rem; }
     <p class="lead">You will be shown sixteen sources, one at a time. You may open eight of them. Before that, you write down where you stand; afterwards, you write it down again.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not finished.</strong> This page is being built. The claim and the sixteen sources below are placeholders &mdash; the real ones are still being assembled and checked. The machinery around them works, so you can walk the whole exercise through today and see what it asks of you.</p>
+  <p class="tpl-notice"><strong>Not finished.</strong> The claim and its sixteen sources are real: every extract is quoted from the document it names, and every link goes to that document. What is still missing is the second round on a different claim, the step where an assistant argues with the position you locked, and the one line of result you hand in. You can walk this round through today and see what it asks of you.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -329,14 +376,30 @@ input[type="text"] { max-width: 18rem; }
       <p class="claim-text" id="claim-1"></p>
     </div>
 
+    <!-- Two controls, in this order: the side, then the reason for it. The
+         side is what the result line measures against, so it cannot be
+         left to be inferred from a sentence. -->
+    <fieldset class="sides">
+      <legend>Where do you stand, right now, before reading anything?</legend>
+      <p class="hint">Commit to a side. The sentence underneath is your reason for it.</p>
+      <div class="side-row">
+        <label class="side-option" for="side-agree">
+          <input type="radio" name="side" id="side-agree" value="agree"> I agree
+        </label>
+        <label class="side-option" for="side-disagree">
+          <input type="radio" name="side" id="side-disagree" value="disagree"> I disagree
+        </label>
+      </div>
+    </fieldset>
+
     <div class="field">
-      <label for="f-position">Write your position in one sentence
-        <span class="hint">Not a summary of the arguments &mdash; where <em>you</em> land, today, before reading anything. You will be asked again at the end, and you may change your mind then.</span>
+      <label for="f-position">In one sentence, why?
+        <span class="hint">Not a summary of the arguments &mdash; why <em>you</em> land there, today, before reading anything. You will be asked again at the end, and you may change your mind then.</span>
       </label>
-      <textarea id="f-position"></textarea>
+      <textarea id="f-position" aria-errormessage="e-position"></textarea>
     </div>
 
-    <p class="err" id="e-position" hidden></p>
+    <p class="err" id="e-position" role="alert" hidden></p>
 
     <div class="warn">
       <p>Once you submit this sentence it is locked. You cannot edit it, and you will see it again later.</p>
@@ -358,15 +421,31 @@ input[type="text"] { max-width: 18rem; }
       <span aria-live="polite">Opens left: <strong id="m-budget">8</strong></span>
     </div>
 
+    <!-- The claim and the position stay above every card. The PRD asks for
+         the position, because the measurement is about this position; the
+         claim is here too because by card twelve nobody recalls its exact
+         wording, and a reader guessing at the claim is not reading the
+         card in front of them. Neither is sticky: a second fixed bar under
+         the navigation costs a phone most of its screen. -->
+    <div class="claim-box claim-box-compact">
+      <p class="bds-eyebrow">The claim</p>
+      <p class="claim-text" id="claim-1c"></p>
+    </div>
+
     <div class="locked">
-      <p class="bds-eyebrow">Your position</p>
+      <p class="bds-eyebrow">Your position <span class="side-badge" id="m-side" hidden></span></p>
       <p id="m-locked"></p>
     </div>
 
     <article class="card" aria-live="polite">
       <h3 class="card-title" id="c-title"></h3>
-      <p class="card-meta" id="c-meta"></p>
       <p class="card-teaser" id="c-teaser"></p>
+      <!-- The reference sits after the teaser rather than before it. A full APA
+           entry runs to 55 words on the longest card, which at phone width is
+           taller than the teaser and would push it off the screen — and the
+           teaser is the thing a reader is weighing when they decide whether to
+           spend an open. -->
+      <p class="card-meta" id="c-meta"></p>
 
       <div id="c-opened" hidden>
         <div class="card-extract" id="c-extract"></div>
@@ -402,18 +481,34 @@ input[type="text"] { max-width: 18rem; }
     </div>
 
     <div class="locked">
-      <p class="bds-eyebrow">What you wrote before you read anything</p>
+      <p class="bds-eyebrow">What you wrote before you read anything <span class="side-badge" id="f-side-was" hidden></span></p>
       <p id="f-locked"></p>
     </div>
 
+    <!-- The same two controls as the first position screen. Nothing is
+         pre-selected: a pre-ticked side would be the instrument answering
+         its own question. -->
+    <fieldset class="sides">
+      <legend>And now?</legend>
+      <p class="hint">Staying where you were is an answer. So is moving.</p>
+      <div class="side-row">
+        <label class="side-option" for="fside-agree">
+          <input type="radio" name="fside" id="fside-agree" value="agree"> I agree
+        </label>
+        <label class="side-option" for="fside-disagree">
+          <input type="radio" name="fside" id="fside-disagree" value="disagree"> I disagree
+        </label>
+      </div>
+    </fieldset>
+
     <div class="field">
-      <label for="f-final">Write your position again, in one sentence
+      <label for="f-final">In one sentence, why?
         <span class="hint">Copy the sentence above if nothing has changed. Saying so is a finding too.</span>
       </label>
-      <textarea id="f-final"></textarea>
+      <textarea id="f-final" aria-errormessage="e-final"></textarea>
     </div>
 
-    <p class="err" id="e-final" hidden></p>
+    <p class="err" id="e-final" role="alert" hidden></p>
 
     <div class="btn-row">
       <button type="button" class="btn" id="b-final">Finish</button>
@@ -468,31 +563,291 @@ input[type="text"] { max-width: 18rem; }
    that is never shipped with the page.
    ================================================================== */
 
-/* ---------------- the claim ---------------- */
-/* PLACEHOLDER. The real claim comes out of phase 0 of the build plan:
-   piloted on at least ten people, kept only if it splits the room. */
-var CLAIM1 = "A firm should trust its own people’s judgement that AI is speeding them up, rather than wait to measure it.";
+/* ---------------- the claims ---------------- */
+/* Round 1 and round 2. Both satisfy CL-4: each names two alternatives
+   rather than proposing one course of action, which is what makes CL-3
+   satisfiable — X and Y each have their own advocates selling against
+   the other. Whether either splits the room is settled by the 0.3
+   pilot, not here. */
+var CLAIM1 = "An SME should run its AI on small models it controls rather than on frontier models it rents.";
+var CLAIM2 = "An SME's first AI project should make its existing staff faster rather than remove steps from a process.";
 
-/* ---------------- the deck ---------------- */
-/* PLACEHOLDER, 16 cards of the right shape and nothing else. Real cards
-   carry a title, an outlet, a year, a teaser of 25 words or fewer, an
-   extract of 150 words or fewer quoted from the document, and an
-   absolute link to it. An empty href renders as an unfilled slot. */
-var DECK1 = [];
-(function(){
-  for (var i = 1; i <= 16; i++){
-    var n = (i < 10 ? "0" : "") + i;
-    DECK1.push({
-      id: "c1-" + n,
-      title: "Placeholder source " + n,
-      outlet: "Outlet " + n,
-      year: "20" + (10 + (i % 17)),
-      teaser: "One or two lines of abstract go here — enough to decide whether to spend an open on it, and no more than twenty-five words.",
-      extract: "The extract from source " + n + " goes here: up to a hundred and fifty words, quoted from the document itself rather than summarised, so that what you read is what the source actually says.",
-      href: ""
-    });
+/* ---------------- the decks ---------------- */
+/* Each card carries a title, an APA reference (which supplies the outlet
+   and the year that SM-5 asks for, and the authors the earlier shape
+   dropped), a teaser of 25 words or fewer, an extract of 150 words or
+   fewer quoted from the source, and an absolute link to the original
+   document rather than to a summary of it.
+
+   Every extract is checked back against the AI Wiki's own capture of the
+   source by check-deck.py in project-documentation/build/, which fails
+   if a quotation cannot be found. Cards are ordered by a hash of their
+   source, so the order here reveals nothing about the cells: the
+   codebook that maps a card id to its cell lives in work/drafts/ and is
+   deliberately not in this repository's published directory.
+
+   DECK2 is data only until phase 3 builds the second-round screen. */
+var DECK1 = [
+  {
+    id: "c1-01",
+    title: "How Agentic AI Is Reshaping Finance Workflows, Processes, and Governance",
+    ref: "CFA Institute. (2026, September 1). How agentic AI is reshaping finance workflows, processes, and governance [Video]. YouTube. https://www.youtube.com/watch?v=E8BbWoP9-Xk",
+    teaser: "A finance roundtable in which a practitioner describes running open models through the same pipeline as a proprietary baseline.",
+    extract: "Whereas with, to Brian's point, like using one of these proprietary models, you have that ability to scale very, very quickly and you can have batch requests where you send 50,000, you know, requests to and through an API and you get results back within 24 hours. It's very, very difficult to replicate that, locally unless you invest a lot in the infrastructure.",
+    href: "https://www.youtube.com/watch?v=E8BbWoP9-Xk"
+  },
+  {
+    id: "c1-02",
+    title: "How Well Can AI Do Strategy? Empirical Benchmarking Using Strategy Simulations",
+    ref: "Allen, R. T., & McDonald, R. M. (2026). How well can AI do strategy? Empirical benchmarking using strategy simulations. Strategy Science, 11(1), 93-117. https://doi.org/10.1287/stsc.2025.0444",
+    teaser: "Twenty-one proprietary and thirteen open-source models were run through the same business-strategy simulation under identical conditions, and scored against past MBA cohorts.",
+    extract: "Finally, to compare proprietary models with open-source alternatives, we also ran the simulation using prominent open-source models, including DeepSeek, Gemma, Qwen, Llama (from Meta), and GPT-OSS. Each run was conducted under the same conditions as the main analyses, with masked terms, default instructions, and Advanced mode. [...] As shown in the figures, open-source models generally exhibited substantially lower performance on the BBB benchmark compared with proprietary systems. Their performance appears less systematically correlated with release date, and although we do not observe the clear decline seen in the latest proprietary models, open-source results seem to have plateaued at a markedly lower level of performance.",
+    href: "https://doi.org/10.1287/stsc.2025.0444"
+  },
+  {
+    id: "c1-03",
+    title: "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs",
+    ref: "Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. In Proceedings of the 34th USENIX Security Symposium (pp. 3687-3706). USENIX Association. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen",
+    teaser: "Sixteen code-generating models were measured for how often they invent software packages that do not exist, across two programming languages.",
+    extract: "Using 16 popular LLMs for code generation and two unique prompt datasets, we generate 576,000 code samples in two programming languages that we analyze for package hallucinations. Our findings reveal that that the average percentage of hallucinated packages is at least 5.2% for commercial models and 21.7% for open-source models, including a staggering 205,474 unique examples of hallucinated package names, further underscoring the severity and pervasiveness of this threat.",
+    href: "https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen"
+  },
+  {
+    id: "c1-04",
+    title: "Small Language Models are the Future of Agentic AI",
+    ref: "Belcak, P., Heinrich, G., Diao, S., Fu, Y., Dong, X., Muralidharan, S., Lin, Y. C., & Molchanov, P. (2025). Small language models are the future of agentic AI (arXiv:2506.02153). arXiv. https://arxiv.org/abs/2506.02153",
+    teaser: "A position paper from a chip maker's research lab arguing that small models, not frontier ones, should run most agent work.",
+    extract: "Inference efficiency. Serving a 7bn SLM is 10-30x cheaper (in latency, energy consumption, and FLOPs) than a 70-175bn LLM, enabling real-time agentic responses at scale. Recent advances in inference operating systems such as NVIDIA Dynamo explicitly provide support for high-throughput, low-latency SLM inference in both cloud and edge deployments. In addition, since SLMs require less or no parallelization across GPUs and nodes, the maintenance and operation of the serving infrastructure comes at a lower expense as well (see item CA4 and item A13). [...] Fine-tuning agility. Parameter-efficient (e.g., LoRA and DoRA), low-resource, and full-parameter finetuning for SLMs require only a few GPU-hours, allowing behaviors to be added, fixed, or specialized overnight rather than over weeks.",
+    href: "https://arxiv.org/abs/2506.02153"
+  },
+  {
+    id: "c1-05",
+    title: "How Companies Are Building Their Own Intelligence",
+    ref: "Sequoia Capital. (2026, August 11). How companies are building their own intelligence | Sonya Huang, Sequoia Capital [Video]. YouTube. https://www.youtube.com/watch?v=bMMv0bZzONg",
+    teaser: "An investor's keynote to her own portfolio, opening an event about owning your models rather than renting them.",
+    extract: "I hereby present the AI version of this meme. Not your weights, not your product. Um, I think that for a product to be truly yours, I think it's reasonable to think that you need to be able to control control and custody your own weights.",
+    href: "https://www.youtube.com/watch?v=bMMv0bZzONg"
+  },
+  {
+    id: "c1-06",
+    title: "APIGen-MT: Agentic Pipeline for Multi-Turn Data Generation via Simulated Agent-Human Interplay",
+    ref: "Prabhakar, A., Liu, Z., Zhu, M., Zhang, J., Awalgaonkar, T., Wang, S., Liu, Z., Chen, H., Hoang, T., Niebles, J. C., Heinecke, S., Yao, W., Wang, H., Savarese, S., & Xiong, C. (2025). APIGen-MT: Agentic pipeline for multi-turn data generation via simulated agent-human interplay (arXiv:2504.03601). arXiv. https://arxiv.org/abs/2504.03601",
+    teaser: "An open-weight model family, released with its training data, ranked against proprietary models on a multi-turn function-calling leaderboard.",
+    extract: "On the BFCL v3 benchmark, our models demonstrate exceptional performance. As shown in Table 1, xLAM-2-70b-fc-r and xLAM-2-32b-fc-r achieve the top 2 positions on the leaderboard with overall accuracies of 78.19% and 75.83% respectively, surpassing all proprietary and open-source models. The most striking advantage appears in multi-turn scenarios, where our models excel across all parameter scales. xLAM-2-70b-fc-r achieves 75.12% multi-turn accuracy, while our smaller models show remarkable capabilities with xLAM-2-8b-fc-r at 69.25%, xLAM-2-3b-fc-r at 56.00%, and even xLAM-2-1b-fc-r at 43.12% - all substantially outperforming o1 (36%) and gpt-4o in function-calling mode (41%).",
+    href: "https://arxiv.org/abs/2504.03601"
+  },
+  {
+    id: "c1-07",
+    title: "Garry Tan: Own Your Intelligence",
+    ref: "Y Combinator. (2026, August 6). Garry Tan: Own your intelligence [Video]. YouTube. https://www.youtube.com/watch?v=eRrc1pUY5oU",
+    teaser: "An accelerator chief executive's keynote, delivered while open-sourcing his own firm's stack.",
+    extract: "Together that harness might be openclaw hermes agent claude code or codeex add that up and that gives you an agent that acts like a very fast version of you model quality is rented but your brain is owned ideally by you.",
+    href: "https://www.youtube.com/watch?v=eRrc1pUY5oU"
+  },
+  {
+    id: "c1-08",
+    title: "Artificial Intelligence Index Report 2025",
+    ref: "Maslej, N., Fattorini, L., Perrault, R., Gil, Y., Parli, V., Kariuki, N., Capstick, E., Reuel, A., Brynjolfsson, E., Etchemendy, J., Ligett, K., Lyons, T., Manyika, J., Niebles, J. C., Shoham, Y., Wald, R., Walsh, T., Hamrah, A., Santarlasci, L., ... Oak, S. (2025). Artificial intelligence index report 2025. Stanford Institute for Human-Centered Artificial Intelligence. https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    teaser: "An independent annual index tracking what inference actually costs across vendors and years, alongside hardware cost and energy-efficiency trends.",
+    extract: "Driven by increasingly capable small models, the inference cost for a system performing at the level of GPT-3.5 dropped over 280-fold between November 2022 and October 2024. At the hardware level, costs have declined by 30% annually, while energy efficiency has improved by 40% each year.",
+    href: "https://hai.stanford.edu/ai-index/2025-ai-index-report"
+  },
+  {
+    id: "c1-09",
+    title: "London Executive Forum 2026: A Leader's Guide to Advanced Team Structures in an Agentic World",
+    ref: "AWS Events. (2026, May 21). London Executive Forum 2026 - A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=ECLHOG3uYzk",
+    teaser: "The same cloud vendor at a different event, describing what its own customer base actually chooses to do.",
+    extract: "You're going to want to use those frontier APIs - the OpenAIs, the Anthropics, the AWS. Of course you are. Absolutely. And actually, this is where I see around 80% of my customers choosing to build the agentic solutions right now. They don't want to train those models. They just want to hit the frontier model. And whether they're using Haiku, the small model, or Sonnet or Opus 4.7, available just this last few days, that's what they're choosing to do.",
+    href: "https://www.youtube.com/watch?v=ECLHOG3uYzk"
+  },
+  {
+    id: "c1-10",
+    title: "A Leader's Guide to Advanced Team Structures in an Agentic World",
+    ref: "AWS Events. (2026, June 12). A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=O7u6myBRsns",
+    teaser: "A cloud vendor's executive-forum talk setting out the cost curves for building a model against renting one.",
+    extract: "But when you b weigh the benefits of operating a small language model against the cost of building one, the economics paint the different picture. Training costs are rising 2.4x per year. At the same time, inference costs are falling 10x per year. The gap between those two curves, the pricing scissors is opening by 12 to 24x per year. What does that mean practically? It means that the cost to create a frontier model is now approaching the billions. Only a handful of companies can afford it, but the cost to use one is collapsing towards zero.",
+    href: "https://www.youtube.com/watch?v=O7u6myBRsns"
+  },
+  {
+    id: "c1-11",
+    title: "Agent Harnesses Explained: Inside the Stack Behind Antigravity, Claude Code and Cursor",
+    ref: "Google Cloud Tech. (2026, September 14). Agent harnesses explained: Inside the stack behind Antigravity, Claude Code & Cursor [Video]. In The Agent Factory. YouTube. https://www.youtube.com/watch?v=F8EZJAm9iO8",
+    teaser: "A cloud vendor's series recommending which model tier to run an agent loop on, with no measurements attached.",
+    extract: "And my daily driver this week has been Gemini 3.8 Flash. Now your initial reaction might be why Flash. [...] Agents don't work like traditional single turn prompt boxes. They run in continuous loops, so an agent might inspect a directory, update a function, execute unit tests, and then repeat that sequence 20, 40, or even 60 times just to finish one task. [...] So a fast, cost effective model isn't a downgrade. It is the exact thing that makes real time agentic loops practical and responsive.",
+    href: "https://www.youtube.com/watch?v=F8EZJAm9iO8"
+  },
+  {
+    id: "c1-12",
+    title: "Amazon CEO Andy Jassy on Agility, AI Strategy, and the Changing Role of Managers",
+    ref: "Harvard Business Review. (2025, May 6). Amazon CEO Andy Jassy on agility, AI strategy, and the changing role of managers [Video]. YouTube. https://www.youtube.com/watch?v=Nl-PpoKtxc4",
+    teaser: "The chief executive of the company that sells the middle layer he describes, on how firms should assemble AI.",
+    extract: "At that middle layer is for people that don't want to have to build their own models. They want to leverage an existing frontier model. They want to customize it with their own data. And then they actually want lots of features that make it easier to build a high-quality generative AI application.",
+    href: "https://www.youtube.com/watch?v=Nl-PpoKtxc4"
+  },
+  {
+    id: "c1-13",
+    title: "Hugging Face's CEO on Why Companies Are Done Renting Their AI",
+    ref: "TechCrunch. (2026, July 10). Hugging Face's CEO on why companies are done renting their AI [Audio podcast episode]. In Equity. https://www.youtube.com/watch?v=MqdEHMJFlSI",
+    teaser: "The chief executive of a company selling open-model infrastructure, interviewed about why firms are moving away from rented models.",
+    extract: "If you're an AI company or technology company, you don't want to outsource your core capabilities, AI, to another company the other kind of like a black box API that that you don't control, that you don't have any visibility on, that that you don't really kind of like have any any sort of ownership. Uh so this kind of like idea that companies need to own AI and own models instead of renting them and outsourcing them to to someone else uh is is kind of like the thing that I hear the most from from companies and and customers and and community members these these days which which makes a lot of sense in my opinion.",
+    href: "https://www.youtube.com/watch?v=MqdEHMJFlSI"
+  },
+  {
+    id: "c1-14",
+    title: "The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models",
+    ref: "Patil, S. G., Mao, H., Yan, F., Ji, C. C.-J., Suresh, V., Stoica, I., & Gonzalez, J. E. (2025). The Berkeley Function Calling Leaderboard (BFCL): From tool use to agentic evaluation of large language models. Proceedings of Machine Learning Research, 267, 48371-48392. https://proceedings.mlr.press/v267/patil25a.html",
+    teaser: "A benchmark that re-tested open models on 2,251 real function-calling tasks drawn from over 67,000 community submissions, to see which scores survive novel queries.",
+    extract: "It is observed that the majority of models achieve comparable or improved performance, i.e., lower perplexity and char-NLL on the crowd-sourced data relative to single-turn. For instance, Llama 2-7B exhibits a perplexity of 3.47 on single-turn compared to 2.56 on crowd-sourced, and a char-NLL of 0.344 versus 0.264. Similarly, Openfunctions-v2 and CodeLlama-7B also demonstrate slightly enhanced performance on the crowd-sourced queries. This trend implies that these models did not derive an unfair advantage from memorization on the original benchmark. This finding supports the inference that their strong benchmark scores are attributable to genuine capability rather than exposure to test solutions. In contrast, Salesforce xLAM-7B shows an increase in perplexity from 3.67 to 5.09 (char-NLL from 0.340 to 0.427) on crowd-sourced, representing a notable performance degradation.",
+    href: "https://proceedings.mlr.press/v267/patil25a.html"
+  },
+  {
+    id: "c1-15",
+    title: "Why The Harness Matters More Than The Model (YC Paper Club)",
+    ref: "Y Combinator. (2026, September 7). Why the harness matters more than the model | YC Paper Club [Video]. YouTube. https://www.youtube.com/watch?v=n9xKblqyQ28",
+    teaser: "A conference talk presenting a Stanford project that optimises a local model once using a cloud model, then runs it locally.",
+    extract: "The local LLMs are finally good enough to actually run a lot of these queries that people care about. And so we see that the current LLMs of today are only 6 to 12 months behind whatever is the state-of-the-art frontier models of before. So you see LLMs today such as Qwen 3.8 27B that achieve roughly the same performance as like Claude 4.6 Opus back in the day. [...] While there remains many tasks for which local-size LLMs are not enough, the gap is surprisingly closing month after month as these LLMs become better distilled, more effective and also we get better accelerators for running them. And so even with LLMs of today, we can get 800x lower cost in terms of actually running them as well as a significant reduction in latency.",
+    href: "https://www.youtube.com/watch?v=n9xKblqyQ28"
+  },
+  {
+    id: "c1-16",
+    title: "Jensen Huang: Why Companies Need Open Agent Systems",
+    ref: "LangChain. (2026, July 8). Jensen Huang: Why companies need open agent systems [Video]. YouTube. https://www.youtube.com/watch?v=Yy3JH6dDugc",
+    teaser: "A chip maker's chief executive, interviewed by a framework vendor, on how a firm should specialise an agent for its own domain.",
+    extract: "The specialization starts with you need to have intelligence that's good enough, and this is what why we worked on Nemotron and really love the fact that you're part of the founding team of Nemotron Coalition. We made Nemotron Ultra pretty incredible. Now, Nemotron Ultra is, a great model as a start, but it becomes an incredible model when you put the LangChain framework around it, the LangChain harness around it, so that you ground it on information that is domain-specific.",
+    href: "https://www.youtube.com/watch?v=Yy3JH6dDugc"
   }
-})();
+];
+
+var DECK2 = [
+  {
+    id: "c2-01",
+    title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+    ref: "Becker, J., Rush, N., Barnes, E., & Rein, D. (2025). Measuring the impact of early-2025 AI on experienced open-source developer productivity (arXiv:2507.09089). arXiv. https://arxiv.org/abs/2507.09089",
+    teaser: "A randomised trial in which sixteen experienced open-source developers completed 246 tasks, each randomly allowing or disallowing AI tools.",
+    extract: "Before starting tasks, developers forecast that allowing AI will reduce completion time by 24%. After completing the study, developers estimate that allowing AI reduced completion time by 20%. Surprisingly, we find that allowing AI actually increases completion time by 19%--AI tooling slowed developers down. This slowdown also contradicts predictions from experts in economics (39% shorter) and ML (38% shorter).",
+    href: "https://arxiv.org/abs/2507.09089"
+  },
+  {
+    id: "c2-02",
+    title: "Hoe AI de sectoren IT en zakelijke dienstverlening verandert",
+    ref: "Van Kampen, M., Koelewijn, R., Groenewegen, J., & Sander, F. J. (2026, June 25). Hoe AI de sectoren IT en zakelijke dienstverlening verandert. RaboResearch. https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert",
+    teaser: "A Dutch bank's sector research estimating how much of the work in IT and business services can be automated at all.",
+    extract: "De potentie is groot en concreet: 86% van de taken in de IT en 64% van de taken in de zakelijke dienstverlening heeft (hoog) automatiseringspotentieel. Vooral taken in de softwareontwikkeling, marketing, boekhouding en administratieve processen lenen zich hiervoor, net als delen van consultancy en juridische analyse.",
+    href: "https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert"
+  },
+  {
+    id: "c2-03",
+    title: "How Lyft Uses Claude for Faster, More Human Customer Support",
+    ref: "Claude. (2026, February 18). How Lyft uses Claude for faster, more human customer support [Video]. YouTube. https://www.youtube.com/watch?v=sZHGbRYQti4",
+    teaser: "A vendor-published customer story about a ride-hailing firm's support queues, chosen by the vendor because it worked.",
+    extract: "Customer resolution time decreased by 87%. So something that would have taken 30 plus minutes now sometimes that's even resolved in a matter of seconds. [...] reinvesting back into our support agents to upskill them, to avoid burnout, empowering our agents to spend more time on the issues that require human care and infusing that layer of empathy and care, that's really important to us at Lyft.",
+    href: "https://www.youtube.com/watch?v=sZHGbRYQti4"
+  },
+  {
+    id: "c2-04",
+    title: "Navigating the Jagged Technological Frontier",
+    ref: "Dell'Acqua, F., McFowland, E., III, Mollick, E., Lifshitz, H., Kellogg, K. C., Rajendran, S., Krayer, L., Candelon, F., & Lakhani, K. R. (2026). Navigating the jagged technological frontier: Field experimental evidence of the effects of artificial intelligence on knowledge worker productivity and quality. Organization Science. https://doi.org/10.1287/orsc.2025.21838",
+    teaser: "A field experiment with consultants, comparing a task inside the AI's capabilities against one deliberately placed outside them.",
+    extract: "Significantly improved performance and quality for every model specification, increasing speed by more than 25%, performance by more than 30%, and task completion by more than 12%. However, for a task outside the frontier, subjects using AI were 19 percentage points less likely to produce correct solutions. Although this design highlights a single outside-the-frontier task-an inherent limitation-it underscores that even a single complex challenge beyond AI's current capabilities can disproportionately reduce overall performance if users rely too heavily on AI's output.",
+    href: "https://doi.org/10.1287/orsc.2025.21838"
+  },
+  {
+    id: "c2-05",
+    title: "Generative AI at Work",
+    ref: "Brynjolfsson, E., Li, D., & Raymond, L. (2025). Generative AI at work. The Quarterly Journal of Economics. https://doi.org/10.1093/qje/qjae044",
+    teaser: "A study of 5,172 customer-support agents whose AI assistant only suggested replies, leaving each agent free to ignore them.",
+    extract: "Importantly, the AI system we study is designed to augment (rather than replace) human agents. The output is shown only to the agent, who has full discretion over which, if any, AI suggestions to accept. [...] First, AI assistance increases worker productivity, resulting in a 15% increase in the number of chats that an agent successfully resolves per hour.",
+    href: "https://doi.org/10.1093/qje/qjae044"
+  },
+  {
+    id: "c2-06",
+    title: "Human-Centered Artificial Intelligence: A Field Experiment",
+    ref: "Krakowski, S., Haftor, D., Luger, J., Pashkevich, N., & Raisch, S. (2025). Human-centered artificial intelligence: A field experiment. Management Science. https://doi.org/10.1287/mnsc.2022.03849",
+    teaser: "A three-arm field experiment in a sales organisation, comparing a control group against untailored AI support and AI tailored to the worker.",
+    extract: "In the control group (D1), sales meetings decreased slightly postintervention. Sales experts in D2 reduced their daily sales meetings by 0.46 compared with the control group, while those in D3 increased their daily meetings by 0.84. Similar patterns were observed for units sold. [...] Figure F1, (a) and (b) in Online Appendix F depict performance trajectories, showing the control group (D1) remaining stable over time, D2 declining after the Q2/2014 intervention, and D3 improving.",
+    href: "https://doi.org/10.1287/mnsc.2022.03849"
+  },
+  {
+    id: "c2-07",
+    title: "The Anthropic Economic Index Report: Learning Curves",
+    ref: "Massenkoff, M., Lyubich, E., McCrory, P., Appel, R., & Heller, R. (2026). The Anthropic Economic Index report: Learning curves. Anthropic. https://www.anthropic.com/research/economic-index-march-2026-report",
+    teaser: "An index built from millions of conversations, classifying each as automation or augmentation and tracking how that split moves over time.",
+    extract: "Since our first report, we have classified conversations into one of five interaction types-directive, feedback loop, task iteration, validation, and learning-which we group into two broader categories: automation and augmentation. Figure 1.3 shows that augmentation in Claude.ai increased slightly. This was driven by small bumps in validation and learning patterns. In Appendix Figure A.3, we show that automation decreased sharply in the 1P API data.",
+    href: "https://www.anthropic.com/research/economic-index-march-2026-report"
+  },
+  {
+    id: "c2-08",
+    title: "Replit's CEO on the Only Two Jobs Left in the Company of the Future",
+    ref: "Y Combinator. (2026, April 25). Replit's CEO on the only two jobs left in the company of the future - Amjad Masad at YC Founder Firesides [Video]. YouTube. https://www.youtube.com/watch?v=kMYeTRqzAfc",
+    teaser: "A founder narrating his own product's history of removing successive layers of work from building software.",
+    extract: "Then what was left is like the coding part was still very intimidating for people. And September 2024, Replit became the first like what's called vibe coding product where uh we abstracted away code",
+    href: "https://www.youtube.com/watch?v=kMYeTRqzAfc"
+  },
+  {
+    id: "c2-09",
+    title: "How HubSpot Uses Claude for Customer Success",
+    ref: "Claude. (2026, February 9). How HubSpot uses Claude for customer success [Video]. YouTube. https://www.youtube.com/watch?v=U9s9Kxb7p5I",
+    teaser: "The same vendor's channel, on a software firm's customer-success team using AI to prepare its follow-ups.",
+    extract: "That is something so far beyond my typical role as a CSM. My customers are saying like, this is the best conversation I've ever had with HubSpot. [...] I feel like it has helped amplify my expertise. We've seen a 40% increase in productivity. You really feel it across a team when you get that much leverage in the work you're doing.",
+    href: "https://www.youtube.com/watch?v=U9s9Kxb7p5I"
+  },
+  {
+    id: "c2-10",
+    title: "Expertise",
+    ref: "Autor, D., & Thompson, N. (2025). Expertise (Working Paper No. 33941). National Bureau of Economic Research. https://www.nber.org/papers/w33941",
+    teaser: "An economy-wide analysis of which tasks automation removed from occupations, and what then happened to those occupations' wages.",
+    extract: "Moreover, the expertise requirements of tasks removed from or added to an occupation affect wage levels independently of the quantity of tasks added or removed present. Remarkably, both the removal of expert tasks and the addition of inexpert tasks predict relative wage declines in an occupation, while, conversely both the removal of inexpert tasks and the addition of expert tasks predict occupational wage gains.",
+    href: "https://www.nber.org/papers/w33941"
+  },
+  {
+    id: "c2-11",
+    title: "Building and Structuring an AI Native Company",
+    ref: "Y Combinator. (2026, August 14). Building and structuring an AI native company [Video]. YouTube. https://www.youtube.com/watch?v=Z3JyAqh4ixg",
+    teaser: "A partner at an accelerator advising early-stage founders on how to organise a company around AI from the start.",
+    extract: "From the ground up, you actually get to a very very different conclusion. Okay, previously AI is like make each person 20% more productive or 30% more productive. What happens if we reimagine the company as a series of AI loops?",
+    href: "https://www.youtube.com/watch?v=Z3JyAqh4ixg"
+  },
+  {
+    id: "c2-12",
+    title: "Harness Engineering: How to Build Software When Humans Steer and Agents Execute",
+    ref: "AI Native Dev. (2026, June 19). Ryan Lopopolo - Harness engineering: How to build software when humans steer and agents execute [Video]. YouTube. https://www.youtube.com/watch?v=c8bE0cj7vHY",
+    teaser: "A practitioner talk from inside a success case, on where its author wants the human checkpoints to end up.",
+    extract: "how we can get to a world where we're more and more headless, less human, interrupt dependent, and able to trust the agent to do more and more complex things helplessly.",
+    href: "https://www.youtube.com/watch?v=c8bE0cj7vHY"
+  },
+  {
+    id: "c2-13",
+    title: "GDPval: Evaluating AI Model Performance on Real-World Economically Valuable Tasks",
+    ref: "Patwardhan, T., Dias, R., Proehl, E., Kim, G., Wang, M., Watkins, O., Posada Fishman, S., Aljubeh, M., Thacker, P., Fauconnet, L., Kim, N. S., Chao, P., Miserendino, S., Chabot, G., Li, D., Sharman, M., Barr, A., Glaese, A., & Tworek, J. (2025). GDPval: Evaluating AI model performance on real-world economically valuable tasks (arXiv:2510.04374). arXiv. https://arxiv.org/abs/2510.04374",
+    teaser: "A benchmark of 1,320 real work deliverables across 44 occupations, graded blind by industry experts against model output.",
+    extract: "We find that frontier model performance on GDPval is improving roughly linearly over time, and that the current best frontier models are approaching industry experts in deliverable quality. We analyze the potential for frontier models, when paired with human oversight, to perform GDPval tasks cheaper and faster than unaided experts.",
+    href: "https://arxiv.org/abs/2510.04374"
+  },
+  {
+    id: "c2-14",
+    title: "AI Is Turning Every Company Into a Software Company",
+    ref: "McKinsey & Company. (2026, June 18). AI is turning every company into a software company [Video]. YouTube. https://www.youtube.com/watch?v=Epi-GQUoNrg",
+    teaser: "A software chief executive on a consultancy's podcast, describing what happened to one team his firm no longer needed.",
+    extract: "If uh for example we no longer need a demo making team because every account exec can make their own demo. We move that team into other roles [...] And so there is this element of figuring out what are the things that you need. What are the new jobs that are being created",
+    href: "https://www.youtube.com/watch?v=Epi-GQUoNrg"
+  },
+  {
+    id: "c2-15",
+    title: "Khan Academy CEO: The Real AI Opportunity Is in Boring Industries",
+    ref: "Silicon Valley Girl. (2026, July 14). Khan Academy CEO: The real AI opportunity is in boring industries | Sal Khan [Video]. YouTube. https://www.youtube.com/watch?v=s-Iz-lLAhdg",
+    teaser: "The chief executive of one education non-profit, stating his own organisation's policy on what AI will and will not be used for.",
+    extract: "If we could do three times more with the same resources, we will do three times more. So that would never be the catalyst for layoffs.",
+    href: "https://www.youtube.com/watch?v=s-Iz-lLAhdg"
+  },
+  {
+    id: "c2-16",
+    title: "Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI",
+    ref: "Koppelaar, T. (2026, May 27). Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI: 'Elke kantoorbaan voor een scherm verdwijnt'. De Ondernemer. https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt",
+    teaser: "A Dutch printing firm's founder, interviewed about a rebuild he chose himself; no firm that tried the same and failed appears in the piece.",
+    extract: "En dus, ondanks dat HelloPrint afgelopen jaar zo'n 80 miljoen euro omzet haalde, dwingt Hans zichzelf te denken alsof dat succes er niet is. Ik heb mezelf de vraag gesteld: wat nou als ik mijn huidige bedrijf op dag een opnieuw zou moeten bouwen, wat zou ik dan doen? Dat gedachte-experiment vormt de basis voor de transformatie. Niet door bestaande afdelingen te optimaliseren, maar door eerst te bepalen hoe waardecreatie eruitziet als technologie een groot deel van het werk kan overnemen.",
+    href: "https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt"
+  }
+];
 
 var BUDGET = 8;
 
@@ -531,12 +886,37 @@ function show(name){
   if (h){ h.setAttribute("tabindex", "-1"); h.focus(); }
 }
 
-function fail(id, msg){
+/* ---------------- the side ---------------- */
+/* A radio group has no value of its own, so these two read and write it.
+   pickSide returns "" when nothing is chosen, which is what the position
+   screen refuses to accept. */
+function pickedSide(name){
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : "";
+}
+function restoreSide(name, value){
+  if (!value) return;
+  var el = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
+  if (el) el.checked = true;
+}
+/* The badge is hidden rather than blank when there is no side, so a
+   session started before the sides existed still renders. */
+function showSide(id, value){
+  var el = $(id);
+  el.textContent = value || "";
+  el.hidden = !value;
+}
+
+function fail(id, msg, fieldId){
   var el = $(id);
   el.textContent = msg;
   el.hidden = false;
+  if (fieldId) $(fieldId).setAttribute("aria-invalid", "true");
 }
-function clearFail(id){ $(id).hidden = true; }
+function clearFail(id, fieldId){
+  $(id).hidden = true;
+  if (fieldId) $(fieldId).removeAttribute("aria-invalid");
+}
 
 /* Fisher-Yates. A fresh order every session, and the order is kept,
    because which card came up when is half of what is being measured. */
@@ -585,9 +965,20 @@ function toPosition(){
 
 /* ---------------- position ---------------- */
 $("b-position").addEventListener("click", function(){
+  var side = pickedSide("side");
   var t = $("f-position").value.trim();
-  if (!t){ fail("e-position", "Write one sentence before you go on."); $("f-position").focus(); return; }
-  clearFail("e-position");
+  if (!side){
+    fail("e-position", "Choose a side before you write your sentence.");
+    $("side-agree").focus();
+    return;
+  }
+  if (!t){
+    fail("e-position", "Write one sentence before you go on.", "f-position");
+    $("f-position").focus();
+    return;
+  }
+  clearFail("e-position", "f-position");
+  S.r1.side = side;
   S.r1.locked = t;
   save();
   toCard();
@@ -595,7 +986,9 @@ $("b-position").addEventListener("click", function(){
 
 /* ---------------- the runner ---------------- */
 function toCard(){
+  $("claim-1c").textContent = CLAIM1;
   $("m-locked").textContent = S.r1.locked;
+  showSide("m-side", S.r1.side);
   renderCard();
   show("card");
 }
@@ -609,7 +1002,11 @@ function renderCard(){
   $("m-budget").textContent = String(BUDGET - r.opens);
 
   $("c-title").textContent = c.title;
-  $("c-meta").textContent = c.outlet + " · " + c.year;
+  /* The APA reference carries the outlet and the year SM-5 asks for, and
+     the authors a separate outlet field left out. It shows before the
+     card is opened, because deciding what to spend an open on is the
+     thing being measured. */
+  $("c-meta").textContent = c.ref;
   $("c-teaser").textContent = c.teaser;
 
   /* Is this card already open and waiting for Next? Opening records the
@@ -693,13 +1090,25 @@ function advance(){
 function toFinal(){
   $("claim-1b").textContent = CLAIM1;
   $("f-locked").textContent = S.r1.locked;
+  showSide("f-side-was", S.r1.side);
   show("final");
 }
 
 $("b-final").addEventListener("click", function(){
+  var side = pickedSide("fside");
   var t = $("f-final").value.trim();
-  if (!t){ fail("e-final", "Write one sentence before you finish."); $("f-final").focus(); return; }
-  clearFail("e-final");
+  if (!side){
+    fail("e-final", "Choose a side before you write your sentence.");
+    $("fside-agree").focus();
+    return;
+  }
+  if (!t){
+    fail("e-final", "Write one sentence before you finish.", "f-final");
+    $("f-final").focus();
+    return;
+  }
+  clearFail("e-final", "f-final");
+  S.r1.finalSide = side;
   S.r1.final = t;
   save();
   toDone();
@@ -729,6 +1138,11 @@ $("b-erase").addEventListener("click", function(){
 
   $("f-code").value = S.code || "";
   $("f-team").value = S.team ? String(S.team) : "";
+
+  /* A locked position is locked, so the controls that produced it are put
+     back as they were rather than left empty behind the student. */
+  restoreSide("side", S.r1.side);
+  restoreSide("fside", S.r1.finalSide);
 
   if (S.screen === "done" && S.r1.final){ toDone(); return; }
   if (S.screen === "final" || S.r1.idx >= S.r1.order.length){
