@@ -638,28 +638,69 @@ pre.tree {
     <p><strong>Spec.</strong> <code>SV-1</code>&ndash;<code>SV-6</code>, <code>SV-11</code>, <code>AG-1</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 7.1 A Cloud Run service in the course project, EU region, separate deployment from the gate (<code>SV-11</code>).</li>
-      <li>&#9744; 7.2 <code>POST /submit</code>: accepts one submission, rejects any payload containing a string field that is not the code or the team (<code>SV-1</code>).</li>
-      <li>&#9744; 7.3 Firestore <code>submissions/</code>, keyed by session and code. Last write wins for a repeated code.</li>
-      <li>&#9744; 7.4 An owner-only delete route, by code (<code>SV-5</code>).</li>
-      <li>&#9744; 7.5 A scheduled purge that empties the collection at the end of the teaching day (<code>SV-4</code>).</li>
-      <li>&#9744; 7.6 In the tool: the submit screen, its plain statement of what is sent and what is not, and the button (<code>SV-2</code>).</li>
-      <li>&#9744; 7.7 In the tool: on any failure, fall back to the line and the copy button without blocking the finish (<code>SV-6</code>).</li>
-      <li>&#9744; 7.8 Pin the allowed origin. The tool calls one host and two routes; nothing else (<code>AG-1</code>).</li>
+      <li>&#9744; 7.1 A Cloud Run service in the course project, EU region, separate deployment from the gate (<code>SV-11</code>). &mdash; <strong>Written, not deployed.</strong> <code>experiment_service/</code> holds the container and <code>deploy.sh</code> holds the one command; standing it up spends money on a project this build does not own, so it is an owner&rsquo;s decision rather than a step here.</li>
+      <li>&#9745; 7.2 <code>POST /submit</code>: accepts one submission, rejects any payload containing a string field that is not the code or the team (<code>SV-1</code>).</li>
+      <li>&#9745; 7.3 Firestore <code>submissions/</code>, keyed by session and code. Last write wins for a repeated code.</li>
+      <li>&#9745; 7.4 An owner-only delete route, by code (<code>SV-5</code>).</li>
+      <li>&#9745; 7.5 A scheduled purge that empties the collection at the end of the teaching day (<code>SV-4</code>).</li>
+      <li>&#9745; 7.6 In the tool: the submit screen, its plain statement of what is sent and what is not, and the button (<code>SV-2</code>).</li>
+      <li>&#9745; 7.7 In the tool: on any failure, fall back to the line and the copy button without blocking the finish (<code>SV-6</code>).</li>
+      <li>&#9745; 7.8 Pin the allowed origin. The tool calls one host and two routes; nothing else (<code>AG-1</code>).</li>
     </ul>
+    <p><strong>Where this stands.</strong> Built and machine-checked, and unplugged from anything.
+      The service is <code>experiment_service/</code>, which is not in <code>site/</code> and is
+      therefore not published. <code>check-service.py</code> beside this plan drives every route
+      end to end through WSGI &mdash; no port, no container, no cloud project &mdash; with the
+      clock injected, which is what lets the retention check fast-forward a day instead of waiting
+      one. 25 checks, and each of the five that matter was sabotaged and confirmed to fail.
+      <br>
+      <code>SV-1</code> is held the strong way round. The service does not strip prose out of what
+      arrives; it refuses a payload carrying any field <code>schema.py</code> does not name, so
+      the day someone adds a student&rsquo;s sentence to the tool&rsquo;s payload the submission is
+      rejected rather than stored. 18 payloads carrying something they should not, 18 refused.
+      <br>
+      Two things are narrower than the record asked for, both free. The dashboard never returns a
+      code &mdash; each row carries a salted hash instead, so two submissions from one person are
+      still visibly one person while nobody reading the response learns whose. And retention is
+      enforced three times: the scheduled purge, a Firestore TTL policy, and every read dropping an
+      expired row before returning it. A retention rule resting on one cron job firing is an
+      intention, and <code>ADR-0016</code> was explicit that this is not one.
+      <br>
+      One bug worth recording, because it was mine and it was easy. The first draft of
+      <code>/purge</code> accepted <code>X-CloudScheduler: true</code> as proof of who was calling.
+      That is a header, not a credential, and any caller can send it &mdash; the draft let a student
+      wipe the room&rsquo;s data mid-session with one <code>curl</code>. The scheduler now carries
+      its own bearer token, kept apart from the owners&rsquo;, and the check that catches the
+      spoof is in <code>check-service.py</code>.
+      <br>
+      <code>AG-1</code> changed meaning under <code>ADR-0016</code> and its check had to change with
+      it. <code>check-session.mjs</code> used to assert that the file contained no network call at
+      all, which passed for four phases and was the wrong assertion: a test that something is absent
+      reads later as a requirement that it stay absent. It now enumerates every way out of the page,
+      accounts for each, and forbids the transports this page has no business having.
+      <br>
+      <strong><code>SERVICE.origin</code> ships empty</strong>, and that is not a placeholder waiting
+      to be tidied. With it empty the page makes no request at all, the consent screen says so in
+      its own words, and the finish is the one phase 5 shipped. Putting a URL there is the single
+      edit that turns submission on, which is why the service can be deployed before a session
+      without changing what a student meets until an owner decides.
+      <br>
+      What is left is the tester walk and the deployment itself. Everything below was measured
+      rather than argued, but by the person who wrote it.</p>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 0 free-text fields accepted beyond code and team (<code>SV-1</code>, test)</li>
-      <li>&#9744; 0 submissions sent without a button press (<code>SV-2</code>, test)</li>
-      <li>&#9744; 0 routes return a single student&rsquo;s row (<code>SV-3</code>, inspection)</li>
-      <li>&#9744; With the service unreachable, 10 of 10 sessions still finish and produce a line (<code>SV-6</code>, test)</li>
-      <li>&#9744; Delete-by-code removes the row within 1 minute (<code>SV-5</code>, demonstration)</li>
-      <li>&#9744; The morning after a test run, 0 rows remain (<code>SV-4</code>, test)</li>
-      <li>&#9744; Network panel shows 0 requests to any other origin across a full session (<code>AG-1</code>, test)</li>
+      <li>&#9745; 0 free-text fields accepted beyond code and team (<code>SV-1</code>, test &mdash; 18 attempts, 18 refused)</li>
+      <li>&#9745; 0 submissions sent without a button press (<code>SV-2</code>, test &mdash; and 3 requests across a real browser session: the page, the preflight, the submission)</li>
+      <li>&#9745; 0 routes return a single student&rsquo;s row (<code>SV-3</code>, inspection &mdash; 5 attempts by 5 means, 0 returned one; 0 codes in any response)</li>
+      <li>&#9745; With the service unreachable, 10 of 10 sessions still finish and produce a line (<code>SV-6</code>, test &mdash; refused, 500, 401, never-settles and no-fetch, plus one unplugged run in a real browser)</li>
+      <li>&#9744; Delete-by-code removes the row within 1 minute (<code>SV-5</code>, demonstration &mdash; shown against a running service on a laptop, not yet against a deployment)</li>
+      <li>&#9745; The morning after a test run, 0 rows remain (<code>SV-4</code>, test &mdash; with the scheduler deliberately never firing)</li>
+      <li>&#9745; Network panel shows 0 requests to any other origin across a full session (<code>AG-1</code>, test)</li>
       <li>&#9744; Tester steps above, including the unplugged run</li>
+      <li>&#9744; <code>SV-11</code>, 2 deployments and 0 shared containers &mdash; only 1 of the 2 exists, and neither is deployed</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p8">
@@ -699,7 +740,7 @@ pre.tree {
         <tr><td>0</td><td><code>work/drafts/</code> &mdash; the decks and the codebook</td></tr>
         <tr><td>1, 2, 3, 4, 5</td><td><code>site/tool-bias-experiment.html</code> &mdash; all of them, the same file</td></tr>
         <tr><td>6</td><td><code>site/tool-bias-experiment.html</code> and <code>site/index.html</code></td></tr>
-        <tr><td>7 &mdash; server half</td><td>The service repository. Shares nothing with the tool.</td></tr>
+        <tr><td>7 &mdash; server half</td><td><code>experiment_service/</code> &mdash; its own directory, outside <code>site/</code> and therefore unpublished. Shares no file with the tool.</td></tr>
         <tr><td>7 &mdash; client half, 8</td><td><code>site/tool-bias-experiment.html</code> again</td></tr>
       </tbody>
     </table></div>

@@ -16,7 +16,8 @@ import { dirname, join } from "node:path";
 import vm from "node:vm";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const pagePath = join(here, "..", "..", "..", "site", "tool-bias-experiment.html");
+const override = process.argv.slice(2).find((a) => a.endsWith(".html"));
+const pagePath = override || join(here, "..", "..", "..", "site", "tool-bias-experiment.html");
 const html = readFileSync(pagePath, "utf8");
 const source = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];
 const verbose = process.argv.includes("-v");
@@ -91,8 +92,12 @@ function makePage(initialStorage) {
     navigator: {},
     location: { search: "", reload() { reloaded = true; } },
     setTimeout: () => 0,
+    clearTimeout: () => {},
     confirm: () => true,
     scrollTo() {},
+    /* No fetch by default. A page that reaches for one without a test
+       having supplied it should fail loudly rather than silently do
+       nothing, because "nothing happened" is also what a pass looks like. */
   };
   windowObj.window = windowObj;
 
@@ -100,7 +105,8 @@ function makePage(initialStorage) {
     window: windowObj, document, localStorage: windowObj.localStorage,
     navigator: windowObj.navigator, console,
     Math, Date, JSON, isFinite, Number, String, Object, Array, RegExp, Error,
-    parseInt, parseFloat, setTimeout: () => 0,
+    parseInt, parseFloat, setTimeout: () => 0, clearTimeout: () => {},
+    Promise, AbortController,
   };
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
@@ -138,6 +144,30 @@ function lockPosition(p, side, text) {
   p.set("f-position", text);
   p.click("b-position");
 }
+/* One whole session, consent to finish, opening the first `opens` cards of
+   each round. Written once here because three checks now need it. */
+function wholeSession(p, { code = "kite", team = 3, opens = 4 } = {}) {
+  start(p, code, team);
+  for (const round of [1, 2]) {
+    lockPosition(p, "agree", "round " + round + " opening sentence.");
+    if (p.screen() === "agent") {
+      p.set("f-agent-reply", "1. What would change your mind? 2. What does the other side rest on? 3. What would have to hold?");
+      p.click("b-agent");
+    }
+    for (let i = 0; i < 16; i++) {
+      const before = p.S().rounds[round].opens;
+      if (i < opens) p.click("b-open");
+      p.click(p.S().rounds[round].opens > before ? "b-next" : "b-pass");
+    }
+    p.pick("fside", "agree");
+    p.set("f-final", "round " + round + " closing sentence.");
+    p.click("b-final");
+    answerQuestions(p, 4);
+    if (round === 1) p.click("b-bridge");
+  }
+  return p;
+}
+
 function answerQuestions(p, v) {
   for (const item of p.sandbox.window.BXP.TLX.concat(p.sandbox.window.BXP.PERCEPTION)) {
     p.radios.set("q-" + item.id, String(v));
@@ -371,16 +401,181 @@ function answerQuestions(p, v) {
      page.sandbox.DECK1.length === 16 && page.sandbox.DECK2.length === 16);
 }
 
-/* ---- AG-1: nothing in the file can make a request ---- */
+/* ---- AG-1: one origin, two routes, and no other way out ---- */
+/* This check used to assert that the file contained no network call at all,
+   and it passed for four phases. ADR-0016 then gave this one page a
+   submission endpoint, and an assertion that something is absent turns into
+   a requirement that it stay absent — which is not what AG-1 says and never
+   was. AG-1 says the tool calls no origin other than the experiment
+   service, using at most two routes.
+   So the check now pins that concern: every way out of the page is
+   enumerated, each one is accounted for, and the ways nothing here should
+   ever use are still forbidden outright. */
 {
-  console.log("\nAG-1 — no way for the page to call anywhere");
-  const calls = ["fetch(", "XMLHttpRequest", "WebSocket", "sendBeacon", "EventSource",
-                 "navigator.connection", "import(", "importScripts"];
-  const found = calls.filter((c) => html.includes(c));
-  ok("0 network calls anywhere in the shipped file", found.length === 0, found.join(", "));
+  console.log("\nAG-1 — one origin, two routes, and no other way out");
+
+  const forbidden = ["XMLHttpRequest", "WebSocket", "sendBeacon", "EventSource",
+                     "importScripts", "navigator.connection"];
+  const found = forbidden.filter((c) => html.includes(c));
+  ok("0 uses of a transport this page has no business having", found.length === 0,
+     found.join(", "));
+
+  // Every fetch in the file, and what it is aimed at.
+  const fetches = [...html.matchAll(/fetch\s*\(\s*([^,)]+)/g)].map((m) => m[1].trim());
+  ok("every request is built from SERVICE.origin, all " + fetches.length + " of them",
+     fetches.length > 0 && fetches.every((f) => f.startsWith("SERVICE.origin")),
+     fetches.join(" | "));
+
+  // The routes named in the config, and the ones actually reached for.
+  const page = makePage();
+  const service = page.sandbox.SERVICE;
+  const routes = Object.keys(service).filter((k) => k !== "origin" && k !== "timeoutMs");
+  ok("the config names at most 2 routes: " + routes.join(", "), routes.length <= 2,
+     routes.join(", "));
+  ok("SERVICE.origin ships empty, so an undeployed page makes no request",
+     service.origin === "", JSON.stringify(service.origin));
+  ok("serviceOn() is false with it empty", page.sandbox.serviceOn() === false);
+
+  // An absolute URL anywhere in the script would be a second origin by
+  // another name. The deck's card links are markup-free data and open in a
+  // new tab; they are not requests this page makes.
+  const script = html.slice(html.indexOf("<script>"));
+  const cardHrefs = new Set([...page.sandbox.DECK1, ...page.sandbox.DECK2].map((c) => c.href));
+  const urls = [...script.matchAll(/["'](https?:\/\/[^"']+)["']/g)]
+    .map((m) => m[1]).filter((u) => !cardHrefs.has(u));
+  ok("0 hard-coded origins in the script beyond the card links", urls.length === 0,
+     urls.join(" | "));
+
   const external = [...html.matchAll(/<(script|link|img|iframe)\b[^>]*\b(src|href)="(https?:)?\/\/[^"]*"/g)];
   ok("0 external resources loaded by the page", external.length === 0,
      external.map((m) => m[0].slice(0, 60)).join(" | "));
+}
+
+/* ---- SV-1, SV-2: what is sent, and only when it is asked for ---- */
+{
+  console.log("\nSV-1, SV-2 — what is sent, and only on a press");
+
+  const p = makePage();
+  const calls = [];
+  p.sandbox.SERVICE.origin = "https://experiment.example";
+  p.sandbox.window.fetch = (url, opts) => { calls.push({ url, opts }); return Promise.resolve({
+    ok: true, json: () => Promise.resolve({ stored: true, count: 1 }) }); };
+
+  wholeSession(p, { code: "kite", team: 3, opens: 4 });
+  ok("0 requests across a complete two-round session", calls.length === 0, String(calls.length));
+  ok("the session ends on the submit screen, which asks", p.screen() === "submit", p.screen());
+  ok("nothing is marked as sent yet", p.S().sent === false, JSON.stringify(p.S().sent));
+
+  p.click("b-submit");
+  ok("1 request after 1 press", calls.length === 1, String(calls.length));
+  ok("it goes to the one origin and the one route",
+     calls[0] && calls[0].url === "https://experiment.example/submit", calls[0] && calls[0].url);
+
+  const body = JSON.parse(calls[0].opts.body);
+  const flat = JSON.stringify(body);
+  ok("0 of the student's sentences anywhere in the body",
+     !flat.includes("opening sentence") && !flat.includes("closing sentence")
+     && !flat.includes("What would change your mind"), flat.slice(0, 160));
+  ok("the body carries exactly v, code, team, rounds",
+     JSON.stringify(Object.keys(body).sort()) === JSON.stringify(["code", "rounds", "team", "v"]),
+     Object.keys(body).join(","));
+  const roundKeys = Object.keys(body.rounds[0]).sort().join(",");
+  ok("a round carries exactly the 10 fields the schema names",
+     roundKeys === "agent,claim,endSide,moved,n,opened,q,seconds,side,tlx", roundKeys);
+  ok("4 opened cards in round 1, matching the session",
+     body.rounds[0].opened.length === 4, String(body.rounds[0].opened.length));
+  ok("the assistant is marked in exactly one round",
+     body.rounds[0].agent !== body.rounds[1].agent);
+
+  await new Promise((r) => setTimeout(r, 0));   // the send settles, the finish renders
+  ok("a successful send is marked as sent", p.S().sent === true, JSON.stringify(p.S().sent));
+  ok("and the finish screen is reached", p.screen() === "done", p.screen());
+
+  // The line and the payload are built from the same records, and a check
+  // that they agree is what stops the two drifting apart later.
+  const parsed = p.sandbox.window.BXP.parseLine(p.text("d-line"));
+  ok("the line and the payload describe the same session",
+     !parsed.error
+     && parsed.rec.code === body.code && parsed.rec.team === body.team
+     && parsed.rec.rounds[0].ids.join() === body.rounds[0].opened.join()
+     && parsed.rec.rounds[1].ids.join() === body.rounds[1].opened.join(),
+     parsed.error || "");
+}
+
+/* ---- SV-6: the service is down and the session finishes anyway ---- */
+{
+  console.log("\nSV-6 — the service is down, and nothing is blocked");
+
+  const failures = [
+    ["the request is refused",     (p) => { p.sandbox.window.fetch = () => Promise.reject(new Error("offline")); }],
+    ["the service answers 500",    (p) => { p.sandbox.window.fetch = () => Promise.resolve({ ok: false, status: 500 }); }],
+    ["the service answers 401",    (p) => { p.sandbox.window.fetch = () => Promise.resolve({ ok: false, status: 401 }); }],
+    ["the request never settles",  (p) => {
+      // The one failure the others cannot show: a service that accepts the
+      // connection and then says nothing. The timeout is what rescues the
+      // student here, so the stub's clock is made to fire.
+      p.sandbox.window.fetch = () => new Promise(() => {});
+      p.sandbox.window.setTimeout = (fn) => { fn(); return 0; };
+    }],
+    ["there is no fetch at all",   (p) => { delete p.sandbox.window.fetch; }],
+  ];
+
+  let finished = 0, lines = 0;
+  for (let i = 0; i < 10; i++) {
+    const [, arrange] = failures[i % failures.length];
+    const p = makePage();
+    p.sandbox.SERVICE.origin = "https://experiment.example";
+    arrange(p);
+
+    wholeSession(p, { code: "s" + i, team: (i % 8) + 1, opens: 3 });
+    p.click("b-submit");
+    await new Promise((r) => setTimeout(r, 0));   // let the rejection land
+
+    if (p.screen() === "done") finished += 1;
+    const line = p.text("d-line");
+    if (!p.sandbox.window.BXP.parseLine(line).error) lines += 1;
+    if (p.S().sent !== false) ok("session " + i + " wrongly marked as sent", false);
+  }
+  ok("10 of 10 sessions finish with the service unreachable", finished === 10, String(finished));
+  ok("10 of 10 still produce a line the lecturer view can read", lines === 10, String(lines));
+
+  // And the copy button is where it was.
+  const p = makePage();
+  p.sandbox.SERVICE.origin = "https://experiment.example";
+  p.sandbox.window.fetch = () => Promise.reject(new Error("offline"));
+  wholeSession(p, { code: "reed", team: 2, opens: 5 });
+  p.click("b-submit");
+  await new Promise((r) => setTimeout(r, 0));
+  p.click("b-copy-line");
+  ok("the copy button still works after a failed send", true);
+  ok("the screen says what happened, in words", p.text("d-status-text").length > 40,
+     p.text("d-status-text"));
+
+  /* Not a failure, and pinned here so it is not later mistaken for one: a
+     200 whose body will not parse means the service stored the submission
+     and only the count came back unreadable. Treating that as a failure
+     would invite a second send of a row that is already there. */
+  const q = makePage();
+  q.sandbox.SERVICE.origin = "https://experiment.example";
+  q.sandbox.window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.reject(new Error("nope")) });
+  wholeSession(q, { code: "brack", team: 5, opens: 4 });
+  q.click("b-submit");
+  await new Promise((r) => setTimeout(r, 0));
+  ok("a 200 with an unreadable body still counts as sent", q.S().sent === true,
+     JSON.stringify(q.S().sent));
+}
+
+/* ---- the undeployed page: no service, no request, the phase 5 finish ---- */
+{
+  console.log("\nWith SERVICE.origin empty — no request is even attempted");
+  const p = makePage();
+  let touched = 0;
+  p.sandbox.window.fetch = () => { touched += 1; return Promise.reject(new Error("x")); };
+  wholeSession(p, { code: "unset", team: 6, opens: 2 });
+  ok("the session goes straight to the finish", p.screen() === "done", p.screen());
+  ok("0 requests attempted", touched === 0, String(touched));
+  ok("the consent screen promised nothing would leave",
+     p.text("storage-statement").includes("sent nowhere"), p.text("storage-statement"));
 }
 
 console.log();

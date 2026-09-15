@@ -365,6 +365,23 @@ input[type="text"] { max-width: 18rem; }
 }
 .copied { font-size: var(--text-sm); color: var(--text-secondary); margin-left: var(--space-3); }
 
+/* ---- the submit screen ---- */
+/* The outcome of a submission is stated in words as well as in colour: a
+   left border is a decoration on a phone in sunlight, and whether a
+   student's numbers reached the room is not a decorative matter. */
+.status {
+  border-left: 4px solid var(--supporting);
+  background: var(--bg-cream-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin: 0 0 var(--space-6);
+}
+.status p { margin: 0 0 var(--space-2); }
+.status p:last-child { margin-bottom: 0; }
+.status-sent { border-left-color: var(--primary); background: var(--bg-yellow); }
+.sends { margin: var(--space-4) 0; padding-left: var(--space-6); }
+.sends li { margin-bottom: var(--space-1); }
+
 /* ---- the lecturer view ---- */
 /* Marked data-audience="instructor" and hidden until ?instructor. That
    is signposting, not access control: it holds no answer key, only the
@@ -483,7 +500,7 @@ input[type="number"] {
     <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not finished.</strong> Both rounds run and both decks are real: every extract is quoted from the document it names, and every link goes to that document. At the end you get one line of result to hand in by copying it. What is still missing is the button that sends it &mdash; today you copy the line yourself &mdash; and the owners&rsquo; live dashboard.</p>
+  <p class="tpl-notice"><strong>Not finished.</strong> Both rounds run and both decks are real: every extract is quoted from the document it names, and every link goes to that document. At the end you get one line of result. The button that sends it is built, and the service behind it is written and tested but not yet standing up anywhere &mdash; so until an owner puts its address in this page, the tool sends nothing and you copy the line yourself. The owners&rsquo; live dashboard is the last part still missing.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -494,7 +511,7 @@ input[type="number"] {
     <p>This is a class exercise about how people look for evidence. It records which sources you chose to open, the order you saw them in, how long you spent, and how the round felt. You can stop at any point and erase everything.</p>
 
     <div class="warn">
-      <p id="storage-statement">What you type stays in this browser. It is saved in your own browser&rsquo;s storage so a reload does not lose your place, and it is sent nowhere. No name is asked for. At the end you get one line of numbers to hand in yourself. Erase everything at any time with the button below.</p>
+      <p id="storage-statement"></p>
     </div>
 
     <div class="field" style="margin-top:var(--space-6)">
@@ -750,12 +767,49 @@ input[type="number"] {
   </section>
 
   <!-- ============================================================
-       8 · Finish, and the one line of result.
+       8 · Submit. The button is the consent act, so nothing is sent
+       before it and the screen says in plain words what a press does.
+       ADR-0016 gave up this page's no-network rule and gave it up for
+       one page; keeping the exception narrow is what this screen is for.
+       ============================================================ -->
+  <section class="screen" id="s-submit" aria-labelledby="h-submit" hidden>
+    <h2 id="h-submit">Send your numbers to the room?</h2>
+
+    <p>Both rounds are done. Your lecturer needs everyone&rsquo;s numbers in one place to draw the comparison the session ends on. You can send yours with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
+
+    <div class="warn">
+      <p><strong>What goes, if you press it:</strong></p>
+      <ul class="sends">
+        <li>The code you chose, and your team number.</li>
+        <li>Which sources you opened, and in what order.</li>
+        <li>The side you locked, the side you ended on, and whether your closing sentence changed.</li>
+        <li>Seconds spent, and your answers to the eight closing questions.</li>
+      </ul>
+      <p><strong>What stays here:</strong> everything you wrote, and everything an assistant replied. Those are never sent, and there is no field in the message that could carry them.</p>
+      <p>What is sent carries your code and no name. It is deleted at the end of the teaching day. Give your code to a lecturer at any point and your row goes sooner.</p>
+    </div>
+
+    <details>
+      <summary>Show me exactly what would be sent</summary>
+      <div class="line-box" id="d-payload" tabindex="0" role="region" aria-label="The message that would be sent"></div>
+    </details>
+
+    <div class="btn-row" style="margin-top:var(--space-6)">
+      <button type="button" class="btn" id="b-submit">Submit my numbers</button>
+      <button type="button" class="btn btn-secondary" id="b-skip">No &mdash; I will hand it in myself</button>
+    </div>
+    <p class="note" id="m-sending" hidden>Sending&hellip;</p>
+  </section>
+
+  <!-- ============================================================
+       9 · Finish, and the one line of result.
        ============================================================ -->
   <section class="screen" id="s-done" aria-labelledby="h-done" hidden>
     <h2 id="h-done">That is the whole exercise</h2>
 
-    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. It is the only thing that leaves this browser, and it leaves it because you copy it.</p>
+    <div class="status" id="d-status" hidden><p id="d-status-text"></p></div>
+
+    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks.</p>
 
     <div class="line-box" id="d-line" tabindex="0" role="region" aria-label="Your result line"></div>
 
@@ -764,7 +818,8 @@ input[type="number"] {
       <span class="copied" id="m-copied-line" hidden>Copied.</span>
     </div>
 
-    <p class="note">Hand it in the way your lecturer asks. <strong>Keep this tab open until you have.</strong> Closing the tab does not delete the line &mdash; it is saved in this browser &mdash; but erasing does, and so does a borrowed laptop being wiped.</p>
+    <p class="note"><strong>Keep this tab open until you have.</strong> Closing the tab does not delete the line &mdash; it is saved in this browser &mdash; but erasing does, and so does a borrowed laptop being wiped.</p>
+    <p class="note" id="d-retry-note" hidden>You can try sending again: <button type="button" class="btn btn-secondary" id="b-resubmit">Try sending my numbers again</button></p>
 
     <details style="margin-top:var(--space-6)">
       <summary>What every part of that line means</summary>
@@ -790,7 +845,7 @@ input[type="number"] {
        DA-4 · One control erases everything.
        ============================================================ -->
   <div class="erase-bar">
-    <p class="note">Nothing here is sent anywhere. If you want it gone from this browser as well:</p>
+    <p class="note" id="erase-note">If you want everything gone from this browser:</p>
     <div class="btn-row">
       <button type="button" class="btn btn-secondary" id="b-erase">Erase everything and start again</button>
     </div>
@@ -1233,6 +1288,25 @@ var DECK2 = [
 var BUDGET = 8;
 var LINE_VERSION = 1;
 
+/* ---------------- the service ---------------- */
+/* The one exception to this site's no-network rule, argued in ADR-0016 and
+   named there as this page and no other. One host, two routes, and a
+   request only ever made because a student pressed a button.
+
+   `origin` is empty until the service is deployed, and that is not a
+   placeholder waiting to be tidied: with it empty the page makes no
+   request at all, the submit screen says so, and the finish is the one
+   phase 5 already shipped. Setting it is the single edit that turns the
+   submission on, and the fallback below is what happens every time it
+   fails afterwards. */
+var SERVICE = {
+  origin: "",
+  submit: "/submit",
+  dashboard: "/dashboard",
+  timeoutMs: 8000
+};
+function serviceOn(){ return !!SERVICE.origin; }
+
 /* Round 1 takes claim 1 and deck 1, round 2 claim 2 and deck 2. Nothing
    else differs between them except which one has the assistant in it. */
 var ROUNDS = {
@@ -1281,7 +1355,8 @@ function clearState(){ try{ localStorage.removeItem(LKEY); }catch(e){} }
    closing questions. A session stored under version 1 is discarded
    rather than migrated: nothing has been run with it, and a half-filled
    round would sit in the data as a complete one. */
-function freshState(){ return { v: 2, screen: "consent", consented: false, round: 1, rounds: {} }; }
+function freshState(){ return { v: 2, screen: "consent", consented: false, round: 1,
+                               rounds: {}, sent: false, outcome: "" }; }
 
 var S = loadState();
 if (!S || S.v !== 2) S = freshState();
@@ -1296,7 +1371,7 @@ function save(){ if (S.consented) saveState(S); }
 /* ---------------- helpers ---------------- */
 function $(id){ return document.getElementById(id); }
 
-var SCREENS = ["consent", "position", "agent", "card", "final", "questions", "bridge", "done"];
+var SCREENS = ["consent", "position", "agent", "card", "final", "questions", "bridge", "submit", "done"];
 
 function show(name){
   S.screen = name;
@@ -1460,11 +1535,38 @@ function agentPrompt(claimText, side, locked){
 }
 
 /* ---------------- consent ---------------- */
+/* Two statements, and which one is true depends on whether there is a
+   service to send to. DA-5 asks for a statement of where what a student
+   types is stored, in 60 words or fewer, and a page that promises nothing
+   ever leaves the browser while carrying a button that sends something is
+   worse than one that says neither. */
+var STORAGE_LOCAL =
+  "What you type stays in this browser. It is saved in your own browser’s storage so a " +
+  "reload does not lose your place, and it is sent nowhere. No name is asked for. At the " +
+  "end you get one line of numbers to hand in yourself. Erase everything at any time with " +
+  "the button below.";
+var STORAGE_SERVICE =
+  "What you type stays in this browser, saved in its own storage so a reload does not lose " +
+  "your place. At the end you choose whether to send your numbers — what you opened, how " +
+  "long, how it felt. Your sentences never leave. Sent numbers carry your code, not your " +
+  "name, and go at the end of the day.";
+$("storage-statement").textContent = serviceOn() ? STORAGE_SERVICE : STORAGE_LOCAL;
+
+/* The code has to survive two readers: the result line, whose separators it
+   must not contain, and the service, which accepts a narrow shape so that
+   nothing shaped like a sentence can arrive in the one string field it has.
+   Both are checked here, where a student can still choose another word,
+   rather than at the finish where the answer would be a refusal. */
+var CODE_SHAPE = /^[a-z0-9][a-z0-9-]{0,19}$/;
+
 $("b-consent").addEventListener("click", function(){
-  var code = $("f-code").value.trim();
+  var code = $("f-code").value.trim().toLowerCase();
   var team = $("f-team").value;
   if (!code){ fail("e-consent", "Choose a code first — any word you will remember."); $("f-code").focus(); return; }
-  if (/[|:,]/.test(code)){ fail("e-consent", "A code cannot contain | : or , — those separate the parts of your result line."); $("f-code").focus(); return; }
+  if (!CODE_SHAPE.test(code)){
+    fail("e-consent", "A code is one word of up to 20 letters, digits or hyphens, and it cannot start with a hyphen. “kite”, “pumice7”, “low-tide”.");
+    $("f-code").focus(); return;
+  }
   if (!team){ fail("e-consent", "Choose your team number."); $("f-team").focus(); return; }
   clearFail("e-consent");
 
@@ -1760,7 +1862,7 @@ $("b-questions").addEventListener("click", function(){
     save();
     show("bridge");
   } else {
-    toDone();
+    toSubmit();
   }
 });
 
@@ -1821,13 +1923,147 @@ function resultLine(){
           roundBlock(1, S.rounds[1]), roundBlock(2, S.rounds[2])].join("|");
 }
 
-function toDone(){
+/* ---------------- the submission ---------------- */
+/* Built from the same round records the line is built from, so the two
+   cannot describe different sessions. Every value is a number, a boolean
+   or one of a named few: SV-1 says the submission carries no free text,
+   and the way to hold that is to have no field a sentence could sit in.
+   The student's two position sentences and whatever their assistant
+   replied are in state a few lines away and are not reachable from here. */
+function roundPayload(n, r){
+  return {
+    n: n,
+    agent: !!r.agent,
+    claim: Number(r.claim.slice(1)),
+    side: sideLetter(r.side),
+    opened: r.choices.filter(function(c){ return c.open; }).map(function(c){ return c.id; }),
+    seconds: roundSeconds(r),
+    endSide: sideLetter(r.finalSide),
+    moved: r.final.trim() !== r.locked.trim(),
+    tlx: tlxTotal(r.answers),
+    q: perceptionTotal(r.answers)
+  };
+}
+
+function submissionPayload(){
+  return {
+    v: LINE_VERSION,
+    code: String(S.code || "").toLowerCase(),
+    team: Number(S.team),
+    rounds: [roundPayload(1, S.rounds[1]), roundPayload(2, S.rounds[2])]
+  };
+}
+
+/* One request, and it cannot outlast the student's patience. A service
+   that hangs is the same as a service that is down as far as this screen
+   is concerned, and SV-6 says neither may block the finish. The timeout
+   is therefore part of the contract rather than a nicety.
+
+   fetch is not assumed: a browser without it falls through to the copy
+   route rather than throwing on the finish screen. */
+function sendSubmission(done){
+  if (!serviceOn()){ done({ ok: false, why: "not-configured" }); return; }
+  if (typeof window.fetch !== "function"){ done({ ok: false, why: "no-fetch" }); return; }
+
+  var settled = false;
+  function finish(result){ if (!settled){ settled = true; done(result); } }
+
+  var controller = null;
+  try { controller = new AbortController(); } catch (e) { controller = null; }
+  var timer = window.setTimeout(function(){
+    if (controller) { try { controller.abort(); } catch (e) {} }
+    finish({ ok: false, why: "timeout" });
+  }, SERVICE.timeoutMs);
+
+  var options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(submissionPayload()),
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store"
+  };
+  if (controller) options.signal = controller.signal;
+
+  window.fetch(SERVICE.origin + SERVICE.submit, options).then(function(response){
+    window.clearTimeout(timer);
+    if (!response.ok){ finish({ ok: false, why: "refused", status: response.status }); return; }
+    return response.json().then(function(body){
+      finish({ ok: true, count: body && body.count });
+    }, function(){ finish({ ok: true }); });
+  }, function(){
+    window.clearTimeout(timer);
+    finish({ ok: false, why: "unreachable" });
+  });
+}
+
+/* ---------------- the submit screen ---------------- */
+function toSubmit(){
+  if (!serviceOn() || S.sent){ toDone(); return; }
+  $("d-payload").textContent = JSON.stringify(submissionPayload(), null, 2);
+  $("m-sending").hidden = true;
+  $("b-submit").disabled = false;
+  $("b-skip").disabled = false;
+  show("submit");
+}
+
+/* Every way this can end, in the words a student should read. The failures
+   say what to do next, because on a failure the student is the recovery
+   mechanism and being told "an error occurred" is no help to them. */
+var OUTCOMES = {
+  sent: "Your numbers are with the room. Your code is on them and your name is not, and they are deleted at the end of the day. Keep the line below anyway, in case a lecturer asks for it.",
+  skipped: "Nothing was sent. Hand the line below in the way your lecturer asks.",
+  "not-configured": "There is nothing to send to yet — this session is being run by hand. Copy the line below and hand it in the way your lecturer asks.",
+  "no-fetch": "This browser cannot send it. Copy the line below and hand it in the way your lecturer asks.",
+  timeout: "The room’s service did not answer in time, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  unreachable: "The room’s service could not be reached, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  refused: "The room’s service refused the message, so nothing was sent. That costs you nothing: copy the line below and hand it in, and tell a lecturer it was refused."
+};
+
+function toDone(outcome){
   var total = 0;
   [1, 2].forEach(function(n){ total += S.rounds[n].opens; });
   $("d-opened").textContent = String(total);
   $("d-line").textContent = resultLine();
+
+  var box = $("d-status");
+  var key = outcome || S.outcome;
+  if (key && OUTCOMES[key]){
+    $("d-status-text").textContent = OUTCOMES[key];
+    box.className = "status" + (key === "sent" ? " status-sent" : "");
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
+  /* A failure is worth one more try from the student's own hand. A success
+     is not, and neither is a session that never had a service to reach. */
+  $("d-retry-note").hidden = !(serviceOn() && key && key !== "sent" && key !== "skipped");
+
   show("done");
 }
+
+function submitNow(){
+  $("b-submit").disabled = true;
+  $("b-skip").disabled = true;
+  $("m-sending").hidden = false;
+  sendSubmission(function(result){
+    S.sent = !!result.ok;
+    S.outcome = result.ok ? "sent" : result.why;
+    save();
+    toDone(S.outcome);
+  });
+}
+
+$("b-submit").addEventListener("click", submitNow);
+$("b-skip").addEventListener("click", function(){
+  S.outcome = "skipped";
+  save();
+  toDone("skipped");
+});
+$("b-resubmit").addEventListener("click", function(){
+  $("d-status-text").textContent = "Sending…";
+  submitNow();
+});
 
 $("b-copy-line").addEventListener("click", function(){
   copyText($("d-line").textContent, "m-copied-line");
@@ -2428,7 +2664,11 @@ $("b-demo").addEventListener("click", function(){
   var r = R();
   tagRounds();
 
+  /* A reload on the submit screen must not send anything: SV-2 says a
+     submission needs a button press, and a page that resends on reload
+     turns one press into as many as the student refreshes. */
   if (S.screen === "done" && S.rounds[2] && S.rounds[2].answers){ toDone(); return; }
+  if (S.screen === "submit" && S.rounds[2] && S.rounds[2].answers){ toSubmit(); return; }
   if (S.screen === "bridge"){ show("bridge"); return; }
   if (S.screen === "questions" && r.final){ toQuestions(); return; }
   if (S.screen === "final" || (r.locked && r.idx >= r.order.length)){ toFinal(); return; }

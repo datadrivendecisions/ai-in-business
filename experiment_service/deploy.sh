@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Stand the experiment service up. Read it before you run it: every line
+# here costs money or creates something that holds student data.
+#
+# NOT RUN BY THE BUILD. Deploying is an owner's decision, and this script
+# exists so that decision is one command rather than an afternoon.
+#
+# SV-11 asks for two deployments and no shared container. This creates the
+# second one. Nothing here touches the Socratic gate's service, and a bad
+# deploy of this cannot take that down.
+set -euo pipefail
+
+PROJECT="${PROJECT:?set PROJECT to the course cloud project}"
+REGION="${REGION:-europe-west4}"          # EU, per ADR-0016
+SERVICE="${SERVICE:-experiment-service}"
+PAGES_ORIGIN="${PAGES_ORIGIN:-https://datadrivendecisions.github.io}"
+
+say() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
+
+say "APIs"
+gcloud services enable run.googleapis.com firestore.googleapis.com \
+  cloudscheduler.googleapis.com secretmanager.googleapis.com --project "$PROJECT"
+
+say "Firestore, in the same EU region"
+gcloud firestore databases create --location="$REGION" --project "$PROJECT" 2>/dev/null \
+  || echo "   a database already exists; leaving it alone"
+
+say "Three secrets"
+# The owners' token opens the dashboard and the delete route. The scheduler's
+# opens the purge and nothing else, so a job configuration and a person's
+# credential are never the same string. The salt makes the dashboard's opaque
+# ids unguessable: without it, anyone could hash 'kite' and find that row.
+for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
+  if ! gcloud secrets describe "$name" --project "$PROJECT" >/dev/null 2>&1; then
+    openssl rand -base64 32 | tr -d '\n' \
+      | gcloud secrets create "$name" --data-file=- --project "$PROJECT"
+    echo "   created $name"
+  else
+    echo "   $name already exists; leaving it alone"
+  fi
+done
+
+say "A service account that may read and write one collection"
+SA="experiment-service@${PROJECT}.iam.gserviceaccount.com"
+gcloud iam service-accounts create experiment-service \
+  --display-name "Week 3 experiment service" --project "$PROJECT" 2>/dev/null || true
+gcloud projects add-iam-policy-binding "$PROJECT" \
+  --member "serviceAccount:$SA" --role roles/datastore.user --condition=None >/dev/null
+for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
+  gcloud secrets add-iam-policy-binding "$name" --project "$PROJECT" \
+    --member "serviceAccount:$SA" --role roles/secretmanager.secretAccessor >/dev/null
+done
+
+say "Deploy"
+# Unauthenticated, because a student's browser has no identity to present.
+# The routes do their own gating: /submit is meant to be open and validates
+# every field, and everything else wants a bearer token.
+gcloud run deploy "$SERVICE" \
+  --source . \
+  --project "$PROJECT" \
+  --region "$REGION" \
+  --service-account "$SA" \
+  --allow-unauthenticated \
+  --min-instances 0 \
+  --max-instances 4 \
+  --memory 256Mi \
+  --set-env-vars "FIRESTORE_PROJECT=${PROJECT},ALLOWED_ORIGINS=${PAGES_ORIGIN}" \
+  --set-secrets "OWNER_TOKEN=experiment-owner-token:latest,PURGE_TOKEN=experiment-purge-token:latest,ID_SALT=experiment-id-salt:latest"
+
+URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')"
+
+say "The purge, at the end of the teaching day"
+# 19:00 Amsterdam. Retention is the session; this is the mechanism ADR-0016
+# names for it. It is not the only one -- store.py drops an expired row on
+# read and a TTL policy sweeps the rest -- because a retention rule that
+# depends on one cron job firing is an intention rather than a rule.
+PURGE_TOKEN="$(gcloud secrets versions access latest --secret experiment-purge-token --project "$PROJECT")"
+gcloud scheduler jobs create http experiment-purge \
+  --project "$PROJECT" --location "$REGION" \
+  --schedule "0 19 * * *" --time-zone "Europe/Amsterdam" \
+  --uri "${URL}/purge" --http-method POST \
+  --headers "Authorization=Bearer ${PURGE_TOKEN}" 2>/dev/null \
+  || gcloud scheduler jobs update http experiment-purge \
+       --project "$PROJECT" --location "$REGION" \
+       --schedule "0 19 * * *" --time-zone "Europe/Amsterdam" \
+       --uri "${URL}/purge" --http-method POST \
+       --headers "Authorization=Bearer ${PURGE_TOKEN}"
+
+say "A TTL policy, for the night the scheduler does not fire"
+gcloud firestore fields ttls update expiresAt \
+  --collection-group=submissions --enable-ttl --project "$PROJECT" --quiet \
+  || echo "   set the TTL on submissions.expiresAt by hand in the console"
+
+cat <<DONE
+
+Deployed: $URL
+
+Two things left, and neither is in this script:
+
+  1. Put the URL in the tool. One line, in site/tool-bias-experiment.html:
+         var SERVICE = { origin: "$URL", ... }
+     Until that line changes the page makes no request at all, which is why
+     it is safe for this to be deployed before the session and after it.
+
+  2. Read the owners' token, and give it to nobody else:
+         gcloud secrets versions access latest \\
+           --secret experiment-owner-token --project $PROJECT
+
+DONE
