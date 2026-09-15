@@ -265,8 +265,19 @@ rules below, because a tool is not a page of prose:
 
 - **They may carry JavaScript.** A self-assessment that cannot be taken is not a tool. Keep it
   self-contained and dependency-free: no build step, no framework, no network calls. State on the
-  landing page's tool card where any answers are stored — the current one keeps them in the
+  landing page's tool card where any answers are stored — the maturity scale keeps them in the
   reader's own browser and sends nothing anywhere, and that is the bar.
+
+  **One page is exempt, and only that one.** `site/tool-bias-experiment.html` may call the week 3
+  experiment service: **one origin, two routes, and only after a student presses a button.**
+  [ADR-0016](work/decisions/0016-experiment-service.md) argued the exception and named the page
+  in it so the next tool cannot inherit it by analogy. What it sends is numbers — counts, timings,
+  scale scores, card ids, a team number and a self-chosen code. What a student writes, and
+  whatever their assistant replied, is never sent, and the service refuses a payload carrying a
+  field it does not name, so that is a property of the wiring rather than a promise. The session
+  finishes whether or not the service answers. The next tool that wants a network call points at
+  ADR-0016; the answer is that this one was argued and written down, which is what that one must
+  also do.
 - **They carry the brand system like every other page**, including the sticky `bds-nav` and the
   `bds-footer` — copy both from `index.html` rather than writing them again. A tool without the nav
   is a dead end, the same defect `handbook.html` used to have. Light only: the site has no dark
@@ -286,7 +297,9 @@ to that is not in `site/` becomes an absolute URL, or the publication gate fails
 font loads: the site is system-stack only.
 
 No page of the course itself has any JavaScript — not `index.html`, not a week page, not the
-handbook template, not the LRD. Keep it that way unless there is a reason not to. The **instructor
+handbook template, not the LRD. Keep it that way unless there is a reason not to. The
+`tool-*.html` pages are the standing exception above; the bias experiment's network call is the
+exception inside that one. The **instructor
 view** is one agreed reason, and the generated `week-NN-deck.html` presenter decks are the other; and it lives at the foot of `index.html`: twenty lines that unhide
 the sections marked `data-audience="instructor"` when the URL carries `?instructor`, remember the
 choice in `sessionStorage` for the rest of the visit, and let `?student` turn it off again. Copy

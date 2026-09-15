@@ -1,0 +1,4 @@
+# The service itself is standard library. These two are the container's:
+# a production server, and the client for the collection ADR-0016 named.
+gunicorn==23.0.0
+google-cloud-firestore==2.19.0

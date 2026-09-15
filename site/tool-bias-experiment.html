@@ -156,6 +156,53 @@ textarea { min-height: 5.5rem; resize: vertical; }
 select { max-width: 12rem; }
 input[type="text"] { max-width: 18rem; }
 
+/* The side, committed before the sentence. Native radios tinted with
+   accent-color rather than replaced by custom controls: a hand-built
+   control would have to re-earn the keyboard behaviour and the
+   screen-reader semantics the browser gives away, and this page has no
+   framework to lean on. Where accent-color is not supported the radio
+   still draws its own checked dot, so the chosen side is never carried
+   by the border alone. */
+.sides { border: 0; padding: 0; margin: 0 0 var(--space-6); }
+.sides legend { display: block; font-weight: 600; padding: 0; }
+.sides .hint {
+  font-weight: 400; font-size: var(--text-sm);
+  color: var(--text-secondary); margin: var(--space-1) 0 var(--space-3);
+}
+.side-row { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+.side-option {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  font-weight: 600; cursor: pointer; accent-color: var(--supporting);
+  background: var(--bg-page);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+}
+.side-option:hover { background: var(--bg-cream-2); }
+/* inset shadow rather than a thicker border, so choosing a side does not
+   shift the row it sits in */
+.side-option:has(input:checked) {
+  border-color: var(--supporting); box-shadow: inset 0 0 0 1px var(--supporting);
+}
+.side-option input { margin: 0; width: 1.1rem; height: 1.1rem; }
+
+/* the side, quoted back on later screens */
+.side-badge {
+  display: inline-block; margin-left: var(--space-2);
+  font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em;
+  font-weight: 700; color: var(--bg-page); background: var(--supporting);
+  border-radius: var(--radius-sm); padding: 1px var(--space-2);
+}
+.side-badge[hidden] { display: none; }
+
+/* The claim above a card is a reminder, not the headline it is on the
+   position screen, so it is set smaller there. */
+.claim-box-compact { padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+.claim-box-compact .claim-text { font-size: var(--text-base); line-height: 1.45; }
+
+/* An eyebrow is --text-muted, which on cream is 4.26:1 and below AA. The
+   cream blocks therefore override it, as the handbook's .handin does. */
+.locked .bds-eyebrow, .claim-box .bds-eyebrow { color: var(--text-secondary); }
+
 .btn {
   font: inherit; font-weight: 600; cursor: pointer;
   border: 2px solid var(--supporting); border-radius: var(--radius-sm);
@@ -189,8 +236,16 @@ input[type="text"] { max-width: 18rem; }
   background: var(--bg-page);
 }
 .card-title { font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-2); line-height: 1.3; }
-.card-meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0 0 var(--space-4); }
-.card-teaser { margin: 0; }
+/* The APA reference ends in a URL, and the longest of the thirty-two is
+   157 characters with nothing in it a browser will break on. Left alone
+   that one card pushes the whole page sideways on a phone, so the rule
+   that allows a break anywhere is on the element that holds a URL rather
+   than on the body, where it would also break ordinary words. */
+.card-meta {
+  font-size: var(--text-sm); color: var(--text-secondary);
+  margin: var(--space-3) 0 0; overflow-wrap: anywhere;
+}
+.card-teaser { margin: 0 0 var(--space-1); }
 .card-extract {
   border-left: 4px solid var(--primary);
   padding-left: var(--space-4); margin: var(--space-6) 0 var(--space-4);
@@ -231,6 +286,174 @@ input[type="text"] { max-width: 18rem; }
   .claim-text { font-size: var(--text-lg); }
   .btn { width: 100%; }
   .btn-row { flex-direction: column; align-items: stretch; }
+}
+
+/* ================================================================
+   Phases 2-5 additions.
+   ================================================================ */
+
+/* ---- the agent step ---- */
+.prompt-box {
+  background: var(--bg-cream-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.step-list { margin: var(--space-4) 0; padding-left: var(--space-6); }
+.step-list li { margin-bottom: var(--space-2); }
+
+/* ---- the closing questions ---- */
+/* A radio scale, not a slider: a slider has a default position, and a
+   default position is the instrument answering its own question. */
+.likert { margin: 0 0 var(--space-6); padding: 0; border: 0; }
+.likert legend {
+  font-weight: 600;
+  font-size: var(--text-base);
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+.likert .anchors {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.scale { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.scale label {
+  flex: 1 1 2.5rem;
+  min-width: 2.5rem;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  background: var(--bg-page);
+}
+.scale label:hover { background: var(--bg-section); }
+.scale label:has(input:checked) {
+  background: var(--supporting);
+  color: var(--bg-page);
+  border-color: var(--supporting);
+  font-weight: 600;
+}
+.scale input { position: absolute; opacity: 0; width: 0; height: 0; }
+.scale label:has(input:focus-visible) { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+/* ---- the result line ---- */
+.line-box {
+  background: var(--supporting);
+  color: #f5f5f5;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.copied { font-size: var(--text-sm); color: var(--text-secondary); margin-left: var(--space-3); }
+
+/* ---- the submit screen ---- */
+/* The outcome of a submission is stated in words as well as in colour: a
+   left border is a decoration on a phone in sunlight, and whether a
+   student's numbers reached the room is not a decorative matter. */
+.status {
+  border-left: 4px solid var(--supporting);
+  background: var(--bg-cream-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin: 0 0 var(--space-6);
+}
+.status p { margin: 0 0 var(--space-2); }
+.status p:last-child { margin-bottom: 0; }
+.status-sent { border-left-color: var(--primary); background: var(--bg-yellow); }
+.sends { margin: var(--space-4) 0; padding-left: var(--space-6); }
+.sends li { margin-bottom: var(--space-1); }
+
+/* ---- the lecturer view ---- */
+/* Marked data-audience="instructor" and hidden until ?instructor. That
+   is signposting, not access control: it holds no answer key, only the
+   arithmetic. The codebook is pasted in, never shipped. */
+.lecturer {
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 3px solid var(--supporting);
+}
+.aside {
+  background: var(--bg-cream);
+  border-left: 4px solid var(--primary);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.lecturer textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-xs);
+  min-height: 9rem;
+}
+.tally { display: flex; flex-wrap: wrap; gap: var(--space-6); margin: var(--space-4) 0; }
+.tally div { min-width: 7rem; }
+.tally .n { font-size: var(--text-3xl); font-weight: 700; line-height: 1.1; display: block; }
+.tally .k { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-secondary); }
+
+.reject-list { font-size: var(--text-sm); }
+.reject-list li { margin-bottom: var(--space-1); overflow-wrap: anywhere; }
+.reject-list code { background: var(--bg-cream-2); padding: 0 .25em; border-radius: 3px; }
+
+/* Two bars on one shared scale. The index runs -1 to +1, so the axis is
+   drawn at the middle and a bar grows either way from it. */
+.bars { margin: var(--space-6) 0; }
+.bar-row { display: grid; grid-template-columns: 8rem 1fr 4.5rem; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3); }
+.bar-label { font-size: var(--text-sm); font-weight: 600; }
+.bar-track {
+  position: relative;
+  height: 2rem;
+  background: var(--bg-cream-2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.bar-zero { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--border-strong); }
+.bar-fill { position: absolute; top: 4px; bottom: 4px; background: var(--supporting); border-radius: 2px; }
+.bar-value { font-size: var(--text-sm); font-variant-numeric: tabular-nums; text-align: right; }
+.bar-scale { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-secondary); padding-left: calc(8rem + var(--space-3)); padding-right: calc(4.5rem + var(--space-3)); }
+
+.stat-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+.stat-table th, .stat-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+.stat-table th { font-weight: 600; width: 55%; }
+.stat-table td { font-variant-numeric: tabular-nums; }
+
+.kappa-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 9rem)); gap: var(--space-3); margin: var(--space-3) 0; }
+/* Two of the four labels wrap to a second line, so the boxes are pushed to
+   the bottom of their cell rather than left to sit at different heights. */
+.kappa-grid > div { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-1); }
+.kappa-grid label { font-size: var(--text-xs); display: block; }
+.kappa-grid input { width: 100%; }
+
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 1fr; gap: var(--space-1); }
+  .bar-scale { padding: 0; }
+  .bar-value { text-align: left; }
+}
+input[type="number"] {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  background: var(--bg-page);
+  color: var(--text-primary);
 }
 </style>
 </head>
@@ -274,10 +497,10 @@ input[type="text"] { max-width: 18rem; }
   <header class="bds-page-header">
     <p class="bds-eyebrow">Week 3 &middot; in the session</p>
     <h1 class="bds-h1">The source menu</h1>
-    <p class="lead">You will be shown sixteen sources, one at a time. You may open eight of them. Before that, you write down where you stand; afterwards, you write it down again.</p>
+    <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not finished.</strong> This page is being built. The claim and the sixteen sources below are placeholders &mdash; the real ones are still being assembled and checked. The machinery around them works, so you can walk the whole exercise through today and see what it asks of you.</p>
+  <p class="tpl-notice"><strong>Not piloted.</strong> Everything on this page is built and both decks are real: every extract is quoted from the document it names, and every link goes to that document. Two things are still open, and neither is code. The two claims have not been piloted on a room, so nobody yet knows whether either of them divides one. And the service that collects the results is written but not standing up anywhere &mdash; until an owner puts its address in this page it sends nothing at all, and you copy your line and hand it in yourself.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -285,10 +508,10 @@ input[type="text"] { max-width: 18rem; }
   <section class="screen" id="s-consent" aria-labelledby="h-consent">
     <h2 id="h-consent">Before you start</h2>
 
-    <p>This is a class exercise about how people look for evidence. It records which sources you chose to open and the order you saw them in. You can stop at any point and erase everything.</p>
+    <p>This is a class exercise about how people look for evidence. It records which sources you chose to open, the order you saw them in, how long you spent, and how the round felt. You can stop at any point and erase everything.</p>
 
     <div class="warn">
-      <p id="storage-statement">What you type stays in this browser. It is saved in your own browser&rsquo;s storage so a reload does not lose your place, and it is sent nowhere. No name is asked for. At the end you get one line of numbers to hand in yourself. Erase everything at any time with the button below.</p>
+      <p id="storage-statement"></p>
     </div>
 
     <div class="field" style="margin-top:var(--space-6)">
@@ -300,7 +523,7 @@ input[type="text"] { max-width: 18rem; }
 
     <div class="field">
       <label for="f-team">Your team number
-        <span class="hint">The number on your team&rsquo;s card.</span>
+        <span class="hint">The number on your team&rsquo;s card. It decides which of your two rounds has the assistant in it &mdash; nothing else.</span>
       </label>
       <select id="f-team">
         <option value="">Choose&hellip;</option>
@@ -322,35 +545,92 @@ input[type="text"] { max-width: 18rem; }
        2 · The position, locked once submitted.
        ============================================================ -->
   <section class="screen" id="s-position" aria-labelledby="h-position" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-position"></p>
     <h2 id="h-position">Where do you stand?</h2>
 
     <div class="claim-box">
       <p class="bds-eyebrow">The claim</p>
-      <p class="claim-text" id="claim-1"></p>
+      <p class="claim-text" id="claim-position"></p>
     </div>
+
+    <!-- Two controls, in this order: the side, then the reason for it. The
+         side is what the result line measures against, so it cannot be
+         left to be inferred from a sentence. -->
+    <fieldset class="sides">
+      <legend>Where do you stand, right now, before reading anything?</legend>
+      <p class="hint">Commit to a side. The sentence underneath is your reason for it.</p>
+      <div class="side-row">
+        <label class="side-option" for="side-agree">
+          <input type="radio" name="side" id="side-agree" value="agree"> I agree
+        </label>
+        <label class="side-option" for="side-disagree">
+          <input type="radio" name="side" id="side-disagree" value="disagree"> I disagree
+        </label>
+      </div>
+    </fieldset>
 
     <div class="field">
-      <label for="f-position">Write your position in one sentence
-        <span class="hint">Not a summary of the arguments &mdash; where <em>you</em> land, today, before reading anything. You will be asked again at the end, and you may change your mind then.</span>
+      <label for="f-position">In one sentence, why?
+        <span class="hint">Not a summary of the arguments &mdash; why <em>you</em> land there, today, before reading anything. You will be asked again at the end, and you may change your mind then.</span>
       </label>
-      <textarea id="f-position"></textarea>
+      <textarea id="f-position" aria-errormessage="e-position"></textarea>
     </div>
 
-    <p class="err" id="e-position" hidden></p>
+    <p class="err" id="e-position" role="alert" hidden></p>
 
     <div class="warn">
       <p>Once you submit this sentence it is locked. You cannot edit it, and you will see it again later.</p>
     </div>
 
     <div class="btn-row" style="margin-top:var(--space-6)">
-      <button type="button" class="btn" id="b-position">Lock it and see the first source</button>
+      <button type="button" class="btn" id="b-position">Lock it and go on</button>
     </div>
   </section>
 
   <!-- ============================================================
-       3 · The runner. One card at a time, eight opens, no way back.
+       3 · The agent step. One of the two rounds only, and always
+       between the locked position and the first card — what is being
+       measured is which sources get opened, so the assistant has to
+       speak while that choice is still ahead.
+       ============================================================ -->
+  <section class="screen" id="s-agent" aria-labelledby="h-agent" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-agent"></p>
+    <h2 id="h-agent">Before you read anything, put it to an assistant</h2>
+
+    <p>Copy the text below into whichever assistant you use &mdash; ChatGPT, Claude, Gemini, Copilot, it does not matter which. Paste back what it says. Nothing here talks to a model for you; this page sends nothing anywhere, so the round trip is yours to make.</p>
+
+    <ol class="step-list">
+      <li>Press <strong>Copy the prompt</strong>.</li>
+      <li>Open your assistant in another tab and paste it.</li>
+      <li>Copy its whole reply and paste it into the box below.</li>
+    </ol>
+
+    <div class="prompt-box" id="agent-prompt"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-copy-prompt">Copy the prompt</button>
+      <span class="copied" id="m-copied-prompt" hidden>Copied.</span>
+    </div>
+
+    <div class="field" style="margin-top:var(--space-6)">
+      <label for="f-agent-reply">Paste the assistant&rsquo;s reply
+        <span class="hint">All of it, as it came. You are not asked to answer its questions in writing &mdash; read them, then go on to the sources.</span>
+      </label>
+      <textarea id="f-agent-reply" aria-errormessage="e-agent"></textarea>
+    </div>
+
+    <p class="err" id="e-agent" role="alert" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-agent">See the first source</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4 · The runner. One card at a time, eight opens, no way back.
        ============================================================ -->
   <section class="screen" id="s-card" aria-labelledby="h-card" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-card"></p>
     <h2 id="h-card" class="bds-eyebrow" style="font-size:var(--text-xs)">Source menu</h2>
 
     <div class="runner-bar">
@@ -358,15 +638,31 @@ input[type="text"] { max-width: 18rem; }
       <span aria-live="polite">Opens left: <strong id="m-budget">8</strong></span>
     </div>
 
+    <!-- The claim and the position stay above every card. The PRD asks for
+         the position, because the measurement is about this position; the
+         claim is here too because by card twelve nobody recalls its exact
+         wording, and a reader guessing at the claim is not reading the
+         card in front of them. Neither is sticky: a second fixed bar under
+         the navigation costs a phone most of its screen. -->
+    <div class="claim-box claim-box-compact">
+      <p class="bds-eyebrow">The claim</p>
+      <p class="claim-text" id="claim-card"></p>
+    </div>
+
     <div class="locked">
-      <p class="bds-eyebrow">Your position</p>
+      <p class="bds-eyebrow">Your position <span class="side-badge" id="m-side" hidden></span></p>
       <p id="m-locked"></p>
     </div>
 
     <article class="card" aria-live="polite">
       <h3 class="card-title" id="c-title"></h3>
-      <p class="card-meta" id="c-meta"></p>
       <p class="card-teaser" id="c-teaser"></p>
+      <!-- The reference sits after the teaser rather than before it. A full APA
+           entry runs to 55 words on the longest card, which at phone width is
+           taller than the teaser and would push it off the screen — and the
+           teaser is the thing a reader is weighing when they decide whether to
+           spend an open. -->
+      <p class="card-meta" id="c-meta"></p>
 
       <div id="c-opened" hidden>
         <div class="card-extract" id="c-extract"></div>
@@ -391,57 +687,322 @@ input[type="text"] { max-width: 18rem; }
   </section>
 
   <!-- ============================================================
-       4 · The final position.
+       5 · The final position.
        ============================================================ -->
   <section class="screen" id="s-final" aria-labelledby="h-final" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-final"></p>
     <h2 id="h-final">Where do you stand now?</h2>
 
     <div class="claim-box">
       <p class="bds-eyebrow">The claim</p>
-      <p class="claim-text" id="claim-1b"></p>
+      <p class="claim-text" id="claim-final"></p>
     </div>
 
     <div class="locked">
-      <p class="bds-eyebrow">What you wrote before you read anything</p>
+      <p class="bds-eyebrow">What you wrote before you read anything <span class="side-badge" id="f-side-was" hidden></span></p>
       <p id="f-locked"></p>
     </div>
 
+    <!-- The same two controls as the first position screen. Nothing is
+         pre-selected: a pre-ticked side would be the instrument answering
+         its own question. -->
+    <fieldset class="sides">
+      <legend>And now?</legend>
+      <p class="hint">Staying where you were is an answer. So is moving.</p>
+      <div class="side-row">
+        <label class="side-option" for="fside-agree">
+          <input type="radio" name="fside" id="fside-agree" value="agree"> I agree
+        </label>
+        <label class="side-option" for="fside-disagree">
+          <input type="radio" name="fside" id="fside-disagree" value="disagree"> I disagree
+        </label>
+      </div>
+    </fieldset>
+
     <div class="field">
-      <label for="f-final">Write your position again, in one sentence
+      <label for="f-final">In one sentence, why?
         <span class="hint">Copy the sentence above if nothing has changed. Saying so is a finding too.</span>
       </label>
-      <textarea id="f-final"></textarea>
+      <textarea id="f-final" aria-errormessage="e-final"></textarea>
     </div>
 
-    <p class="err" id="e-final" hidden></p>
+    <p class="err" id="e-final" role="alert" hidden></p>
 
     <div class="btn-row">
-      <button type="button" class="btn" id="b-final">Finish</button>
+      <button type="button" class="btn" id="b-final">Go on to the last questions</button>
     </div>
   </section>
 
   <!-- ============================================================
-       5 · Finish.
+       6 · The closing questions. Asked at the end of each round, not
+       once at the finish: a single set of answers at the end would
+       belong to neither condition, and the comparison the session is
+       built on is between how a round went and how it felt.
+       ============================================================ -->
+  <section class="screen" id="s-questions" aria-labelledby="h-questions" hidden>
+    <p class="bds-eyebrow round-tag" id="tag-questions"></p>
+    <h2 id="h-questions">How was that round?</h2>
+
+    <p>Eight questions about the round you have just finished, not about the claim. There is no right answer and nothing here is scored.</p>
+
+    <div id="q-items"></div>
+
+    <p class="err" id="e-questions" role="alert" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-questions">Done with this round</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7 · Between the rounds.
+       ============================================================ -->
+  <section class="screen" id="s-bridge" aria-labelledby="h-bridge" hidden>
+    <h2 id="h-bridge">That is round one</h2>
+    <p>Round two works exactly the same way, on a different claim with a different sixteen sources. Nothing you did in round one carries over, and the two decks share no source.</p>
+    <p class="note">Wait here if your lecturer has asked you to.</p>
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-bridge">Start round two</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8 · Submit. The button is the consent act, so nothing is sent
+       before it and the screen says in plain words what a press does.
+       ADR-0016 gave up this page's no-network rule and gave it up for
+       one page; keeping the exception narrow is what this screen is for.
+       ============================================================ -->
+  <section class="screen" id="s-submit" aria-labelledby="h-submit" hidden>
+    <h2 id="h-submit">Send your numbers to the room?</h2>
+
+    <p>Both rounds are done. Your lecturer needs everyone&rsquo;s numbers in one place to draw the comparison the session ends on. You can send yours with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
+
+    <div class="warn">
+      <p><strong>What goes, if you press it:</strong></p>
+      <ul class="sends">
+        <li>The code you chose, and your team number.</li>
+        <li>Which sources you opened, and in what order.</li>
+        <li>The side you locked, the side you ended on, and whether your closing sentence changed.</li>
+        <li>Seconds spent, and your answers to the eight closing questions.</li>
+      </ul>
+      <p><strong>What stays here:</strong> everything you wrote, and everything an assistant replied. Those are never sent, and there is no field in the message that could carry them.</p>
+      <p>What is sent carries your code and no name. It is deleted at the end of the teaching day. Give your code to a lecturer at any point and your row goes sooner.</p>
+    </div>
+
+    <details>
+      <summary>Show me exactly what would be sent</summary>
+      <div class="line-box" id="d-payload" tabindex="0" role="region" aria-label="The message that would be sent"></div>
+    </details>
+
+    <div class="btn-row" style="margin-top:var(--space-6)">
+      <button type="button" class="btn" id="b-submit">Submit my numbers</button>
+      <button type="button" class="btn btn-secondary" id="b-skip">No &mdash; I will hand it in myself</button>
+    </div>
+    <p class="note" id="m-sending" hidden>Sending&hellip;</p>
+  </section>
+
+  <!-- ============================================================
+       9 · Finish, and the one line of result.
        ============================================================ -->
   <section class="screen" id="s-done" aria-labelledby="h-done" hidden>
-    <h2 id="h-done">That is the end of the round</h2>
+    <h2 id="h-done">That is the whole exercise</h2>
 
-    <p>You opened <strong id="d-opened">0</strong> of the sixteen sources. Your choices are saved in this browser.</p>
+    <div class="status" id="d-status" hidden><p id="d-status-text"></p></div>
 
-    <p class="tpl">More is still to come on this page. A second round, on a different claim. A step where an assistant argues with the position you locked. The questions asked at the end of each round. And the one line of result you hand in. Today, stop here.</p>
+    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks.</p>
 
-    <p class="note">Keep this tab open until your lecturer says otherwise.</p>
+    <div class="line-box" id="d-line" tabindex="0" role="region" aria-label="Your result line"></div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-copy-line">Copy my result line</button>
+      <span class="copied" id="m-copied-line" hidden>Copied.</span>
+    </div>
+
+    <p class="note"><strong>Keep this tab open until you have.</strong> Closing the tab does not delete the line &mdash; it is saved in this browser &mdash; but erasing does, and so does a borrowed laptop being wiped.</p>
+    <p class="note" id="d-retry-note" hidden>You can try sending again: <button type="button" class="btn btn-secondary" id="b-resubmit">Try sending my numbers again</button></p>
+
+    <details style="margin-top:var(--space-6)">
+      <summary>What every part of that line means</summary>
+      <table class="stat-table">
+        <tr><th><code>v1</code></th><td>The format of the line. A reader that only knows another version says so rather than guessing.</td></tr>
+        <tr><th><code>kite</code></th><td>The code you chose. Never a name.</td></tr>
+        <tr><th><code>t3</code></th><td>Your team number.</td></tr>
+        <tr><th><code>r1:ask</code> / <code>r1:none</code></th><td>Round one, with the assistant or without it.</td></tr>
+        <tr><th><code>c1</code></th><td>Which claim that round used.</td></tr>
+        <tr><th><code>posa</code> / <code>posd</code></th><td>The side you locked before reading: agree or disagree.</td></tr>
+        <tr><th><code>op6</code></th><td>How many sources you opened.</td></tr>
+        <tr><th><code>ids=&hellip;</code></th><td>Which ones, in the order you opened them. Whether a source agreed with you is not in this page at all. That list is held separately and applied afterwards, so someone can show you the arithmetic behind your own number.</td></tr>
+        <tr><th><code>s188</code></th><td>Seconds spent on the sources in that round.</td></tr>
+        <tr><th><code>enda</code> / <code>endd</code></th><td>The side you ended on.</td></tr>
+        <tr><th><code>moved1</code></th><td>Whether your closing sentence differs from your locked one.</td></tr>
+        <tr><th><code>tlx47</code></th><td>Your six workload answers, totalled to a 0&ndash;100 scale.</td></tr>
+        <tr><th><code>q9</code></th><td>Your two answers about how the round felt, added together.</td></tr>
+      </table>
+    </details>
   </section>
 
   <!-- ============================================================
        DA-4 · One control erases everything.
        ============================================================ -->
   <div class="erase-bar">
-    <p class="note">Nothing here is sent anywhere. If you want it gone from this browser as well:</p>
+    <p class="note" id="erase-note">If you want everything gone from this browser:</p>
     <div class="btn-row">
       <button type="button" class="btn btn-secondary" id="b-erase">Erase everything and start again</button>
     </div>
   </div>
+
+  <!-- ============================================================
+       The lecturer view. Hidden unless the address carries ?instructor.
+       It holds no answer key: the codebook is pasted in at analysis
+       time, which is the whole reason the published page can be read
+       by a student in advance without spoiling the exercise.
+       ============================================================ -->
+  <section class="lecturer" id="an" data-audience="instructor" aria-labelledby="h-an" hidden>
+    <h2 id="h-an">The class result</h2>
+
+    <p class="aside"><strong>Instructor view.</strong> This section is hidden on the ordinary page and is showing because the address carries <code>?instructor</code>. <a href="tool-bias-experiment.html?student">Leave the instructor view</a>.</p>
+
+    <p>Paste the codebook and the class&rsquo;s result lines. Everything is computed here in this browser; nothing is sent anywhere, and nothing is stored.</p>
+
+    <div class="field">
+      <label for="f-codebook">The codebook
+        <span class="hint">Paste the two tables from <code>work/drafts/week-03-codebook.md</code> as they stand. Any line carrying a card id followed by its cell code is read. Every other line is ignored, and so is everything else on a line that has both. No worked example is given here, on purpose. A real card beside its real cell would be the answer key this page exists not to carry.</span>
+      </label>
+      <textarea id="f-codebook" spellcheck="false"></textarea>
+    </div>
+
+    <!-- The live feed. Since ADR-0016 this is the ordinary path and the
+         paste box below it is the fallback, which is why the paste box was
+         built first: it is the arithmetic both of them need, and it can be
+         tested with no infrastructure at all. -->
+    <h3>The live feed</h3>
+    <p class="note">Submissions as they land. The token is the owners&rsquo; one, out of Secret Manager; it is held in this tab for as long as the tab is open and written nowhere.</p>
+    <div class="field">
+      <label for="f-token">Owner token
+        <span class="hint">Nothing is fetched without it, and the service refuses an anonymous read.</span>
+      </label>
+      <input type="text" id="f-token" autocomplete="off" spellcheck="false" />
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-live">Watch it fill up</button>
+      <button type="button" class="btn btn-secondary" id="b-live-stop" hidden>Stop watching</button>
+      <span class="copied" id="m-live"></span>
+    </div>
+    <p class="note" id="m-live-detail" hidden></p>
+
+    <h3 style="margin-top:var(--space-8)">Or paste the lines</h3>
+    <p class="note">What to do when the service is down, and what to do if it never goes up. The arithmetic below is the same either way; only where the numbers came from differs.</p>
+    <div class="field">
+      <label for="f-lines">The result lines
+        <span class="hint">One per student, one per line. Blank lines are skipped; anything else that will not parse is listed back rather than dropped.</span>
+      </label>
+      <textarea id="f-lines" spellcheck="false"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-analyse">Work it out</button>
+      <select id="f-demo" aria-label="Which fixture">
+        <option value="below">Fixture: interval below zero</option>
+        <option value="above">Fixture: interval above zero</option>
+        <option value="spanning">Fixture: interval spanning zero</option>
+      </select>
+      <button type="button" class="btn btn-secondary" id="b-demo">Load it</button>
+    </div>
+
+    <p class="err" id="e-an" role="alert" hidden></p>
+
+    <div id="an-out" hidden>
+      <h3>What came in</h3>
+      <div class="tally">
+        <div><span class="n" id="an-cards">0</span><span class="k">cards coded</span></div>
+        <div><span class="n" id="an-ok">0</span><span class="k">lines accepted</span></div>
+        <div><span class="n" id="an-bad">0</span><span class="k">lines rejected</span></div>
+        <div><span class="n" id="an-paired">0</span><span class="k">complete pairs</span></div>
+      </div>
+
+      <div id="an-rejects" hidden>
+        <h4>Rejected, and why</h4>
+        <ul class="reject-list" id="an-reject-list"></ul>
+      </div>
+
+      <h3>The two conditions</h3>
+      <p class="note">Congeniality index per round: (sources opened that agreed with the position locked &minus; sources opened that did not) &divide; sources opened. It runs from &minus;1 to +1. Higher means more one-sided reading.</p>
+
+      <div class="bars" id="an-bars">
+        <div class="bar-row">
+          <span class="bar-label">With the assistant</span>
+          <span class="bar-track"><span class="bar-zero"></span><span class="bar-fill" id="bar-ask"></span></span>
+          <span class="bar-value" id="val-ask">&mdash;</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Without it</span>
+          <span class="bar-track"><span class="bar-zero"></span><span class="bar-fill" id="bar-none"></span></span>
+          <span class="bar-value" id="val-none">&mdash;</span>
+        </div>
+        <p class="bar-scale"><span>&minus;1</span><span>0</span><span>+1</span></p>
+      </div>
+
+      <table class="stat-table">
+        <tr><th>Mean index, with the assistant</th><td id="s-ask">&mdash;</td></tr>
+        <tr><th>Mean index, without it</th><td id="s-none">&mdash;</td></tr>
+        <tr><th>Paired difference (with &minus; without)</th><td id="s-diff">&mdash;</td></tr>
+        <tr><th>95% interval on that difference</th><td id="s-ci">&mdash;</td></tr>
+        <tr><th>Smallest difference this many pairs could have detected</th><td id="s-mde">&mdash;</td></tr>
+        <tr><th>Strong opposing sources opened, with the assistant</th><td id="s-sopp-ask">&mdash;</td></tr>
+        <tr><th>Strong opposing sources opened, without it</th><td id="s-sopp-none">&mdash;</td></tr>
+        <tr><th>Seconds on the sources, with / without</th><td id="s-secs">&mdash;</td></tr>
+        <tr><th>Workload 0&ndash;100, with / without</th><td id="s-tlx">&mdash;</td></tr>
+        <tr><th>How the round felt, 2&ndash;14, with / without</th><td id="s-q">&mdash;</td></tr>
+        <tr><th>Changed their closing sentence, with / without</th><td id="s-moved">&mdash;</td></tr>
+        <tr><th>Changed sides, with / without</th><td id="s-flip">&mdash;</td></tr>
+      </table>
+
+      <h3>Now say what it means</h3>
+      <!-- There is no sentence on this page that states a finding. Writing
+           one would put the verdict-giving the experiment is testing
+           inside the instrument that measures it. What the page can do is
+           put the numbers up and ask. -->
+      <div class="warn">
+        <p id="an-question"></p>
+      </div>
+      <!-- SV-9, SV-10. One of a fixed set of sentences, chosen by where the
+           interval sits, and it cannot render without the two numbers it
+           turns on. Nothing here is composed: which sentence appears is a
+           function of the arithmetic, and the whole set is in the script
+           for anyone who wants to check it holds no verdict. -->
+      <div class="status" id="an-interp" hidden>
+        <p class="bds-eyebrow" id="an-interp-which"></p>
+        <p id="an-interp-text"></p>
+        <p class="note" id="an-interp-numbers"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-reading">Write the room&rsquo;s answer here
+          <span class="hint">This box is a scratchpad. It is not saved and it is not sent anywhere; it is here so the sentence gets written by the people who saw the session.</span>
+        </label>
+        <textarea id="f-reading"></textarea>
+      </div>
+    </div>
+
+    <h3>Kappa, for the debrief</h3>
+    <p class="note">Two coders, one 2&times;2. Used by students on the eight-card debrief set, not by the analysis above.</p>
+    <div class="kappa-grid">
+      <div><label for="k-a">Both said supporting</label><input type="number" id="k-a" min="0" step="1" value="0"></div>
+      <div><label for="k-b">A supporting, B opposing</label><input type="number" id="k-b" min="0" step="1" value="0"></div>
+      <div><label for="k-c">A opposing, B supporting</label><input type="number" id="k-c" min="0" step="1" value="0"></div>
+      <div><label for="k-d">Both said opposing</label><input type="number" id="k-d" min="0" step="1" value="0"></div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-kappa">Compute kappa</button>
+    </div>
+    <table class="stat-table" id="k-out" hidden>
+      <tr><th>Pairs coded</th><td id="k-n">&mdash;</td></tr>
+      <tr><th>Agreement observed</th><td id="k-po">&mdash;</td></tr>
+      <tr><th>Agreement expected by chance</th><td id="k-pe">&mdash;</td></tr>
+      <tr><th>Cohen&rsquo;s kappa</th><td id="k-k">&mdash;</td></tr>
+    </table>
+    <p class="err" id="e-kappa" role="alert" hidden></p>
+  </section>
 
 </main>
 
@@ -468,33 +1029,354 @@ input[type="text"] { max-width: 18rem; }
    that is never shipped with the page.
    ================================================================== */
 
-/* ---------------- the claim ---------------- */
-/* PLACEHOLDER. The real claim comes out of phase 0 of the build plan:
-   piloted on at least ten people, kept only if it splits the room. */
-var CLAIM1 = "A firm should trust its own people’s judgement that AI is speeding them up, rather than wait to measure it.";
+/* ---------------- the claims ---------------- */
+/* Round 1 and round 2. Both satisfy CL-4: each names two alternatives
+   rather than proposing one course of action, which is what makes CL-3
+   satisfiable — X and Y each have their own advocates selling against
+   the other. Whether either splits the room is settled by the 0.3
+   pilot, not here. */
+var CLAIM1 = "An SME should run its AI on small models it controls rather than on frontier models it rents.";
+var CLAIM2 = "An SME's first AI project should make its existing staff faster rather than remove steps from a process.";
 
-/* ---------------- the deck ---------------- */
-/* PLACEHOLDER, 16 cards of the right shape and nothing else. Real cards
-   carry a title, an outlet, a year, a teaser of 25 words or fewer, an
-   extract of 150 words or fewer quoted from the document, and an
-   absolute link to it. An empty href renders as an unfilled slot. */
-var DECK1 = [];
-(function(){
-  for (var i = 1; i <= 16; i++){
-    var n = (i < 10 ? "0" : "") + i;
-    DECK1.push({
-      id: "c1-" + n,
-      title: "Placeholder source " + n,
-      outlet: "Outlet " + n,
-      year: "20" + (10 + (i % 17)),
-      teaser: "One or two lines of abstract go here — enough to decide whether to spend an open on it, and no more than twenty-five words.",
-      extract: "The extract from source " + n + " goes here: up to a hundred and fifty words, quoted from the document itself rather than summarised, so that what you read is what the source actually says.",
-      href: ""
-    });
+/* ---------------- the decks ---------------- */
+/* Each card carries a title, an APA reference (which supplies the outlet
+   and the year that SM-5 asks for, and the authors the earlier shape
+   dropped), a teaser of 25 words or fewer, an extract of 150 words or
+   fewer quoted from the source, and an absolute link to the original
+   document rather than to a summary of it.
+
+   Every extract is checked back against the AI Wiki's own capture of the
+   source by check-deck.py in project-documentation/build/, which fails
+   if a quotation cannot be found.
+
+   The order of the cards is built in two steps. A hash of each source
+   decides which card comes first out of each cell, so the ordering is
+   unrelated to the coding; the walk through them then never takes two
+   cards from the same cell in a row. The second step is there because
+   the first, left alone, happened to put all four of one cell's cards
+   next to each other -- an ordering can be independent of the cells and
+   still cluster them, and a cluster is a pattern a reader of this file
+   could work with. The codebook that maps a card id to its cell lives
+   in work/drafts/ and is deliberately not in the published directory.
+
+   DECK2 is data only until phase 3 builds the second-round screen. */
+var DECK1 = [
+  {
+    id: "c1-01",
+    title: "How Agentic AI Is Reshaping Finance Workflows, Processes, and Governance",
+    ref: "CFA Institute. (2026, September 1). How agentic AI is reshaping finance workflows, processes, and governance [Video]. YouTube. https://www.youtube.com/watch?v=E8BbWoP9-Xk",
+    teaser: "A finance roundtable in which a practitioner describes running open models through the same pipeline as a proprietary baseline.",
+    extract: "Whereas with, to Brian's point, like using one of these proprietary models, you have that ability to scale very, very quickly and you can have batch requests where you send 50,000, you know, requests to and through an API and you get results back within 24 hours. It's very, very difficult to replicate that, locally unless you invest a lot in the infrastructure.",
+    href: "https://www.youtube.com/watch?v=E8BbWoP9-Xk"
+  },
+  {
+    id: "c1-02",
+    title: "Small Language Models are the Future of Agentic AI",
+    ref: "Belcak, P., Heinrich, G., Diao, S., Fu, Y., Dong, X., Muralidharan, S., Lin, Y. C., & Molchanov, P. (2025). Small language models are the future of agentic AI (arXiv:2506.02153). arXiv. https://arxiv.org/abs/2506.02153",
+    teaser: "A position paper from a chip maker's research lab arguing that small models, not frontier ones, should run most agent work.",
+    extract: "Inference efficiency. Serving a 7bn SLM is 10-30x cheaper (in latency, energy consumption, and FLOPs) than a 70-175bn LLM, enabling real-time agentic responses at scale. Recent advances in inference operating systems such as NVIDIA Dynamo explicitly provide support for high-throughput, low-latency SLM inference in both cloud and edge deployments. In addition, since SLMs require less or no parallelization across GPUs and nodes, the maintenance and operation of the serving infrastructure comes at a lower expense as well (see item CA4 and item A13). [...] Fine-tuning agility. Parameter-efficient (e.g., LoRA and DoRA), low-resource, and full-parameter finetuning for SLMs require only a few GPU-hours, allowing behaviors to be added, fixed, or specialized overnight rather than over weeks.",
+    href: "https://arxiv.org/abs/2506.02153"
+  },
+  {
+    id: "c1-03",
+    title: "How Well Can AI Do Strategy? Empirical Benchmarking Using Strategy Simulations",
+    ref: "Allen, R. T., & McDonald, R. M. (2026). How well can AI do strategy? Empirical benchmarking using strategy simulations. Strategy Science, 11(1), 93-117. https://doi.org/10.1287/stsc.2025.0444",
+    teaser: "Twenty-one proprietary and thirteen open-source models were run through the same business-strategy simulation under identical conditions, and scored against past MBA cohorts.",
+    extract: "Finally, to compare proprietary models with open-source alternatives, we also ran the simulation using prominent open-source models, including DeepSeek, Gemma, Qwen, Llama (from Meta), and GPT-OSS. Each run was conducted under the same conditions as the main analyses, with masked terms, default instructions, and Advanced mode. [...] As shown in the figures, open-source models generally exhibited substantially lower performance on the BBB benchmark compared with proprietary systems. Their performance appears less systematically correlated with release date, and although we do not observe the clear decline seen in the latest proprietary models, open-source results seem to have plateaued at a markedly lower level of performance.",
+    href: "https://doi.org/10.1287/stsc.2025.0444"
+  },
+  {
+    id: "c1-04",
+    title: "How Companies Are Building Their Own Intelligence",
+    ref: "Sequoia Capital. (2026, August 11). How companies are building their own intelligence | Sonya Huang, Sequoia Capital [Video]. YouTube. https://www.youtube.com/watch?v=bMMv0bZzONg",
+    teaser: "An investor's keynote to her own portfolio, opening an event about owning your models rather than renting them.",
+    extract: "I hereby present the AI version of this meme. Not your weights, not your product. Um, I think that for a product to be truly yours, I think it's reasonable to think that you need to be able to control control and custody your own weights.",
+    href: "https://www.youtube.com/watch?v=bMMv0bZzONg"
+  },
+  {
+    id: "c1-05",
+    title: "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs",
+    ref: "Spracklen, J., Wijewickrama, R., Sakib, A. H. M. N., Maiti, A., Viswanath, B., & Jadliwala, M. (2025). We have a package for you! A comprehensive analysis of package hallucinations by code generating LLMs. In Proceedings of the 34th USENIX Security Symposium (pp. 3687-3706). USENIX Association. https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen",
+    teaser: "Sixteen code-generating models were measured for how often they invent software packages that do not exist, across two programming languages.",
+    extract: "Using 16 popular LLMs for code generation and two unique prompt datasets, we generate 576,000 code samples in two programming languages that we analyze for package hallucinations. Our findings reveal that that the average percentage of hallucinated packages is at least 5.2% for commercial models and 21.7% for open-source models, including a staggering 205,474 unique examples of hallucinated package names, further underscoring the severity and pervasiveness of this threat.",
+    href: "https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen"
+  },
+  {
+    id: "c1-06",
+    title: "APIGen-MT: Agentic Pipeline for Multi-Turn Data Generation via Simulated Agent-Human Interplay",
+    ref: "Prabhakar, A., Liu, Z., Zhu, M., Zhang, J., Awalgaonkar, T., Wang, S., Liu, Z., Chen, H., Hoang, T., Niebles, J. C., Heinecke, S., Yao, W., Wang, H., Savarese, S., & Xiong, C. (2025). APIGen-MT: Agentic pipeline for multi-turn data generation via simulated agent-human interplay (arXiv:2504.03601). arXiv. https://arxiv.org/abs/2504.03601",
+    teaser: "An open-weight model family, released with its training data, ranked against proprietary models on a multi-turn function-calling leaderboard.",
+    extract: "On the BFCL v3 benchmark, our models demonstrate exceptional performance. As shown in Table 1, xLAM-2-70b-fc-r and xLAM-2-32b-fc-r achieve the top 2 positions on the leaderboard with overall accuracies of 78.19% and 75.83% respectively, surpassing all proprietary and open-source models. The most striking advantage appears in multi-turn scenarios, where our models excel across all parameter scales. xLAM-2-70b-fc-r achieves 75.12% multi-turn accuracy, while our smaller models show remarkable capabilities with xLAM-2-8b-fc-r at 69.25%, xLAM-2-3b-fc-r at 56.00%, and even xLAM-2-1b-fc-r at 43.12% - all substantially outperforming o1 (36%) and gpt-4o in function-calling mode (41%).",
+    href: "https://arxiv.org/abs/2504.03601"
+  },
+  {
+    id: "c1-07",
+    title: "Garry Tan: Own Your Intelligence",
+    ref: "Y Combinator. (2026, August 6). Garry Tan: Own your intelligence [Video]. YouTube. https://www.youtube.com/watch?v=eRrc1pUY5oU",
+    teaser: "An accelerator chief executive's keynote, delivered while open-sourcing his own firm's stack.",
+    extract: "Together that harness might be openclaw hermes agent claude code or codeex add that up and that gives you an agent that acts like a very fast version of you model quality is rented but your brain is owned ideally by you.",
+    href: "https://www.youtube.com/watch?v=eRrc1pUY5oU"
+  },
+  {
+    id: "c1-08",
+    title: "Artificial Intelligence Index Report 2025",
+    ref: "Maslej, N., Fattorini, L., Perrault, R., Gil, Y., Parli, V., Kariuki, N., Capstick, E., Reuel, A., Brynjolfsson, E., Etchemendy, J., Ligett, K., Lyons, T., Manyika, J., Niebles, J. C., Shoham, Y., Wald, R., Walsh, T., Hamrah, A., Santarlasci, L., ... Oak, S. (2025). Artificial intelligence index report 2025. Stanford Institute for Human-Centered Artificial Intelligence. https://hai.stanford.edu/ai-index/2025-ai-index-report",
+    teaser: "An independent annual index tracking what inference actually costs across vendors and years, alongside hardware cost and energy-efficiency trends.",
+    extract: "Driven by increasingly capable small models, the inference cost for a system performing at the level of GPT-3.5 dropped over 280-fold between November 2022 and October 2024. At the hardware level, costs have declined by 30% annually, while energy efficiency has improved by 40% each year.",
+    href: "https://hai.stanford.edu/ai-index/2025-ai-index-report"
+  },
+  {
+    id: "c1-09",
+    title: "London Executive Forum 2026: A Leader's Guide to Advanced Team Structures in an Agentic World",
+    ref: "AWS Events. (2026, May 21). London Executive Forum 2026 - A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=ECLHOG3uYzk",
+    teaser: "The same cloud vendor at a different event, describing what its own customer base actually chooses to do.",
+    extract: "You're going to want to use those frontier APIs - the OpenAIs, the Anthropics, the AWS. Of course you are. Absolutely. And actually, this is where I see around 80% of my customers choosing to build the agentic solutions right now. They don't want to train those models. They just want to hit the frontier model. And whether they're using Haiku, the small model, or Sonnet or Opus 4.7, available just this last few days, that's what they're choosing to do.",
+    href: "https://www.youtube.com/watch?v=ECLHOG3uYzk"
+  },
+  {
+    id: "c1-10",
+    title: "Hugging Face's CEO on Why Companies Are Done Renting Their AI",
+    ref: "TechCrunch. (2026, July 10). Hugging Face's CEO on why companies are done renting their AI [Audio podcast episode]. In Equity. https://www.youtube.com/watch?v=MqdEHMJFlSI",
+    teaser: "The chief executive of a company selling open-model infrastructure, interviewed about why firms are moving away from rented models.",
+    extract: "If you're an AI company or technology company, you don't want to outsource your core capabilities, AI, to another company the other kind of like a black box API that that you don't control, that you don't have any visibility on, that that you don't really kind of like have any any sort of ownership. Uh so this kind of like idea that companies need to own AI and own models instead of renting them and outsourcing them to to someone else uh is is kind of like the thing that I hear the most from from companies and and customers and and community members these these days which which makes a lot of sense in my opinion.",
+    href: "https://www.youtube.com/watch?v=MqdEHMJFlSI"
+  },
+  {
+    id: "c1-11",
+    title: "A Leader's Guide to Advanced Team Structures in an Agentic World",
+    ref: "AWS Events. (2026, June 12). A leader's guide to advanced team structures in an agentic world [Video]. YouTube. https://www.youtube.com/watch?v=O7u6myBRsns",
+    teaser: "A cloud vendor's executive-forum talk setting out the cost curves for building a model against renting one.",
+    extract: "But when you b weigh the benefits of operating a small language model against the cost of building one, the economics paint the different picture. Training costs are rising 2.4x per year. At the same time, inference costs are falling 10x per year. The gap between those two curves, the pricing scissors is opening by 12 to 24x per year. What does that mean practically? It means that the cost to create a frontier model is now approaching the billions. Only a handful of companies can afford it, but the cost to use one is collapsing towards zero.",
+    href: "https://www.youtube.com/watch?v=O7u6myBRsns"
+  },
+  {
+    id: "c1-12",
+    title: "The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models",
+    ref: "Patil, S. G., Mao, H., Yan, F., Ji, C. C.-J., Suresh, V., Stoica, I., & Gonzalez, J. E. (2025). The Berkeley Function Calling Leaderboard (BFCL): From tool use to agentic evaluation of large language models. Proceedings of Machine Learning Research, 267, 48371-48392. https://proceedings.mlr.press/v267/patil25a.html",
+    teaser: "A benchmark that re-tested open models on 2,251 real function-calling tasks drawn from over 67,000 community submissions, to see which scores survive novel queries.",
+    extract: "It is observed that the majority of models achieve comparable or improved performance, i.e., lower perplexity and char-NLL on the crowd-sourced data relative to single-turn. For instance, Llama 2-7B exhibits a perplexity of 3.47 on single-turn compared to 2.56 on crowd-sourced, and a char-NLL of 0.344 versus 0.264. Similarly, Openfunctions-v2 and CodeLlama-7B also demonstrate slightly enhanced performance on the crowd-sourced queries. This trend implies that these models did not derive an unfair advantage from memorization on the original benchmark. This finding supports the inference that their strong benchmark scores are attributable to genuine capability rather than exposure to test solutions. In contrast, Salesforce xLAM-7B shows an increase in perplexity from 3.67 to 5.09 (char-NLL from 0.340 to 0.427) on crowd-sourced, representing a notable performance degradation.",
+    href: "https://proceedings.mlr.press/v267/patil25a.html"
+  },
+  {
+    id: "c1-13",
+    title: "Agent Harnesses Explained: Inside the Stack Behind Antigravity, Claude Code and Cursor",
+    ref: "Google Cloud Tech. (2026, September 14). Agent harnesses explained: Inside the stack behind Antigravity, Claude Code & Cursor [Video]. In The Agent Factory. YouTube. https://www.youtube.com/watch?v=F8EZJAm9iO8",
+    teaser: "A cloud vendor's series recommending which model tier to run an agent loop on, with no measurements attached.",
+    extract: "And my daily driver this week has been Gemini 3.8 Flash. Now your initial reaction might be why Flash. [...] Agents don't work like traditional single turn prompt boxes. They run in continuous loops, so an agent might inspect a directory, update a function, execute unit tests, and then repeat that sequence 20, 40, or even 60 times just to finish one task. [...] So a fast, cost effective model isn't a downgrade. It is the exact thing that makes real time agentic loops practical and responsive.",
+    href: "https://www.youtube.com/watch?v=F8EZJAm9iO8"
+  },
+  {
+    id: "c1-14",
+    title: "Why The Harness Matters More Than The Model (YC Paper Club)",
+    ref: "Y Combinator. (2026, September 7). Why the harness matters more than the model | YC Paper Club [Video]. YouTube. https://www.youtube.com/watch?v=n9xKblqyQ28",
+    teaser: "A conference talk presenting a Stanford project that optimises a local model once using a cloud model, then runs it locally.",
+    extract: "The local LLMs are finally good enough to actually run a lot of these queries that people care about. And so we see that the current LLMs of today are only 6 to 12 months behind whatever is the state-of-the-art frontier models of before. So you see LLMs today such as Qwen 3.8 27B that achieve roughly the same performance as like Claude 4.6 Opus back in the day. [...] While there remains many tasks for which local-size LLMs are not enough, the gap is surprisingly closing month after month as these LLMs become better distilled, more effective and also we get better accelerators for running them. And so even with LLMs of today, we can get 800x lower cost in terms of actually running them as well as a significant reduction in latency.",
+    href: "https://www.youtube.com/watch?v=n9xKblqyQ28"
+  },
+  {
+    id: "c1-15",
+    title: "Amazon CEO Andy Jassy on Agility, AI Strategy, and the Changing Role of Managers",
+    ref: "Harvard Business Review. (2025, May 6). Amazon CEO Andy Jassy on agility, AI strategy, and the changing role of managers [Video]. YouTube. https://www.youtube.com/watch?v=Nl-PpoKtxc4",
+    teaser: "The chief executive of the company that sells the middle layer he describes, on how firms should assemble AI.",
+    extract: "At that middle layer is for people that don't want to have to build their own models. They want to leverage an existing frontier model. They want to customize it with their own data. And then they actually want lots of features that make it easier to build a high-quality generative AI application.",
+    href: "https://www.youtube.com/watch?v=Nl-PpoKtxc4"
+  },
+  {
+    id: "c1-16",
+    title: "Jensen Huang: Why Companies Need Open Agent Systems",
+    ref: "LangChain. (2026, July 8). Jensen Huang: Why companies need open agent systems [Video]. YouTube. https://www.youtube.com/watch?v=Yy3JH6dDugc",
+    teaser: "A chip maker's chief executive, interviewed by a framework vendor, on how a firm should specialise an agent for its own domain.",
+    extract: "The specialization starts with you need to have intelligence that's good enough, and this is what why we worked on Nemotron and really love the fact that you're part of the founding team of Nemotron Coalition. We made Nemotron Ultra pretty incredible. Now, Nemotron Ultra is, a great model as a start, but it becomes an incredible model when you put the LangChain framework around it, the LangChain harness around it, so that you ground it on information that is domain-specific.",
+    href: "https://www.youtube.com/watch?v=Yy3JH6dDugc"
   }
-})();
+];
+
+var DECK2 = [
+  {
+    id: "c2-01",
+    title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+    ref: "Becker, J., Rush, N., Barnes, E., & Rein, D. (2025). Measuring the impact of early-2025 AI on experienced open-source developer productivity (arXiv:2507.09089). arXiv. https://arxiv.org/abs/2507.09089",
+    teaser: "A randomised trial in which sixteen experienced open-source developers completed 246 tasks, each randomly allowing or disallowing AI tools.",
+    extract: "Before starting tasks, developers forecast that allowing AI will reduce completion time by 24%. After completing the study, developers estimate that allowing AI reduced completion time by 20%. Surprisingly, we find that allowing AI actually increases completion time by 19%--AI tooling slowed developers down. This slowdown also contradicts predictions from experts in economics (39% shorter) and ML (38% shorter).",
+    href: "https://arxiv.org/abs/2507.09089"
+  },
+  {
+    id: "c2-02",
+    title: "How Lyft Uses Claude for Faster, More Human Customer Support",
+    ref: "Claude. (2026, February 18). How Lyft uses Claude for faster, more human customer support [Video]. YouTube. https://www.youtube.com/watch?v=sZHGbRYQti4",
+    teaser: "A vendor-published customer story about a ride-hailing firm's support queues, chosen by the vendor because it worked.",
+    extract: "Customer resolution time decreased by 87%. So something that would have taken 30 plus minutes now sometimes that's even resolved in a matter of seconds. [...] reinvesting back into our support agents to upskill them, to avoid burnout, empowering our agents to spend more time on the issues that require human care and infusing that layer of empathy and care, that's really important to us at Lyft.",
+    href: "https://www.youtube.com/watch?v=sZHGbRYQti4"
+  },
+  {
+    id: "c2-03",
+    title: "Hoe AI de sectoren IT en zakelijke dienstverlening verandert",
+    ref: "Van Kampen, M., Koelewijn, R., Groenewegen, J., & Sander, F. J. (2026, June 25). Hoe AI de sectoren IT en zakelijke dienstverlening verandert. RaboResearch. https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert",
+    teaser: "A Dutch bank's sector research estimating how much of the work in IT and business services can be automated at all.",
+    extract: "De potentie is groot en concreet: 86% van de taken in de IT en 64% van de taken in de zakelijke dienstverlening heeft (hoog) automatiseringspotentieel. Vooral taken in de softwareontwikkeling, marketing, boekhouding en administratieve processen lenen zich hiervoor, net als delen van consultancy en juridische analyse.",
+    href: "https://www.rabobank.nl/kennis/d011532294-hoe-ai-de-sectoren-it-en-zakelijke-dienstverlening-verandert"
+  },
+  {
+    id: "c2-04",
+    title: "Generative AI at Work",
+    ref: "Brynjolfsson, E., Li, D., & Raymond, L. (2025). Generative AI at work. The Quarterly Journal of Economics. https://doi.org/10.1093/qje/qjae044",
+    teaser: "A study of 5,172 customer-support agents whose AI assistant only suggested replies, leaving each agent free to ignore them.",
+    extract: "Importantly, the AI system we study is designed to augment (rather than replace) human agents. The output is shown only to the agent, who has full discretion over which, if any, AI suggestions to accept. [...] First, AI assistance increases worker productivity, resulting in a 15% increase in the number of chats that an agent successfully resolves per hour.",
+    href: "https://doi.org/10.1093/qje/qjae044"
+  },
+  {
+    id: "c2-05",
+    title: "Navigating the Jagged Technological Frontier",
+    ref: "Dell'Acqua, F., McFowland, E., III, Mollick, E., Lifshitz, H., Kellogg, K. C., Rajendran, S., Krayer, L., Candelon, F., & Lakhani, K. R. (2026). Navigating the jagged technological frontier: Field experimental evidence of the effects of artificial intelligence on knowledge worker productivity and quality. Organization Science. https://doi.org/10.1287/orsc.2025.21838",
+    teaser: "A field experiment with consultants, comparing a task inside the AI's capabilities against one deliberately placed outside them.",
+    extract: "Significantly improved performance and quality for every model specification, increasing speed by more than 25%, performance by more than 30%, and task completion by more than 12%. However, for a task outside the frontier, subjects using AI were 19 percentage points less likely to produce correct solutions. Although this design highlights a single outside-the-frontier task-an inherent limitation-it underscores that even a single complex challenge beyond AI's current capabilities can disproportionately reduce overall performance if users rely too heavily on AI's output.",
+    href: "https://doi.org/10.1287/orsc.2025.21838"
+  },
+  {
+    id: "c2-06",
+    title: "Human-Centered Artificial Intelligence: A Field Experiment",
+    ref: "Krakowski, S., Haftor, D., Luger, J., Pashkevich, N., & Raisch, S. (2025). Human-centered artificial intelligence: A field experiment. Management Science. https://doi.org/10.1287/mnsc.2022.03849",
+    teaser: "A three-arm field experiment in a sales organisation, comparing a control group against untailored AI support and AI tailored to the worker.",
+    extract: "In the control group (D1), sales meetings decreased slightly postintervention. Sales experts in D2 reduced their daily sales meetings by 0.46 compared with the control group, while those in D3 increased their daily meetings by 0.84. Similar patterns were observed for units sold. [...] Figure F1, (a) and (b) in Online Appendix F depict performance trajectories, showing the control group (D1) remaining stable over time, D2 declining after the Q2/2014 intervention, and D3 improving.",
+    href: "https://doi.org/10.1287/mnsc.2022.03849"
+  },
+  {
+    id: "c2-07",
+    title: "Replit's CEO on the Only Two Jobs Left in the Company of the Future",
+    ref: "Y Combinator. (2026, April 25). Replit's CEO on the only two jobs left in the company of the future - Amjad Masad at YC Founder Firesides [Video]. YouTube. https://www.youtube.com/watch?v=kMYeTRqzAfc",
+    teaser: "A founder narrating his own product's history of removing successive layers of work from building software.",
+    extract: "Then what was left is like the coding part was still very intimidating for people. And September 2024, Replit became the first like what's called vibe coding product where uh we abstracted away code",
+    href: "https://www.youtube.com/watch?v=kMYeTRqzAfc"
+  },
+  {
+    id: "c2-08",
+    title: "The Anthropic Economic Index Report: Learning Curves",
+    ref: "Massenkoff, M., Lyubich, E., McCrory, P., Appel, R., & Heller, R. (2026). The Anthropic Economic Index report: Learning curves. Anthropic. https://www.anthropic.com/research/economic-index-march-2026-report",
+    teaser: "An index built from millions of conversations, classifying each as automation or augmentation and tracking how that split moves over time.",
+    extract: "Since our first report, we have classified conversations into one of five interaction types-directive, feedback loop, task iteration, validation, and learning-which we group into two broader categories: automation and augmentation. Figure 1.3 shows that augmentation in Claude.ai increased slightly. This was driven by small bumps in validation and learning patterns. In Appendix Figure A.3, we show that automation decreased sharply in the 1P API data.",
+    href: "https://www.anthropic.com/research/economic-index-march-2026-report"
+  },
+  {
+    id: "c2-09",
+    title: "How HubSpot Uses Claude for Customer Success",
+    ref: "Claude. (2026, February 9). How HubSpot uses Claude for customer success [Video]. YouTube. https://www.youtube.com/watch?v=U9s9Kxb7p5I",
+    teaser: "The same vendor's channel, on a software firm's customer-success team using AI to prepare its follow-ups.",
+    extract: "That is something so far beyond my typical role as a CSM. My customers are saying like, this is the best conversation I've ever had with HubSpot. [...] I feel like it has helped amplify my expertise. We've seen a 40% increase in productivity. You really feel it across a team when you get that much leverage in the work you're doing.",
+    href: "https://www.youtube.com/watch?v=U9s9Kxb7p5I"
+  },
+  {
+    id: "c2-10",
+    title: "Expertise",
+    ref: "Autor, D., & Thompson, N. (2025). Expertise (Working Paper No. 33941). National Bureau of Economic Research. https://www.nber.org/papers/w33941",
+    teaser: "An economy-wide analysis of which tasks automation removed from occupations, and what then happened to those occupations' wages.",
+    extract: "Moreover, the expertise requirements of tasks removed from or added to an occupation affect wage levels independently of the quantity of tasks added or removed present. Remarkably, both the removal of expert tasks and the addition of inexpert tasks predict relative wage declines in an occupation, while, conversely both the removal of inexpert tasks and the addition of expert tasks predict occupational wage gains.",
+    href: "https://www.nber.org/papers/w33941"
+  },
+  {
+    id: "c2-11",
+    title: "Building and Structuring an AI Native Company",
+    ref: "Y Combinator. (2026, August 14). Building and structuring an AI native company [Video]. YouTube. https://www.youtube.com/watch?v=Z3JyAqh4ixg",
+    teaser: "A partner at an accelerator advising early-stage founders on how to organise a company around AI from the start.",
+    extract: "From the ground up, you actually get to a very very different conclusion. Okay, previously AI is like make each person 20% more productive or 30% more productive. What happens if we reimagine the company as a series of AI loops?",
+    href: "https://www.youtube.com/watch?v=Z3JyAqh4ixg"
+  },
+  {
+    id: "c2-12",
+    title: "GDPval: Evaluating AI Model Performance on Real-World Economically Valuable Tasks",
+    ref: "Patwardhan, T., Dias, R., Proehl, E., Kim, G., Wang, M., Watkins, O., Posada Fishman, S., Aljubeh, M., Thacker, P., Fauconnet, L., Kim, N. S., Chao, P., Miserendino, S., Chabot, G., Li, D., Sharman, M., Barr, A., Glaese, A., & Tworek, J. (2025). GDPval: Evaluating AI model performance on real-world economically valuable tasks (arXiv:2510.04374). arXiv. https://arxiv.org/abs/2510.04374",
+    teaser: "A benchmark of 1,320 real work deliverables across 44 occupations, graded blind by industry experts against model output.",
+    extract: "We find that frontier model performance on GDPval is improving roughly linearly over time, and that the current best frontier models are approaching industry experts in deliverable quality. We analyze the potential for frontier models, when paired with human oversight, to perform GDPval tasks cheaper and faster than unaided experts.",
+    href: "https://arxiv.org/abs/2510.04374"
+  },
+  {
+    id: "c2-13",
+    title: "Harness Engineering: How to Build Software When Humans Steer and Agents Execute",
+    ref: "AI Native Dev. (2026, June 19). Ryan Lopopolo - Harness engineering: How to build software when humans steer and agents execute [Video]. YouTube. https://www.youtube.com/watch?v=c8bE0cj7vHY",
+    teaser: "A practitioner talk from inside a success case, on where its author wants the human checkpoints to end up.",
+    extract: "how we can get to a world where we're more and more headless, less human, interrupt dependent, and able to trust the agent to do more and more complex things helplessly.",
+    href: "https://www.youtube.com/watch?v=c8bE0cj7vHY"
+  },
+  {
+    id: "c2-14",
+    title: "AI Is Turning Every Company Into a Software Company",
+    ref: "McKinsey & Company. (2026, June 18). AI is turning every company into a software company [Video]. YouTube. https://www.youtube.com/watch?v=Epi-GQUoNrg",
+    teaser: "A software chief executive on a consultancy's podcast, describing what happened to one team his firm no longer needed.",
+    extract: "If uh for example we no longer need a demo making team because every account exec can make their own demo. We move that team into other roles [...] And so there is this element of figuring out what are the things that you need. What are the new jobs that are being created",
+    href: "https://www.youtube.com/watch?v=Epi-GQUoNrg"
+  },
+  {
+    id: "c2-15",
+    title: "Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI",
+    ref: "Koppelaar, T. (2026, May 27). Ondanks 80 miljoen omzet gooit Hans Scheffer zijn bedrijf volledig om met AI: 'Elke kantoorbaan voor een scherm verdwijnt'. De Ondernemer. https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt",
+    teaser: "A Dutch printing firm's founder, interviewed about a rebuild he chose himself; no firm that tried the same and failed appears in the piece.",
+    extract: "En dus, ondanks dat HelloPrint afgelopen jaar zo'n 80 miljoen euro omzet haalde, dwingt Hans zichzelf te denken alsof dat succes er niet is. Ik heb mezelf de vraag gesteld: wat nou als ik mijn huidige bedrijf op dag een opnieuw zou moeten bouwen, wat zou ik dan doen? Dat gedachte-experiment vormt de basis voor de transformatie. Niet door bestaande afdelingen te optimaliseren, maar door eerst te bepalen hoe waardecreatie eruitziet als technologie een groot deel van het werk kan overnemen.",
+    href: "https://www.deondernemer.nl/innovatie/ondanks-80-miljoen-omzet-gooit-hans-scheffer-zijn-bedrijf-volledig-om-met-ai-elke-kantoorbaan-voor-een-scherm-verdwijnt"
+  },
+  {
+    id: "c2-16",
+    title: "Khan Academy CEO: The Real AI Opportunity Is in Boring Industries",
+    ref: "Silicon Valley Girl. (2026, July 14). Khan Academy CEO: The real AI opportunity is in boring industries | Sal Khan [Video]. YouTube. https://www.youtube.com/watch?v=s-Iz-lLAhdg",
+    teaser: "The chief executive of one education non-profit, stating his own organisation's policy on what AI will and will not be used for.",
+    extract: "If we could do three times more with the same resources, we will do three times more. So that would never be the catalyst for layoffs.",
+    href: "https://www.youtube.com/watch?v=s-Iz-lLAhdg"
+  }
+];
 
 var BUDGET = 8;
+var LINE_VERSION = 1;
+
+/* ---------------- the service ---------------- */
+/* The one exception to this site's no-network rule, argued in ADR-0016 and
+   named there as this page and no other. One host, two routes, and a
+   request only ever made because a student pressed a button.
+
+   `origin` is empty until the service is deployed, and that is not a
+   placeholder waiting to be tidied: with it empty the page makes no
+   request at all, the submit screen says so, and the finish is the one
+   phase 5 already shipped. Setting it is the single edit that turns the
+   submission on, and the fallback below is what happens every time it
+   fails afterwards. */
+var SERVICE = {
+  origin: "",
+  submit: "/submit",
+  dashboard: "/dashboard",
+  timeoutMs: 8000
+};
+function serviceOn(){ return !!SERVICE.origin; }
+
+/* Round 1 takes claim 1 and deck 1, round 2 claim 2 and deck 2. Nothing
+   else differs between them except which one has the assistant in it. */
+var ROUNDS = {
+  1: { claim: "c1", text: CLAIM1, deck: DECK1 },
+  2: { claim: "c2", text: CLAIM2, deck: DECK2 }
+};
+
+/* ---------------- the closing questions ---------------- */
+/* Six workload items and two about how the round felt, asked at the end
+   of each round rather than once at the finish. A single set of answers
+   at the finish would belong to neither condition, and the comparison
+   this session is built on is between how a round went and how it felt.
+
+   The six are the NASA-TLX dimensions on a 7-point scale. Physical
+   demand is near the floor for a reading task and is kept anyway: the
+   instrument is only comparable with itself if it stays whole, and a
+   floor is a finding rather than a fault.
+
+   `flip: true` marks the one item scored the other way up. On the TLX,
+   performance is asked as "how well did you do" and totalled as a cost,
+   so a 7 there is a 1 in the total. */
+var TLX = [
+  { id: "mental",  q: "How much mental effort did that round take?",                     lo: "Very little",  hi: "A great deal" },
+  { id: "physical",q: "How physically demanding was it?",                                lo: "Not at all",   hi: "Very" },
+  { id: "temporal",q: "How hurried or rushed did you feel?",                             lo: "Not at all",   hi: "Very" },
+  { id: "perform", q: "How well do you think you did at working out what is true here?", lo: "Very poorly",  hi: "Very well", flip: true },
+  { id: "effort",  q: "How hard did you have to work to get there?",                     lo: "Hardly at all",hi: "Very hard" },
+  { id: "frustr",  q: "How irritated or frustrated did you feel?",                       lo: "Not at all",   hi: "Very" }
+];
+var PERCEPTION = [
+  { id: "satisf",  q: "How satisfied are you with how that round went?",                 lo: "Not at all",   hi: "Very" },
+  { id: "confid",  q: "How confident are you in the position you ended on?",             lo: "Not at all",   hi: "Very" }
+];
 
 /* ---------------- storage (best effort) ---------------- */
 /* One key. The try/catch is not tidiness: localStorage throws outright
@@ -506,10 +1388,15 @@ function saveState(a){ try{ localStorage.setItem(LKEY, JSON.stringify(a)); }catc
 function clearState(){ try{ localStorage.removeItem(LKEY); }catch(e){} }
 
 /* ---------------- state ---------------- */
-function freshState(){ return { v: 1, screen: "consent", consented: false }; }
+/* Version 2 added the second round, the agent step, the timings and the
+   closing questions. A session stored under version 1 is discarded
+   rather than migrated: nothing has been run with it, and a half-filled
+   round would sit in the data as a complete one. */
+function freshState(){ return { v: 2, screen: "consent", consented: false, round: 1,
+                               rounds: {}, sent: false, outcome: "" }; }
 
 var S = loadState();
-if (!S || S.v !== 1) S = freshState();
+if (!S || S.v !== 2) S = freshState();
 
 /* Nothing is written until the student has agreed to it. Until then the
    state lives in memory only, so a visitor who reads the consent screen
@@ -521,22 +1408,95 @@ function save(){ if (S.consented) saveState(S); }
 /* ---------------- helpers ---------------- */
 function $(id){ return document.getElementById(id); }
 
-var SCREENS = ["consent", "position", "card", "final", "done"];
+var SCREENS = ["consent", "position", "agent", "card", "final", "questions", "bridge", "submit", "done"];
 
 function show(name){
   S.screen = name;
   SCREENS.forEach(function(s){ $("s-" + s).hidden = (s !== name); });
   save();
+  window.scrollTo(0, 0);
   var h = $("s-" + name).querySelector("h2");
   if (h){ h.setAttribute("tabindex", "-1"); h.focus(); }
 }
 
-function fail(id, msg){
+function R(){ return S.rounds[S.round]; }
+function conf(){ return ROUNDS[S.round]; }
+
+/* The round tag is the only place the page says which round is running.
+   It does not say which round has the assistant in it: a student who
+   knows they are in the "treated" half reads differently, and that is
+   the one thing the design cannot let the interface give away. */
+function tagRounds(){
+  var t = "Round " + S.round + " of 2";
+  ["position", "agent", "card", "final", "questions"].forEach(function(s){
+    var el = $("tag-" + s);
+    if (el) el.textContent = t;
+  });
+}
+
+/* ---------------- the side ---------------- */
+/* A radio group has no value of its own, so these two read and write it.
+   pickedSide returns "" when nothing is chosen, which is what the
+   position screen refuses to accept. */
+function pickedSide(name){
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : "";
+}
+function setSide(name, value){
+  var all = document.querySelectorAll('input[name="' + name + '"]');
+  for (var i = 0; i < all.length; i++) all[i].checked = (value ? all[i].value === value : false);
+}
+/* The badge is hidden rather than blank when there is no side, so a
+   session started before the sides existed still renders. */
+function showSide(id, value){
+  var el = $(id);
+  el.textContent = value || "";
+  el.hidden = !value;
+}
+
+function fail(id, msg, fieldId){
   var el = $(id);
   el.textContent = msg;
   el.hidden = false;
+  if (fieldId) $(fieldId).setAttribute("aria-invalid", "true");
 }
-function clearFail(id){ $(id).hidden = true; }
+function clearFail(id, fieldId){
+  $(id).hidden = true;
+  if (fieldId) $(fieldId).removeAttribute("aria-invalid");
+}
+
+/* Copying to the clipboard has two implementations because the modern
+   one needs a secure context, and a lecturer previewing the page over
+   plain http on a laptop is not in one. */
+function copyText(text, flagId){
+  function flag(){
+    var f = $(flagId);
+    if (!f) return;
+    f.hidden = false;
+    window.setTimeout(function(){ f.hidden = true; }, 2500);
+  }
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flag, function(){ legacyCopy(text); flag(); });
+      return;
+    }
+  } catch (e) {}
+  legacyCopy(text);
+  flag();
+}
+function legacyCopy(text){
+  try {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  } catch (e) {}
+}
 
 /* Fisher-Yates. A fresh order every session, and the order is kept,
    because which card came up when is half of what is being measured. */
@@ -550,66 +1510,208 @@ function shuffled(deck){
 }
 
 function cardById(id){
-  for (var i = 0; i < DECK1.length; i++){ if (DECK1[i].id === id) return DECK1[i]; }
+  var deck = conf().deck;
+  for (var i = 0; i < deck.length; i++){ if (deck[i].id === id) return deck[i]; }
   return null;
 }
 
+/* Which round carries the assistant, from the team number. Half the room
+   meets it first and half meets it second, so anything that is really
+   just "the second round is quicker" shows up as an order effect rather
+   than as the assistant's doing. */
+function agentRoundFor(team){ return team <= 4 ? 2 : 1; }
+
+function newRound(n){
+  return {
+    claim: ROUNDS[n].claim,
+    agent: agentRoundFor(S.team) === n,
+    order: shuffled(ROUNDS[n].deck),
+    idx: 0,
+    opens: 0,
+    choices: [],
+    side: "",
+    locked: "",
+    agentReply: "",
+    finalSide: "",
+    final: "",
+    answers: null
+  };
+}
+
+/* ---------------- the agent prompt ---------------- */
+/* Built here rather than stored as a string with holes in it, so the
+   claim and the locked sentence go in exactly as the student wrote
+   them.
+
+   Three things about the wording are load-bearing and are checked by
+   check-prompt.py beside the build plan. It asks for questions and
+   nothing else. It says nothing about whether the position holds up —
+   the point of the step is that the student does that work. And it
+   speaks about the position in the third person while addressing its
+   questions to the student, because "your position" invites the model
+   to have a view about it. */
+function agentPrompt(claimText, side, locked){
+  return [
+    "Below is a claim from a business course, and the position one student has taken on it before reading any sources.",
+    "",
+    "CLAIM: " + claimText,
+    "",
+    "THE POSITION TAKEN: " + (side === "agree" ? "agrees with the claim" : "disagrees with the claim"),
+    "REASON GIVEN: " + locked,
+    "",
+    "Ask this student four questions that would help them examine the position above. Number them 1 to 4.",
+    "",
+    "How to answer:",
+    "- Ask questions. Offer no view of your own on the position, and no assessment of it.",
+    "- Address the student directly as \"you\".",
+    "- Let one question ask what evidence would change your mind.",
+    "- Let one question ask what the case on the other side rests on.",
+    "- Let one question ask what would have to hold for the position to survive contact with a real company.",
+    "- Write nothing before question 1 and nothing after question 4."
+  ].join("\n");
+}
+
 /* ---------------- consent ---------------- */
+/* Two statements, and which one is true depends on whether there is a
+   service to send to. DA-5 asks for a statement of where what a student
+   types is stored, in 60 words or fewer, and a page that promises nothing
+   ever leaves the browser while carrying a button that sends something is
+   worse than one that says neither. */
+var STORAGE_LOCAL =
+  "What you type stays in this browser. It is saved in your own browser’s storage so a " +
+  "reload does not lose your place, and it is sent nowhere. No name is asked for. At the " +
+  "end you get one line of numbers to hand in yourself. Erase everything at any time with " +
+  "the button below.";
+var STORAGE_SERVICE =
+  "What you type stays in this browser, saved in its own storage so a reload does not lose " +
+  "your place. At the end you choose whether to send your numbers — what you opened, how " +
+  "long, how it felt. Your sentences never leave. Sent numbers carry your code, not your " +
+  "name, and go at the end of the day.";
+$("storage-statement").textContent = serviceOn() ? STORAGE_SERVICE : STORAGE_LOCAL;
+
+/* The code has to survive two readers: the result line, whose separators it
+   must not contain, and the service, which accepts a narrow shape so that
+   nothing shaped like a sentence can arrive in the one string field it has.
+   Both are checked here, where a student can still choose another word,
+   rather than at the finish where the answer would be a refusal. */
+var CODE_SHAPE = /^[a-z0-9][a-z0-9-]{0,19}$/;
+
 $("b-consent").addEventListener("click", function(){
-  var code = $("f-code").value.trim();
+  var code = $("f-code").value.trim().toLowerCase();
   var team = $("f-team").value;
   if (!code){ fail("e-consent", "Choose a code first — any word you will remember."); $("f-code").focus(); return; }
+  if (!CODE_SHAPE.test(code)){
+    fail("e-consent", "A code is one word of up to 20 letters, digits or hyphens, and it cannot start with a hyphen. “kite”, “pumice7”, “low-tide”.");
+    $("f-code").focus(); return;
+  }
   if (!team){ fail("e-consent", "Choose your team number."); $("f-team").focus(); return; }
   clearFail("e-consent");
 
   S.consented = true;
   S.code = code;
   S.team = Number(team);
-  S.r1 = {
-    claim: "c1",
-    order: shuffled(DECK1),
-    idx: 0,
-    opens: 0,
-    choices: [],
-    locked: "",
-    final: ""
-  };
+  S.round = 1;
+  S.rounds = { 1: newRound(1) };
   save();
   toPosition();
 });
 
+/* ---------------- position ---------------- */
 function toPosition(){
-  $("claim-1").textContent = CLAIM1;
+  tagRounds();
+  $("claim-position").textContent = conf().text;
+  setSide("side", R().side);
+  $("f-position").value = R().locked || "";
   show("position");
 }
 
-/* ---------------- position ---------------- */
 $("b-position").addEventListener("click", function(){
+  var side = pickedSide("side");
   var t = $("f-position").value.trim();
-  if (!t){ fail("e-position", "Write one sentence before you go on."); $("f-position").focus(); return; }
-  clearFail("e-position");
-  S.r1.locked = t;
+  if (!side){
+    fail("e-position", "Choose a side before you write your sentence.");
+    $("side-agree").focus();
+    return;
+  }
+  if (!t){
+    fail("e-position", "Write one sentence before you go on.", "f-position");
+    $("f-position").focus();
+    return;
+  }
+  clearFail("e-position", "f-position");
+  R().side = side;
+  R().locked = t;
+  save();
+  afterPosition();
+});
+
+/* The assistant, when this round has it, sits between the locked
+   position and the first card. That placement is the whole of the
+   manipulation: what is measured is which sources get opened, so an
+   assistant speaking after the menu could not move the measurement at
+   all. */
+function afterPosition(){
+  if (R().agent) toAgent(); else toCard();
+}
+
+/* ---------------- the agent step ---------------- */
+function toAgent(){
+  tagRounds();
+  $("agent-prompt").textContent = agentPrompt(conf().text, R().side, R().locked);
+  $("f-agent-reply").value = R().agentReply || "";
+  show("agent");
+}
+
+$("b-copy-prompt").addEventListener("click", function(){
+  copyText($("agent-prompt").textContent, "m-copied-prompt");
+});
+
+$("b-agent").addEventListener("click", function(){
+  var t = $("f-agent-reply").value.trim();
+  if (!t){
+    fail("e-agent", "Paste the assistant's reply before you go on. The questions it asks are the point of this step.", "f-agent-reply");
+    $("f-agent-reply").focus();
+    return;
+  }
+  clearFail("e-agent", "f-agent-reply");
+  R().agentReply = t;
   save();
   toCard();
 });
 
 /* ---------------- the runner ---------------- */
+/* When the card on screen went up. Per-card time is wall clock between
+   that moment and the move to the next card, so an opened card's time
+   includes reading the extract, which is what it is meant to include. A
+   reload restarts this card's clock: the alternative is carrying a
+   start time through storage and counting the minutes a shut laptop
+   was closed for. */
+var tCard = 0;
+
 function toCard(){
-  $("m-locked").textContent = S.r1.locked;
+  tagRounds();
+  $("claim-card").textContent = conf().text;
+  $("m-locked").textContent = R().locked;
+  showSide("m-side", R().side);
   renderCard();
   show("card");
 }
 
 function renderCard(){
-  var r = S.r1;
+  var r = R();
   if (r.idx >= r.order.length){ toFinal(); return; }
 
   var c = cardById(r.order[r.idx]);
+  tCard = Date.now();
   $("m-index").textContent = String(r.idx + 1);
   $("m-budget").textContent = String(BUDGET - r.opens);
 
   $("c-title").textContent = c.title;
-  $("c-meta").textContent = c.outlet + " · " + c.year;
+  /* The APA reference carries the outlet and the year SM-5 asks for, and
+     the authors a separate outlet field left out. It shows before the
+     card is opened, because deciding what to spend an open on is the
+     thing being measured. */
+  $("c-meta").textContent = c.ref;
   $("c-teaser").textContent = c.teaser;
 
   /* Is this card already open and waiting for Next? Opening records the
@@ -657,14 +1759,14 @@ function revealExtract(c){
 }
 
 $("b-open").addEventListener("click", function(){
-  var r = S.r1;
+  var r = R();
   /* The budget is refused here as well as on the button. Disabling a
      control hides an action; this one has to be genuinely unavailable. */
   if (r.opens >= BUDGET) return;
   if (r.choices.length > r.idx) return;
 
   r.opens += 1;
-  r.choices.push({ id: r.order[r.idx], open: true });
+  r.choices.push({ id: r.order[r.idx], open: true, ms: 0 });
   save();
 
   $("m-budget").textContent = String(BUDGET - r.opens);
@@ -672,9 +1774,9 @@ $("b-open").addEventListener("click", function(){
 });
 
 $("b-pass").addEventListener("click", function(){
-  var r = S.r1;
+  var r = R();
   if (r.choices.length > r.idx) return;
-  r.choices.push({ id: r.order[r.idx], open: false });
+  r.choices.push({ id: r.order[r.idx], open: false, ms: 0 });
   advance();
 });
 
@@ -683,32 +1785,326 @@ $("b-next").addEventListener("click", advance);
 /* The only way through the deck. It counts up and never down, which is
    the whole of "a card you passed does not come back". */
 function advance(){
-  S.r1.idx += 1;
+  var r = R();
+  var here = r.choices[r.idx];
+  if (here && tCard) here.ms = (here.ms || 0) + (Date.now() - tCard);
+  r.idx += 1;
   save();
-  if (S.r1.idx >= S.r1.order.length){ toFinal(); return; }
+  if (r.idx >= r.order.length){ toFinal(); return; }
   renderCard();
 }
 
 /* ---------------- the final position ---------------- */
 function toFinal(){
-  $("claim-1b").textContent = CLAIM1;
-  $("f-locked").textContent = S.r1.locked;
+  tagRounds();
+  $("claim-final").textContent = conf().text;
+  $("f-locked").textContent = R().locked;
+  showSide("f-side-was", R().side);
+  setSide("fside", R().finalSide);
+  $("f-final").value = R().final || "";
   show("final");
 }
 
 $("b-final").addEventListener("click", function(){
+  var side = pickedSide("fside");
   var t = $("f-final").value.trim();
-  if (!t){ fail("e-final", "Write one sentence before you finish."); $("f-final").focus(); return; }
-  clearFail("e-final");
-  S.r1.final = t;
+  if (!side){
+    fail("e-final", "Choose a side before you write your sentence.");
+    $("fside-agree").focus();
+    return;
+  }
+  if (!t){
+    fail("e-final", "Write one sentence before you go on.", "f-final");
+    $("f-final").focus();
+    return;
+  }
+  clearFail("e-final", "f-final");
+  R().finalSide = side;
+  R().final = t;
   save();
-  toDone();
+  toQuestions();
 });
 
-function toDone(){
-  $("d-opened").textContent = String(S.r1.opens);
+/* ---------------- the closing questions ---------------- */
+function questionItems(){ return TLX.concat(PERCEPTION); }
+
+function buildQuestions(){
+  var box = $("q-items");
+  box.textContent = "";
+  questionItems().forEach(function(item, n){
+    var fs = document.createElement("fieldset");
+    fs.className = "likert";
+
+    var lg = document.createElement("legend");
+    lg.textContent = (n + 1) + ". " + item.q;
+    fs.appendChild(lg);
+
+    var anch = document.createElement("div");
+    anch.className = "anchors";
+    var lo = document.createElement("span"); lo.textContent = "1 — " + item.lo;
+    var hi = document.createElement("span"); hi.textContent = "7 — " + item.hi;
+    anch.appendChild(lo); anch.appendChild(hi);
+    fs.appendChild(anch);
+
+    var scale = document.createElement("div");
+    scale.className = "scale";
+    for (var v = 1; v <= 7; v++){
+      var lab = document.createElement("label");
+      var inp = document.createElement("input");
+      inp.type = "radio";
+      inp.name = "q-" + item.id;
+      inp.value = String(v);
+      lab.appendChild(inp);
+      lab.appendChild(document.createTextNode(String(v)));
+      scale.appendChild(lab);
+    }
+    fs.appendChild(scale);
+    box.appendChild(fs);
+  });
+}
+
+function toQuestions(){
+  tagRounds();
+  buildQuestions();
+  var saved = R().answers;
+  if (saved){
+    questionItems().forEach(function(item){
+      if (saved[item.id]) setSide("q-" + item.id, String(saved[item.id]));
+    });
+  }
+  show("questions");
+}
+
+$("b-questions").addEventListener("click", function(){
+  var answers = {};
+  var missing = null;
+  questionItems().forEach(function(item){
+    var v = pickedSide("q-" + item.id);
+    if (!v){ if (!missing) missing = item; return; }
+    answers[item.id] = Number(v);
+  });
+  if (missing){
+    fail("e-questions", "Answer every question before you go on. The first one still blank is “" + missing.q + "”.");
+    var el = document.querySelector('input[name="q-' + missing.id + '"]');
+    if (el) el.focus();
+    return;
+  }
+  clearFail("e-questions");
+  R().answers = answers;
+  save();
+
+  if (S.round === 1){
+    S.round = 2;
+    S.rounds[2] = newRound(2);
+    save();
+    show("bridge");
+  } else {
+    toSubmit();
+  }
+});
+
+$("b-bridge").addEventListener("click", function(){ toPosition(); });
+
+/* ---------------- the result line ---------------- */
+/* The one thing that crosses from a student to the class. It carries no
+   name, and it carries no judgement of any card: which sources agreed
+   with the position is worked out afterwards, from a codebook that is
+   not in this page. That is why the list of card ids is in the line at
+   all — with it a student can be shown the arithmetic that produced
+   their own number instead of being asked to take it. */
+function sideLetter(s){ return s === "agree" ? "a" : "d"; }
+
+function roundSeconds(r){
+  var ms = 0;
+  r.choices.forEach(function(c){ ms += (c.ms || 0); });
+  return Math.round(ms / 1000);
+}
+
+/* Six items on a 7-point scale total 6 to 42. Rescaled to 0–100 so the
+   number means the same thing as every other workload total anyone will
+   compare it with. Performance is asked the right way up and counted
+   upside down: on this instrument doing well is a low cost. */
+function tlxTotal(answers){
+  var raw = 0;
+  TLX.forEach(function(item){
+    var v = answers[item.id];
+    raw += item.flip ? (8 - v) : v;
+  });
+  return Math.round((raw - TLX.length) / (TLX.length * 6) * 100);
+}
+function perceptionTotal(answers){
+  var raw = 0;
+  PERCEPTION.forEach(function(item){ raw += answers[item.id]; });
+  return raw;
+}
+
+function roundBlock(n, r){
+  var opened = r.choices.filter(function(c){ return c.open; }).map(function(c){ return c.id; });
+  return [
+    "r" + n,
+    r.agent ? "ask" : "none",
+    r.claim,
+    "pos" + sideLetter(r.side),
+    "op" + opened.length,
+    "ids=" + opened.join(","),
+    "s" + roundSeconds(r),
+    "end" + sideLetter(r.finalSide),
+    "moved" + (r.final.trim() === r.locked.trim() ? "0" : "1"),
+    "tlx" + tlxTotal(r.answers),
+    "q" + perceptionTotal(r.answers)
+  ].join(":");
+}
+
+function resultLine(){
+  return ["v" + LINE_VERSION, S.code, "t" + S.team,
+          roundBlock(1, S.rounds[1]), roundBlock(2, S.rounds[2])].join("|");
+}
+
+/* ---------------- the submission ---------------- */
+/* Built from the same round records the line is built from, so the two
+   cannot describe different sessions. Every value is a number, a boolean
+   or one of a named few: SV-1 says the submission carries no free text,
+   and the way to hold that is to have no field a sentence could sit in.
+   The student's two position sentences and whatever their assistant
+   replied are in state a few lines away and are not reachable from here. */
+function roundPayload(n, r){
+  return {
+    n: n,
+    agent: !!r.agent,
+    claim: Number(r.claim.slice(1)),
+    side: sideLetter(r.side),
+    opened: r.choices.filter(function(c){ return c.open; }).map(function(c){ return c.id; }),
+    seconds: roundSeconds(r),
+    endSide: sideLetter(r.finalSide),
+    moved: r.final.trim() !== r.locked.trim(),
+    tlx: tlxTotal(r.answers),
+    q: perceptionTotal(r.answers)
+  };
+}
+
+function submissionPayload(){
+  return {
+    v: LINE_VERSION,
+    code: String(S.code || "").toLowerCase(),
+    team: Number(S.team),
+    rounds: [roundPayload(1, S.rounds[1]), roundPayload(2, S.rounds[2])]
+  };
+}
+
+/* One request, and it cannot outlast the student's patience. A service
+   that hangs is the same as a service that is down as far as this screen
+   is concerned, and SV-6 says neither may block the finish. The timeout
+   is therefore part of the contract rather than a nicety.
+
+   fetch is not assumed: a browser without it falls through to the copy
+   route rather than throwing on the finish screen. */
+function sendSubmission(done){
+  if (!serviceOn()){ done({ ok: false, why: "not-configured" }); return; }
+  if (typeof window.fetch !== "function"){ done({ ok: false, why: "no-fetch" }); return; }
+
+  var settled = false;
+  function finish(result){ if (!settled){ settled = true; done(result); } }
+
+  var controller = null;
+  try { controller = new AbortController(); } catch (e) { controller = null; }
+  var timer = window.setTimeout(function(){
+    if (controller) { try { controller.abort(); } catch (e) {} }
+    finish({ ok: false, why: "timeout" });
+  }, SERVICE.timeoutMs);
+
+  var options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(submissionPayload()),
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store"
+  };
+  if (controller) options.signal = controller.signal;
+
+  window.fetch(SERVICE.origin + SERVICE.submit, options).then(function(response){
+    window.clearTimeout(timer);
+    if (!response.ok){ finish({ ok: false, why: "refused", status: response.status }); return; }
+    return response.json().then(function(body){
+      finish({ ok: true, count: body && body.count });
+    }, function(){ finish({ ok: true }); });
+  }, function(){
+    window.clearTimeout(timer);
+    finish({ ok: false, why: "unreachable" });
+  });
+}
+
+/* ---------------- the submit screen ---------------- */
+function toSubmit(){
+  if (!serviceOn() || S.sent){ toDone(); return; }
+  $("d-payload").textContent = JSON.stringify(submissionPayload(), null, 2);
+  $("m-sending").hidden = true;
+  $("b-submit").disabled = false;
+  $("b-skip").disabled = false;
+  show("submit");
+}
+
+/* Every way this can end, in the words a student should read. The failures
+   say what to do next, because on a failure the student is the recovery
+   mechanism and being told "an error occurred" is no help to them. */
+var OUTCOMES = {
+  sent: "Your numbers are with the room. Your code is on them and your name is not, and they are deleted at the end of the day. Keep the line below anyway, in case a lecturer asks for it.",
+  skipped: "Nothing was sent. Hand the line below in the way your lecturer asks.",
+  "not-configured": "There is nothing to send to yet — this session is being run by hand. Copy the line below and hand it in the way your lecturer asks.",
+  "no-fetch": "This browser cannot send it. Copy the line below and hand it in the way your lecturer asks.",
+  timeout: "The room’s service did not answer in time, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  unreachable: "The room’s service could not be reached, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  refused: "The room’s service refused the message, so nothing was sent. That costs you nothing: copy the line below and hand it in, and tell a lecturer it was refused."
+};
+
+function toDone(outcome){
+  var total = 0;
+  [1, 2].forEach(function(n){ total += S.rounds[n].opens; });
+  $("d-opened").textContent = String(total);
+  $("d-line").textContent = resultLine();
+
+  var box = $("d-status");
+  var key = outcome || S.outcome;
+  if (key && OUTCOMES[key]){
+    $("d-status-text").textContent = OUTCOMES[key];
+    box.className = "status" + (key === "sent" ? " status-sent" : "");
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
+  /* A failure is worth one more try from the student's own hand. A success
+     is not, and neither is a session that never had a service to reach. */
+  $("d-retry-note").hidden = !(serviceOn() && key && key !== "sent" && key !== "skipped");
+
   show("done");
 }
+
+function submitNow(){
+  $("b-submit").disabled = true;
+  $("b-skip").disabled = true;
+  $("m-sending").hidden = false;
+  sendSubmission(function(result){
+    S.sent = !!result.ok;
+    S.outcome = result.ok ? "sent" : result.why;
+    save();
+    toDone(S.outcome);
+  });
+}
+
+$("b-submit").addEventListener("click", submitNow);
+$("b-skip").addEventListener("click", function(){
+  S.outcome = "skipped";
+  save();
+  toDone("skipped");
+});
+$("b-resubmit").addEventListener("click", function(){
+  $("d-status-text").textContent = "Sending…";
+  submitNow();
+});
+
+$("b-copy-line").addEventListener("click", function(){
+  copyText($("d-line").textContent, "m-copied-line");
+});
 
 /* ---------------- erase ---------------- */
 $("b-erase").addEventListener("click", function(){
@@ -718,25 +2114,952 @@ $("b-erase").addEventListener("click", function(){
   window.location.reload();
 });
 
+/* ==================================================================
+   The arithmetic.
+
+   Everything below is a pure function of its arguments: no DOM, no
+   storage, no clock. That is what lets the same code serve the lecturer
+   view here and a test harness outside the browser, and it is why the
+   five fixture datasets can be checked against a reference
+   implementation at all.
+
+   None of it knows the codebook. The codebook arrives as an argument,
+   pasted in at analysis time, because a card's cell in this file would
+   be an answer key on a public URL.
+   ================================================================== */
+
+/* ---------------- the codebook ---------------- */
+/* Tolerant on purpose: the owners' copy is a markdown table, and asking
+   them to reformat it before a session is asking for a transcription
+   error in the one input nothing downstream can check. Any line holding
+   a card id followed by a cell code is read; everything else on the
+   line, and every line without both, is ignored. */
+function parseCodebook(text){
+  var map = {}, n = 0, dup = [];
+  String(text || "").split(/\r?\n/).forEach(function(line){
+    var idm = line.match(/\b(c[12]-\d{2})\b/);
+    if (!idm) return;
+    var rest = line.slice(idm.index + idm[0].length);
+    var cm = rest.match(/\b(NA|A)(S|W)\d*\b/);
+    if (!cm) return;
+    if (map[idm[1]]) dup.push(idm[1]);
+    map[idm[1]] = { stance: cm[1], quality: cm[2] };
+    n++;
+  });
+  return { map: map, n: Object.keys(map).length, rows: n, duplicates: dup };
+}
+
+/* ---------------- the result line ---------------- */
+/* A line is either accepted whole or listed back with a reason. There is
+   no third outcome: a line quietly dropped is a student who took part
+   and does not appear in the total, and nobody would ever find it. */
+var ROUND_SHAPE = [
+  { key: "round",  re: /^r([12])$/ },
+  { key: "agent",  re: /^(ask|none)$/ },
+  { key: "claim",  re: /^(c[12])$/ },
+  { key: "side",   re: /^pos([ad])$/ },
+  { key: "opened", re: /^op(\d+)$/ },
+  { key: "ids",    re: /^ids=(.*)$/ },
+  { key: "secs",   re: /^s(\d+)$/ },
+  { key: "endSide",re: /^end([ad])$/ },
+  { key: "moved",  re: /^moved([01])$/ },
+  { key: "tlx",    re: /^tlx(\d+)$/ },
+  { key: "q",      re: /^q(\d+)$/ }
+];
+
+function parseRound(block){
+  var tok = block.split(":");
+  if (tok.length !== ROUND_SHAPE.length){
+    return { error: "a round block has " + tok.length + " parts, not " + ROUND_SHAPE.length + " (" + block.slice(0, 40) + ")" };
+  }
+  var out = {};
+  for (var i = 0; i < ROUND_SHAPE.length; i++){
+    var m = tok[i].match(ROUND_SHAPE[i].re);
+    if (!m) return { error: "“" + tok[i] + "” is not a " + ROUND_SHAPE[i].key + " token" };
+    out[ROUND_SHAPE[i].key] = m[1];
+  }
+  out.round = Number(out.round);
+  out.opened = Number(out.opened);
+  out.secs = Number(out.secs);
+  out.tlx = Number(out.tlx);
+  out.q = Number(out.q);
+  out.moved = out.moved === "1";
+  out.agent = out.agent === "ask";
+  out.side = out.side === "a" ? "agree" : "disagree";
+  out.endSide = out.endSide === "a" ? "agree" : "disagree";
+  out.ids = out.ids === "" ? [] : out.ids.split(",");
+  /* op and the id list say the same thing twice, so they can disagree.
+     When they do the line is wrong somewhere and guessing which half to
+     believe is worse than refusing it. */
+  if (out.ids.length !== out.opened){
+    return { error: "says op" + out.opened + " but lists " + out.ids.length + " sources" };
+  }
+  if (out.opened > 8) return { error: "claims " + out.opened + " opens, and the budget is 8" };
+  for (var j = 0; j < out.ids.length; j++){
+    if (!/^c[12]-\d{2}$/.test(out.ids[j])) return { error: "“" + out.ids[j] + "” is not a source id" };
+  }
+  if (out.tlx > 100) return { error: "workload " + out.tlx + " is above 100" };
+  if (out.q < 2 || out.q > 14) return { error: "perception total " + out.q + " is outside 2–14" };
+  return { round: out };
+}
+
+function parseLine(raw){
+  var line = String(raw || "").trim();
+  if (!line) return { error: "blank" };
+  var f = line.split("|");
+  if (f.length !== 5) return { error: "has " + f.length + (f.length === 1 ? " part" : " parts") + " separated by | , not 5" };
+
+  var vm = f[0].match(/^v(\d+)$/);
+  if (!vm) return { error: "does not start with a version token" };
+  if (Number(vm[1]) !== 1) return { error: "was written by version " + vm[1] + " of the tool; this reader knows v1" };
+
+  if (!/^[^|:,]{1,20}$/.test(f[1])) return { error: "the code “" + f[1] + "” is empty or holds a separator" };
+  var tm = f[2].match(/^t([1-8])$/);
+  if (!tm) return { error: "“" + f[2] + "” is not a team number 1–8" };
+
+  var r1 = parseRound(f[3]);
+  if (r1.error) return { error: "round 1: " + r1.error };
+  var r2 = parseRound(f[4]);
+  if (r2.error) return { error: "round 2: " + r2.error };
+  if (r1.round.round !== 1 || r2.round.round !== 2) return { error: "the two round blocks are not r1 then r2" };
+  if (r1.round.agent === r2.round.agent){
+    return { error: "the assistant is marked " + (r1.round.agent ? "present" : "absent") + " in both rounds; it belongs to exactly one" };
+  }
+  if (r1.round.claim === r2.round.claim) return { error: "both rounds ran the same claim" };
+
+  return { rec: { code: f[1], team: Number(tm[1]), rounds: [r1.round, r2.round] } };
+}
+
+/* ---------------- one round's index ---------------- */
+/* Congenial means the source took the side the student had already
+   taken. Strong means the source carries a denominator — it includes
+   the cases that did the same thing and failed — which is the one
+   distinction the whole codebook rests on. */
+function congenial(cell, side){
+  return (side === "agree" && cell.stance === "A") || (side === "disagree" && cell.stance === "NA");
+}
+
+function roundIndex(round, book){
+  var cong = 0, unknown = [];
+  var sopp = 0;
+  round.ids.forEach(function(id){
+    var cell = book[id];
+    if (!cell){ unknown.push(id); return; }
+    if (congenial(cell, round.side)) cong++;
+    else if (cell.quality === "S") sopp++;
+  });
+  if (unknown.length) return { unknown: unknown };
+  var opened = round.ids.length;
+  return {
+    opened: opened,
+    congenial: cong,
+    uncongenial: opened - cong,
+    strongOpposing: sopp,
+    index: opened === 0 ? null : (cong - (opened - cong)) / opened
+  };
+}
+
+/* ---------------- the paired comparison ---------------- */
+function pairUp(records, book){
+  var pairs = [], dropped = [];
+  records.forEach(function(rec){
+    var ask = null, none = null, bad = null;
+    rec.rounds.forEach(function(r){
+      var m = roundIndex(r, book);
+      if (m.unknown){ bad = "no codebook entry for " + m.unknown.join(", "); return; }
+      var slot = { m: m, r: r };
+      if (r.agent) ask = slot; else none = slot;
+    });
+    if (bad){ dropped.push({ code: rec.code, why: bad }); return; }
+    if (!ask || !none){ dropped.push({ code: rec.code, why: "only one round usable" }); return; }
+    if (ask.m.index === null || none.m.index === null){
+      dropped.push({ code: rec.code, why: "opened no sources in one round, so that round has no index" });
+      return;
+    }
+    pairs.push({ code: rec.code, ask: ask, none: none, d: ask.m.index - none.m.index });
+  });
+  return { pairs: pairs, dropped: dropped };
+}
+
+function mean(xs){ if (!xs.length) return null; var s = 0; xs.forEach(function(x){ s += x; }); return s / xs.length; }
+function sd(xs){
+  if (xs.length < 2) return null;
+  var m = mean(xs), s = 0;
+  xs.forEach(function(x){ s += (x - m) * (x - m); });
+  return Math.sqrt(s / (xs.length - 1));
+}
+
+/* Student's t, by way of the regularised incomplete beta. A lookup table
+   would do for the one df this session produces, but the lecturer view
+   has to be right for whatever n turns up on the day, including the
+   afternoon half the room is missing. */
+function gammln(x){
+  var cof = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+             -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  var y = x, tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  var ser = 1.000000000190015;
+  for (var j = 0; j < 6; j++){ y += 1; ser += cof[j] / y; }
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+function betacf(a, b, x){
+  var MAXIT = 300, EPS = 3e-15, FPMIN = 1e-300;
+  var qab = a + b, qap = a + 1, qam = a - 1;
+  var c = 1, d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  var h = d;
+  for (var m = 1; m <= MAXIT; m++){
+    var m2 = 2 * m;
+    var aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    var del = d * c; h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+function betai(a, b, x){
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  var bt = Math.exp(gammln(a + b) - gammln(a) - gammln(b) + a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) return bt * betacf(a, b, x) / a;
+  return 1 - bt * betacf(b, a, 1 - x) / b;
+}
+function tcdf(t, df){
+  var p = 0.5 * betai(df / 2, 0.5, df / (df + t * t));
+  return t > 0 ? 1 - p : p;
+}
+function tinv(p, df){
+  var lo = -400, hi = 400;
+  for (var i = 0; i < 120; i++){
+    var mid = (lo + hi) / 2;
+    if (tcdf(mid, df) < p) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* The smallest standardised difference a paired design of this many
+   pairs would catch four times in five at the conventional threshold.
+
+   This is solved rather than approximated. The usual closed form,
+   (z_a + z_b) / sqrt(n), is out by about .04 at the sizes a half-group
+   produces, and the whole reason this figure is on screen is that it is
+   larger than people expect — a number that is wrong in the reassuring
+   direction, for the smallest rooms, would be worse than no number.
+
+   What is solved is the power of a paired t test: the difference d for
+   which the non-central t puts 80% of its mass past the critical value.
+   The non-central t has no closed form either, so it is integrated: a
+   t with df degrees of freedom and non-centrality nc is (Z + nc) / U,
+   where U is the square root of a chi-square over its df, which leaves
+   one well-behaved integral over U of the normal CDF. */
+var ALPHA = 0.05;
+var POWER = 0.80;
+
+/* erfc to full double precision, Chebyshev-style. The normal CDF is
+   built on it rather than on the incomplete gamma above because this
+   runs a few hundred thousand times per press of the button. */
+var ERFC_COF = [
+  -1.3026537197817094, 6.4196979235649026e-1, 1.9476473204185836e-2,
+  -9.561514786808631e-3, -9.46595344482036e-4, 3.66839497852761e-4,
+  4.2523324806907e-5, -2.0278578112534e-5, -1.624290004647e-6,
+  1.303655835580e-6, 1.5626441722e-8, -8.5238095915e-8,
+  6.529054439e-9, 5.059343495e-9, -9.91364156e-10, -2.27365122e-10,
+  9.6467911e-11, 2.394038e-12, -6.886027e-12, 8.94487e-13,
+  3.13092e-13, -1.12708e-13, 3.81e-16, 7.106e-15
+];
+function erfc(x){
+  var z = Math.abs(x), t = 2 / (2 + z), ty = 4 * t - 2;
+  var d = 0, dd = 0, tmp;
+  for (var j = ERFC_COF.length - 1; j > 0; j--){
+    tmp = d; d = ty * d - dd + ERFC_COF[j]; dd = tmp;
+  }
+  var ans = t * Math.exp(-z * z + 0.5 * (ERFC_COF[0] + ty * d) - dd);
+  return x >= 0 ? ans : 2 - ans;
+}
+function normCdf(z){ return 0.5 * erfc(-z / Math.SQRT2); }
+
+/* Simpson over u, the square root of a chi-square over its df. Its mean
+   is 1 and its spread is about 1/sqrt(2 df), so the range below holds
+   everything the density has; outside it the integrand is past e^-70. */
+function nctCdf(t, df, nc){
+  var hi = 1 + 15 / Math.sqrt(2 * df);
+  if (hi < 2) hi = 2;
+  var steps = 2000;
+  var h = hi / steps;
+  var logK = Math.log(2) + (df / 2) * Math.log(df / 2) - gammln(df / 2);
+  function f(u){
+    if (u <= 0) return 0;
+    var logg = logK + (df - 1) * Math.log(u) - df * u * u / 2;
+    if (logg < -700) return 0;
+    return normCdf(t * u - nc) * Math.exp(logg);
+  }
+  var sum = f(0) + f(hi);
+  for (var i = 1; i < steps; i++){
+    sum += f(i * h) * (i % 2 ? 4 : 2);
+  }
+  return sum * h / 3;
+}
+
+function pairedPower(d, n){
+  var df = n - 1;
+  var crit = tinv(1 - ALPHA / 2, df);
+  var nc = d * Math.sqrt(n);
+  var upper = 1 - nctCdf(crit, df, nc);
+  var lower = nctCdf(-crit, df, nc);
+  if (!isFinite(lower)) lower = 0;
+  return upper + lower;
+}
+
+function detectableEffect(n){
+  if (n < 2) return null;
+  var lo = 1e-6, hi = 5;
+  if (pairedPower(hi, n) < POWER) return null;
+  for (var i = 0; i < 60; i++){
+    var mid = (lo + hi) / 2;
+    if (pairedPower(mid, n) < POWER) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+function summarise(pairs){
+  var n = pairs.length;
+  if (n < 2) return { n: n };
+  var ds = pairs.map(function(p){ return p.d; });
+  var ask = pairs.map(function(p){ return p.ask.m.index; });
+  var none = pairs.map(function(p){ return p.none.m.index; });
+  var md = mean(ds), sdd = sd(ds);
+  var se = sdd / Math.sqrt(n);
+  var t = tinv(0.975, n - 1);
+  var dz = detectableEffect(n);
+  function avg(side, f){ return mean(pairs.map(function(p){ return f(p[side]); })); }
+  return {
+    n: n,
+    meanAsk: mean(ask),
+    meanNone: mean(none),
+    diff: md,
+    sdDiff: sdd,
+    se: se,
+    tcrit: t,
+    lo: md - t * se,
+    hi: md + t * se,
+    dz: dz,
+    mdeUnits: dz === null ? null : dz * sdd,
+    soppAsk: avg("ask", function(s){ return s.m.strongOpposing; }),
+    soppNone: avg("none", function(s){ return s.m.strongOpposing; }),
+    secsAsk: avg("ask", function(s){ return s.r.secs; }),
+    secsNone: avg("none", function(s){ return s.r.secs; }),
+    tlxAsk: avg("ask", function(s){ return s.r.tlx; }),
+    tlxNone: avg("none", function(s){ return s.r.tlx; }),
+    qAsk: avg("ask", function(s){ return s.r.q; }),
+    qNone: avg("none", function(s){ return s.r.q; }),
+    movedAsk: avg("ask", function(s){ return s.r.moved ? 1 : 0; }),
+    movedNone: avg("none", function(s){ return s.r.moved ? 1 : 0; }),
+    flipAsk: avg("ask", function(s){ return s.r.side !== s.r.endSide ? 1 : 0; }),
+    flipNone: avg("none", function(s){ return s.r.side !== s.r.endSide ? 1 : 0; })
+  };
+}
+
+/* ---------------- Cohen's kappa ---------------- */
+/* Shown with the 2×2 it came from and with chance agreement beside it,
+   because a kappa on its own is a number students have no way to argue
+   with, and arguing with it is the exercise. */
+function kappa2x2(a, b, c, d){
+  var n = a + b + c + d;
+  if (n <= 0) return { error: "no pairs entered" };
+  var po = (a + d) / n;
+  var pe = ((a + b) * (a + c) + (c + d) * (b + d)) / (n * n);
+  if (pe >= 1) return { n: n, po: po, pe: pe, kappa: null,
+                        note: "every pair falls in one category, so chance agreement is total and kappa is undefined" };
+  return { n: n, po: po, pe: pe, kappa: (po - pe) / (1 - pe) };
+}
+
+/* Exposed so the fixtures can be run against this exact code from
+   outside a browser. Nothing here is a codebook and nothing here is
+   state; it is arithmetic. */
+window.BXP = {
+  parseCodebook: parseCodebook, parseLine: parseLine, roundIndex: roundIndex,
+  /* Declared further down and read through a getter, because this object is
+     built before they exist and `var` would hand out an undefined. */
+  get INTERPRETATIONS(){ return INTERPRETATIONS; },
+  chooseInterpretation: chooseInterpretation,
+  governingNumbers: governingNumbers, recordFromRow: recordFromRow,
+  get FIXTURES(){ return FIXTURES; },
+  pairUp: pairUp, summarise: summarise, kappa2x2: kappa2x2,
+  detectableEffect: detectableEffect, pairedPower: pairedPower,
+  nctCdf: nctCdf, normCdf: normCdf, tinv: tinv, tcdf: tcdf,
+  mean: mean, sd: sd, agentPrompt: agentPrompt, tlxTotal: tlxTotal,
+  perceptionTotal: perceptionTotal, roundBlock: roundBlock, TLX: TLX,
+  PERCEPTION: PERCEPTION
+};
+
+/* ==================================================================
+   The lecturer view. Wiring only — every number it shows comes from the
+   pure functions above.
+
+   Since ADR-0016 this is the fallback path rather than the primary one:
+   what happens when the service is down. It is built first because it
+   is the arithmetic the dashboard will also need, and because it can be
+   tested without any infrastructure at all.
+   ================================================================== */
+
+function fmt(x, dp){
+  if (x === null || x === undefined || !isFinite(x)) return "—";
+  return (x < 0 ? "−" : "") + Math.abs(x).toFixed(dp === undefined ? 3 : dp);
+}
+function pct(x){ return x === null ? "—" : Math.round(x * 100) + "%"; }
+function pair(a, b, dp){ return fmt(a, dp) + " / " + fmt(b, dp); }
+
+function drawBar(id, valueId, v){
+  var fill = $(id);
+  var half = Math.max(-1, Math.min(1, v)) * 50;
+  fill.style.left = (half >= 0 ? 50 : 50 + half) + "%";
+  fill.style.width = Math.abs(half) + "%";
+  $(valueId).textContent = fmt(v, 3);
+}
+
+/* ================================================================
+   The interpretation.
+
+   SV-9 says the sentence is chosen from a fixed set and never composed.
+   SV-10 says it does not render without the two numbers it turns on. Both
+   are held structurally rather than by discipline: a template is a
+   `text(n)` function over the numbers it needs, the renderer computes those
+   numbers first and refuses to draw anything if any of them is missing, and
+   there is no path from here to a string built out of anything else.
+
+   AN-3 still governs. Not one of these states a finding about assistants
+   and bias: each says what an interval of this width over a sample of this
+   size does and does not license, which is a fact about the instrument and
+   not about the world. ADR-0016 asked for exactly that — "each says what
+   the data cannot distinguish as well as what it can" — and an
+   underpowered study usually licenses very little, which is the point.
+
+   The regions are where the interval sits relative to zero. An earlier
+   draft had a fourth, for an interval narrower than the smallest difference
+   this many pairs could have caught, and that region does not exist: a 95%
+   interval is about 1.4 times the width of an 80%-power detectable effect
+   at every sample size — 1.52 at n = 3, 1.41 at n = 32, 1.40 at n = 2000,
+   because both are fixed multiples of the same standard error. The
+   template could never have been selected. What it was reaching for is now
+   said inside the spanning sentence instead, where it is a fact about
+   intervals rather than a verdict on the session.
+   ================================================================ */
+var INTERPRETATIONS = [
+  {
+    id: "below",
+    when: function(n){ return n.hi < 0; },
+    text: function(n){
+      return "Every value in the interval is below zero, so these " + n.pairs + " pairs are hard to " +
+             "account for by a difference of zero. The interval runs from " + n.loText + " to " + n.hiText +
+             ", which is the range this sample does not rule out: it does not say where in that " +
+             "range the truth sits, and it says nothing at all about why.";
+    }
+  },
+  {
+    id: "above",
+    when: function(n){ return n.lo > 0; },
+    text: function(n){
+      return "Every value in the interval is above zero, so these " + n.pairs + " pairs are hard to " +
+             "account for by a difference of zero — in the opposite direction to the one the session " +
+             "was set up to look for. The interval runs from " + n.loText + " to " + n.hiText + ", which is " +
+             "the range this sample does not rule out.";
+    }
+  },
+  {
+    id: "spans",
+    when: function(n){ return n.lo <= 0 && n.hi >= 0; },
+    text: function(n){
+      return "The interval spans zero, so these " + n.pairs + " pairs do not separate a difference of " +
+             "zero from the differences at either end of it: everything between " + n.loText + " and " +
+             n.hiText + " is still on the table. It is also wider than the smallest difference " +
+             n.pairs + " pairs could have caught, and that is arithmetic rather than a fault — a 95% " +
+             "interval runs about 1.4 times that width whatever the sample size. Nothing follows about " +
+             "whether a difference exists; only that a room this size could not have settled it.";
+    }
+  }
+];
+
+/* The two numbers every one of them turns on, or null if any is missing.
+   Returning null rather than a blank is what makes SV-10 a property of the
+   code: a template has nothing to render into, so it does not render. */
+function governingNumbers(st){
+  if (!st || st.n < 2) return null;
+  var needed = [st.lo, st.hi, st.mdeUnits, st.sdDiff];
+  for (var i = 0; i < needed.length; i++){
+    if (needed[i] === null || needed[i] === undefined || !isFinite(needed[i])) return null;
+  }
+  /* Numbers for the deciding, strings for the reading, and the two kept
+     apart on purpose. A first draft formatted them first and then asked
+     whether "-0.100" was below zero, which is a string comparison: three of
+     the four regions silently stopped matching and the one that still did
+     matched by coercion. */
+  return {
+    pairs: st.n,
+    lo: st.lo, hi: st.hi, mde: st.mdeUnits,
+    loText: fmt(st.lo, 3), hiText: fmt(st.hi, 3), mdeText: fmt(st.mdeUnits, 3)
+  };
+}
+
+function chooseInterpretation(st){
+  var n = governingNumbers(st);
+  if (!n) return null;
+  for (var i = 0; i < INTERPRETATIONS.length; i++){
+    if (INTERPRETATIONS[i].when(n)) return { pick: INTERPRETATIONS[i], numbers: n, at: i };
+  }
+  return null;
+}
+
+function renderInterpretation(st){
+  var chosen = chooseInterpretation(st);
+  var box = $("an-interp");
+  if (!chosen){
+    /* No numbers, no sentence. Not an empty sentence, and not a hedged
+       one: the panel is not there. */
+    $("an-interp-which").textContent = "";
+    $("an-interp-text").textContent = "";
+    $("an-interp-numbers").textContent = "";
+    box.hidden = true;
+    return null;
+  }
+  var n = chosen.numbers;
+  $("an-interp-which").textContent =
+    "What the interval permits — sentence " + (chosen.at + 1) + " of " +
+    INTERPRETATIONS.length + " (" + chosen.pick.id + ")";
+  $("an-interp-text").textContent = chosen.pick.text(n);
+  $("an-interp-numbers").textContent =
+    "95% interval " + n.loText + " to " + n.hiText + " · smallest difference " + n.pairs +
+    " pairs could have caught " + n.mdeText + " index points. Neither of those two numbers " +
+    "is decoration: the sentence above was chosen by them and cannot be shown without them.";
+  box.hidden = false;
+  return chosen;
+}
+
+/* The codebook, read once and complained about once, whichever way the
+   records arrived. */
+function readCodebook(){
+  var book = parseCodebook($("f-codebook").value);
+  if (book.n === 0){
+    /* No worked example here either: naming a card beside a cell would be
+       the answer key, on the one page that must not hold it. */
+    fail("e-an", "No card codes found. A line is read when it carries a card id and then that card's cell code — which is what every row of the codebook's two tables does.");
+    return null;
+  }
+  if (book.duplicates.length){
+    fail("e-an", "These cards are coded more than once, and the last one wins: " + book.duplicates.join(", ") + ". Check the paste before you read anything below.");
+  }
+  return book;
+}
+
+/* Everything below here is a function of (records, codebook) and has no
+   idea where the records came from. That is what lets the dashboard reuse
+   the arithmetic phase 5 proved rather than agree with it by coincidence:
+   there is one implementation, and the paste box and the live feed are two
+   ways of filling its argument. */
+function renderAnalysis(accepted, rejected, book){
+  var up = pairUp(accepted, book.map);
+  up.dropped.forEach(function(d){ rejected.push({ n: null, why: d.why, text: d.code }); });
+
+  $("an-cards").textContent = String(book.n);
+  $("an-ok").textContent = String(accepted.length);
+  $("an-bad").textContent = String(rejected.length);
+  $("an-paired").textContent = String(up.pairs.length);
+
+  var rl = $("an-reject-list");
+  rl.textContent = "";
+  rejected.forEach(function(r){
+    var li = document.createElement("li");
+    var where = document.createElement("strong");
+    where.textContent = r.n ? ("Line " + r.n + ": ") : ("Code " + r.text + ": ");
+    li.appendChild(where);
+    li.appendChild(document.createTextNode(r.why));
+    if (r.n){
+      li.appendChild(document.createTextNode(" — "));
+      var code = document.createElement("code");
+      code.textContent = r.text.length > 90 ? r.text.slice(0, 90) + "…" : r.text;
+      li.appendChild(code);
+    }
+    rl.appendChild(li);
+  });
+  $("an-rejects").hidden = (rejected.length === 0);
+
+  $("an-out").hidden = false;
+
+  var st = summarise(up.pairs);
+  if (st.n < 2){
+    ["s-ask","s-none","s-diff","s-ci","s-mde","s-sopp-ask","s-sopp-none","s-secs","s-tlx","s-q","s-moved","s-flip"]
+      .forEach(function(id){ $(id).textContent = "—"; });
+    drawBar("bar-ask", "val-ask", 0);
+    drawBar("bar-none", "val-none", 0);
+    $("an-question").textContent = "Two pairs are the fewest this can work with, and there are " + st.n + ". What would you need before the room could read anything off a comparison at all?";
+    renderInterpretation(st);
+    return;
+  }
+
+  drawBar("bar-ask", "val-ask", st.meanAsk);
+  drawBar("bar-none", "val-none", st.meanNone);
+
+  $("s-ask").textContent = fmt(st.meanAsk, 3);
+  $("s-none").textContent = fmt(st.meanNone, 3);
+  $("s-diff").textContent = fmt(st.diff, 3);
+  $("s-ci").textContent = fmt(st.lo, 3) + " to " + fmt(st.hi, 3) + "  (n = " + st.n + ", t = " + fmt(st.tcrit, 3) + ")";
+  $("s-mde").textContent = fmt(st.dz, 3) + " standard deviations, which on these answers is " + fmt(st.mdeUnits, 3) + " index points";
+  $("s-sopp-ask").textContent = fmt(st.soppAsk, 2) + " of 8 on average";
+  $("s-sopp-none").textContent = fmt(st.soppNone, 2) + " of 8 on average";
+  $("s-secs").textContent = pair(st.secsAsk, st.secsNone, 0) + " seconds";
+  $("s-tlx").textContent = pair(st.tlxAsk, st.tlxNone, 1);
+  $("s-q").textContent = pair(st.qAsk, st.qNone, 2);
+  $("s-moved").textContent = pct(st.movedAsk) + " / " + pct(st.movedNone);
+  $("s-flip").textContent = pct(st.flipAsk) + " / " + pct(st.flipNone);
+
+  /* AN-3. There is one sentence's worth of text here and it is a
+     question, twice over. The two numbers it turns on are written into
+     it rather than sat beside it, so neither can go missing. */
+  $("an-question").textContent =
+    "The interval on the difference runs from " + fmt(st.lo, 3) + " to " + fmt(st.hi, 3) +
+    ", and the smallest difference " + st.n + " pairs could have caught four times in five is " +
+    fmt(st.mdeUnits, 3) + " index points. Two questions for the room. Which of the values inside that interval " +
+    "would have changed the advice you would give an SME? And if more than one of them would, what would this " +
+    "session have to do differently to tell those values apart?";
+
+  renderInterpretation(st);
+}
+
+/* ================================================================
+   The live feed.
+
+   One route, polled. It asks the service for its rows and turns each into
+   the same record shape the paste box produces, so everything downstream —
+   the pairing, the index, the interval, the detectable effect, the
+   sentence — is the code phase 5 already proved against a scipy reference.
+   There is no second implementation to agree with the first.
+
+   The token lives in a variable for as long as the tab is open. It is not
+   put in localStorage: a token that outlives the session is a token
+   somebody finds on a shared laptop in December.
+   ================================================================ */
+var LIVE = { timer: null, token: "", lastCount: -1, failures: 0 };
+var LIVE_EVERY_MS = 5000;        // SV-7 asks for 10 seconds; this is half
+var LIVE_GIVE_UP_AFTER = 5;      // consecutive failures
+
+/* A stored row, in the shape the rest of this page reads. The service holds
+   the session's numbers and no opinion about them, so this is a rename and
+   not a translation — except for the side, which the line format spells
+   'a'/'d' and everything downstream spells out. */
+function recordFromRow(row){
+  function side(x){ return x === "a" ? "agree" : "disagree"; }
+  return {
+    code: row.id,
+    team: row.team,
+    rounds: row.rounds.map(function(r){
+      return {
+        round: r.n,
+        agent: !!r.agent,
+        claim: "c" + r.claim,
+        side: side(r.side),
+        opened: r.opened.length,
+        ids: r.opened.slice(),
+        secs: r.seconds,
+        endSide: side(r.endSide),
+        moved: !!r.moved,
+        tlx: r.tlx,
+        q: r.q
+      };
+    })
+  };
+}
+
+function liveSay(message, detail){
+  $("m-live").textContent = message;
+  $("m-live-detail").textContent = detail || "";
+  $("m-live-detail").hidden = !detail;
+}
+
+function stopLive(why){
+  if (LIVE.timer){ window.clearInterval(LIVE.timer); LIVE.timer = null; }
+  $("b-live").hidden = false;
+  $("b-live-stop").hidden = true;
+  if (why) liveSay("Not watching.", why);
+}
+
+function pollOnce(book){
+  if (typeof window.fetch !== "function"){
+    stopLive("This browser cannot fetch. Use the paste box.");
+    return;
+  }
+  window.fetch(SERVICE.origin + SERVICE.dashboard, {
+    method: "GET",
+    headers: { "Authorization": "Bearer " + LIVE.token },
+    mode: "cors", credentials: "omit", cache: "no-store"
+  }).then(function(response){
+    if (response.status === 401){
+      stopLive("The service refused that token. Check it and try again.");
+      return null;
+    }
+    if (!response.ok){
+      LIVE.failures += 1;
+      liveSay("Watching.", "The service answered " + response.status + ". Still trying.");
+      if (LIVE.failures >= LIVE_GIVE_UP_AFTER){
+        stopLive("The service kept refusing. Fall back to the paste box below.");
+      }
+      return null;
+    }
+    return response.json();
+  }).then(function(body){
+    if (!body) return;
+    LIVE.failures = 0;
+    var accepted = [], rejected = [];
+    body.rows.forEach(function(row){
+      try { accepted.push(recordFromRow(row)); }
+      catch (e) { rejected.push({ n: null, why: "the service sent a row this page cannot read", text: row.id || "?" }); }
+    });
+    liveSay(body.count + (body.count === 1 ? " submission." : " submissions."),
+            LIVE.lastCount >= 0 && body.count !== LIVE.lastCount
+              ? ((body.count > LIVE.lastCount ? "+" : "") + (body.count - LIVE.lastCount) + " since the last look."
+                 + " Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.")
+              : "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
+    LIVE.lastCount = body.count;
+    renderAnalysis(accepted, rejected, book);
+  }, function(){
+    LIVE.failures += 1;
+    liveSay("Watching.", "The service could not be reached. Still trying.");
+    if (LIVE.failures >= LIVE_GIVE_UP_AFTER){
+      stopLive("The service could not be reached. Fall back to the paste box below.");
+    }
+  });
+}
+
+$("b-live").addEventListener("click", function(){
+  clearFail("e-an");
+  if (!serviceOn()){
+    fail("e-an", "There is no service address in this page, so there is nothing to watch. Use the paste box below.");
+    return;
+  }
+  var token = $("f-token").value.trim();
+  if (!token){
+    fail("e-an", "The dashboard needs the owners' token. The service refuses an anonymous read, which is the point of it.");
+    $("f-token").focus();
+    return;
+  }
+  var book = readCodebook();
+  if (!book){ $("f-codebook").focus(); return; }
+
+  LIVE.token = token;
+  LIVE.failures = 0;
+  LIVE.lastCount = -1;
+  $("b-live").hidden = true;
+  $("b-live-stop").hidden = false;
+  liveSay("Watching.", "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
+  pollOnce(book);
+  LIVE.timer = window.setInterval(function(){ pollOnce(book); }, LIVE_EVERY_MS);
+});
+
+$("b-live-stop").addEventListener("click", function(){
+  stopLive("Stopped. What is on screen is the last look.");
+});
+
+$("b-analyse").addEventListener("click", function(){
+  clearFail("e-an");
+  var book = readCodebook();
+  if (!book){ $("f-codebook").focus(); return; }
+
+  var accepted = [], rejected = [];
+  $("f-lines").value.split(/\r?\n/).forEach(function(raw, i){
+    if (!raw.trim()) return;
+    var out = parseLine(raw);
+    if (out.error) rejected.push({ n: i + 1, why: out.error, text: raw.trim() });
+    else accepted.push(out.rec);
+  });
+  stopLive("A paste replaces the live feed. Connect again to go back to it.");
+  renderAnalysis(accepted, rejected, book);
+});
+
+/* ---------------- kappa ---------------- */
+$("b-kappa").addEventListener("click", function(){
+  clearFail("e-kappa");
+  var v = ["k-a", "k-b", "k-c", "k-d"].map(function(id){ return Number($(id).value); });
+  for (var i = 0; i < 4; i++){
+    if (!isFinite(v[i]) || v[i] < 0 || v[i] !== Math.floor(v[i])){
+      fail("e-kappa", "All four cells need a whole number of pairs, 0 or more.");
+      return;
+    }
+  }
+  var k = kappa2x2(v[0], v[1], v[2], v[3]);
+  if (k.error){ fail("e-kappa", k.error); $("k-out").hidden = true; return; }
+  $("k-n").textContent = String(k.n);
+  $("k-po").textContent = fmt(k.po, 3) + "  (" + (v[0] + v[3]) + " of " + k.n + ")";
+  $("k-pe").textContent = fmt(k.pe, 3);
+  $("k-k").textContent = k.kappa === null ? k.note : fmt(k.kappa, 3);
+  $("k-out").hidden = false;
+});
+
+/* ---------------- fixtures, for a dry run ---------------- */
+/* Four rooms, one per region of the interval, so an owner can rehearse the
+   ten minutes between the last student finishing and the comparison going
+   up — and, more to the point, can see the interpretation sentence change
+   under them before thirty-two people are watching.
+
+   The region a fixture lands in is a fact about the codebook, not about the
+   lines: whether a card was congenial depends on the answer key, which is
+   not in this page. So a fixture is built *against the codebook the owner
+   has pasted*, which is also why the button asks for it first. A fixture
+   that hard-coded its own cells would be an answer key by another name.
+
+   Fixed seeds, so the same choice always produces the same room. The
+   fixtures with reference values live beside the build plan; these exist so
+   a screen fills up. */
+function seeded(seed){
+  return function(){
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+var FIXTURES = {
+  below:    { seed: 20260915, ask: 0.25, none: 0.85, jitter: 0.06,
+              says: "the assistant's round less congenial, by a margin this many pairs can see" },
+  above:    { seed: 20260916, ask: 0.85, none: 0.25, jitter: 0.06,
+              says: "the difference in the other direction" },
+  spanning: { seed: 20260917, ask: 0.55, none: 0.55, jitter: 0.34,
+              says: "no difference in the middle, and people varying too much to tell" }
+};
+
+/* k cards from the deck, each congenial with probability p, given the
+   codebook and the side this student took. Falls back to whatever is left
+   when a cell runs out, which is what a real session does too. */
+function fixtureCards(deck, book, side, p, k, rnd){
+  var yes = [], no = [];
+  deck.forEach(function(c){
+    var cell = book[c.id];
+    if (!cell) return;
+    (congenial(cell, side) ? yes : no).push(c.id);
+  });
+  function draw(pool){
+    if (!pool.length) return null;
+    return pool.splice(Math.floor(rnd() * pool.length), 1)[0];
+  }
+  var picked = [];
+  while (picked.length < k){
+    var want = rnd() < p;
+    var id = draw(want ? yes : no) || draw(want ? no : yes);
+    if (!id) break;
+    picked.push(id);
+  }
+  return picked;
+}
+
+function fixtureLines(spec, book){
+  var rnd = seeded(spec.seed);
+  var words = ["kite","pumice","bramble","gannet","quartz","lintel","mallow","osprey","tundra","verger",
+               "willow","yarrow","zephyr","alder","birch","cedar","damson","elder","fennel","gorse",
+               "hazel","ilex","juniper","kelp","larch","medlar","nettle","oleander","privet","quince",
+               "rowan","sorrel"];
+  var lines = [];
+  for (var i = 0; i < 32; i++){
+    var team = (i % 8) + 1;
+    var agentRound = agentRoundFor(team);
+    /* One offset per student, applied to both of their rounds, so the
+       jitter is between people rather than inside them. That is what makes
+       the paired interval wide or narrow, which is the whole point of
+       having a wide fixture and a tight one. */
+    var offset = (rnd() - 0.5) * 2 * spec.jitter;
+    var blocks = [];
+    for (var n = 1; n <= 2; n++){
+      var deck = n === 1 ? DECK1 : DECK2;
+      var side = rnd() < 0.5 ? "agree" : "disagree";
+      var p = Math.max(0, Math.min(1, (agentRound === n ? spec.ask : spec.none) + offset));
+      var k = 6 + Math.floor(rnd() * 3);
+      var opened = fixtureCards(deck, book, side, p, k, rnd);
+      var end = rnd() < 0.15 ? (side === "agree" ? "d" : "a") : sideLetter(side);
+      blocks.push([
+        "r" + n,
+        agentRound === n ? "ask" : "none",
+        "c" + n,
+        "pos" + sideLetter(side),
+        "op" + opened.length,
+        "ids=" + opened.join(","),
+        "s" + (90 + Math.floor(rnd() * 200)),
+        "end" + end,
+        "moved" + (rnd() < 0.4 ? 1 : 0),
+        "tlx" + (25 + Math.floor(rnd() * 45)),
+        "q" + (4 + Math.floor(rnd() * 9))
+      ].join(":"));
+    }
+    lines.push(["v1", words[i], "t" + team, blocks[0], blocks[1]].join("|"));
+  }
+  return lines;
+}
+
+$("b-demo").addEventListener("click", function(){
+  clearFail("e-an");
+  var book = readCodebook();
+  if (!book){
+    fail("e-an", "A fixture is built against the codebook, because whether a card was congenial is not something this page knows. Paste the codebook above first, then load one.");
+    $("f-codebook").focus();
+    return;
+  }
+  var spec = FIXTURES[$("f-demo").value] || FIXTURES.below;
+  $("f-lines").value = fixtureLines(spec, book.map).join("\n");
+  liveSay("", "");
+  stopLive("A fixture replaces the live feed. Connect again to go back to it.");
+  $("b-analyse").click();
+});
+
 /* ---------------- resume ---------------- */
 /* A reload in the middle of a round puts the student back where they
-   were, on the card they were looking at, with the opens they had left. */
+   were, on the card they were looking at, with the opens they had left.
+   The screen recorded in state is the truth about where they are; the
+   round's own counters are the fallback for a state written before that
+   screen existed. */
 (function resume(){
-  $("claim-1").textContent = CLAIM1;
-  $("claim-1b").textContent = CLAIM1;
-
-  if (!S.consented || !S.r1 || !S.code){ show("consent"); return; }
+  if (!S.consented || !S.rounds || !S.rounds[1] || !S.code){ show("consent"); return; }
 
   $("f-code").value = S.code || "";
   $("f-team").value = S.team ? String(S.team) : "";
+  if (!S.rounds[S.round]) S.round = 1;
 
-  if (S.screen === "done" && S.r1.final){ toDone(); return; }
-  if (S.screen === "final" || S.r1.idx >= S.r1.order.length){
-    $("f-position").value = S.r1.locked;
-    toFinal(); return;
-  }
-  if (S.r1.locked){ $("f-position").value = S.r1.locked; toCard(); return; }
+  var r = R();
+  tagRounds();
+
+  /* A reload on the submit screen must not send anything: SV-2 says a
+     submission needs a button press, and a page that resends on reload
+     turns one press into as many as the student refreshes. */
+  if (S.screen === "done" && S.rounds[2] && S.rounds[2].answers){ toDone(); return; }
+  if (S.screen === "submit" && S.rounds[2] && S.rounds[2].answers){ toSubmit(); return; }
+  if (S.screen === "bridge"){ show("bridge"); return; }
+  if (S.screen === "questions" && r.final){ toQuestions(); return; }
+  if (S.screen === "final" || (r.locked && r.idx >= r.order.length)){ toFinal(); return; }
+  if (S.screen === "agent" && r.locked && r.agent && !r.agentReply){ toAgent(); return; }
+  if (r.locked){ toCard(); return; }
   toPosition();
+})();
+</script>
+
+<!-- Instructor view. ?instructor reveals every [data-audience="instructor"] section and
+     sticks for the rest of the visit; ?student turns it off again. This is signposting, not
+     access control: the markup is public either way, so nothing whose worth depends on a
+     student not having read it belongs in site/ at all. See CLAUDE.md. -->
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
 })();
 </script>
 
