@@ -65,8 +65,10 @@ Two rules keep it worth reading:
   what stops the next person repeating the work. A finding you looked at and chose to keep
   matters more, because the check will report it again: write down why it stays.
 - **Hours come from the session transcripts, never from memory.** `worklog.py hours` reports
-  what is not yet booked; add a row per working day and list the session ids in the
-  `worklog:booked` comment so nothing is counted twice. The measure is active time — gaps
+  what is not yet booked; add a row per working day, then `worklog.py book` writes the figures
+  into the `worklog:booked` comment so nothing is counted twice — minutes per session rather
+  than a bare id, so a session booked mid-conversation is topped up rather than truncated.
+  The measure is active time — gaps
   between messages, each capped at 15 minutes — because a session's first-to-last span counts
   the night it was left open. Work away from Claude Code is not counted, and the hours before
   13 September 2026 were never measured: they are absent rather than estimated.
@@ -85,6 +87,7 @@ python3 -m http.server -d site     # preview the site locally at :8000
 gh run list --workflow=pages.yml   # deploy status
 
 python3 .github/scripts/worklog.py hours    # worklog: session time not yet booked (local only)
+python3 .github/scripts/worklog.py book     # worklog: record what has been counted (local only)
 python3 .github/scripts/worklog.py verify   # worklog: the stated total still matches its rows
 
 python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/ --codes A1,A16,A17          # prose: AI language, every page

@@ -4,7 +4,9 @@
 Two jobs, and only one of them can run in CI.
 
   worklog.py hours     # local only: read the Claude Code transcripts and
-                       # report the active time of sessions not yet booked
+                       # report the active time not yet booked
+  worklog.py book      # local only: record what has been counted, so a session
+                       # booked while still running is topped up next time
   worklog.py verify    # anywhere: the stated total equals the table's sum
 
 The split is forced by where the evidence lives. Session transcripts sit in
@@ -108,9 +110,32 @@ def active_minutes(path):
     return stamps[0], total
 
 
-def booked_ids(text):
+def booked_minutes(text):
+    """id -> minutes already booked, from the worklog:booked comment.
+
+    Minutes rather than a bare list of ids, because a session can be booked
+    while it is still running: the row goes in, the conversation continues, and
+    everything after the commit would be lost for good if the id alone marked
+    it done. Storing the figure lets a later run book only the difference.
+    """
     m = BOOKED_RE.search(text)
-    return set(m.group(1).split()) if m else set()
+    if not m:
+        return {}
+    out = {}
+    for token in m.group(1).split():
+        sid, _, mins = token.partition(":")
+        out[sid] = float(mins) if mins else 0.0
+    return out
+
+
+def measure(files):
+    """(start, minutes) per session id, skipping windows that only opened."""
+    seen = {}
+    for f in sorted(files):
+        start, mins = active_minutes(f)
+        if start is not None and mins >= 0.5:
+            seen[f.stem[:8]] = (start, mins)
+    return seen
 
 
 def table_hours(text):
@@ -140,26 +165,40 @@ def cmd_hours():
     if not files:
         sys.exit("No Claude Code transcripts for this repository on this machine.")
     log = worklog_path()
-    booked = booked_ids(log.read_text()) if log.exists() else set()
+    booked = booked_minutes(log.read_text()) if log.exists() else {}
 
-    rows, fresh = [], 0.0
-    for f in sorted(files):
-        sid = f.stem[:8]
-        start, mins = active_minutes(f)
-        if start is None or mins < 0.5:
-            continue                      # a session that only opened and closed
-        rows.append((start, sid, mins, sid in booked))
-        if sid not in booked:
-            fresh += mins
-
-    rows.sort()
+    fresh = 0.0
     print(f"Active time, gaps capped at {GAP_CAP_MINUTES} min:\n")
-    for start, sid, mins, done in rows:
-        mark = "booked" if done else "NEW   "
-        print(f"  {mark}  {sid}  {start:%Y-%m-%d %H:%M}  {mins / 60:5.2f} h")
+    for sid, (start, mins) in sorted(measure(files).items(), key=lambda kv: kv[1][0]):
+        owed = mins - booked.get(sid, 0.0)
+        fresh += max(owed, 0.0)
+        mark = "NEW   " if sid not in booked else ("+more " if owed > 0.5 else "booked")
+        extra = f"  (+{owed / 60:.2f} h since booking)" if 0.5 < owed < mins else ""
+        print(f"  {mark}  {sid}  {start:%Y-%m-%d %H:%M}  {mins / 60:5.2f} h{extra}")
     print(f"\n  {fresh / 60:.2f} h not yet in {WORKLOG}")
     if fresh:
-        print("  Add the rows, then list the ids in the worklog:booked comment.")
+        print("  Add or adjust the rows, then run:  worklog.py book")
+
+
+def cmd_book():
+    """Rewrite the worklog:booked comment with what the transcripts now say.
+
+    Transcribing eight figures by hand is how a ledger picks up its first wrong
+    number, so the machine writes them. The visible rows and the total are
+    still yours to edit; `verify` is what checks you got them to agree.
+    """
+    log = worklog_path()
+    text = log.read_text()
+    seen = measure(transcript_files(main_checkout()))
+    lines = [f"{sid}:{mins:.1f}"
+             for sid, (_, mins) in sorted(seen.items(), key=lambda kv: kv[1][0])]
+    block = "<!-- worklog:booked\n" + "\n".join(lines) + "\n-->"
+    if not BOOKED_RE.search(text):
+        sys.exit(f"::error file={WORKLOG}::no worklog:booked comment to update")
+    log.write_text(BOOKED_RE.sub(lambda _: block, text, count=1))
+    total = sum(m for _, m in seen.values())
+    print(f"Booked {len(seen)} sessions, {total / 60:.2f} h in total.")
+    print(f"The ledger's rows must now add up to that; run verify.")
 
 
 def cmd_verify():
@@ -187,6 +226,8 @@ if __name__ == "__main__":
     action = sys.argv[1] if len(sys.argv) > 1 else ""
     if action == "hours":
         cmd_hours()
+    elif action == "book":
+        cmd_book()
     elif action == "verify":
         cmd_verify()
     else:
