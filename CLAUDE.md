@@ -47,6 +47,36 @@ honour system.
 Records live under `work/`, so they are off the site but still in a public repo: they name
 **roles**, never people, and carry no timetables or personal notes.
 
+## The worklog
+
+[`project-documentation/worklog.md`](project-documentation/worklog.md) records what has been
+done here, what has been **checked**, and how long it took. `lrd-logbook.md` does this for one
+document; the worklog does it for the project.
+
+**Start a review session by reading its checks register.** That table is the reason the file
+exists. On 15 September 2026 a prose check was run across the whole site and 125 of its 247
+findings had already been reviewed nine days earlier and deliberately kept — the reasoning
+written down twice, in the LRD logbook and in a skill file, and an agent starting fresh found
+neither. A verdict in the register stands until a new row supersedes it.
+
+Two rules keep it worth reading:
+
+- **Every check that runs gets a row, including the ones that find nothing.** A clean result is
+  what stops the next person repeating the work. A finding you looked at and chose to keep
+  matters more, because the check will report it again: write down why it stays.
+- **Hours come from the session transcripts, never from memory.** `worklog.py hours` reports
+  what is not yet booked; add a row per working day, then `worklog.py book` writes the figures
+  into the `worklog:booked` comment so nothing is counted twice — minutes per session rather
+  than a bare id, so a session booked mid-conversation is topped up rather than truncated.
+  The measure is active time — gaps
+  between messages, each capped at 15 minutes — because a session's first-to-last span counts
+  the night it was left open. Work away from Claude Code is not counted, and the hours before
+  13 September 2026 were never measured: they are absent rather than estimated.
+
+`worklog.py verify` fails when the stated total stops matching the rows beneath it, which is
+the way a ledger rots. It runs in CI. The other half cannot: transcripts live on a laptop, not
+in the repository.
+
 ## Commands
 
 ```bash
@@ -55,6 +85,10 @@ Records live under `work/`, so they are off the site but still in a public repo:
 BASE_SHA=HEAD~1 ./.github/scripts/check-adrs.sh   # ...plus: no accepted record was edited
 python3 -m http.server -d site     # preview the site locally at :8000
 gh run list --workflow=pages.yml   # deploy status
+
+python3 .github/scripts/worklog.py hours    # worklog: session time not yet booked (local only)
+python3 .github/scripts/worklog.py book     # worklog: record what has been counted (local only)
+python3 .github/scripts/worklog.py verify   # worklog: the stated total still matches its rows
 
 python3 .claude/skills/strip-ai-language/scripts/aiprose.py site/ --codes A1,A16,A17          # prose: AI language, every page
 python3 .claude/skills/slide-deck/scripts/slidewords.py site/week-02-slides.html               # slides: words, bullets, longest sentence per card
@@ -80,6 +114,7 @@ further workflows check things that are never published and therefore never depl
 | PR touching `site/` | Link check → downloadable `site-preview` artifact, no deploy |
 | Push or PR touching `work/decisions/` | ADR check — [`decisions.yml`](.github/workflows/decisions.yml) — plus the doc link check. Never deploys |
 | Push to `main` touching `README.md`, `CLAUDE.md` or `work/` | Link check — [`links.yml`](.github/workflows/links.yml). Never deploys |
+| Push or PR touching `project-documentation/worklog.md` | Worklog arithmetic — [`worklog.yml`](.github/workflows/worklog.yml). Never deploys |
 | **Any pull request** | Link check, unfiltered. The ruleset on `main` requires it, and a required check that never starts leaves a PR unmergeable forever |
 | Any other push | No run at all |
 

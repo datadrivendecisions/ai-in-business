@@ -45,12 +45,32 @@ kruisje, dan is er een link kapot; klik erop om te zien welke.
 | `site/` | De cursussite. Staat live zodra het op `main` staat. |
 | `work/drafts/` | Waar je iets uitwerkt dat nog niet af is. Komt niet op de site. |
 | `work/decisions/` | Waarom de cursus is zoals hij is. Blijft staan, wordt nooit gepubliceerd. |
+| `project-documentation/worklog.md` | Het logboek: wat er gedaan is, wat er gecontroleerd is, en hoeveel tijd het kostte. |
 
 Werk je aan iets nieuws, begin dan in `work/drafts/`. Als het af is verhuist het naar
 `site/`. Die route staat in [`work/README.md`](work/README.md).
 
 Let op: de repo is **openbaar**. `work/` houdt drafts van de site af; op GitHub zelf kan
 iedereen ze gewoon lezen. Wat echt niet openbaar mag, hoort hier helemaal niet.
+
+## Het logboek
+
+In `project-documentation/worklog.md` staat wat er gedaan is, wat er al gecontroleerd is, en
+hoeveel tijd het gekost heeft. Onderin staan de uren, bovenin een tabel met controles.
+
+Die tabel met controles is het belangrijkste deel. Er staat in wat er al nagekeken is en wat
+eruit kwam, ook als er niets mis was. Dat scheelt de volgende keer werk. Een voorbeeld: op
+6 september is de tekst van het LRD nagelopen op „AI-taal". Er kwamen 120 meldingen uit die na
+lezing allemaal terecht bleken. Staat dat nergens, dan loopt de volgende iemand dezelfde 120
+meldingen opnieuw na.
+
+**Wat jij hoeft te doen:** niets met scripts. Zeg aan het eind van je werk tegen Claude Code:
+*„zet dit in het logboek"*. Claude schrijft op wat er veranderd is. De uren haalt Claude uit
+de gesprekken zelf; jij hoeft geen tijd bij te houden.
+
+Twee dingen om te weten over die uren. Ze tellen alleen mee wat je in Claude Code doet; lezen,
+lesgeven en nakijken staan er niet in. En ze beginnen pas op 13 september 2026, want daarvoor
+is er niets gemeten. Die eerste maanden staan er dus niet in plaats van dat ze geschat zijn.
 
 ## Als er iets misgaat
 

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The source menu — AI in Business</title>
+<meta name="description" content="The week 3 in-class exercise: state a position, then build the evidence for it from a menu of sixteen sources revealed one at a time, of which you may open eight." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + tool-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+/* An author `display` rule beats the UA stylesheet's [hidden] rule, so a
+   flex row told to hide stays on screen. Everything here that hides is
+   hidden with the attribute; this makes the attribute win. */
+[hidden] { display: none !important; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+
+/* FOOTER */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Skip link + focus */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, button:focus-visible, summary:focus-visible,
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+/* Each screen change moves focus to that screen's heading so a screen
+   reader announces it. The heading is not in the tab order, so it needs
+   no ring of its own — and a ring nobody asked for reads as a defect. */
+[tabindex="-1"]:focus { outline: none; }
+
+/* Template placeholders — an unfilled slot reads as deliberate, not forgotten. */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); font-style: italic; }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 760px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--border); }
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-3xl); font-weight: 700; margin: 0 0 var(--space-4); line-height: 1.15; }
+.lead { font-size: var(--text-lg); color: var(--text-secondary); margin: 0; }
+
+/* ---------------- the tool ---------------- */
+h2 { font-size: var(--text-2xl); font-weight: 700; margin: 0 0 var(--space-4); line-height: 1.2; }
+h3 { font-size: var(--text-lg); font-weight: 700; margin: 0 0 var(--space-2); }
+
+.claim-box {
+  border: 2px solid var(--supporting); border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6); margin: 0 0 var(--space-6);
+  background: var(--bg-off-white);
+}
+.claim-box .bds-eyebrow { margin-bottom: var(--space-1); }
+.claim-text { font-size: var(--text-xl); font-weight: 600; margin: 0; line-height: 1.35; }
+
+.field { margin: 0 0 var(--space-6); }
+.field label { display: block; font-weight: 600; margin-bottom: var(--space-2); }
+.field .hint { display: block; font-weight: 400; font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-1); }
+input[type="text"], select, textarea {
+  width: 100%; font: inherit; color: var(--text-primary);
+  background: var(--bg-page);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+textarea { min-height: 5.5rem; resize: vertical; }
+select { max-width: 12rem; }
+input[type="text"] { max-width: 18rem; }
+
+.btn {
+  font: inherit; font-weight: 600; cursor: pointer;
+  border: 2px solid var(--supporting); border-radius: var(--radius-sm);
+  background: var(--supporting); color: #fff;
+  padding: var(--space-3) var(--space-6);
+}
+.btn:hover { background: #000; }
+.btn-secondary { background: var(--bg-page); color: var(--text-primary); }
+.btn-secondary:hover { background: var(--bg-cream-2); }
+.btn[disabled] {
+  cursor: not-allowed; opacity: 1;
+  background: var(--bg-section); color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+.btn-row { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center; }
+
+/* the progress strip above a card */
+.runner-bar {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: var(--space-4); flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2); margin-bottom: var(--space-6);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.runner-bar strong { color: var(--text-primary); }
+
+.card {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6); margin-bottom: var(--space-6);
+  background: var(--bg-page);
+}
+.card-title { font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-2); line-height: 1.3; }
+.card-meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0 0 var(--space-4); }
+.card-teaser { margin: 0; }
+.card-extract {
+  border-left: 4px solid var(--primary);
+  padding-left: var(--space-4); margin: var(--space-6) 0 var(--space-4);
+}
+.card-extract p { margin: 0 0 var(--space-3); }
+.card-link { font-size: var(--text-sm); }
+
+/* the locked sentence, quoted back */
+.locked {
+  background: var(--bg-cream); border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-6); margin: 0 0 var(--space-6);
+}
+.locked .bds-eyebrow { margin-bottom: var(--space-1); }
+.locked p { margin: 0; font-size: var(--text-lg); }
+
+.note { font-size: var(--text-sm); color: var(--text-secondary); }
+.warn {
+  border-left: 4px solid var(--supporting); background: var(--bg-cream-2);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm);
+  margin: var(--space-4) 0 0;
+}
+.warn p { margin: 0; }
+
+.err { color: var(--supporting); font-weight: 600; margin: var(--space-2) 0 0; }
+.err[hidden] { display: none; }
+
+/* the erase control sits under everything, always reachable */
+.erase-bar {
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-12); padding-top: var(--space-6);
+}
+.erase-bar p { margin: 0 0 var(--space-3); }
+
+@media (max-width: 720px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-16); }
+  h1.bds-h1 { font-size: var(--text-2xl); }
+  .claim-text { font-size: var(--text-lg); }
+  .btn { width: 100%; }
+  .btn-row { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="index.html#tools">Course tools</a>
+      <a href="week-01.html">Week 1</a>
+      <a href="handbook.html">Handbook</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <p class="bds-eyebrow">Week 3 &middot; in the session</p>
+    <h1 class="bds-h1">The source menu</h1>
+    <p class="lead">You will be shown sixteen sources, one at a time. You may open eight of them. Before that, you write down where you stand; afterwards, you write it down again.</p>
+  </header>
+
+  <p class="tpl-notice"><strong>Not finished.</strong> This page is being built. The claim and the sixteen sources below are placeholders &mdash; the real ones are still being assembled and checked. The machinery around them works, so you can walk the whole exercise through today and see what it asks of you.</p>
+
+  <!-- ============================================================
+       1 · Consent. The first screen, before any question is asked.
+       ============================================================ -->
+  <section class="screen" id="s-consent" aria-labelledby="h-consent">
+    <h2 id="h-consent">Before you start</h2>
+
+    <p>This is a class exercise about how people look for evidence. It records which sources you chose to open and the order you saw them in. You can stop at any point and erase everything.</p>
+
+    <div class="warn">
+      <p id="storage-statement">What you type stays in this browser. It is saved in your own browser&rsquo;s storage so a reload does not lose your place, and it is sent nowhere. No name is asked for. At the end you get one line of numbers to hand in yourself. Erase everything at any time with the button below.</p>
+    </div>
+
+    <div class="field" style="margin-top:var(--space-6)">
+      <label for="f-code">Choose a code for yourself
+        <span class="hint">Any word you will remember and nobody else will guess &mdash; <em>kite</em>, <em>pumice</em>, <em>bramble</em>. Not your name.</span>
+      </label>
+      <input type="text" id="f-code" maxlength="20" autocomplete="off" spellcheck="false" />
+    </div>
+
+    <div class="field">
+      <label for="f-team">Your team number
+        <span class="hint">The number on your team&rsquo;s card.</span>
+      </label>
+      <select id="f-team">
+        <option value="">Choose&hellip;</option>
+        <option value="1">1</option><option value="2">2</option>
+        <option value="3">3</option><option value="4">4</option>
+        <option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option>
+      </select>
+    </div>
+
+    <p class="err" id="e-consent" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-consent">I agree &mdash; start</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2 · The position, locked once submitted.
+       ============================================================ -->
+  <section class="screen" id="s-position" aria-labelledby="h-position" hidden>
+    <h2 id="h-position">Where do you stand?</h2>
+
+    <div class="claim-box">
+      <p class="bds-eyebrow">The claim</p>
+      <p class="claim-text" id="claim-1"></p>
+    </div>
+
+    <div class="field">
+      <label for="f-position">Write your position in one sentence
+        <span class="hint">Not a summary of the arguments &mdash; where <em>you</em> land, today, before reading anything. You will be asked again at the end, and you may change your mind then.</span>
+      </label>
+      <textarea id="f-position"></textarea>
+    </div>
+
+    <p class="err" id="e-position" hidden></p>
+
+    <div class="warn">
+      <p>Once you submit this sentence it is locked. You cannot edit it, and you will see it again later.</p>
+    </div>
+
+    <div class="btn-row" style="margin-top:var(--space-6)">
+      <button type="button" class="btn" id="b-position">Lock it and see the first source</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3 · The runner. One card at a time, eight opens, no way back.
+       ============================================================ -->
+  <section class="screen" id="s-card" aria-labelledby="h-card" hidden>
+    <h2 id="h-card" class="bds-eyebrow" style="font-size:var(--text-xs)">Source menu</h2>
+
+    <div class="runner-bar">
+      <span>Source <strong id="m-index">1</strong> of <strong>16</strong></span>
+      <span aria-live="polite">Opens left: <strong id="m-budget">8</strong></span>
+    </div>
+
+    <div class="locked">
+      <p class="bds-eyebrow">Your position</p>
+      <p id="m-locked"></p>
+    </div>
+
+    <article class="card" aria-live="polite">
+      <h3 class="card-title" id="c-title"></h3>
+      <p class="card-meta" id="c-meta"></p>
+      <p class="card-teaser" id="c-teaser"></p>
+
+      <div id="c-opened" hidden>
+        <div class="card-extract" id="c-extract"></div>
+        <p class="card-link"><a id="c-link" href="#" target="_blank" rel="noopener">Read the original document</a></p>
+      </div>
+    </article>
+
+    <div class="btn-row" id="c-choice">
+      <button type="button" class="btn" id="b-open">Open this source</button>
+      <button type="button" class="btn btn-secondary" id="b-pass">Pass</button>
+    </div>
+
+    <div class="btn-row" id="c-next" hidden>
+      <button type="button" class="btn" id="b-next">Next source</button>
+    </div>
+
+    <div class="warn" id="c-spent" hidden>
+      <p>You have used all eight of your opens. The remaining sources can only be passed.</p>
+    </div>
+
+    <p class="note" style="margin-top:var(--space-6)">A source you pass does not come back.</p>
+  </section>
+
+  <!-- ============================================================
+       4 · The final position.
+       ============================================================ -->
+  <section class="screen" id="s-final" aria-labelledby="h-final" hidden>
+    <h2 id="h-final">Where do you stand now?</h2>
+
+    <div class="claim-box">
+      <p class="bds-eyebrow">The claim</p>
+      <p class="claim-text" id="claim-1b"></p>
+    </div>
+
+    <div class="locked">
+      <p class="bds-eyebrow">What you wrote before you read anything</p>
+      <p id="f-locked"></p>
+    </div>
+
+    <div class="field">
+      <label for="f-final">Write your position again, in one sentence
+        <span class="hint">Copy the sentence above if nothing has changed. Saying so is a finding too.</span>
+      </label>
+      <textarea id="f-final"></textarea>
+    </div>
+
+    <p class="err" id="e-final" hidden></p>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-final">Finish</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5 · Finish.
+       ============================================================ -->
+  <section class="screen" id="s-done" aria-labelledby="h-done" hidden>
+    <h2 id="h-done">That is the end of the round</h2>
+
+    <p>You opened <strong id="d-opened">0</strong> of the sixteen sources. Your choices are saved in this browser.</p>
+
+    <p class="tpl">More is still to come on this page. A second round, on a different claim. A step where an assistant argues with the position you locked. The questions asked at the end of each round. And the one line of result you hand in. Today, stop here.</p>
+
+    <p class="note">Keep this tab open until your lecturer says otherwise.</p>
+  </section>
+
+  <!-- ============================================================
+       DA-4 · One control erases everything.
+       ============================================================ -->
+  <div class="erase-bar">
+    <p class="note">Nothing here is sent anywhere. If you want it gone from this browser as well:</p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-erase">Erase everything and start again</button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+<script>
+/* ==================================================================
+   The source menu — week 3.
+
+   No network calls. Nothing here talks to anything: it never requests a
+   URL, opens a socket, or fires a beacon. That is a rule of the
+   instrument, not a preference, and it is checked by grep — so this
+   comment names none of those calls, or it would be the only hit.
+
+   The deck below carries no label saying what kind of source a card is.
+   This page is served from a public repository at a public URL, so a
+   label in the file is a label a student can read before the session.
+   Cards are mapped to their cells at analysis time, from a codebook
+   that is never shipped with the page.
+   ================================================================== */
+
+/* ---------------- the claim ---------------- */
+/* PLACEHOLDER. The real claim comes out of phase 0 of the build plan:
+   piloted on at least ten people, kept only if it splits the room. */
+var CLAIM1 = "A firm should trust its own people’s judgement that AI is speeding them up, rather than wait to measure it.";
+
+/* ---------------- the deck ---------------- */
+/* PLACEHOLDER, 16 cards of the right shape and nothing else. Real cards
+   carry a title, an outlet, a year, a teaser of 25 words or fewer, an
+   extract of 150 words or fewer quoted from the document, and an
+   absolute link to it. An empty href renders as an unfilled slot. */
+var DECK1 = [];
+(function(){
+  for (var i = 1; i <= 16; i++){
+    var n = (i < 10 ? "0" : "") + i;
+    DECK1.push({
+      id: "c1-" + n,
+      title: "Placeholder source " + n,
+      outlet: "Outlet " + n,
+      year: "20" + (10 + (i % 17)),
+      teaser: "One or two lines of abstract go here — enough to decide whether to spend an open on it, and no more than twenty-five words.",
+      extract: "The extract from source " + n + " goes here: up to a hundred and fifty words, quoted from the document itself rather than summarised, so that what you read is what the source actually says.",
+      href: ""
+    });
+  }
+})();
+
+var BUDGET = 8;
+
+/* ---------------- storage (best effort) ---------------- */
+/* One key. The try/catch is not tidiness: localStorage throws outright
+   in a private window, and a student in one should still be able to
+   take part. Private window: fine. */
+var LKEY = "bxp-v1";
+function loadState(){ try{ var s = localStorage.getItem(LKEY); return s ? (JSON.parse(s)||{}) : {}; }catch(e){ return {}; } }
+function saveState(a){ try{ localStorage.setItem(LKEY, JSON.stringify(a)); }catch(e){} }
+function clearState(){ try{ localStorage.removeItem(LKEY); }catch(e){} }
+
+/* ---------------- state ---------------- */
+function freshState(){ return { v: 1, screen: "consent", consented: false }; }
+
+var S = loadState();
+if (!S || S.v !== 1) S = freshState();
+
+/* Nothing is written until the student has agreed to it. Until then the
+   state lives in memory only, so a visitor who reads the consent screen
+   and closes the tab leaves nothing behind — and so the erase button
+   really does erase, rather than clearing the key and writing it back
+   on the reload. */
+function save(){ if (S.consented) saveState(S); }
+
+/* ---------------- helpers ---------------- */
+function $(id){ return document.getElementById(id); }
+
+var SCREENS = ["consent", "position", "card", "final", "done"];
+
+function show(name){
+  S.screen = name;
+  SCREENS.forEach(function(s){ $("s-" + s).hidden = (s !== name); });
+  save();
+  var h = $("s-" + name).querySelector("h2");
+  if (h){ h.setAttribute("tabindex", "-1"); h.focus(); }
+}
+
+function fail(id, msg){
+  var el = $(id);
+  el.textContent = msg;
+  el.hidden = false;
+}
+function clearFail(id){ $(id).hidden = true; }
+
+/* Fisher-Yates. A fresh order every session, and the order is kept,
+   because which card came up when is half of what is being measured. */
+function shuffled(deck){
+  var ids = deck.map(function(c){ return c.id; });
+  for (var i = ids.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = ids[i]; ids[i] = ids[j]; ids[j] = t;
+  }
+  return ids;
+}
+
+function cardById(id){
+  for (var i = 0; i < DECK1.length; i++){ if (DECK1[i].id === id) return DECK1[i]; }
+  return null;
+}
+
+/* ---------------- consent ---------------- */
+$("b-consent").addEventListener("click", function(){
+  var code = $("f-code").value.trim();
+  var team = $("f-team").value;
+  if (!code){ fail("e-consent", "Choose a code first — any word you will remember."); $("f-code").focus(); return; }
+  if (!team){ fail("e-consent", "Choose your team number."); $("f-team").focus(); return; }
+  clearFail("e-consent");
+
+  S.consented = true;
+  S.code = code;
+  S.team = Number(team);
+  S.r1 = {
+    claim: "c1",
+    order: shuffled(DECK1),
+    idx: 0,
+    opens: 0,
+    choices: [],
+    locked: "",
+    final: ""
+  };
+  save();
+  toPosition();
+});
+
+function toPosition(){
+  $("claim-1").textContent = CLAIM1;
+  show("position");
+}
+
+/* ---------------- position ---------------- */
+$("b-position").addEventListener("click", function(){
+  var t = $("f-position").value.trim();
+  if (!t){ fail("e-position", "Write one sentence before you go on."); $("f-position").focus(); return; }
+  clearFail("e-position");
+  S.r1.locked = t;
+  save();
+  toCard();
+});
+
+/* ---------------- the runner ---------------- */
+function toCard(){
+  $("m-locked").textContent = S.r1.locked;
+  renderCard();
+  show("card");
+}
+
+function renderCard(){
+  var r = S.r1;
+  if (r.idx >= r.order.length){ toFinal(); return; }
+
+  var c = cardById(r.order[r.idx]);
+  $("m-index").textContent = String(r.idx + 1);
+  $("m-budget").textContent = String(BUDGET - r.opens);
+
+  $("c-title").textContent = c.title;
+  $("c-meta").textContent = c.outlet + " · " + c.year;
+  $("c-teaser").textContent = c.teaser;
+
+  /* Is this card already open and waiting for Next? Opening records the
+     choice; advancing consumes it. So one extra choice means the card on
+     screen has been opened and not yet left behind. */
+  var isOpen = (r.choices.length > r.idx);
+
+  if (isOpen){
+    revealExtract(c);
+  } else {
+    $("c-opened").hidden = true;
+    $("c-choice").hidden = false;
+    $("c-next").hidden = true;
+  }
+
+  var spent = (r.opens >= BUDGET);
+  $("b-open").disabled = spent;
+  $("c-spent").hidden = !spent || isOpen;
+}
+
+function revealExtract(c){
+  var box = $("c-extract");
+  box.textContent = "";
+  var p = document.createElement("p");
+  p.textContent = c.extract;
+  box.appendChild(p);
+
+  var link = $("c-link");
+  if (c.href){
+    link.href = c.href;
+    link.hidden = false;
+    link.parentNode.hidden = false;
+  } else {
+    link.parentNode.hidden = true;
+    var slot = document.createElement("p");
+    slot.className = "tpl";
+    slot.textContent = "The link to the original document goes here.";
+    box.appendChild(slot);
+  }
+
+  $("c-opened").hidden = false;
+  $("c-choice").hidden = true;
+  $("c-next").hidden = false;
+  $("c-spent").hidden = true;
+}
+
+$("b-open").addEventListener("click", function(){
+  var r = S.r1;
+  /* The budget is refused here as well as on the button. Disabling a
+     control hides an action; this one has to be genuinely unavailable. */
+  if (r.opens >= BUDGET) return;
+  if (r.choices.length > r.idx) return;
+
+  r.opens += 1;
+  r.choices.push({ id: r.order[r.idx], open: true });
+  save();
+
+  $("m-budget").textContent = String(BUDGET - r.opens);
+  revealExtract(cardById(r.order[r.idx]));
+});
+
+$("b-pass").addEventListener("click", function(){
+  var r = S.r1;
+  if (r.choices.length > r.idx) return;
+  r.choices.push({ id: r.order[r.idx], open: false });
+  advance();
+});
+
+$("b-next").addEventListener("click", advance);
+
+/* The only way through the deck. It counts up and never down, which is
+   the whole of "a card you passed does not come back". */
+function advance(){
+  S.r1.idx += 1;
+  save();
+  if (S.r1.idx >= S.r1.order.length){ toFinal(); return; }
+  renderCard();
+}
+
+/* ---------------- the final position ---------------- */
+function toFinal(){
+  $("claim-1b").textContent = CLAIM1;
+  $("f-locked").textContent = S.r1.locked;
+  show("final");
+}
+
+$("b-final").addEventListener("click", function(){
+  var t = $("f-final").value.trim();
+  if (!t){ fail("e-final", "Write one sentence before you finish."); $("f-final").focus(); return; }
+  clearFail("e-final");
+  S.r1.final = t;
+  save();
+  toDone();
+});
+
+function toDone(){
+  $("d-opened").textContent = String(S.r1.opens);
+  show("done");
+}
+
+/* ---------------- erase ---------------- */
+$("b-erase").addEventListener("click", function(){
+  if (!window.confirm("Erase everything you have done here and start again? This cannot be undone.")) return;
+  clearState();
+  S = freshState();
+  window.location.reload();
+});
+
+/* ---------------- resume ---------------- */
+/* A reload in the middle of a round puts the student back where they
+   were, on the card they were looking at, with the opens they had left. */
+(function resume(){
+  $("claim-1").textContent = CLAIM1;
+  $("claim-1b").textContent = CLAIM1;
+
+  if (!S.consented || !S.r1 || !S.code){ show("consent"); return; }
+
+  $("f-code").value = S.code || "";
+  $("f-team").value = S.team ? String(S.team) : "";
+
+  if (S.screen === "done" && S.r1.final){ toDone(); return; }
+  if (S.screen === "final" || S.r1.idx >= S.r1.order.length){
+    $("f-position").value = S.r1.locked;
+    toFinal(); return;
+  }
+  if (S.r1.locked){ $("f-position").value = S.r1.locked; toCard(); return; }
+  toPosition();
+})();
+</script>
+
+</body>
+</html>

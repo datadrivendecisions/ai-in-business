@@ -335,7 +335,7 @@ pre.tree {
     <p><strong>Spec.</strong> <code>CL-1</code>&ndash;<code>CL-10</code>, <code>SM-5</code>, <code>SM-6</code>, <code>SM-7</code>, <code>SM-10</code>, <code>SM-11</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 0.1 Draft 3&ndash;4 candidate claims &mdash; <strong>four drawn from the AI Wiki are already written up in <code>work/drafts/week-03-candidate-claims.md</code>, with what is settled and what the pilot must settle</strong> &mdash; each in the form <em>&ldquo;an SME should do X before Y&rdquo;</em> rather than <em>&ldquo;an SME should do X&rdquo;</em>. The comparison form is what makes <code>CL-3</code> satisfiable: almost nobody publishes marketing material arguing against buying software, so a proposition has an easy weak-supporting cell and a near-impossible weak-opposing one, while X and Y each have their own vendors selling against the other.</li>
+      <li>&#9745; 0.1 Draft 3&ndash;4 candidate claims &mdash; <strong>four drawn from the AI Wiki are already written up in <code>work/drafts/week-03-candidate-claims.md</code>, with what is settled and what the pilot must settle</strong> &mdash; each in the form <em>&ldquo;an SME should do X before Y&rdquo;</em> rather than <em>&ldquo;an SME should do X&rdquo;</em>. The comparison form is what makes <code>CL-3</code> satisfiable: almost nobody publishes marketing material arguing against buying software, so a proposition has an easy weak-supporting cell and a near-impossible weak-opposing one, while X and Y each have their own vendors selling against the other.</li>
       <li>&#9744; 0.2 Check each candidate against <code>CL-8</code> (not a team&rsquo;s own handbook topic) and <code>CL-9</code> (professional judgement, not personal values). Discard failures now; they get more expensive later.</li>
       <li>&#9744; 0.3 Pilot each survivor on &ge; 10 people: read the claim, commit to a side, hands up. Record the split and how long people took. Discard anything that splits worse than 70/30 (<code>CL-1</code>) or that people cannot answer inside a minute (<code>CL-10</code>).</li>
       <li>&#9744; 0.4 Of what is left, pick the two whose splits are closest to each other (<code>CL-7</code>) and which share no subject matter (<code>CL-6</code>).</li>
@@ -369,30 +369,30 @@ pre.tree {
     <p><strong>Spec.</strong> <code>SM-1</code>, <code>SM-2</code>, <code>SM-3</code>, <code>SM-4</code>, <code>SM-9</code>, <code>DA-1</code>, <code>DA-2</code>, <code>DA-4</code>, <code>DA-5</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 1.1 Create the file; copy the token block, <code>bds-nav</code> and <code>bds-footer</code> from <code>site/index.html</code>.</li>
-      <li>&#9744; 1.2 Copy <code>loadState/saveState/clearState</code> from <code>tool-ai-worker-maturity.html</code>. One key.</li>
+      <li>&#9745; 1.1 Create the file; copy the token block, <code>bds-nav</code> and <code>bds-footer</code> from <code>site/index.html</code>.</li>
+      <li>&#9745; 1.2 Copy <code>loadState/saveState/clearState</code> from <code>tool-ai-worker-maturity.html</code>. One key.</li>
       <li>&#9744; 1.3 Embed deck 1 as data. No stance or quality fields in the file.</li>
-      <li>&#9744; 1.4 Consent screen, with the storage sentence and a code field. No name field.</li>
-      <li>&#9744; 1.5 Position screen; lock the sentence once submitted.</li>
-      <li>&#9744; 1.6 Shuffle the 16 cards; store the order.</li>
-      <li>&#9744; 1.7 Card screen: open or pass, a counter, no way back to a passed card.</li>
-      <li>&#9744; 1.8 Refuse the 9th open.</li>
-      <li>&#9744; 1.9 Final position screen and a finish screen.</li>
-      <li>&#9744; 1.10 A single control that erases everything.</li>
+      <li>&#9745; 1.4 Consent screen, with the storage sentence and a code field. No name field.</li>
+      <li>&#9745; 1.5 Position screen; lock the sentence once submitted.</li>
+      <li>&#9745; 1.6 Shuffle the 16 cards; store the order.</li>
+      <li>&#9745; 1.7 Card screen: open or pass, a counter, no way back to a passed card.</li>
+      <li>&#9745; 1.8 Refuse the 9th open.</li>
+      <li>&#9745; 1.9 Final position screen and a finish screen.</li>
+      <li>&#9745; 1.10 A single control that erases everything.</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 20 fresh sessions give &ge; 19 distinct orders (<code>SM-2</code>, test)</li>
-      <li>&#9744; The shown order is in stored state, 20 of 20 (<code>SM-9</code>, test)</li>
-      <li>&#9744; The 9th open refused, 100 of 100 (<code>SM-3</code>, test)</li>
-      <li>&#9744; 0 paths back to a passed card (<code>SM-4</code>, test)</li>
-      <li>&#9744; 1 storage key, 0 cookies (<code>DA-1</code>, test)</li>
-      <li>&#9744; Consent is the 1st screen (<code>DA-2</code>, inspection)</li>
-      <li>&#9744; Storage statement present, &le; 60 words (<code>DA-5</code>, inspection)</li>
+      <li>&#9745; 20 fresh sessions give &ge; 19 distinct orders (<code>SM-2</code>, test)</li>
+      <li>&#9745; The shown order is in stored state, 20 of 20 (<code>SM-9</code>, test)</li>
+      <li>&#9745; The 9th open refused, 100 of 100 (<code>SM-3</code>, test)</li>
+      <li>&#9745; 0 paths back to a passed card (<code>SM-4</code>, test)</li>
+      <li>&#9745; 1 storage key, 0 cookies (<code>DA-1</code>, test)</li>
+      <li>&#9745; Consent is the 1st screen (<code>DA-2</code>, inspection)</li>
+      <li>&#9745; Storage statement present, &le; 60 words (<code>DA-5</code>, inspection)</li>
       <li>&#9744; Tester steps above, by someone who did not write the code</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="p2">
