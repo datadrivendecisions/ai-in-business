@@ -500,7 +500,7 @@ input[type="number"] {
     <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not finished.</strong> Both rounds run and both decks are real: every extract is quoted from the document it names, and every link goes to that document. At the end you get one line of result. The button that sends it is built, and the service behind it is written and tested but not yet standing up anywhere &mdash; so until an owner puts its address in this page, the tool sends nothing and you copy the line yourself. The owners&rsquo; live dashboard is the last part still missing.</p>
+  <p class="tpl-notice"><strong>Not piloted.</strong> Everything on this page is built and both decks are real: every extract is quoted from the document it names, and every link goes to that document. Two things are still open, and neither is code. The two claims have not been piloted on a room, so nobody yet knows whether either of them divides one. And the service that collects the results is written but not standing up anywhere &mdash; until an owner puts its address in this page it sends nothing at all, and you copy your line and hand it in yourself.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -871,6 +871,27 @@ input[type="number"] {
       <textarea id="f-codebook" spellcheck="false"></textarea>
     </div>
 
+    <!-- The live feed. Since ADR-0016 this is the ordinary path and the
+         paste box below it is the fallback, which is why the paste box was
+         built first: it is the arithmetic both of them need, and it can be
+         tested with no infrastructure at all. -->
+    <h3>The live feed</h3>
+    <p class="note">Submissions as they land. The token is the owners&rsquo; one, out of Secret Manager; it is held in this tab for as long as the tab is open and written nowhere.</p>
+    <div class="field">
+      <label for="f-token">Owner token
+        <span class="hint">Nothing is fetched without it, and the service refuses an anonymous read.</span>
+      </label>
+      <input type="text" id="f-token" autocomplete="off" spellcheck="false" />
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="b-live">Watch it fill up</button>
+      <button type="button" class="btn btn-secondary" id="b-live-stop" hidden>Stop watching</button>
+      <span class="copied" id="m-live"></span>
+    </div>
+    <p class="note" id="m-live-detail" hidden></p>
+
+    <h3 style="margin-top:var(--space-8)">Or paste the lines</h3>
+    <p class="note">What to do when the service is down, and what to do if it never goes up. The arithmetic below is the same either way; only where the numbers came from differs.</p>
     <div class="field">
       <label for="f-lines">The result lines
         <span class="hint">One per student, one per line. Blank lines are skipped; anything else that will not parse is listed back rather than dropped.</span>
@@ -880,7 +901,12 @@ input[type="number"] {
 
     <div class="btn-row">
       <button type="button" class="btn" id="b-analyse">Work it out</button>
-      <button type="button" class="btn btn-secondary" id="b-demo">Load a fixture</button>
+      <select id="f-demo" aria-label="Which fixture">
+        <option value="below">Fixture: interval below zero</option>
+        <option value="above">Fixture: interval above zero</option>
+        <option value="spanning">Fixture: interval spanning zero</option>
+      </select>
+      <button type="button" class="btn btn-secondary" id="b-demo">Load it</button>
     </div>
 
     <p class="err" id="e-an" role="alert" hidden></p>
@@ -939,6 +965,17 @@ input[type="number"] {
       <div class="warn">
         <p id="an-question"></p>
       </div>
+      <!-- SV-9, SV-10. One of a fixed set of sentences, chosen by where the
+           interval sits, and it cannot render without the two numbers it
+           turns on. Nothing here is composed: which sentence appears is a
+           function of the arithmetic, and the whole set is in the script
+           for anyone who wants to check it holds no verdict. -->
+      <div class="status" id="an-interp" hidden>
+        <p class="bds-eyebrow" id="an-interp-which"></p>
+        <p id="an-interp-text"></p>
+        <p class="note" id="an-interp-numbers"></p>
+      </div>
+
       <div class="field">
         <label for="f-reading">Write the room&rsquo;s answer here
           <span class="hint">This box is a scratchpad. It is not saved and it is not sent anywhere; it is here so the sentence gets written by the people who saw the session.</span>
@@ -2448,6 +2485,12 @@ function kappa2x2(a, b, c, d){
    state; it is arithmetic. */
 window.BXP = {
   parseCodebook: parseCodebook, parseLine: parseLine, roundIndex: roundIndex,
+  /* Declared further down and read through a getter, because this object is
+     built before they exist and `var` would hand out an undefined. */
+  get INTERPRETATIONS(){ return INTERPRETATIONS; },
+  chooseInterpretation: chooseInterpretation,
+  governingNumbers: governingNumbers, recordFromRow: recordFromRow,
+  get FIXTURES(){ return FIXTURES; },
   pairUp: pairUp, summarise: summarise, kappa2x2: kappa2x2,
   detectableEffect: detectableEffect, pairedPower: pairedPower,
   nctCdf: nctCdf, normCdf: normCdf, tinv: tinv, tcdf: tcdf,
@@ -2481,28 +2524,145 @@ function drawBar(id, valueId, v){
   $(valueId).textContent = fmt(v, 3);
 }
 
-$("b-analyse").addEventListener("click", function(){
-  clearFail("e-an");
+/* ================================================================
+   The interpretation.
+
+   SV-9 says the sentence is chosen from a fixed set and never composed.
+   SV-10 says it does not render without the two numbers it turns on. Both
+   are held structurally rather than by discipline: a template is a
+   `text(n)` function over the numbers it needs, the renderer computes those
+   numbers first and refuses to draw anything if any of them is missing, and
+   there is no path from here to a string built out of anything else.
+
+   AN-3 still governs. Not one of these states a finding about assistants
+   and bias: each says what an interval of this width over a sample of this
+   size does and does not license, which is a fact about the instrument and
+   not about the world. ADR-0016 asked for exactly that — "each says what
+   the data cannot distinguish as well as what it can" — and an
+   underpowered study usually licenses very little, which is the point.
+
+   The regions are where the interval sits relative to zero. An earlier
+   draft had a fourth, for an interval narrower than the smallest difference
+   this many pairs could have caught, and that region does not exist: a 95%
+   interval is about 1.4 times the width of an 80%-power detectable effect
+   at every sample size — 1.52 at n = 3, 1.41 at n = 32, 1.40 at n = 2000,
+   because both are fixed multiples of the same standard error. The
+   template could never have been selected. What it was reaching for is now
+   said inside the spanning sentence instead, where it is a fact about
+   intervals rather than a verdict on the session.
+   ================================================================ */
+var INTERPRETATIONS = [
+  {
+    id: "below",
+    when: function(n){ return n.hi < 0; },
+    text: function(n){
+      return "Every value in the interval is below zero, so these " + n.pairs + " pairs are hard to " +
+             "account for by a difference of zero. The interval runs from " + n.loText + " to " + n.hiText +
+             ", which is the range this sample does not rule out: it does not say where in that " +
+             "range the truth sits, and it says nothing at all about why.";
+    }
+  },
+  {
+    id: "above",
+    when: function(n){ return n.lo > 0; },
+    text: function(n){
+      return "Every value in the interval is above zero, so these " + n.pairs + " pairs are hard to " +
+             "account for by a difference of zero — in the opposite direction to the one the session " +
+             "was set up to look for. The interval runs from " + n.loText + " to " + n.hiText + ", which is " +
+             "the range this sample does not rule out.";
+    }
+  },
+  {
+    id: "spans",
+    when: function(n){ return n.lo <= 0 && n.hi >= 0; },
+    text: function(n){
+      return "The interval spans zero, so these " + n.pairs + " pairs do not separate a difference of " +
+             "zero from the differences at either end of it: everything between " + n.loText + " and " +
+             n.hiText + " is still on the table. It is also wider than the smallest difference " +
+             n.pairs + " pairs could have caught, and that is arithmetic rather than a fault — a 95% " +
+             "interval runs about 1.4 times that width whatever the sample size. Nothing follows about " +
+             "whether a difference exists; only that a room this size could not have settled it.";
+    }
+  }
+];
+
+/* The two numbers every one of them turns on, or null if any is missing.
+   Returning null rather than a blank is what makes SV-10 a property of the
+   code: a template has nothing to render into, so it does not render. */
+function governingNumbers(st){
+  if (!st || st.n < 2) return null;
+  var needed = [st.lo, st.hi, st.mdeUnits, st.sdDiff];
+  for (var i = 0; i < needed.length; i++){
+    if (needed[i] === null || needed[i] === undefined || !isFinite(needed[i])) return null;
+  }
+  /* Numbers for the deciding, strings for the reading, and the two kept
+     apart on purpose. A first draft formatted them first and then asked
+     whether "-0.100" was below zero, which is a string comparison: three of
+     the four regions silently stopped matching and the one that still did
+     matched by coercion. */
+  return {
+    pairs: st.n,
+    lo: st.lo, hi: st.hi, mde: st.mdeUnits,
+    loText: fmt(st.lo, 3), hiText: fmt(st.hi, 3), mdeText: fmt(st.mdeUnits, 3)
+  };
+}
+
+function chooseInterpretation(st){
+  var n = governingNumbers(st);
+  if (!n) return null;
+  for (var i = 0; i < INTERPRETATIONS.length; i++){
+    if (INTERPRETATIONS[i].when(n)) return { pick: INTERPRETATIONS[i], numbers: n, at: i };
+  }
+  return null;
+}
+
+function renderInterpretation(st){
+  var chosen = chooseInterpretation(st);
+  var box = $("an-interp");
+  if (!chosen){
+    /* No numbers, no sentence. Not an empty sentence, and not a hedged
+       one: the panel is not there. */
+    $("an-interp-which").textContent = "";
+    $("an-interp-text").textContent = "";
+    $("an-interp-numbers").textContent = "";
+    box.hidden = true;
+    return null;
+  }
+  var n = chosen.numbers;
+  $("an-interp-which").textContent =
+    "What the interval permits — sentence " + (chosen.at + 1) + " of " +
+    INTERPRETATIONS.length + " (" + chosen.pick.id + ")";
+  $("an-interp-text").textContent = chosen.pick.text(n);
+  $("an-interp-numbers").textContent =
+    "95% interval " + n.loText + " to " + n.hiText + " · smallest difference " + n.pairs +
+    " pairs could have caught " + n.mdeText + " index points. Neither of those two numbers " +
+    "is decoration: the sentence above was chosen by them and cannot be shown without them.";
+  box.hidden = false;
+  return chosen;
+}
+
+/* The codebook, read once and complained about once, whichever way the
+   records arrived. */
+function readCodebook(){
   var book = parseCodebook($("f-codebook").value);
   if (book.n === 0){
     /* No worked example here either: naming a card beside a cell would be
        the answer key, on the one page that must not hold it. */
     fail("e-an", "No card codes found. A line is read when it carries a card id and then that card's cell code — which is what every row of the codebook's two tables does.");
-    $("f-codebook").focus();
-    return;
+    return null;
   }
   if (book.duplicates.length){
     fail("e-an", "These cards are coded more than once, and the last one wins: " + book.duplicates.join(", ") + ". Check the paste before you read anything below.");
   }
+  return book;
+}
 
-  var accepted = [], rejected = [];
-  $("f-lines").value.split(/\r?\n/).forEach(function(raw, i){
-    if (!raw.trim()) return;
-    var out = parseLine(raw);
-    if (out.error) rejected.push({ n: i + 1, why: out.error, text: raw.trim() });
-    else accepted.push(out.rec);
-  });
-
+/* Everything below here is a function of (records, codebook) and has no
+   idea where the records came from. That is what lets the dashboard reuse
+   the arithmetic phase 5 proved rather than agree with it by coincidence:
+   there is one implementation, and the paste box and the live feed are two
+   ways of filling its argument. */
+function renderAnalysis(accepted, rejected, book){
   var up = pairUp(accepted, book.map);
   up.dropped.forEach(function(d){ rejected.push({ n: null, why: d.why, text: d.code }); });
 
@@ -2538,6 +2698,7 @@ $("b-analyse").addEventListener("click", function(){
     drawBar("bar-ask", "val-ask", 0);
     drawBar("bar-none", "val-none", 0);
     $("an-question").textContent = "Two pairs are the fewest this can work with, and there are " + st.n + ". What would you need before the room could read anything off a comparison at all?";
+    renderInterpretation(st);
     return;
   }
 
@@ -2566,6 +2727,157 @@ $("b-analyse").addEventListener("click", function(){
     fmt(st.mdeUnits, 3) + " index points. Two questions for the room. Which of the values inside that interval " +
     "would have changed the advice you would give an SME? And if more than one of them would, what would this " +
     "session have to do differently to tell those values apart?";
+
+  renderInterpretation(st);
+}
+
+/* ================================================================
+   The live feed.
+
+   One route, polled. It asks the service for its rows and turns each into
+   the same record shape the paste box produces, so everything downstream —
+   the pairing, the index, the interval, the detectable effect, the
+   sentence — is the code phase 5 already proved against a scipy reference.
+   There is no second implementation to agree with the first.
+
+   The token lives in a variable for as long as the tab is open. It is not
+   put in localStorage: a token that outlives the session is a token
+   somebody finds on a shared laptop in December.
+   ================================================================ */
+var LIVE = { timer: null, token: "", lastCount: -1, failures: 0 };
+var LIVE_EVERY_MS = 5000;        // SV-7 asks for 10 seconds; this is half
+var LIVE_GIVE_UP_AFTER = 5;      // consecutive failures
+
+/* A stored row, in the shape the rest of this page reads. The service holds
+   the session's numbers and no opinion about them, so this is a rename and
+   not a translation — except for the side, which the line format spells
+   'a'/'d' and everything downstream spells out. */
+function recordFromRow(row){
+  function side(x){ return x === "a" ? "agree" : "disagree"; }
+  return {
+    code: row.id,
+    team: row.team,
+    rounds: row.rounds.map(function(r){
+      return {
+        round: r.n,
+        agent: !!r.agent,
+        claim: "c" + r.claim,
+        side: side(r.side),
+        opened: r.opened.length,
+        ids: r.opened.slice(),
+        secs: r.seconds,
+        endSide: side(r.endSide),
+        moved: !!r.moved,
+        tlx: r.tlx,
+        q: r.q
+      };
+    })
+  };
+}
+
+function liveSay(message, detail){
+  $("m-live").textContent = message;
+  $("m-live-detail").textContent = detail || "";
+  $("m-live-detail").hidden = !detail;
+}
+
+function stopLive(why){
+  if (LIVE.timer){ window.clearInterval(LIVE.timer); LIVE.timer = null; }
+  $("b-live").hidden = false;
+  $("b-live-stop").hidden = true;
+  if (why) liveSay("Not watching.", why);
+}
+
+function pollOnce(book){
+  if (typeof window.fetch !== "function"){
+    stopLive("This browser cannot fetch. Use the paste box.");
+    return;
+  }
+  window.fetch(SERVICE.origin + SERVICE.dashboard, {
+    method: "GET",
+    headers: { "Authorization": "Bearer " + LIVE.token },
+    mode: "cors", credentials: "omit", cache: "no-store"
+  }).then(function(response){
+    if (response.status === 401){
+      stopLive("The service refused that token. Check it and try again.");
+      return null;
+    }
+    if (!response.ok){
+      LIVE.failures += 1;
+      liveSay("Watching.", "The service answered " + response.status + ". Still trying.");
+      if (LIVE.failures >= LIVE_GIVE_UP_AFTER){
+        stopLive("The service kept refusing. Fall back to the paste box below.");
+      }
+      return null;
+    }
+    return response.json();
+  }).then(function(body){
+    if (!body) return;
+    LIVE.failures = 0;
+    var accepted = [], rejected = [];
+    body.rows.forEach(function(row){
+      try { accepted.push(recordFromRow(row)); }
+      catch (e) { rejected.push({ n: null, why: "the service sent a row this page cannot read", text: row.id || "?" }); }
+    });
+    liveSay(body.count + (body.count === 1 ? " submission." : " submissions."),
+            LIVE.lastCount >= 0 && body.count !== LIVE.lastCount
+              ? ((body.count > LIVE.lastCount ? "+" : "") + (body.count - LIVE.lastCount) + " since the last look."
+                 + " Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.")
+              : "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
+    LIVE.lastCount = body.count;
+    renderAnalysis(accepted, rejected, book);
+  }, function(){
+    LIVE.failures += 1;
+    liveSay("Watching.", "The service could not be reached. Still trying.");
+    if (LIVE.failures >= LIVE_GIVE_UP_AFTER){
+      stopLive("The service could not be reached. Fall back to the paste box below.");
+    }
+  });
+}
+
+$("b-live").addEventListener("click", function(){
+  clearFail("e-an");
+  if (!serviceOn()){
+    fail("e-an", "There is no service address in this page, so there is nothing to watch. Use the paste box below.");
+    return;
+  }
+  var token = $("f-token").value.trim();
+  if (!token){
+    fail("e-an", "The dashboard needs the owners' token. The service refuses an anonymous read, which is the point of it.");
+    $("f-token").focus();
+    return;
+  }
+  var book = readCodebook();
+  if (!book){ $("f-codebook").focus(); return; }
+
+  LIVE.token = token;
+  LIVE.failures = 0;
+  LIVE.lastCount = -1;
+  $("b-live").hidden = true;
+  $("b-live-stop").hidden = false;
+  liveSay("Watching.", "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
+  pollOnce(book);
+  LIVE.timer = window.setInterval(function(){ pollOnce(book); }, LIVE_EVERY_MS);
+});
+
+$("b-live-stop").addEventListener("click", function(){
+  stopLive("Stopped. What is on screen is the last look.");
+});
+
+$("b-analyse").addEventListener("click", function(){
+  clearFail("e-an");
+  var book = readCodebook();
+  if (!book){ $("f-codebook").focus(); return; }
+
+  var accepted = [], rejected = [];
+  $("f-lines").value.split(/\r?\n/).forEach(function(raw, i){
+    if (!raw.trim()) return;
+    var out = parseLine(raw);
+    if (out.error) rejected.push({ n: i + 1, why: out.error, text: raw.trim() });
+    else accepted.push(out.rec);
+  });
+  stopLive("A paste replaces the live feed. Connect again to go back to it.");
+  renderAnalysis(accepted, rejected, book);
 });
 
 /* ---------------- kappa ---------------- */
@@ -2587,13 +2899,21 @@ $("b-kappa").addEventListener("click", function(){
   $("k-out").hidden = false;
 });
 
-/* ---------------- a fixture, for a dry run ---------------- */
-/* Thirty-two lines built from a fixed seed, so the same button always
-   produces the same room. It is here to rehearse the ten minutes
-   between the last student finishing and the comparison going up, which
-   is the part of the session that has no slack in it. The real fixtures
-   with their reference values live beside the build plan; this one
-   exists so an owner can see the screen fill up. */
+/* ---------------- fixtures, for a dry run ---------------- */
+/* Four rooms, one per region of the interval, so an owner can rehearse the
+   ten minutes between the last student finishing and the comparison going
+   up — and, more to the point, can see the interpretation sentence change
+   under them before thirty-two people are watching.
+
+   The region a fixture lands in is a fact about the codebook, not about the
+   lines: whether a card was congenial depends on the answer key, which is
+   not in this page. So a fixture is built *against the codebook the owner
+   has pasted*, which is also why the button asks for it first. A fixture
+   that hard-coded its own cells would be an answer key by another name.
+
+   Fixed seeds, so the same choice always produces the same room. The
+   fixtures with reference values live beside the build plan; these exist so
+   a screen fills up. */
 function seeded(seed){
   return function(){
     seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
@@ -2603,8 +2923,41 @@ function seeded(seed){
   };
 }
 
-$("b-demo").addEventListener("click", function(){
-  var rnd = seeded(20260915);
+var FIXTURES = {
+  below:    { seed: 20260915, ask: 0.25, none: 0.85, jitter: 0.06,
+              says: "the assistant's round less congenial, by a margin this many pairs can see" },
+  above:    { seed: 20260916, ask: 0.85, none: 0.25, jitter: 0.06,
+              says: "the difference in the other direction" },
+  spanning: { seed: 20260917, ask: 0.55, none: 0.55, jitter: 0.34,
+              says: "no difference in the middle, and people varying too much to tell" }
+};
+
+/* k cards from the deck, each congenial with probability p, given the
+   codebook and the side this student took. Falls back to whatever is left
+   when a cell runs out, which is what a real session does too. */
+function fixtureCards(deck, book, side, p, k, rnd){
+  var yes = [], no = [];
+  deck.forEach(function(c){
+    var cell = book[c.id];
+    if (!cell) return;
+    (congenial(cell, side) ? yes : no).push(c.id);
+  });
+  function draw(pool){
+    if (!pool.length) return null;
+    return pool.splice(Math.floor(rnd() * pool.length), 1)[0];
+  }
+  var picked = [];
+  while (picked.length < k){
+    var want = rnd() < p;
+    var id = draw(want ? yes : no) || draw(want ? no : yes);
+    if (!id) break;
+    picked.push(id);
+  }
+  return picked;
+}
+
+function fixtureLines(spec, book){
+  var rnd = seeded(spec.seed);
   var words = ["kite","pumice","bramble","gannet","quartz","lintel","mallow","osprey","tundra","verger",
                "willow","yarrow","zephyr","alder","birch","cedar","damson","elder","fennel","gorse",
                "hazel","ilex","juniper","kelp","larch","medlar","nettle","oleander","privet","quince",
@@ -2612,24 +2965,25 @@ $("b-demo").addEventListener("click", function(){
   var lines = [];
   for (var i = 0; i < 32; i++){
     var team = (i % 8) + 1;
-    var agentRound = team <= 4 ? 2 : 1;
+    var agentRound = agentRoundFor(team);
+    /* One offset per student, applied to both of their rounds, so the
+       jitter is between people rather than inside them. That is what makes
+       the paired interval wide or narrow, which is the whole point of
+       having a wide fixture and a tight one. */
+    var offset = (rnd() - 0.5) * 2 * spec.jitter;
     var blocks = [];
     for (var n = 1; n <= 2; n++){
       var deck = n === 1 ? DECK1 : DECK2;
-      var side = rnd() < 0.5 ? "a" : "d";
-      var ids = deck.map(function(c){ return c.id; });
-      for (var k = ids.length - 1; k > 0; k--){
-        var j = Math.floor(rnd() * (k + 1));
-        var tmp = ids[k]; ids[k] = ids[j]; ids[j] = tmp;
-      }
-      var opened = ids.slice(0, 6 + Math.floor(rnd() * 3));
-      if (opened.length > 8) opened = opened.slice(0, 8);
-      var end = rnd() < 0.15 ? (side === "a" ? "d" : "a") : side;
+      var side = rnd() < 0.5 ? "agree" : "disagree";
+      var p = Math.max(0, Math.min(1, (agentRound === n ? spec.ask : spec.none) + offset));
+      var k = 6 + Math.floor(rnd() * 3);
+      var opened = fixtureCards(deck, book, side, p, k, rnd);
+      var end = rnd() < 0.15 ? (side === "agree" ? "d" : "a") : sideLetter(side);
       blocks.push([
         "r" + n,
         agentRound === n ? "ask" : "none",
         "c" + n,
-        "pos" + side,
+        "pos" + sideLetter(side),
         "op" + opened.length,
         "ids=" + opened.join(","),
         "s" + (90 + Math.floor(rnd() * 200)),
@@ -2641,11 +2995,22 @@ $("b-demo").addEventListener("click", function(){
     }
     lines.push(["v1", words[i], "t" + team, blocks[0], blocks[1]].join("|"));
   }
-  $("f-lines").value = lines.join("\n");
-  if (!$("f-codebook").value.trim()){
-    fail("e-an", "Thirty-two lines loaded. The codebook is still empty — paste the two tables from work/drafts/week-03-codebook.md above, then press Work it out.");
+  return lines;
+}
+
+$("b-demo").addEventListener("click", function(){
+  clearFail("e-an");
+  var book = readCodebook();
+  if (!book){
+    fail("e-an", "A fixture is built against the codebook, because whether a card was congenial is not something this page knows. Paste the codebook above first, then load one.");
     $("f-codebook").focus();
+    return;
   }
+  var spec = FIXTURES[$("f-demo").value] || FIXTURES.below;
+  $("f-lines").value = fixtureLines(spec, book.map).join("\n");
+  liveSay("", "");
+  stopLive("A fixture replaces the live feed. Connect again to go back to it.");
+  $("b-analyse").click();
 });
 
 /* ---------------- resume ---------------- */

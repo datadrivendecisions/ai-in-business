@@ -578,6 +578,160 @@ function answerQuestions(p, v) {
      p.text("storage-statement").includes("sent nowhere"), p.text("storage-statement"));
 }
 
+/* ---- SV-9, SV-10, AN-2: the dashboard and what it is allowed to say ---- */
+{
+  console.log("\nSV-9, SV-10, AN-2 — the dashboard and the sentences it may say");
+  const B = makePage().sandbox.window.BXP;
+
+  // SV-9: a fixed set, and every sentence that appears is one of them.
+  const regions = [
+    ["interval entirely below zero", { n: 20, lo: -0.40, hi: -0.10, mdeUnits: 0.30, sdDiff: 0.5 }],
+    ["interval entirely above zero", { n: 20, lo: 0.10, hi: 0.40, mdeUnits: 0.30, sdDiff: 0.5 }],
+    ["interval spanning zero",       { n: 20, lo: -0.40, hi: 0.40, mdeUnits: 0.30, sdDiff: 0.5 }],
+  ];
+  const chosen = regions.map(([, st]) => B.chooseInterpretation(st));
+  ok("3 fixtures produce 3 chosen sentences", chosen.every(Boolean),
+     JSON.stringify(chosen.map((c) => c && c.pick.id)));
+  ok("3 different sentences, 0 repeats",
+     new Set(chosen.map((c) => c.pick.id)).size === 3,
+     chosen.map((c) => c.pick.id).join(", "));
+
+  /* Every stored sentence must be reachable. A template nobody can select
+     reads like a case the page handles and is dead code — which is what the
+     fourth one was: an interval narrower than the smallest detectable effect
+     cannot happen, because a 95% interval is about 1.4 times that width at
+     every sample size, both being fixed multiples of the same standard
+     error. This check is here so the next one added has to prove it can
+     appear. */
+  const seen = new Set();
+  const sd = 0.5;
+  // Sample sizes rather than every integer: detectableEffect solves a
+  // non-central t numerically, and the regions turn on the sign structure of
+  // the interval, which does not hide between n = 41 and n = 42.
+  for (const n of [3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 40, 64, 100, 200, 500]) {
+    const half = B.tinv(0.975, n - 1) * sd / Math.sqrt(n);
+    const mde = B.detectableEffect(n) * sd;
+    for (const centre of [-2, -1, -0.3, -0.05, 0, 0.05, 0.3, 1, 2]) {
+      const c = B.chooseInterpretation({ n, lo: centre - half, hi: centre + half,
+                                         mdeUnits: mde, sdDiff: sd });
+      if (c) seen.add(c.pick.id);
+    }
+  }
+  ok(`all ${B.INTERPRETATIONS.length} stored sentences are reachable by some real summary`,
+     seen.size === B.INTERPRETATIONS.length,
+     "reachable: " + [...seen].join(", ") + " of " + B.INTERPRETATIONS.map((t) => t.id).join(", "));
+  ok("every one comes out of the stored set, 0 composed",
+     chosen.every((c) => B.INTERPRETATIONS.indexOf(c.pick) >= 0));
+  ok("the rendered text is the template's own output, character for character",
+     chosen.every((c) => c.pick.text(c.numbers) === c.pick.text(c.numbers)
+                      && typeof c.pick.text(c.numbers) === "string"));
+
+  // SV-10: nothing renders without both governing numbers.
+  const crippled = [
+    ["no interval low end",  { n: 20, lo: null, hi: 0.4, mdeUnits: 0.3, sdDiff: 0.5 }],
+    ["no interval high end", { n: 20, lo: -0.4, hi: null, mdeUnits: 0.3, sdDiff: 0.5 }],
+    ["no detectable effect", { n: 20, lo: -0.4, hi: 0.4, mdeUnits: null, sdDiff: 0.5 }],
+    ["a NaN detectable effect", { n: 20, lo: -0.4, hi: 0.4, mdeUnits: NaN, sdDiff: 0.5 }],
+    ["an infinite interval", { n: 20, lo: -Infinity, hi: 0.4, mdeUnits: 0.3, sdDiff: 0.5 }],
+    ["one pair",             { n: 1 }],
+    ["no pairs",             { n: 0 }],
+  ];
+  const rendered = crippled.filter(([, st]) => B.chooseInterpretation(st) !== null);
+  ok("7 summaries missing a governing number, 0 render a sentence",
+     rendered.length === 0, rendered.map((r) => r[0]).join(", "));
+
+  // AN-3 still governs the set: none of them states a finding.
+  const verdicts = [
+    "the assistant reduced", "the assistant increased", "proves", "shows that",
+    "we can conclude", "therefore the assistant", "confirms", "demonstrates that",
+    "students who used", "the effect is real", "significant effect of",
+  ];
+  const offending = [];
+  for (const t of B.INTERPRETATIONS) {
+    const text = t.text({ pairs: 20, loText: "−0.100", hiText: "0.100", mdeText: "0.300",
+                          lo: -0.1, hi: 0.1, mde: 0.3, widerThanDetectable: true }).toLowerCase();
+    for (const v of verdicts) if (text.includes(v)) offending.push(t.id + ": " + v);
+  }
+  ok(`${B.INTERPRETATIONS.length} stored sentences, 0 carrying a verdict phrase`,
+     offending.length === 0, offending.join(" | "));
+  ok("every stored sentence names what the data cannot do",
+     B.INTERPRETATIONS.every((t) => {
+       const text = t.text({ pairs: 20, loText: "a", hiText: "b", mdeText: "c",
+                             lo: -1, hi: 1, mde: 0.3, widerThanDetectable: true }).toLowerCase();
+       return /does not|cannot|nothing follows|rules out|remains on the table|not rule out/.test(text);
+     }));
+
+  // AN-2: the live path and the paste path are the same arithmetic, not two
+  // implementations that happen to agree. Build records, turn them into the
+  // rows the service would hold, turn those back, and compare the summary.
+  const book = {};
+  const cells = [["A", "S"], ["A", "W"], ["NA", "S"], ["NA", "W"]];
+  for (const claim of [1, 2]) {
+    for (let i = 1; i <= 16; i++) {
+      const [stance, quality] = cells[(i - 1) % 4];
+      book[`c${claim}-${String(i).padStart(2, "0")}`] = { stance, quality };
+    }
+  }
+  const rnd = (() => { let x = 12345; return () => (x = (x * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff; })();
+  const records = [];
+  for (let p = 0; p < 24; p++) {
+    const mk = (n, claim, agent) => {
+      const k = 2 + Math.floor(rnd() * 7);
+      const ids = [];
+      while (ids.length < k) {
+        const id = `c${claim}-${String(1 + Math.floor(rnd() * 16)).padStart(2, "0")}`;
+        if (!ids.includes(id)) ids.push(id);
+      }
+      return { round: n, agent, claim: "c" + claim, side: rnd() < 0.5 ? "agree" : "disagree",
+               opened: ids.length, ids, secs: 60 + Math.floor(rnd() * 200),
+               endSide: rnd() < 0.5 ? "agree" : "disagree", moved: rnd() < 0.5,
+               tlx: Math.floor(rnd() * 101), q: 2 + Math.floor(rnd() * 13) };
+    };
+    const agentFirst = p % 2 === 0;
+    records.push({ code: "p" + p, team: (p % 8) + 1,
+                   rounds: [mk(1, 1, agentFirst), mk(2, 2, !agentFirst)] });
+  }
+
+  // The shape the service stores, built from the same records.
+  const asRows = records.map((rec) => ({
+    id: rec.code, team: rec.team, at: 1,
+    rounds: rec.rounds.map((r) => ({
+      n: r.round, agent: r.agent, claim: Number(r.claim.slice(1)),
+      side: r.side === "agree" ? "a" : "d", opened: r.ids.slice(), seconds: r.secs,
+      endSide: r.endSide === "agree" ? "a" : "d", moved: r.moved, tlx: r.tlx, q: r.q,
+    })),
+  }));
+  const viaLive = asRows.map((row) => B.recordFromRow(row));
+
+  const pasted = B.summarise(B.pairUp(records, book).pairs);
+  const live = B.summarise(B.pairUp(viaLive, book).pairs);
+
+  const keys = Object.keys(pasted).filter((k) => typeof pasted[k] === "number");
+  const off = keys.filter((k) => {
+    const a = pasted[k], b = live[k];
+    return !(a === b || (a !== null && b !== null && Math.abs(a - b) < 5e-4));
+  });
+  ok(`${keys.length} figures, live feed against paste box, all equal to 3 dp on 24 pairs`,
+     off.length === 0 && pasted.n === 24, off.join(", ") + " n=" + pasted.n);
+  ok("and the same sentence is selected from both",
+     B.chooseInterpretation(pasted).pick.id === B.chooseInterpretation(live).pick.id);
+
+  // A row the service could not have produced is listed, not silently dropped.
+  const strayRow = {
+    id: "x", team: 1, at: 1,
+    rounds: [
+      { n: 1, agent: true, claim: 1, side: "a", opened: ["c1-99"], seconds: 1,
+        endSide: "a", moved: false, tlx: 1, q: 2 },
+      { n: 2, agent: false, claim: 2, side: "a", opened: ["c2-01"], seconds: 1,
+        endSide: "a", moved: false, tlx: 1, q: 2 },
+    ],
+  };
+  const strayResult = B.pairUp([B.recordFromRow(strayRow)], book);
+  ok("a row with an unknown card id is listed as dropped, not absorbed",
+     strayResult.pairs.length === 0 && strayResult.dropped.length === 1,
+     JSON.stringify(strayResult.dropped));
+}
+
 console.log();
 if (fails.length) {
   console.log(`${fails.length} failure(s):`);

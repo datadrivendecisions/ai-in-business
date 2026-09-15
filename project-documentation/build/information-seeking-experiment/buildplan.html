@@ -333,7 +333,8 @@ pre.tree {
       runs both rounds, the assistant step, the closing questions and the lecturer view.
       <em>This line replaced &ldquo;no such file exists&rdquo;, which is what it said when the plan
       was written.</em></li>
-      <li><strong>Four checks, beside this plan.</strong> <code>check-measures.py</code> (the
+      <li><strong>Five checks, beside this plan.</strong> <code>check-service.py</code> (every
+      route of the service, driven through WSGI with an injected clock), <code>check-measures.py</code> (the
       arithmetic, against a scipy reference), <code>check-session.mjs</code> (whole sessions
       driven through the page's own code), <code>check-prompt.py</code> (the assistant prompt
       against a verdict word list) and <code>check-presentation.py</code> (the brand block, the
@@ -341,7 +342,8 @@ pre.tree {
       on). All four read the shipped page; the first three evaluate its script in a
       <code>node:vm</code> context with a stub DOM and the fourth runs a small CSS cascade over
       its document tree, so none of them can pass against a copy of the
-      logic that has drifted. There is no package manager here and they need none.</li>
+      logic that has drifted. <code>check-session.mjs</code> also covers the submission and the
+      dashboard, because both are the session&rsquo;s own code. There is no package manager here and they need none.</li>
     </ul>
   </section>
 
@@ -710,25 +712,57 @@ pre.tree {
     <p><strong>Spec.</strong> <code>SV-7</code>&ndash;<code>SV-10</code>, <code>AN-2</code>, <code>AN-4</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 8.1 <code>GET /dashboard</code>, owner authentication, anonymous reads refused (<code>SV-8</code>).</li>
-      <li>&#9744; 8.2 Aggregate the stored submissions using the same arithmetic phase 5 already proved.</li>
-      <li>&#9744; 8.3 Live refresh while a session runs (<code>SV-7</code>).</li>
-      <li>&#9744; 8.4 Write the fixed set of interpretation sentences. One per region of the interval, and each says what the data cannot distinguish as well as what it can (<code>SV-9</code>).</li>
-      <li>&#9744; 8.5 Bind each sentence to its two numbers so neither can be shown without the other (<code>SV-10</code>).</li>
-      <li>&#9744; 8.6 Show which template was selected, and out of how many.</li>
-      <li>&#9744; 8.7 Three fixture datasets, one per region of the interval.</li>
+      <li>&#9745; 8.1 <code>GET /dashboard</code>, owner authentication, anonymous reads refused (<code>SV-8</code>).</li>
+      <li>&#9745; 8.2 Aggregate the stored submissions using the same arithmetic phase 5 already proved.</li>
+      <li>&#9745; 8.3 Live refresh while a session runs (<code>SV-7</code>).</li>
+      <li>&#9745; 8.4 Write the fixed set of interpretation sentences. One per region of the interval, and each says what the data cannot distinguish as well as what it can (<code>SV-9</code>).</li>
+      <li>&#9745; 8.5 Bind each sentence to its two numbers so neither can be shown without the other (<code>SV-10</code>).</li>
+      <li>&#9745; 8.6 Show which template was selected, and out of how many.</li>
+      <li>&#9745; 8.7 Three fixture datasets, one per region of the interval.</li>
     </ul>
+    <p><strong>Where this stands.</strong> Built, machine-checked, and driven in a real browser
+      against a running service.
+      <br>
+      <strong>&ldquo;Matches phase 5&rsquo;s arithmetic&rdquo; is true by construction rather than by
+      agreement.</strong> The dashboard does not compute anything: it turns each stored row into
+      the record shape the paste box produces and hands it to the same <code>pairUp</code> and
+      <code>summarise</code> that phase 5 checked against scipy. There is one implementation, and
+      the check runs 24 pairs down both paths and compares all 23 figures to 3 dp. A second
+      implementation that happened to agree would be a worse answer to <code>AN-2</code> than this.
+      <br>
+      <strong>One template could never have appeared.</strong> The first draft had four regions,
+      the fourth for an interval narrower than the smallest difference the sample could detect. It
+      is unreachable at every sample size: a 95% interval runs about 1.4 times the width of an
+      80%-power detectable effect &mdash; 1.52 at <em>n</em> = 3, 1.41 at 32, 1.40 at 2000 &mdash;
+      because both are fixed multiples of the same standard error. The fixture built to reach it
+      landed in the spanning region instead, which is how it was caught. The set is three, the
+      fact is now said inside the spanning sentence where it belongs, and a check sweeps sixteen
+      sample sizes to insist every stored sentence is reachable by some real summary. A template
+      nobody can select reads like a case the page handles.
+      <br>
+      <code>SV-10</code> is structural. A template is a function over the numbers it needs, and
+      <code>governingNumbers()</code> returns null if any of them is missing &mdash; so a sentence
+      has nothing to render into and the panel is absent rather than hedged. Seven crippled
+      summaries, 0 sentences drawn.
+      <br>
+      <code>SV-9</code>&rsquo;s other half is <code>AN-3</code>, and they pull against each other:
+      the dashboard must say something, and it must state no finding. What each sentence states is
+      what an interval of that width over a sample of that size does and does not license, which
+      is a fact about the instrument and not about the world. The check runs an 11-phrase verdict
+      list over the set and insists every sentence names something the data cannot do.
+      <br>
+      What is left is the tester walk from two machines, and the deployment.</p>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; 0 anonymous reads accepted (<code>SV-8</code>, test)</li>
-      <li>&#9744; A new submission is visible within 10 seconds (<code>SV-7</code>, demonstration)</li>
-      <li>&#9744; 3 fixtures produce 3 different sentences, all from the stored set; 0 composed (<code>SV-9</code>, inspection)</li>
-      <li>&#9744; 0 interpretations render without both governing numbers (<code>SV-10</code>, test)</li>
-      <li>&#9744; Dashboard arithmetic matches phase 5&rsquo;s on the same 5 datasets to 3 dp (<code>AN-2</code>, test)</li>
+      <li>&#9745; 0 anonymous reads accepted (<code>SV-8</code>, test &mdash; 5 attempts by 5 means, and 401 from a real browser)</li>
+      <li>&#9745; A new submission is visible within 10 seconds (<code>SV-7</code>, demonstration &mdash; measured at 4.27 s, submitted from outside the page; the poll runs every 5 s)</li>
+      <li>&#9745; 3 fixtures produce 3 different sentences, all from the stored set; 0 composed (<code>SV-9</code>, inspection &mdash; and all 3 are reachable, which the 4th was not)</li>
+      <li>&#9745; 0 interpretations render without both governing numbers (<code>SV-10</code>, test &mdash; 7 crippled summaries, 0 sentences)</li>
+      <li>&#9745; Dashboard arithmetic matches phase 5&rsquo;s on the same 5 datasets to 3 dp (<code>AN-2</code>, test &mdash; 23 figures over 24 pairs, both paths, one implementation)</li>
       <li>&#9744; Tester steps above, from two machines</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
   <section id="parallel">
