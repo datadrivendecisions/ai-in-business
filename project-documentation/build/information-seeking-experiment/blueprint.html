@@ -303,7 +303,7 @@ pre.tree {
       <tr><th>Version</th><td>0.1, 14 September 2026</td></tr>
       <tr><th>Implements</th><td><a href="prd.html">PRD &mdash; the bias experiment tool</a></td></tr>
       <tr><th>Serves</th><td>The experiment protocol in <code>work/drafts/week-03-information-seeking-experiment.md</code></td></tr>
-      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored) and the tool rules in <code>CLAUDE.md</code></td></tr>
+      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a> (the service, and the named exception to the no-network rule) and the tool rules in <code>CLAUDE.md</code></td></tr>
       <tr><th>Owner</th><td>The two module owners; the AIBS owner runs the session</td></tr>
     </tbody></table></div>
   </section>
@@ -323,7 +323,9 @@ pre.tree {
         <tr><th>Card deck</th><td>Holds 32 cards as data: 2 claims &times; 16. Title, outlet, year, teaser, extract, link.</td><td>Which cell a card belongs to. The deck in the published page carries no stance or quality label.</td></tr>
         <tr><th>Session runner</th><td>Consent, position, shuffle, the budget of 8, the agent step, the closing questions. Writes one result line.</td><td>What the numbers mean. It counts; it does not judge.</td></tr>
         <tr><th>Result line</th><td>The only thing that crosses between a student and the class. One line of text, copied by hand.</td><td>Who the student is. It carries a self-chosen code.</td></tr>
-        <tr><th>Lecturer view</th><td>Takes pasted lines, applies the codebook, computes the paired difference and interval, draws the comparison, asks a question.</td><td>How to state a conclusion. It has no sentence that concludes.</td></tr>
+        <tr><th>Service</th><td>Takes one submission of numbers, stores it for the day, aggregates on request. Two routes and nothing else.</td><td>Anything a student wrote. No sentence ever reaches it.</td></tr>
+        <tr><th>Dashboard</th><td>Owners only. Draws the comparison live, and states which of a fixed set of sentences the interval permits.</td><td>How to write its own sentence. It selects; it does not compose.</td></tr>
+        <tr><th>Lecturer paste view</th><td>The fallback when the service is down: takes pasted lines and does the same arithmetic offline.</td><td>How to state a conclusion. It has no sentence that concludes.</td></tr>
       </tbody>
     </table></div>
     <p class="aside">The codebook &mdash; which card is congenial, which is strong &mdash; is <strong>not</strong> in the card deck. <code>site/</code> is a public URL from a public repository, so a label in the page is a label a student can read before the session. The lecturer view takes the codebook as pasted input at analysis time.</p>
@@ -339,7 +341,8 @@ ROUND 1 ── claim A ── position (locked) ── [agent?] ── 16 cards 
 ROUND 2 ── claim B ── position (locked) ── [agent?] ── 16 cards shuffled ── open &le; 8
                    ── final position ── closing questions
       &darr;
-one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  paired comparison + a question</pre>
+one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners only)
+                 └──copy by hand──&gt; paste box, when the service is down</pre>
     <p>The agent appears in exactly one of the two rounds. Which one depends on the team number, so that half the room meets it first and half meets it second.</p>
     <p class="aside"><strong>The agent sits between the locked position and the first card, and that placement is load-bearing.</strong> What is measured is which sources a student opens, so the agent has to speak while that choice is still ahead of them. Placed after the menu it could not move the measurement at all.</p>
   </section>
@@ -436,7 +439,7 @@ one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  pair
     <div class="tbl-wrap"><table>
       <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
       <tbody>
-        <tr><td id="ag-1"><strong>AG-1</strong></td><td>The tool shall issue no network request after the page has loaded.</td><td>Must</td><td>0 requests observed across 1 complete two-round session.</td><td>Test</td></tr>
+        <tr><td id="ag-1"><strong>AG-1</strong></td><td>The tool shall call no origin other than the experiment service.</td><td>Must</td><td>0 requests to any other origin across 1 complete two-round session; at most 2 routes used.</td><td>Test</td></tr>
         <tr><td id="ag-2"><strong>AG-2</strong></td><td>The supplied prompt shall request questions about the locked position.</td><td>Must</td><td>&ge; 3 questions requested.</td><td>Inspection</td></tr>
         <tr><td id="ag-3"><strong>AG-3</strong></td><td>The agent round should require the assistant&rsquo;s reply to be pasted before continuing.</td><td>Should</td><td>0 ways past an empty box.</td><td>Test</td></tr>
         <tr><td id="ag-4"><strong>AG-4</strong></td><td>The supplied prompt shall state no view on the student&rsquo;s position.</td><td>Must</td><td>0 phrases from the verdict list.</td><td>Inspection</td></tr>
@@ -467,6 +470,25 @@ one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  pair
         <tr><td id="an-5"><strong>AN-5</strong></td><td>Cohen&rsquo;s kappa for 2 coders should be computed from a 2&times;2 they enter.</td><td>Should</td><td>Matches a hand-computed kappa on 4 fixture matrices to 3 decimal places.</td><td>Test</td></tr>
         <tr><td id="an-7"><strong>AN-7</strong></td><td>The kappa display shall show the 2&times;2 and the chance-agreement figure beside the result.</td><td>Should</td><td>4 cell counts, 1 observed-agreement figure and 1 chance-agreement figure shown with every kappa.</td><td>Inspection</td></tr>
         <tr><td id="an-6"><strong>AN-6</strong></td><td>A line that cannot be parsed shall be listed back to the reader.</td><td>Must</td><td>2 malformed lines &rarr; 2 listed; 0 silent drops.</td><td>Test</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>SV &mdash; the service</h3>
+    <p>Added by <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a>, which gives up the site&rsquo;s static property for this one page. Everything here exists to keep that exception narrow.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr><td id="sv-1"><strong>SV-1</strong></td><td>The submission shall carry no free text.</td><td>Must</td><td>0 free-text fields in the payload; numeric and enumerated fields only.</td><td>Test</td></tr>
+        <tr><td id="sv-2"><strong>SV-2</strong></td><td>Submitting shall require a deliberate action by the student.</td><td>Must</td><td>1 button press; 0 submissions sent without one.</td><td>Test</td></tr>
+        <tr><td id="sv-3"><strong>SV-3</strong></td><td>The service shall expose no route that returns one student&rsquo;s row.</td><td>Must</td><td>0 such routes.</td><td>Inspection</td></tr>
+        <tr><td id="sv-4"><strong>SV-4</strong></td><td>Submitted data shall be deleted at the end of the teaching day.</td><td>Must</td><td>0 rows older than 24 hours, checked the following morning.</td><td>Test</td></tr>
+        <tr><td id="sv-5"><strong>SV-5</strong></td><td>A student&rsquo;s row shall be removable on request by their code.</td><td>Must</td><td>1 owner-operated route; the row is gone within 1 minute.</td><td>Demonstration</td></tr>
+        <tr><td id="sv-6"><strong>SV-6</strong></td><td>The tool shall finish a session when the service is unreachable.</td><td>Must</td><td>0 blocked finishes with the service down; the local line and its copy button still produced.</td><td>Test</td></tr>
+        <tr><td id="sv-7"><strong>SV-7</strong></td><td>The dashboard should reflect a new submission while the session runs.</td><td>Should</td><td>Visible within 10 seconds.</td><td>Demonstration</td></tr>
+        <tr><td id="sv-8"><strong>SV-8</strong></td><td>The dashboard shall be readable only by the owners.</td><td>Must</td><td>0 anonymous reads accepted.</td><td>Test</td></tr>
+        <tr><td id="sv-9"><strong>SV-9</strong></td><td>The interpretation shall be chosen from a fixed set of sentences.</td><td>Must</td><td>1 of N stored templates; 0 model-written sentences in the required layer.</td><td>Inspection</td></tr>
+        <tr><td id="sv-10"><strong>SV-10</strong></td><td>An interpretation shall not render without its two governing numbers.</td><td>Must</td><td>The interval and the smallest detectable effect both on screen, 2 of 2, with every interpretation.</td><td>Test</td></tr>
+        <tr><td id="sv-11"><strong>SV-11</strong></td><td>The experiment service should be deployed separately from the gate service.</td><td>Should</td><td>2 deployments; 0 shared containers.</td><td>Inspection</td></tr>
       </tbody>
     </table></div>
 
@@ -503,7 +525,10 @@ one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  pair
         <tr><td>Inside a 150-minute block</td><td>SM-7, MS-6</td></tr>
         <tr><td>On the students&rsquo; own laptops</td><td>DA-1, PR-2, PR-4</td></tr>
         <tr><td>Every choice and its shown order recorded</td><td>SM-2, SM-9, MS-1, MS-2, MS-3, MS-4, MS-5</td></tr>
-        <tr><td>No request leaving the browser</td><td>AG-1, DA-1, DA-3, DA-4</td></tr>
+        <tr><td>Nothing leaving the browser but numbers</td><td>AG-1, SV-1, SV-2, DA-1, DA-3, DA-4</td></tr>
+        <tr><td>&mdash; and the session survives the service failing</td><td>SV-6, SV-11, AN-1, AN-6</td></tr>
+        <tr><td>&mdash; and what is held is held briefly and narrowly</td><td>SV-3, SV-4, SV-5, SV-8</td></tr>
+        <tr><td>&mdash; and the dashboard reports rather than concludes</td><td>SV-9, SV-10, AN-3</td></tr>
         <tr><td>32 lines to one comparison in under 10 minutes</td><td>AN-1, AN-2, AN-4, AN-6</td></tr>
         <tr><td>&mdash; and the comparison means something</td><td>CL-1, CL-5, CL-6, CL-7, CL-8, CL-10</td></tr>
         <tr><td>&mdash; and the deck can be built honestly</td><td>CL-2, CL-3, CL-4, CL-9, SM-6</td></tr>
@@ -521,8 +546,9 @@ one result line  ──copied by hand──&gt;  lecturer view  ──&gt;  pair
       <li><strong>Calling a model.</strong> The agent runs in the student&rsquo;s own assistant.</li>
       <li><strong>Writing the conclusion.</strong> Stating a finding would put the verdict-giving behaviour the experiment is testing inside the instrument that measures it.</li>
       <li><strong>Scoring a student.</strong> ADR-0011 keeps the week&rsquo;s gates unscored, and this is not a way round that.</li>
-      <li><strong>A server, an account, or sync between devices.</strong></li>
-      <li><strong>Retaining data after the session.</strong></li>
+      <li><strong>An account for a student, or sync between their devices.</strong> The service knows a self-chosen code and nothing that identifies anyone.</li>
+      <li><strong>Retaining data beyond the teaching day.</strong> A scheduled purge, per ADR-0016, not an intention.</li>
+      <li><strong>A model writing the interpretation.</strong> The dashboard selects a sentence the interval permits; it does not compose one.</li>
       <li><strong>A general survey builder.</strong> Two claims, sixteen cards each.</li>
     </ul>
   </section>
