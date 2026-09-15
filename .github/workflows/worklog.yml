@@ -1,0 +1,42 @@
+name: Check the worklog
+
+# Only half of worklog.py can run here, and that is by design.
+#
+# The hours come from Claude Code session transcripts in ~/.claude/projects/,
+# which live on whoever's laptop ran them and are not in the repository. A
+# runner cannot recompute an hour, so `worklog.py hours` is a local command and
+# CI never calls it.
+#
+# What CI can do is refuse a total that no longer matches the rows under it.
+# That is the failure that actually happens — a session gets added and the
+# header keeps yesterday's figure — and it is the failure that makes the whole
+# ledger untrustworthy, because a total nobody checks is a number nobody
+# believes. Hence `verify`, which is pure arithmetic over the file itself.
+#
+# This never deploys. The worklog is in project-documentation/, which pages.yml
+# does not upload.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'project-documentation/worklog.md'
+      - '.github/scripts/worklog.py'
+      - '.github/workflows/worklog.yml'
+  pull_request:
+    paths:
+      - 'project-documentation/worklog.md'
+      - '.github/scripts/worklog.py'
+      - '.github/workflows/worklog.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: The worklog total matches its rows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/worklog.py verify
