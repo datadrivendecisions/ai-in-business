@@ -333,11 +333,14 @@ pre.tree {
       runs both rounds, the assistant step, the closing questions and the lecturer view.
       <em>This line replaced &ldquo;no such file exists&rdquo;, which is what it said when the plan
       was written.</em></li>
-      <li><strong>Three checks, beside this plan.</strong> <code>check-measures.py</code> (the
+      <li><strong>Four checks, beside this plan.</strong> <code>check-measures.py</code> (the
       arithmetic, against a scipy reference), <code>check-session.mjs</code> (whole sessions
-      driven through the page's own code) and <code>check-prompt.py</code> (the assistant prompt
-      against a verdict word list). All three read the shipped page and evaluate its script in a
-      <code>node:vm</code> context with a stub DOM, so none of them can pass against a copy of the
+      driven through the page's own code), <code>check-prompt.py</code> (the assistant prompt
+      against a verdict word list) and <code>check-presentation.py</code> (the brand block, the
+      nav, the footer, and every text node's contrast against the background it actually lands
+      on). All four read the shipped page; the first three evaluate its script in a
+      <code>node:vm</code> context with a stub DOM and the fourth runs a small CSS cascade over
+      its document tree, so none of them can pass against a copy of the
       logic that has drifted. There is no package manager here and they need none.</li>
     </ul>
   </section>
@@ -581,26 +584,50 @@ pre.tree {
     <p><strong>Spec.</strong> <code>PR-1</code>, <code>PR-2</code>, <code>PR-3</code>, <code>PR-4</code>, <code>PR-5</code>, <code>PR-6</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 6.1 Diff the token block against <code>site/index.html</code>; make them identical.</li>
-      <li>&#9744; 6.2 Check every text/background pair for contrast; remove any muted-on-cream.</li>
-      <li>&#9744; 6.3 Tab order over every control; no traps.</li>
-      <li>&#9744; 6.4 Test at 400 px.</li>
-      <li>&#9744; 6.5 Add the tool card to <code>site/index.html</code>, stating where answers are stored.</li>
-      <li>&#9744; 6.6 Run <code>./.github/scripts/check-links.sh</code>.</li>
-      <li>&#9744; 6.7 Run <code>aiprose.py</code> over the page with the A-codes.</li>
+      <li>&#9745; 6.1 Diff the token block against <code>site/index.html</code>; make them identical. &mdash; They already were, and <code>check-presentation.py</code> now says so on every run.</li>
+      <li>&#9745; 6.2 Check every text/background pair for contrast; remove any muted-on-cream.</li>
+      <li>&#9745; 6.3 Tab order over every control; no traps.</li>
+      <li>&#9745; 6.4 Test at 400 px.</li>
+      <li>&#9745; 6.5 Add the tool card to <code>site/index.html</code>, stating where answers are stored.</li>
+      <li>&#9745; 6.6 Run <code>./.github/scripts/check-links.sh</code>.</li>
+      <li>&#9745; 6.7 Run <code>aiprose.py</code> over the page with the A-codes.</li>
     </ul>
+    <p><strong>Where this stands.</strong> Built and machine-checked.
+      <code>check-presentation.py</code> beside this plan reads the shipped page, builds its
+      document tree, runs a small CSS cascade over it and asks every text node what colour it
+      ends up being on what. A colour pair is not a property of a rule but of an element &mdash;
+      an eyebrow is <code>--text-muted</code> and only becomes a defect when it lands inside a
+      cream box three levels up &mdash; so a grep could not have answered <code>PR-3</code>.
+      206 text nodes in 2 state variants, all above 4.5:1. Each of its checks was sabotaged and
+      confirmed to fail, including the one that matters most: a selector the matcher cannot read
+      is reported rather than skipped.
+      <br>
+      One real defect, found by the 400&nbsp;px screen and then measured in a browser. Card
+      <code>c1-05</code>&rsquo;s APA reference ends in a 73-character USENIX path, and without a
+      rule allowing a break inside it that one card pushed the page to 531&nbsp;px at a
+      400&nbsp;px viewport. <code>.card-meta</code> now allows the break. The screen originally
+      accused the wrong card: the longest URL in the deck is 157 characters and wraps unaided,
+      because browsers do break after a hyphen. Measured in Chrome, of
+      <code>/ - ? &amp; # = _ . : , + ~ % @ |</code> only <code>-</code> and <code>?</code> are
+      break opportunities, and the check now measures runs the same way.
+      <br>
+      A real 400&nbsp;px viewport with every screen unhidden at once and the widest strings the
+      deck can produce loaded into it scrolls 400&nbsp;px, with 0 elements outside the viewport.
+      That is not the gate: <code>PR-2</code> and <code>PR-4</code> are verified by demonstration,
+      and a headless Chrome is not a phone in a hand. What is left here is that demonstration,
+      and the tester walk.</p>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; Token block byte-identical to <code>index.html</code> (<code>PR-1</code>, inspection)</li>
-      <li>&#9744; 1 <code>bds-nav</code> (<code>PR-5</code>) and 1 <code>bds-footer</code> with the credit (<code>PR-6</code>, inspection)</li>
-      <li>&#9744; Contrast &ge; 4.5:1 throughout; 0 muted-on-cream (<code>PR-3</code>, analysis)</li>
-      <li>&#9744; 0 horizontal scroll at 400 px (<code>PR-2</code>, demonstration)</li>
-      <li>&#9744; 0 keyboard traps (<code>PR-4</code>, demonstration)</li>
-      <li>&#9744; Link check green</li>
+      <li>&#9745; Token block byte-identical to <code>index.html</code> (<code>PR-1</code>, inspection)</li>
+      <li>&#9745; 1 <code>bds-nav</code> (<code>PR-5</code>) and 1 <code>bds-footer</code> with the credit (<code>PR-6</code>, inspection)</li>
+      <li>&#9745; Contrast &ge; 4.5:1 throughout; 0 muted-on-cream (<code>PR-3</code>, analysis)</li>
+      <li>&#9744; 0 horizontal scroll at 400 px (<code>PR-2</code>, demonstration &mdash; measured at 400 px in Chrome, not yet on a phone)</li>
+      <li>&#9744; 0 keyboard traps (<code>PR-4</code>, demonstration &mdash; 0 trap patterns in the markup, not yet walked by hand)</li>
+      <li>&#9745; Link check green</li>
       <li>&#9744; Tester steps above, on a real phone</li>
     </ul>
     <h3>Closing</h3>
-    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+    <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
 

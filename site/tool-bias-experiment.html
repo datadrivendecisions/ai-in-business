@@ -236,7 +236,15 @@ input[type="text"] { max-width: 18rem; }
   background: var(--bg-page);
 }
 .card-title { font-size: var(--text-xl); font-weight: 700; margin: 0 0 var(--space-2); line-height: 1.3; }
-.card-meta { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-3) 0 0; }
+/* The APA reference ends in a URL, and the longest of the thirty-two is
+   157 characters with nothing in it a browser will break on. Left alone
+   that one card pushes the whole page sideways on a phone, so the rule
+   that allows a break anywhere is on the element that holds a URL rather
+   than on the body, where it would also break ordinary words. */
+.card-meta {
+  font-size: var(--text-sm); color: var(--text-secondary);
+  margin: var(--space-3) 0 0; overflow-wrap: anywhere;
+}
 .card-teaser { margin: 0 0 var(--space-1); }
 .card-extract {
   border-left: 4px solid var(--primary);
