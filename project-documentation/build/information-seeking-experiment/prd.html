@@ -307,7 +307,7 @@ pre.screen { background: var(--bg-off-white); border: 1px solid var(--border-str
       <tr><th>Version</th><td>0.2, 14 September 2026</td></tr>
       <tr><th>Owner</th><td>The two module owners; the AIBS owner runs the session</td></tr>
       <tr><th>Serves</th><td>The experiment protocol in <code>work/drafts/week-03-information-seeking-experiment.md</code></td></tr>
-      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored) and the tool rules in <code>CLAUDE.md</code></td></tr>
+      <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a> (the service, and the named exception to the no-network rule) and the tool rules in <code>CLAUDE.md</code></td></tr>
     </tbody></table></div>
   </section>
 
@@ -530,47 +530,69 @@ pre.screen { background: var(--bg-off-white); border: 1px solid var(--border-str
     <p>A negative number means the student read less one-sidedly in the round where the agent spoke. Averaging the two halves this way also cancels two things at once: the effect of claim&nbsp;2 being a different question from claim&nbsp;1, and the effect of simply being further into the session. Both fall out of the arithmetic because each is added to one half and subtracted from the other.</p>
     <p class="aside"><strong>One thing it does not cancel.</strong> A student who met the devil&rsquo;s advocate in round 1 carries it into round 2 &mdash; they may read more even-handedly the second time <em>because of</em> the first. Counterbalancing removes the average effect of that carryover but not its interaction with the agent, and nothing in the design can. It belongs in the write-up as a stated limitation rather than a solved problem.</p>
 
-    <h3>2.8 The end &mdash; one line, handed over by choice</h3>
-    <p>Two round blocks, each carrying its own counts, its own timing and its own subjective scores.</p>
+    <h3>2.8 The end &mdash; submitting, which is the consent act</h3>
+    <p>Two round blocks, each carrying its own counts, its own timing and its own subjective scores, go to the class service. <strong>Pressing the button is how a student takes part</strong>, and not pressing it is how they decline &mdash; the same choice closing the tab used to be, made explicit.</p>
+    <p>What travels is numbers. The position sentences and the assistant&rsquo;s reply never leave the laptop, which is what keeps the payload uninteresting to read and keeps <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0013-hand-in-routes.md" target="_blank" rel="noopener">NFR-11</a> a property of the wiring rather than a promise.</p>
     <pre class="screen">┌────────────────────────────────────────────────────────────────┐
-│  Done. Nothing you typed has left this browser.                │
+│  Done.                                                         │
 ├────────────────────────────────────────────────────────────────┤
+│  Pressing Submit puts your numbers into the class dataset.     │
+│  That is what taking part means, and it is your choice.        │
 │                                                                │
-│  Your result line:                                             │
+│    Sent:      how many sources you opened and which kinds,     │
+│               your timings, your two scale answers.            │
+│    Not sent:  anything you wrote, and anything your            │
+│               assistant said. Those stay on this laptop.       │
+│    Kept for:  today. Deleted this evening.                     │
+│    Changed your mind? Give us your code and it goes.           │
+│                                                                │
+│                                         [ Submit my numbers ]  │
+│                                                                │
+│  Prefer not to? Close the tab. Nothing is sent.                │
+└────────────────────────────────────────────────────────────────┘</pre>
+    <p>And when the service is down &mdash; which it now can be, for the first time in this repository &mdash; the session does not stop. The tool has been writing the line all along, so it degrades to the manual paste it was originally designed around:</p>
+    <pre class="screen">┌────────────────────────────────────────────────────────────────┐
+│  The class service is not answering.                           │
+├────────────────────────────────────────────────────────────────┤
+│  No matter — copy your line and hand it to your lecturer.      │
+│                                                                │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │ v1|kite|t3                                               │  │
 │  │ |r1:ask:c1:op8:cong4:sopp3:s188:moved1:tlx47:q11         │  │
 │  │ |r2:none:c2:op8:cong6:sopp1:s142:moved0:tlx38:q9         │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                              [ Copy my line ]  │
-│                                                                │
-│  Hand this line in and you are in the dataset. Prefer not      │
-│  to? Close the tab — there is no copy anywhere else.           │
 └────────────────────────────────────────────────────────────────┘</pre>
 
-    <h3>2.9 The lecturer&rsquo;s screen</h3>
-    <p>Same page, a different door. Thirty-two lines in, the paired comparison out &mdash; <strong>and a question rather than a verdict</strong>, because the conclusion is the thing the students came to write.</p>
+    <h3>2.9 The instructor dashboard</h3>
+    <p>Owners only, and live: submissions appear while the room is still working, which is the reason the service exists at all. Thirty-two people watching a difference take shape and then being asked what it licenses is the session.</p>
+    <p><strong>The interpretation is selected, not written.</strong> Which of a fixed set of sentences appears is decided by where the interval sits relative to zero and to the smallest effect this sample could have detected &mdash; and it cannot render unless both of those numbers are on screen beside it. A model composing the sentence would produce something fluent and overconfident about an underpowered study, which is the failure this whole session exists to teach against.</p>
     <pre class="screen">┌────────────────────────────────────────────────────────────────┐
-│  Lecturer view                32 pasted · 32 read · 0 rejected │
+│  Instructor dashboard                live · 29 of 32 submitted │
 ├────────────────────────────────────────────────────────────────┤
 │  Congeniality index — higher means more one-sided reading      │
 │                                                                │
-│    no agent   ████████████████████░░░░░░  0.52                 │
-│    with agent ███████████████░░░░░░░░░░░  0.38                 │
+│    no agent    ████████████████████░░░░░░  0.52                │
+│    with agent  ███████████████░░░░░░░░░░░  0.38                │
 │                                                                │
-│    paired difference          −0.14                            │
-│    95% interval        −0.31  to  +0.03                        │
-│    n = 32 students in 8 teams                                  │
+│    paired difference        −0.14                              │
+│    95% interval      −0.31  to  +0.03                          │
+│    n = 29 in 8 teams                                           │
+│    smallest effect this n could detect:  d ≈ 0.53              │
 │                                                                │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │ The interval crosses zero.                               │  │
-│  │ What would you have to believe to call this an effect?   │  │
+│  │ INTERPRETATION                        template 3 of 5    │  │
 │  │                                                          │  │
+│  │ The interval includes zero, and also includes effects    │  │
+│  │ larger than this sample could have detected. The data    │  │
+│  │ is consistent with no effect and with a moderate one.    │  │
+│  │ It does not distinguish between them.                    │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                                │
-│  Smallest effect 32 paired observations could have detected    │
-│  at 80% power:  d ≈ 0.51                    [ show working ]   │
+│  Ask the room: what would you have to believe to call          │
+│  this an effect?                                               │
 └────────────────────────────────────────────────────────────────┘</pre>
+    <p class="aside">The template number is shown deliberately. An owner who can see that the same sentence would have appeared for a range of results reads it as a rule being applied, rather than as a finding.</p>
   </section>
 
   <section id="qualities">
@@ -595,8 +617,8 @@ pre.screen { background: var(--bg-off-white); border: 1px solid var(--border-str
   <section id="constraints">
     <h2 class="bds-part">4 &middot; Known constraints</h2>
     <ul>
-      <li><strong>No network calls.</strong> The tool rules in <code>CLAUDE.md</code> allow JavaScript on a <code>tool-*.html</code> page only if it is self-contained: no build step, no framework, no requests. That rules out hosting the model, and it rules out a server collecting results.</li>
-      <li><strong><code>localStorage</code> is per-browser.</strong> Thirty-two laptops means thirty-two islands. Aggregation is a deliberate manual step &mdash; copy a line, paste thirty-two &mdash; not an oversight.</li>
+      <li><strong>One origin, two routes, and nothing else.</strong> <code>CLAUDE.md</code> allows JavaScript on a <code>tool-*.html</code> page only if it is self-contained. <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a> gives that up for this one named page and no other, so the exception cannot spread by analogy. It still rules out hosting the model: the agent runs in the student&rsquo;s own assistant.</li>
+      <li><strong><code>localStorage</code> is still where the session lives.</strong> The service receives a submission at the end; it is not the working store. That is what lets the tool finish a session with the service down, and the manual paste remains as the fallback path rather than as the primary one.</li>
       <li><strong>The site is public.</strong> The sixteen cards are in the page source, so the stance and quality labels <em>cannot</em> be, or the experiment is readable before it is run.</li>
       <li><strong>One 240-minute block</strong>, shared with the rest of week 3. The tool gets perhaps 150 minutes.</li>
       <li><strong>Light only, brand system, sticky nav and footer</strong>, copied from <code>index.html</code> like every other tool.</li>
@@ -610,9 +632,10 @@ pre.screen { background: var(--bg-off-white); border: 1px solid var(--border-str
       <li><strong>Calling a model.</strong> The agent runs in the student&rsquo;s own assistant, from a prompt the tool supplies.</li>
       <li><strong>Writing the conclusion.</strong> The tool displays numbers and asks about them. Stating a finding would put the verdict-giving behaviour the experiment is testing inside the instrument that measures it &mdash; and would take from students the one thing the session exists to give them. There is evidence for the narrow claim too: across six studies the presence of a <strong>conclusive recommendation consistently amplified confirmation bias</strong> while its absence mitigated it, and the source of the information mattered far less than its structure (<a href="https://www.sciencedirect.com/science/article/pii/S2451958826001211" target="_blank" rel="noopener">Computers in Human Behavior: Artificial Humans, 2026</a>). A tool that graded rather than asked would also be unreliable at it &mdash; human&ndash;LLM agreement on student essays scored against a four-criterion rubric was non-significant, worst on exactly the interpretive criteria a project rubric uses (<a href="https://arxiv.org/abs/2508.02442" target="_blank" rel="noopener">Gaggioli et al. 2025</a>) &mdash; and the order of presentation alone can flip an LLM judge&rsquo;s verdict (<a href="https://aclanthology.org/2024.acl-long.511/" target="_blank" rel="noopener">Wang et al. 2024</a>).</li>
       <li><strong>Scoring anyone.</strong> ADR-0011 keeps the week&rsquo;s gates informational and unscored; this is not a back door.</li>
-      <li><strong>Cross-device or cross-session sync.</strong> A student who closes the tab has withdrawn.</li>
+      <li><strong>Cross-device or cross-session sync, and any account for a student.</strong> The service knows a self-chosen code and nothing that identifies anyone.</li>
       <li><strong>A general-purpose survey builder.</strong> Two claims, sixteen cards each, hard-coded.</li>
-      <li><strong>Keeping the data.</strong> Nothing persists past the session by design.</li>
+      <li><strong>Keeping the data.</strong> A scheduled purge deletes it at the end of the teaching day &mdash; a job, not an intention.</li>
+      <li><strong>A model writing the interpretation.</strong> The dashboard selects the sentence the interval permits. It does not compose one.</li>
     </ul>
   </section>
 
