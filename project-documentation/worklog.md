@@ -51,7 +51,7 @@ absent rather than estimated.
 
 ---
 
-Total recorded: **13.60 h** over 3 working days, from 13 September 2026.
+Total recorded: **14.51 h** over 3 working days, from 13 September 2026.
 
 ## Checks register
 
@@ -92,7 +92,7 @@ supersedes it with a new row.
 
 | Date | Who | Hours | Branch | What happened |
 |---|---|---|---|---|
-| 2026-09-15 | Witek | 7.20 | `worktree-prose-pass-and-worklog`, `week-03-decks-and-position-controls` | Built this worklog: the checks register, the sessions ledger, `worklog.py` and the CI job that refuses a total which stops matching its rows. Then ran the prose pass that prompted it across every page of `site/`, rewriting six constructions and recording the verdict on the rest. Rebuilt the week-2 presenter deck, PDF and PPTX from the edited card page. The pull request could not be opened: GitHub returned 502s and empty bodies from both the GraphQL and REST create paths while its reads stayed up. Then took the bias experiment tool from phase 1 to phase 5: the second round, the assistant step, the closing questions, the timings, the result line and the lecturer view that turns thirty-two of them into one paired comparison. Wrote the three checks that hold it — one of which caught an answer key I had put in my own help text. |
+| 2026-09-15 | Witek | 8.11 | `worktree-prose-pass-and-worklog`, `week-03-decks-and-position-controls` | Built this worklog: the checks register, the sessions ledger, `worklog.py` and the CI job that refuses a total which stops matching its rows. Then ran the prose pass that prompted it across every page of `site/`, rewriting six constructions and recording the verdict on the rest. Rebuilt the week-2 presenter deck, PDF and PPTX from the edited card page. The pull request could not be opened: GitHub returned 502s and empty bodies from both the GraphQL and REST create paths while its reads stayed up. Then took the bias experiment tool from phase 1 to phase 5: the second round, the assistant step, the closing questions, the timings, the result line and the lecturer view that turns thirty-two of them into one paired comparison. Wrote the three checks that hold it — one of which caught an answer key I had put in my own help text. Then phases 6 to 8: the presentation check that reads the page's own CSS cascade and found a card whose URL pushed the page sideways on a phone; the experiment service, its container and its deploy script, written and tested but deliberately not deployed; and the live dashboard, whose interpretation set lost a sentence that could never have been selected. |
 | 2026-09-14 | Witek | 5.22 | `collaboration-guardrails`, `week-03-*` | Put the pull-request route behind a ruleset on `main` that refuses a direct push, and wrote the merge-conflict agreement into `CLAUDE.md` and `SAMENWERKEN.md`. Designed the week-3 experiment on biased information seeking and specified the browser tool that runs it, then moved its result collection to a service and costed it. |
 | 2026-09-13 | Witek | 1.18 | `main` | Published the session slides as one page of cards per slide, generated the presenter decks from those cards, and rebuilt the week-2 page around the session as the deck now runs it. Gathered everything written to build the system into `project-documentation/build/`. Landed phase 6 of the hand-in pipeline. |
 
@@ -120,5 +120,10 @@ fc94e9a2:1.5
 1f93dbcc:0.9
 fd1e54ec:0.7
 57e8a8d2:0.5
-bc957735:47.5
+bc957735:50.3
+55faa0fd:1.2
+aa1d78dc:1.4
+4f57e4a8:43.6
+0e840fc5:2.6
+19436f83:2.9
 -->
