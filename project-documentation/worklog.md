@@ -51,7 +51,7 @@ absent rather than estimated.
 
 ---
 
-Total recorded: **7.27 h** over 3 working days, from 13 September 2026.
+Total recorded: **8.65 h** over 3 working days, from 13 September 2026.
 
 ## Checks register
 
@@ -76,7 +76,7 @@ supersedes it with a new row.
 
 | Date | Who | Hours | Branch | What happened |
 |---|---|---|---|---|
-| 2026-09-15 | Witek | 0.87 | `worktree-prose-pass-and-worklog` | Built this worklog: the checks register, the sessions ledger, `worklog.py` and the CI job that refuses a total which stops matching its rows. Then ran the prose pass that prompted it across every page of `site/`, rewriting six constructions and recording the verdict on the rest. Rebuilt the week-2 presenter deck, PDF and PPTX from the edited card page. |
+| 2026-09-15 | Witek | 2.25 | `worktree-prose-pass-and-worklog` | Built this worklog: the checks register, the sessions ledger, `worklog.py` and the CI job that refuses a total which stops matching its rows. Then ran the prose pass that prompted it across every page of `site/`, rewriting six constructions and recording the verdict on the rest. Rebuilt the week-2 presenter deck, PDF and PPTX from the edited card page. The pull request could not be opened: GitHub returned 502s and empty bodies from both the GraphQL and REST create paths while its reads stayed up. |
 | 2026-09-14 | Witek | 5.22 | `collaboration-guardrails`, `week-03-*` | Put the pull-request route behind a ruleset on `main` that refuses a direct push, and wrote the merge-conflict agreement into `CLAUDE.md` and `SAMENWERKEN.md`. Designed the week-3 experiment on biased information seeking and specified the browser tool that runs it, then moved its result collection to a service and costed it. |
 | 2026-09-13 | Witek | 1.18 | `main` | Published the session slides as one page of cards per slide, generated the presenter decks from those cards, and rebuilt the week-2 page around the session as the deck now runs it. Gathered everything written to build the system into `project-documentation/build/`. Landed phase 6 of the hand-in pipeline. |
 
@@ -87,8 +87,14 @@ a470a9b9:0.8
 75bf4d92:0.7
 12e6427b:1.3
 26636e49:311.5
-37c8f1e5:25.6
-6578e10f:15.2
-8a19ba30:11.0
+37c8f1e5:44.7
+6578e10f:21.6
+8a19ba30:22.5
 cfe0144c:1.2
+277f19c6:39.3
+22cf3541:1.1
+9bd6a79e:1.1
+680da1a9:0.9
+32e9dcd6:0.9
+c6b21fc3:1.2
 -->
