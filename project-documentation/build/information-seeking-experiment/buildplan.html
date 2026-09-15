@@ -308,6 +308,8 @@ pre.tree {
         <tr><td>&#9744;</td><td><a href="#p4">4 &mdash; Closing questions and timing</a></td><td>Finish a full session and get a complete line</td></tr>
         <tr><td>&#9744;</td><td><a href="#p5">5 &mdash; The lecturer view</a></td><td>Paste 32 lines, see the comparison and the question</td></tr>
         <tr><td>&#9744;</td><td><a href="#p6">6 &mdash; Brand, access, publication</a></td><td>Open it on a phone, tab through it, follow it from the landing page</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p7">7 &mdash; The service and the submit button</a></td><td>Finish a session, press submit, watch the count rise &mdash; then pull the network and finish anyway</td></tr>
+        <tr><td>&#9744;</td><td><a href="#p8">8 &mdash; The dashboard and its interpretation</a></td><td>Watch submissions land live, and see the sentence change when the numbers do</td></tr>
       </tbody>
     </table></div>
   </section>
@@ -477,6 +479,7 @@ pre.tree {
     <h2 class="bds-part">Phase 5 &mdash; The lecturer view</h2>
     <p><strong>Goal.</strong> Thirty-two lines become one paired comparison, and a question.</p>
     <p><strong>What the tester does.</strong> Opens the page with <code>?instructor</code>, pastes 32 fixture lines plus 2 broken ones, sees 32 accepted and 2 listed as rejected, reads the difference and the interval, and finds a question on screen where a conclusion would be.</p>
+    <p class="aside">Since <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a> this is the <strong>fallback</strong> path, not the primary one &mdash; what happens when the service is down. It is still built first, because it is the arithmetic the dashboard also needs and it can be tested without any infrastructure at all.</p>
     <p><strong>Spec.</strong> <code>AN-1</code>, <code>AN-2</code>, <code>AN-3</code>, <code>AN-4</code>, <code>AN-5</code>, <code>AN-6</code>, <code>AN-7</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
@@ -534,6 +537,66 @@ pre.tree {
     <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
   </section>
 
+
+  <section id="p7">
+    <h2 class="bds-part">Phase 7 &mdash; The service and the submit button</h2>
+    <p><strong>Goal.</strong> A student&rsquo;s numbers reach a service they did not have to type into, and the session survives that service being down.</p>
+    <p><strong>What the tester does.</strong> Finishes a session, presses <em>Submit my numbers</em>, and watches the stored count go up by one. Then turns off the network, finishes a second session, and finds the copy button and the line exactly where they were. Then asks an owner to delete their row by code, and watches the count go back down.</p>
+    <p><strong>Spec.</strong> <code>SV-1</code>&ndash;<code>SV-6</code>, <code>SV-11</code>, <code>AG-1</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 7.1 A Cloud Run service in the course project, EU region, separate deployment from the gate (<code>SV-11</code>).</li>
+      <li>&#9744; 7.2 <code>POST /submit</code>: accepts one submission, rejects any payload containing a string field that is not the code or the team (<code>SV-1</code>).</li>
+      <li>&#9744; 7.3 Firestore <code>submissions/</code>, keyed by session and code. Last write wins for a repeated code.</li>
+      <li>&#9744; 7.4 An owner-only delete route, by code (<code>SV-5</code>).</li>
+      <li>&#9744; 7.5 A scheduled purge that empties the collection at the end of the teaching day (<code>SV-4</code>).</li>
+      <li>&#9744; 7.6 In the tool: the submit screen, its plain statement of what is sent and what is not, and the button (<code>SV-2</code>).</li>
+      <li>&#9744; 7.7 In the tool: on any failure, fall back to the line and the copy button without blocking the finish (<code>SV-6</code>).</li>
+      <li>&#9744; 7.8 Pin the allowed origin. The tool calls one host and two routes; nothing else (<code>AG-1</code>).</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 0 free-text fields accepted beyond code and team (<code>SV-1</code>, test)</li>
+      <li>&#9744; 0 submissions sent without a button press (<code>SV-2</code>, test)</li>
+      <li>&#9744; 0 routes return a single student&rsquo;s row (<code>SV-3</code>, inspection)</li>
+      <li>&#9744; With the service unreachable, 10 of 10 sessions still finish and produce a line (<code>SV-6</code>, test)</li>
+      <li>&#9744; Delete-by-code removes the row within 1 minute (<code>SV-5</code>, demonstration)</li>
+      <li>&#9744; The morning after a test run, 0 rows remain (<code>SV-4</code>, test)</li>
+      <li>&#9744; Network panel shows 0 requests to any other origin across a full session (<code>AG-1</code>, test)</li>
+      <li>&#9744; Tester steps above, including the unplugged run</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
+  <section id="p8">
+    <h2 class="bds-part">Phase 8 &mdash; The dashboard and its interpretation</h2>
+    <p><strong>Goal.</strong> The owners see the comparison take shape while the room is still working, with a sentence that says what the interval permits and never more.</p>
+    <p><strong>What the tester does.</strong> Opens the dashboard with owner credentials and sees nothing without them. Submits from another machine and watches the count and the bars move within ten seconds. Then feeds it three fixture datasets &mdash; interval entirely below zero, interval spanning zero, interval above &mdash; and reads three different sentences, each with its interval and its detectable effect beside it.</p>
+    <p><strong>Spec.</strong> <code>SV-7</code>&ndash;<code>SV-10</code>, <code>AN-2</code>, <code>AN-4</code></p>
+    <h3>Subtasks</h3>
+    <ul class="checks">
+      <li>&#9744; 8.1 <code>GET /dashboard</code>, owner authentication, anonymous reads refused (<code>SV-8</code>).</li>
+      <li>&#9744; 8.2 Aggregate the stored submissions using the same arithmetic phase 5 already proved.</li>
+      <li>&#9744; 8.3 Live refresh while a session runs (<code>SV-7</code>).</li>
+      <li>&#9744; 8.4 Write the fixed set of interpretation sentences. One per region of the interval, and each says what the data cannot distinguish as well as what it can (<code>SV-9</code>).</li>
+      <li>&#9744; 8.5 Bind each sentence to its two numbers so neither can be shown without the other (<code>SV-10</code>).</li>
+      <li>&#9744; 8.6 Show which template was selected, and out of how many.</li>
+      <li>&#9744; 8.7 Three fixture datasets, one per region of the interval.</li>
+    </ul>
+    <h3>Test gate</h3>
+    <ul class="checks">
+      <li>&#9744; 0 anonymous reads accepted (<code>SV-8</code>, test)</li>
+      <li>&#9744; A new submission is visible within 10 seconds (<code>SV-7</code>, demonstration)</li>
+      <li>&#9744; 3 fixtures produce 3 different sentences, all from the stored set; 0 composed (<code>SV-9</code>, inspection)</li>
+      <li>&#9744; 0 interpretations render without both governing numbers (<code>SV-10</code>, test)</li>
+      <li>&#9744; Dashboard arithmetic matches phase 5&rsquo;s on the same 5 datasets to 3 dp (<code>AN-2</code>, test)</li>
+      <li>&#9744; Tester steps above, from two machines</li>
+    </ul>
+    <h3>Closing</h3>
+    <ul class="checks"><li>&#9744; commit</li><li>&#9744; push</li><li>&#9744; tick the overview</li></ul>
+  </section>
+
   <section id="parallel">
     <h2 class="bds-part">What can run in parallel</h2>
     <p>Derived from which files a phase writes to, because merge conflicts are a file-level matter and have nothing to do with how independent two phases feel.</p>
@@ -543,10 +606,13 @@ pre.tree {
         <tr><td>0</td><td><code>work/drafts/</code> &mdash; the decks and the codebook</td></tr>
         <tr><td>1, 2, 3, 4, 5</td><td><code>site/tool-bias-experiment.html</code> &mdash; all of them, the same file</td></tr>
         <tr><td>6</td><td><code>site/tool-bias-experiment.html</code> and <code>site/index.html</code></td></tr>
+        <tr><td>7 &mdash; server half</td><td>The service repository. Shares nothing with the tool.</td></tr>
+        <tr><td>7 &mdash; client half, 8</td><td><code>site/tool-bias-experiment.html</code> again</td></tr>
       </tbody>
     </table></div>
     <p><strong>Phase 0 is the only thing that can run beside anything else</strong>, because it is the only phase that does not touch the tool. That is convenient, since it is also the slowest and the one that needs two people: one person hunts sources while the other builds phases 1&ndash;2.</p>
     <p>Phases 1&ndash;6 share one file and must run in order. Two people editing the same tool page concurrently will spend longer merging than they saved.</p>
+    <p><strong>Phase 7 splits, and the split is useful.</strong> Its server half touches no file in this repository, so the service can be built alongside phases 1&ndash;4 by someone else entirely. Its client half &mdash; the submit screen and the fallback &mdash; is back in the tool page and queues behind them. Settle the submission payload before the two halves diverge; it is the second contract in this build, after the result line, and the same discipline applies.</p>
     <p class="aside">One interface has to be fixed before phases 2 and 5 can be worked on by different people: the <strong>result line format</strong>. It is the contract between the student&rsquo;s session and the lecturer&rsquo;s analysis. Settle its shape in phase 2 and do not change it afterwards without bumping the version token.</p>
   </section>
 
@@ -558,6 +624,8 @@ pre.tree {
       <li><strong>It does not analyse the results.</strong> The tool computes and displays; the conclusion is written by people in the room.</li>
       <li><strong>It does not build an agent.</strong> The prompt is supplied; the assistant is the student&rsquo;s own.</li>
       <li><strong>It does not cover the second cohort.</strong> Two claims, one run.</li>
+      <li><strong>It does not create the cloud project or its billing.</strong> ADR-0015 already stands one up for the gate; this assumes it, and assumes someone owns it.</li>
+      <li><strong>It does not write the consent form.</strong> The tool shows a consent screen; the agreement covering the experiment is the owners' business.</li>
     </ul>
   </section>
 
