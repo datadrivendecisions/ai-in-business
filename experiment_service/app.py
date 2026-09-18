@@ -42,13 +42,21 @@ RATE_WINDOW = 60.0       # seconds
 
 
 def _json(status, payload, origin=None, extra=None):
-    body = json.dumps(payload).encode("utf-8")
-    headers = [
-        ("Content-Type", "application/json; charset=utf-8"),
-        ("Content-Length", str(len(body))),
-        ("Cache-Control", "no-store"),
-        ("X-Content-Type-Options", "nosniff"),
-    ]
+    # A 204 carries no body, and says nothing about one. The local server
+    # passed "204 with {}" through; Cloud Run's front end answers it with a
+    # 502 -- which, on the CORS preflight, failed every student's submit
+    # before it was sent.
+    if status == 204:
+        body = b""
+        headers = [("Cache-Control", "no-store"), ("X-Content-Type-Options", "nosniff")]
+    else:
+        body = json.dumps(payload).encode("utf-8")
+        headers = [
+            ("Content-Type", "application/json; charset=utf-8"),
+            ("Content-Length", str(len(body))),
+            ("Cache-Control", "no-store"),
+            ("X-Content-Type-Options", "nosniff"),
+        ]
     if origin:
         headers += [
             ("Access-Control-Allow-Origin", origin),

@@ -79,6 +79,7 @@ def call(app, method, path, body=None, token=None, origin=ORIGIN, headers=None):
 
     chunks = app(environ, start_response)
     raw_body = b"".join(chunks)
+    captured["raw"] = raw_body
     try:
         captured["json"] = json.loads(raw_body) if raw_body else {}
     except ValueError:
@@ -88,10 +89,10 @@ def call(app, method, path, body=None, token=None, origin=ORIGIN, headers=None):
 
 def submission(code="kite", team=3, agent_round=1, claims=(1, 2)):
     def one(n, agent, claim, opened):
-        return {"n": n, "agent": agent, "claim": claim, "side": "a",
+        return {"n": n, "agent": agent, "claim": claim, "side": "a", "pick": 24,
                 "opened": ["c%d-%02d" % (claim, i) for i in opened],
                 "seconds": 180, "endSide": "a", "moved": True, "tlx": 47, "q": 11}
-    return {"v": 1, "code": code, "team": team, "rounds": [
+    return {"v": 2, "code": code, "team": team, "rounds": [
         one(1, agent_round == 1, claims[0], [3, 7, 11, 2]),
         one(2, agent_round == 2, claims[1], [4, 9, 1, 12, 5, 16]),
     ]}
@@ -128,12 +129,16 @@ def sv1():
         ("nine opened cards", None),
         ("the same card twice", None),
         ("a card from the other claim", None),
-        ("an unknown line version", dict(submission(), v=2)),
+        ("an unknown line version", dict(submission(), v=3)),
         ("the assistant in both rounds", None),
         ("the assistant in neither round", None),
         ("the same claim twice", None),
         ("a raw result line as the body", "v1|kite|t3|r1:ask:c1"),
         ("three rounds", None),
+        # Appended, not inserted: the overrides below address this list by position.
+        ("a version 1 payload, from before the seconds to a side",
+         dict(submission(), v=1, rounds=[{k: v for k, v in r.items() if k != "pick"}
+                                         for r in submission()["rounds"]])),
     ]
 
     s = submission(); s["rounds"][0]["reply"] = prose
@@ -172,7 +177,7 @@ def sv1():
 
     stored = json.dumps(app.store.rows())
     check("0 occurrences of the prose in anything stored", prose not in stored)
-    check("still 1 row after 18 refusals",
+    check("still 1 row after %d refusals" % len(attempts),
           call(app, "GET", "/dashboard", token=TOKEN)["json"]["count"] == 1)
 
 
@@ -312,6 +317,14 @@ def ag1():
     check("the preflight is answered 204 for the pinned origin",
           pre["status"] == 204
           and pre["headers"].get("Access-Control-Allow-Origin") == ORIGIN)
+    # HTTP gives a 204 no body. The local server let "204 with {}" through;
+    # Cloud Run's front end turned it into a 502, so every student's submit
+    # died at the preflight. A check that calls the app directly could only
+    # see it if it asks this question outright.
+    check("the 204 carries no body and no content headers",
+          pre["raw"] == b"" and "Content-Length" not in pre["headers"]
+          and "Content-Type" not in pre["headers"],
+          "body %r, headers %s" % (pre["raw"], sorted(pre["headers"])))
 
     routes = [p for p in ("/submit", "/dashboard", "/delete", "/purge", "/health")]
     tool_routes = ("/submit", "/dashboard")

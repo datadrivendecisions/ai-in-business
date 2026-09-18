@@ -22,10 +22,21 @@ const html = readFileSync(pagePath, "utf8");
 const source = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];
 const verbose = process.argv.includes("-v");
 
-function makePage(initialStorage) {
+/* The page ships with the service's address in it. Most checks here are about
+   the session, not the service, so by default they run the page with that one
+   value blanked -- the state the page is in whenever the service is switched
+   off -- and the checks that are about the service set an origin of their own.
+   makePage(..., { shipped: true }) runs the file exactly as published. */
+const ORIGIN_LINE = /(var SERVICE = \{\s*origin:\s*)"[^"]*"/;
+if (!ORIGIN_LINE.test(source)) throw new Error("cannot find SERVICE.origin in the page");
+const SHIPPED_ORIGIN = source.match(ORIGIN_LINE)[0].match(/"([^"]*)"$/)[1];
+const blankedSource = source.replace(ORIGIN_LINE, '$1""');
+
+function makePage(initialStorage, { shipped = false } = {}) {
   const handlers = new Map();
   const nodes = new Map();
   const radios = new Map();
+  const onChange = new Map();   // radio group name -> the page's change handlers
   const store = new Map();
   if (initialStorage) store.set("bxp-v1", initialStorage);
   let reloaded = false;
@@ -68,14 +79,21 @@ function makePage(initialStorage) {
     querySelectorAll(sel) {
       const m = /^input\[name="([^"]+)"\](:checked)?$/.exec(sel);
       if (!m) return [];
-      // Enough of a radio group for setSide to clear or set it.
+      // Enough of a radio group for setSide to clear or set it, and for
+      // the page to hear a side being chosen.
+      const listen = (ev, fn) => {
+        if (ev !== "change") return;
+        if (!onChange.has(m[1])) onChange.set(m[1], []);
+        if (!onChange.get(m[1]).includes(fn)) onChange.get(m[1]).push(fn);
+      };
       return [1, 2, 3, 4, 5, 6, 7].map((n) => ({
+        addEventListener: listen,
         value: String(n),
         set checked(on) { if (on) radios.set(m[1], String(n)); },
         get checked() { return radios.get(m[1]) === String(n); },
       })).concat([
-        { value: "agree", set checked(on) { if (on) radios.set(m[1], "agree"); }, get checked() { return radios.get(m[1]) === "agree"; } },
-        { value: "disagree", set checked(on) { if (on) radios.set(m[1], "disagree"); }, get checked() { return radios.get(m[1]) === "disagree"; } },
+        { value: "agree", addEventListener: listen, set checked(on) { if (on) radios.set(m[1], "agree"); }, get checked() { return radios.get(m[1]) === "agree"; } },
+        { value: "disagree", addEventListener: listen, set checked(on) { if (on) radios.set(m[1], "disagree"); }, get checked() { return radios.get(m[1]) === "disagree"; } },
       ]);
     },
     body: el("body"),
@@ -110,7 +128,7 @@ function makePage(initialStorage) {
   };
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
-  vm.runInContext(source, sandbox, { filename: "tool-bias-experiment.html" });
+  vm.runInContext(shipped ? source : blankedSource, sandbox, { filename: "tool-bias-experiment.html" });
 
   return {
     sandbox, store, radios, nodes,
@@ -121,7 +139,10 @@ function makePage(initialStorage) {
       fn();
     },
     set(id, value) { document.getElementById(id).value = value; },
-    pick(name, value) { radios.set(name, value); },
+    pick(name, value) {
+      radios.set(name, value);
+      for (const fn of onChange.get(name) || []) fn();
+    },
     text(id) { return document.getElementById(id).textContent; },
     screen() { return sandbox.S.screen; },
     S() { return sandbox.S; },
@@ -432,9 +453,13 @@ function answerQuestions(p, v) {
   const routes = Object.keys(service).filter((k) => k !== "origin" && k !== "timeoutMs");
   ok("the config names at most 2 routes: " + routes.join(", "), routes.length <= 2,
      routes.join(", "));
-  ok("SERVICE.origin ships empty, so an undeployed page makes no request",
-     service.origin === "", JSON.stringify(service.origin));
-  ok("serviceOn() is false with it empty", page.sandbox.serviceOn() === false);
+  // Since the service was deployed the page names it. What must hold is that
+  // it names exactly one host, over https, and that host is a Cloud Run one.
+  ok("the page names one service address, https, on Cloud Run",
+     /^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.run\.app$/.test(SHIPPED_ORIGIN), JSON.stringify(SHIPPED_ORIGIN));
+  const shippedPage = makePage(undefined, { shipped: true });
+  ok("serviceOn() is true in the page as published", shippedPage.sandbox.serviceOn() === true);
+  ok("serviceOn() is false with the address blanked", page.sandbox.serviceOn() === false);
 
   // An absolute URL anywhere in the script would be a second origin by
   // another name. The deck's card links are markup-free data and open in a
@@ -442,9 +467,9 @@ function answerQuestions(p, v) {
   const script = html.slice(html.indexOf("<script>"));
   const cardHrefs = new Set([...page.sandbox.DECK1, ...page.sandbox.DECK2].map((c) => c.href));
   const urls = [...script.matchAll(/["'](https?:\/\/[^"']+)["']/g)]
-    .map((m) => m[1]).filter((u) => !cardHrefs.has(u));
-  ok("0 hard-coded origins in the script beyond the card links", urls.length === 0,
-     urls.join(" | "));
+    .map((m) => m[1]).filter((u) => !cardHrefs.has(u) && u !== SHIPPED_ORIGIN);
+  ok("0 hard-coded origins in the script beyond the card links and the one service",
+     urls.length === 0, urls.join(" | "));
 
   const external = [...html.matchAll(/<(script|link|img|iframe)\b[^>]*\b(src|href)="(https?:)?\/\/[^"]*"/g)];
   ok("0 external resources loaded by the page", external.length === 0,
@@ -480,8 +505,8 @@ function answerQuestions(p, v) {
      JSON.stringify(Object.keys(body).sort()) === JSON.stringify(["code", "rounds", "team", "v"]),
      Object.keys(body).join(","));
   const roundKeys = Object.keys(body.rounds[0]).sort().join(",");
-  ok("a round carries exactly the 10 fields the schema names",
-     roundKeys === "agent,claim,endSide,moved,n,opened,q,seconds,side,tlx", roundKeys);
+  ok("a round carries exactly the 11 fields the schema names",
+     roundKeys === "agent,claim,endSide,moved,n,opened,pick,q,seconds,side,tlx", roundKeys);
   ok("4 opened cards in round 1, matching the session",
      body.rounds[0].opened.length === 4, String(body.rounds[0].opened.length));
   ok("the assistant is marked in exactly one round",
@@ -565,9 +590,23 @@ function answerQuestions(p, v) {
      JSON.stringify(q.S().sent));
 }
 
-/* ---- the undeployed page: no service, no request, the phase 5 finish ---- */
+/* ---- the page as published: the submit screen, and the consent that says so ---- */
 {
-  console.log("\nWith SERVICE.origin empty — no request is even attempted");
+  console.log("\nThe page as published — a service to send to");
+  const p = makePage(undefined, { shipped: true });
+  let touched = 0;
+  p.sandbox.window.fetch = () => { touched += 1; return new Promise(() => {}); };
+  wholeSession(p, { code: "live", team: 2, opens: 2 });
+  ok("the session ends on the submit screen, not the copy-your-line finish", p.screen() === "submit", p.screen());
+  ok("0 requests before the button is pressed", touched === 0, String(touched));
+  ok("the consent screen says numbers may be sent, and sentences never",
+     /choose whether to send your numbers/.test(p.text("storage-statement"))
+     && /sentences never leave/.test(p.text("storage-statement")), p.text("storage-statement"));
+}
+
+/* ---- the switched-off page: no service, no request, the phase 5 finish ---- */
+{
+  console.log("\nWith SERVICE.origin blanked — no request is even attempted");
   const p = makePage();
   let touched = 0;
   p.sandbox.window.fetch = () => { touched += 1; return Promise.reject(new Error("x")); };
@@ -683,7 +722,7 @@ function answerQuestions(p, v) {
         if (!ids.includes(id)) ids.push(id);
       }
       return { round: n, agent, claim: "c" + claim, side: rnd() < 0.5 ? "agree" : "disagree",
-               opened: ids.length, ids, secs: 60 + Math.floor(rnd() * 200),
+               pick: 5 + Math.floor(rnd() * 80), opened: ids.length, ids, secs: 60 + Math.floor(rnd() * 200),
                endSide: rnd() < 0.5 ? "agree" : "disagree", moved: rnd() < 0.5,
                tlx: Math.floor(rnd() * 101), q: 2 + Math.floor(rnd() * 13) };
     };
@@ -697,11 +736,16 @@ function answerQuestions(p, v) {
     id: rec.code, team: rec.team, at: 1,
     rounds: rec.rounds.map((r) => ({
       n: r.round, agent: r.agent, claim: Number(r.claim.slice(1)),
-      side: r.side === "agree" ? "a" : "d", opened: r.ids.slice(), seconds: r.secs,
+      side: r.side === "agree" ? "a" : "d", pick: r.pick, opened: r.ids.slice(), seconds: r.secs,
       endSide: r.endSide === "agree" ? "a" : "d", moved: r.moved, tlx: r.tlx, q: r.q,
     })),
   }));
   const viaLive = asRows.map((row) => B.recordFromRow(row));
+  ok("the seconds to a side survive the trip through the service's rows",
+     viaLive.every((rec, i) => rec.rounds.every((r, j) => r.pick === records[i].rounds[j].pick)));
+  const auPasted = B.pilotAudit(records, null), auLive = B.pilotAudit(viaLive, null);
+  ok("the pilot audit reads the same from the live feed as from the paste box",
+     JSON.stringify(auPasted.rows) === JSON.stringify(auLive.rows));
 
   const pasted = B.summarise(B.pairUp(records, book).pairs);
   const live = B.summarise(B.pairUp(viaLive, book).pairs);
@@ -720,9 +764,9 @@ function answerQuestions(p, v) {
   const strayRow = {
     id: "x", team: 1, at: 1,
     rounds: [
-      { n: 1, agent: true, claim: 1, side: "a", opened: ["c1-99"], seconds: 1,
+      { n: 1, agent: true, claim: 1, side: "a", pick: 1, opened: ["c1-99"], seconds: 1,
         endSide: "a", moved: false, tlx: 1, q: 2 },
-      { n: 2, agent: false, claim: 2, side: "a", opened: ["c2-01"], seconds: 1,
+      { n: 2, agent: false, claim: 2, side: "a", pick: 1, opened: ["c2-01"], seconds: 1,
         endSide: "a", moved: false, tlx: 1, q: 2 },
     ],
   };
@@ -730,6 +774,78 @@ function answerQuestions(p, v) {
   ok("a row with an unknown card id is listed as dropped, not absorbed",
      strayResult.pairs.length === 0 && strayResult.dropped.length === 1,
      JSON.stringify(strayResult.dropped));
+}
+
+/* ---- CL-10: the seconds to a side ---- */
+{
+  console.log("\nCL-10 — the time to choose a side, not to lock it");
+  const busy = (ms) => { const until = Date.now() + ms; while (Date.now() < until) { /* a real wait */ } };
+  const p = makePage();
+  start(p, "clock2", 5);
+  busy(700);
+  p.pick("side", "disagree");     // the side is chosen here...
+  busy(1400);
+  p.set("f-position", "because.");
+  p.click("b-position");          // ...and locked after the sentence is written
+  const ms = p.S().rounds[1].pickMs;
+  ok(`the clock stops at the choice, not the lock (${ms} ms for a side chosen at 700 ms and locked at 2100)`,
+     ms >= 650 && ms < 1100, String(ms));
+
+  const q = makePage();
+  start(q, "clock3", 5);
+  busy(300);
+  q.pick("side", "agree");
+  busy(300);
+  q.pick("side", "disagree");     // a change of mind moves the clock to the last choice
+  q.set("f-position", "because.");
+  q.click("b-position");
+  const ms2 = q.S().rounds[1].pickMs;
+  ok(`a second choice restarts nothing and counts to itself (${ms2} ms)`, ms2 >= 550 && ms2 < 900, String(ms2));
+
+  wholeSession(q, { code: "clock3", team: 5, opens: 2 });
+  const parsed = q.sandbox.window.BXP.parseLine(q.text("d-line"));
+  ok("the line carries the seconds to a side, and parses", !parsed.error && typeof parsed.rec.rounds[0].pick === "number",
+     parsed.error || q.text("d-line").slice(0, 80));
+}
+
+/* ---- Phase 0: the pilot audit, wired ---- */
+{
+  console.log("\nPhase 0 — the pilot audit fills in from the lines and the coders");
+  const cells = [["A", "S"], ["A", "W"], ["NA", "S"], ["NA", "W"]];
+  const text = [];
+  for (const claim of [1, 2]) {
+    for (let i = 1; i <= 16; i++) {
+      const [stance, quality] = cells[(i - 1) % 4];
+      text.push(`| c${claim}-${String(i).padStart(2, "0")} | ${stance}${quality} |`);
+    }
+  }
+  const lines = [];
+  for (let i = 0; i < 12; i++) {
+    const s = wholeSession(makePage(), { code: "au" + i, team: (i % 8) + 1, opens: 3 });
+    lines.push(s.text("d-line"));
+  }
+  const p = makePage();
+  ok("before anything arrives, all 7 criteria are open", p.text("au-open") === "7" && p.text("au-met") === "0",
+     `${p.text("au-met")}/${p.text("au-missed")}/${p.text("au-open")}`);
+
+  p.set("f-codebook", text.join("\n"));
+  p.set("f-lines", lines.join("\n"));
+  p.click("b-analyse");
+  // Every one of the twelve agreed, so CL-1 misses twice, CL-7 is met (0
+  // points apart), CL-10 is met twice (no clock ran), CL-5 waits.
+  const t1 = `${p.text("au-met")}/${p.text("au-missed")}/${p.text("au-open")}`;
+  ok("12 pasted lines: 3 met, 2 not met, 2 open", t1 === "3/2/2", t1);
+
+  p.set("f-coder1", text.join("\n"));
+  p.set("f-coder2", text.join("\n"));
+  p.click("b-coders");
+  const t2 = `${p.text("au-met")}/${p.text("au-missed")}/${p.text("au-open")}`;
+  ok("two identical codebooks close CL-5 for both decks: 5 met, 2 not met, 0 open", t2 === "5/2/0", t2);
+
+  p.set("f-coder2", "");
+  p.click("b-coders");
+  ok("an empty second codebook is refused, and CL-5 goes back to open",
+     !p.nodes.get("e-audit").hidden && p.text("au-open") === "2", p.text("au-open"));
 }
 
 console.log();

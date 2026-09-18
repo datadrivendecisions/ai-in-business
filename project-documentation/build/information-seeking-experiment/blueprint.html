@@ -300,7 +300,7 @@ pre.tree {
     <h2 class="bds-part">1 &middot; Header and provenance</h2>
     <div class="tbl-wrap"><table><tbody>
       <tr><th>Document</th><td>Technical blueprint &mdash; the bias experiment tool</td></tr>
-      <tr><th>Version</th><td>0.2, 15 September 2026</td></tr>
+      <tr><th>Version</th><td>0.4, 18 September 2026</td></tr>
       <tr><th>Implements</th><td><a href="prd.html">PRD &mdash; the bias experiment tool</a></td></tr>
       <tr><th>Serves</th><td>The experiment protocol in <code>work/drafts/week-03-information-seeking-experiment.md</code></td></tr>
       <tr><th>Rests on</th><td><a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0011-continuous-assessment.md" target="_blank" rel="noopener">ADR-0011</a> (gates informational, never scored), <a href="https://github.com/datadrivendecisions/ai-in-business/blob/main/work/decisions/0016-experiment-service.md" target="_blank" rel="noopener">ADR-0016</a> (the service, and the named exception to the no-network rule) and the tool rules in <code>CLAUDE.md</code></td></tr>
@@ -362,23 +362,25 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
       </tbody>
     </table></div>
     <h3>The result line</h3>
-    <pre class="tree">v1|kite|t3
-|r1:ask:c1:posa:op8:ids=c1-03,c1-07,c1-11,c1-02,c1-14,c1-06,c1-09,c1-16:s188:enda:moved1:tlx47:q11
-|r2:none:c2:posd:op6:ids=c2-04,c2-09,c2-01,c2-12,c2-05,c2-16:s142:endd:moved0:tlx38:q9</pre>
+    <pre class="tree">v2|kite|t3
+|r1:ask:c1:posa:pick23:op8:ids=c1-03,c1-07,c1-11,c1-02,c1-14,c1-06,c1-09,c1-16:s188:enda:moved1:tlx47:q11
+|r2:none:c2:posd:pick41:op6:ids=c2-04,c2-09,c2-01,c2-12,c2-05,c2-16:s142:endd:moved0:tlx38:q9</pre>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Token</th><th>Means</th></tr></thead>
       <tbody>
-        <tr><th><code>v1</code></th><td>Line format version. A lecturer view that meets <code>v2</code> says so rather than guessing.</td></tr>
+        <tr><th><code>v2</code></th><td>Line format version. A lecturer view that meets any other version says so rather than guessing.</td></tr>
         <tr><th><code>kite</code></th><td>The student&rsquo;s own code. Never a name.</td></tr>
         <tr><th><code>t3</code></th><td>Team, 1&ndash;8.</td></tr>
         <tr><th><code>r1:ask:c1</code></th><td>Round 1, agent present, claim 1. <code>none</code> where it was absent.</td></tr>
         <tr><th><code>posa</code></th><td>The side locked before reading: <code>posa</code> agrees with the claim, <code>posd</code> disagrees. Congenial is defined against this, so nothing downstream can be computed without it.</td></tr>
+        <tr><th><code>pick23</code></th><td>Seconds from the claim appearing to the side being chosen &mdash; the last choice before the lock, not the lock itself, which also counts writing the sentence. MS-7; CL-10 is read off it.</td></tr>
         <tr><th><code>op8</code> <code>ids=&hellip;</code></th><td>Opened 8, and which 8, in the order they were opened. The two say the same thing twice on purpose: a line whose count and list disagree is refused rather than half-believed.</td></tr>
         <tr><th><code>s188</code></th><td>Seconds spent in that round&rsquo;s menu.</td></tr>
         <tr><th><code>enda</code> <code>moved1</code></th><td>The side ended on, and whether that round&rsquo;s closing sentence differs from its locked one. A side that flips and a sentence that is rewritten are different events and are recorded separately.</td></tr>
         <tr><th><code>tlx47</code> <code>q11</code></th><td>That round&rsquo;s workload total (0&ndash;100) and its two perception items summed (2&ndash;14). <strong>Per round, because a single score at the finish belongs to no condition.</strong></td></tr>
       </tbody>
     </table></div>
+    <p class="aside"><strong>Why the line went to version 2.</strong> The owners decided on 18 September 2026 that the first session is also the pilot for its two claims. CL-1 and CL-7 can be read off <code>pos</code>, which every version carried, but CL-10 asks how long a side took, and nothing in version 1 recorded that. The submission gained the same field, and the service refuses a version 1 payload rather than storing a row the pilot audit cannot read.</p>
     <p class="aside">The line is deliberately readable. A student who wants to know what they are handing over can read it, which is what makes consent to hand it over meaningful.</p>
     <p class="aside"><strong>Why the service returns rows and does not aggregate.</strong> Version 0.2 of this document had the service aggregate on request, which cannot be done. Every figure the comparison rests on is a function of the congeniality index, the index is a function of the codebook, and SM&#8209;8 keeps the codebook out of anything published &mdash; so a service that aggregated would have to hold the answer key, in the cloud, for the one page whose whole design is that the answer key is not in it. The service therefore stores numbers and returns them; the lecturer view, which already holds the arithmetic and already takes the codebook as pasted input, does the rest. This makes the service narrower rather than poorer: it holds no opinion about what any row means, which is the same property &sect;7 claims for the tool.</p>
 
@@ -409,6 +411,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
 
     <h3>CL &mdash; the claims</h3>
     <p>A deck is only as good as the claim it is built around, and a claim that fails these cannot be rescued by better cards.</p>
+    <p class="aside"><strong>The pilot is the first session.</strong> Since version 0.4 the pilot these rules name is the first run with students, by the owners&rsquo; decision: the sides people lock before reading are the split, and <code>pick</code> is the timing. AN-8 measures CL-1, CL-5, CL-7 and CL-10 in the lecturer view. The cost is that a claim which fails is found out after the session rather than before it; that claim is replaced for the next run, and this run&rsquo;s comparison is reported with the miss beside it.</p>
     <div class="tbl-wrap"><table>
       <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
       <tbody>
@@ -435,6 +438,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
         <tr><td id="ms-4"><strong>MS-4</strong></td><td>Whether the final position differs from the locked one should be recorded for each round.</td><td>Should</td><td>2 booleans per session, correct on 10 fixtures.</td><td>Test</td></tr>
         <tr><td id="ms-5"><strong>MS-5</strong></td><td>Time on each card could be recorded.</td><td>Could</td><td>Milliseconds per card, &plusmn; 100 ms of wall clock.</td><td>Test</td></tr>
         <tr><td id="ms-6"><strong>MS-6</strong></td><td>Closing questions should be asked once per round.</td><td>Should</td><td>6 workload items + 2 perception items, 7-point, asked 2 times per session.</td><td>Inspection</td></tr>
+        <tr><td id="ms-7"><strong>MS-7</strong></td><td>The time from the claim appearing to a side being chosen shall be recorded for each round.</td><td>Must</td><td>Whole seconds, 2 per session; the clock stops at the last side chosen before the lock, not at the lock.</td><td>Test</td></tr>
       </tbody>
     </table></div>
 
@@ -473,6 +477,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
         <tr><td id="an-5"><strong>AN-5</strong></td><td>Cohen&rsquo;s kappa for 2 coders should be computed from a 2&times;2 they enter.</td><td>Should</td><td>Matches a hand-computed kappa on 4 fixture matrices to 3 decimal places.</td><td>Test</td></tr>
         <tr><td id="an-7"><strong>AN-7</strong></td><td>The kappa display shall show the 2&times;2 and the chance-agreement figure beside the result.</td><td>Should</td><td>4 cell counts, 1 observed-agreement figure and 1 chance-agreement figure shown with every kappa.</td><td>Inspection</td></tr>
         <tr><td id="an-6"><strong>AN-6</strong></td><td>A line that cannot be parsed shall be listed back to the reader.</td><td>Must</td><td>2 malformed lines &rarr; 2 listed; 0 silent drops.</td><td>Test</td></tr>
+        <tr><td id="an-8"><strong>AN-8</strong></td><td>The lecturer view shall report each measurable phase 0 criterion as met, not met or not yet measurable.</td><td>Must</td><td>CL-1, CL-5, CL-7 and CL-10: 7 verdicts matching a reference on 6 fixture rooms and 4 pairs of codebooks; 0 verdicts given below 10 people or with a card coded by only one coder.</td><td>Test</td></tr>
       </tbody>
     </table></div>
 
@@ -527,7 +532,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
         <tr><td>32 students, two rounds, end to end</td><td>SM-1, SM-3, SM-6, AG-3</td></tr>
         <tr><td>Inside a 150-minute block</td><td>SM-7, MS-6</td></tr>
         <tr><td>On the students&rsquo; own laptops</td><td>DA-1, PR-2, PR-4</td></tr>
-        <tr><td>Every choice and its shown order recorded</td><td>SM-2, SM-9, MS-1, MS-2, MS-3, MS-4, MS-5</td></tr>
+        <tr><td>Every choice and its shown order recorded</td><td>SM-2, SM-9, MS-1, MS-2, MS-3, MS-4, MS-5, MS-7</td></tr>
         <tr><td>Nothing leaving the browser but numbers</td><td>AG-1, SV-1, SV-2, DA-1, DA-3, DA-4</td></tr>
         <tr><td>&mdash; and the session survives the service failing</td><td>SV-6, SV-11, AN-1, AN-6</td></tr>
         <tr><td>&mdash; and what is held is held briefly and narrowly</td><td>SV-3, SV-4, SV-5, SV-8</td></tr>
@@ -537,6 +542,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
         <tr><td>&mdash; and the deck can be built honestly</td><td>CL-2, CL-3, CL-4, CL-9, SM-6</td></tr>
         <tr><td>&mdash; and the conclusion stays with the student</td><td>AN-3, AG-2, AG-4, AG-5</td></tr>
         <tr><td>The room can audit the instrument</td><td>AN-5, AN-7</td></tr>
+        <tr><td>&mdash; and the owners can audit the claims, from the session itself</td><td>AN-8, MS-7, CL-1, CL-5, CL-7, CL-10</td></tr>
         <tr><td>Readable, accessible, on-brand</td><td>PR-1, PR-3, PR-5, PR-6, SM-5, SM-10, SM-11, DA-2, DA-5, SM-8</td></tr>
       </tbody>
     </table></div>
@@ -562,7 +568,7 @@ one result line ──[ Submit ]──&gt; service ──&gt; dashboard (owners 
       <li><strong>Where the codebook lives at analysis time.</strong> <em>Settled in version 0.2, narrowed in 0.3, and the owners may still overrule it.</em> It is pasted into the lecturer view and reaches no server: version 0.3 removed the service&rsquo;s aggregation for that reason. The codebook is pasted into the lecturer view, which is why the result line carries card ids rather than counts; <code>work/drafts/week-03-codebook.md</code> pastes as it stands. The alternative the PRD named &mdash; applying the labels afterwards in a spreadsheet &mdash; is still open to whoever runs the day, and costs nothing to fall back to, since the line holds everything a spreadsheet would need.</li>
       <li><strong>The floor on opens, in the lecturer view.</strong> A round with 0 opens has no index and its student is dropped from the comparison, which is listed rather than silent. Whether a round with 2 opens should be dropped too is the same unresolved question as the one below, seen from the analysis end. <em>Owner: the AIBS owner.</em></li>
       <li><strong>The floor on opens.</strong> A student who passes over nine cards reaches the end with budget unspent. Whether an index computed over three opens is comparable with one over eight is unresolved. <em>Owner: the AIBS owner.</em></li>
-      <li><strong>Both claims are unchosen.</strong> The CL rules say what they must satisfy; finding two that do is the open work. <em>Owner: the AIBS owner.</em></li>
+      <li><strong>Whether the two claims hold.</strong> <em>Chosen, not yet piloted.</em> Deck 1 is <em>own or rent</em> and deck 2 <em>augment or automate</em>. Whether each divides a room, and whether two coders agree on its cards, is settled by the first session and AN-8. <em>Owner: the AIBS owner.</em></li>
     </ul>
   </section>
 

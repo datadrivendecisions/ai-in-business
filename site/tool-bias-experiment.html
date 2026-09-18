@@ -500,7 +500,6 @@ input[type="number"] {
     <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
 
-  <p class="tpl-notice"><strong>Not piloted.</strong> Everything on this page is built and both decks are real: every extract is quoted from the document it names, and every link goes to that document. Two things are still open, and neither is code. The two claims have not been piloted on a room, so nobody yet knows whether either of them divides one. And the service that collects the results is written but not standing up anywhere &mdash; until an owner puts its address in this page it sends nothing at all, and you copy your line and hand it in yourself.</p>
 
   <!-- ============================================================
        1 · Consent. The first screen, before any question is asked.
@@ -824,12 +823,13 @@ input[type="number"] {
     <details style="margin-top:var(--space-6)">
       <summary>What every part of that line means</summary>
       <table class="stat-table">
-        <tr><th><code>v1</code></th><td>The format of the line. A reader that only knows another version says so rather than guessing.</td></tr>
+        <tr><th><code>v2</code></th><td>The format of the line. A reader that only knows another version says so rather than guessing.</td></tr>
         <tr><th><code>kite</code></th><td>The code you chose. Never a name.</td></tr>
         <tr><th><code>t3</code></th><td>Your team number.</td></tr>
         <tr><th><code>r1:ask</code> / <code>r1:none</code></th><td>Round one, with the assistant or without it.</td></tr>
         <tr><th><code>c1</code></th><td>Which claim that round used.</td></tr>
         <tr><th><code>posa</code> / <code>posd</code></th><td>The side you locked before reading: agree or disagree.</td></tr>
+        <tr><th><code>pick23</code></th><td>Seconds from the claim appearing to you choosing a side.</td></tr>
         <tr><th><code>op6</code></th><td>How many sources you opened.</td></tr>
         <tr><th><code>ids=&hellip;</code></th><td>Which ones, in the order you opened them. Whether a source agreed with you is not in this page at all. That list is held separately and applied afterwards, so someone can show you the arithmetic behind your own number.</td></tr>
         <tr><th><code>s188</code></th><td>Seconds spent on the sources in that round.</td></tr>
@@ -1002,6 +1002,40 @@ input[type="number"] {
       <tr><th>Cohen&rsquo;s kappa</th><td id="k-k">&mdash;</td></tr>
     </table>
     <p class="err" id="e-kappa" role="alert" hidden></p>
+
+    <!-- The pilot audit. The first session is also the pilot for its two
+         claims, so phase 0 of the build plan closes on what this table
+         says. It reports on the instrument — did the claims divide the
+         room, could people answer them, did the coders agree — and not on
+         the question the session asks, which is why it can say "met"
+         where the section above may only ask. -->
+    <h3 style="margin-top:var(--space-8)">Pilot audit: do the two claims hold?</h3>
+    <p class="note">This session is also the pilot for its two claims. The sides people locked before reading are the pilot&rsquo;s split, and the seconds until they chose one are its timing. Both arrive with the lines above, so this table fills in when they do. The one input the room cannot supply is the coders&rsquo; agreement: two people code all 32 cards, each on their own, and paste the result here.</p>
+    <div class="field">
+      <label for="f-coder1">Coder 1&rsquo;s codebook
+        <span class="hint">The same shape as the codebook above: any line carrying a card id followed by its cell code.</span>
+      </label>
+      <textarea id="f-coder1" spellcheck="false"></textarea>
+    </div>
+    <div class="field">
+      <label for="f-coder2">Coder 2&rsquo;s codebook</label>
+      <textarea id="f-coder2" spellcheck="false"></textarea>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" id="b-coders">Compare the two coders</button>
+    </div>
+    <p class="err" id="e-audit" role="alert" hidden></p>
+
+    <div class="tally">
+      <div><span class="n" id="au-met">0</span><span class="k">criteria met</span></div>
+      <div><span class="n" id="au-missed">0</span><span class="k">not met</span></div>
+      <div><span class="n" id="au-open">7</span><span class="k">not yet measurable</span></div>
+    </div>
+    <table class="stat-table">
+      <tbody id="au-rows"></tbody>
+    </table>
+    <p class="note">A claim that misses CL-1 or CL-10 is replaced before the next run, and this run&rsquo;s comparison is reported with the miss written beside it. A deck that misses CL-5 holds a card the two coders read differently. Replace that card, and leave the coding as it came.</p>
+    <p class="note">Two phase 0 checks are judgements, so this table leaves them out. CL-8: neither claim is a team&rsquo;s own handbook topic. CL-9: both owners, working apart, class each claim as a question of professional judgement. Tick both in the build plan.</p>
   </section>
 
 </main>
@@ -1323,7 +1357,11 @@ var DECK2 = [
 ];
 
 var BUDGET = 8;
-var LINE_VERSION = 1;
+/* Version 2 added `pick`, the seconds from the claim appearing to a side
+   being chosen. The first session is also the pilot for its two claims,
+   and CL-10 — a side inside a minute — cannot be read off anything
+   version 1 recorded. */
+var LINE_VERSION = 2;
 
 /* ---------------- the service ---------------- */
 /* The one exception to this site's no-network rule, argued in ADR-0016 and
@@ -1337,7 +1375,7 @@ var LINE_VERSION = 1;
    submission on, and the fallback below is what happens every time it
    fails afterwards. */
 var SERVICE = {
-  origin: "",
+  origin: "https://experiment-service-349006826805.europe-west4.run.app",
   submit: "/submit",
   dashboard: "/dashboard",
   timeoutMs: 8000
@@ -1389,14 +1427,14 @@ function clearState(){ try{ localStorage.removeItem(LKEY); }catch(e){} }
 
 /* ---------------- state ---------------- */
 /* Version 2 added the second round, the agent step, the timings and the
-   closing questions. A session stored under version 1 is discarded
-   rather than migrated: nothing has been run with it, and a half-filled
-   round would sit in the data as a complete one. */
-function freshState(){ return { v: 2, screen: "consent", consented: false, round: 1,
+   closing questions; version 3 the time taken to choose a side. An older
+   session is discarded rather than migrated: nothing has been run with
+   one, and a half-filled round would sit in the data as a complete one. */
+function freshState(){ return { v: 3, screen: "consent", consented: false, round: 1,
                                rounds: {}, sent: false, outcome: "" }; }
 
 var S = loadState();
-if (!S || S.v !== 2) S = freshState();
+if (!S || S.v !== 3) S = freshState();
 
 /* Nothing is written until the student has agreed to it. Until then the
    state lives in memory only, so a visitor who reads the consent screen
@@ -1530,6 +1568,7 @@ function newRound(n){
     opens: 0,
     choices: [],
     side: "",
+    pickMs: 0,
     locked: "",
     agentReply: "",
     finalSide: "",
@@ -1617,13 +1656,26 @@ $("b-consent").addEventListener("click", function(){
 });
 
 /* ---------------- position ---------------- */
+/* CL-10 asks whether people can take a side inside a minute, so the clock
+   runs from the claim appearing to the moment the side they lock was last
+   chosen — not to the lock, which also counts writing the sentence. A
+   side restored without a click falls back to the lock. A reload restarts
+   the clock, as it does for a card. */
+var tPosition = 0, tSide = 0;
+
 function toPosition(){
   tagRounds();
   $("claim-position").textContent = conf().text;
   setSide("side", R().side);
   $("f-position").value = R().locked || "";
+  tPosition = Date.now();
+  tSide = 0;
   show("position");
 }
+
+Array.prototype.forEach.call(document.querySelectorAll('input[name="side"]'), function(radio){
+  radio.addEventListener("change", function(){ tSide = Date.now(); });
+});
 
 $("b-position").addEventListener("click", function(){
   var side = pickedSide("side");
@@ -1640,6 +1692,7 @@ $("b-position").addEventListener("click", function(){
   }
   clearFail("e-position", "f-position");
   R().side = side;
+  R().pickMs = tPosition ? (tSide || Date.now()) - tPosition : 0;
   R().locked = t;
   save();
   afterPosition();
@@ -1919,6 +1972,7 @@ function roundSeconds(r){
   r.choices.forEach(function(c){ ms += (c.ms || 0); });
   return Math.round(ms / 1000);
 }
+function pickSeconds(r){ return Math.round((r.pickMs || 0) / 1000); }
 
 /* Six items on a 7-point scale total 6 to 42. Rescaled to 0–100 so the
    number means the same thing as every other workload total anyone will
@@ -1945,6 +1999,7 @@ function roundBlock(n, r){
     r.agent ? "ask" : "none",
     r.claim,
     "pos" + sideLetter(r.side),
+    "pick" + pickSeconds(r),
     "op" + opened.length,
     "ids=" + opened.join(","),
     "s" + roundSeconds(r),
@@ -1973,6 +2028,7 @@ function roundPayload(n, r){
     agent: !!r.agent,
     claim: Number(r.claim.slice(1)),
     side: sideLetter(r.side),
+    pick: pickSeconds(r),
     opened: r.choices.filter(function(c){ return c.open; }).map(function(c){ return c.id; }),
     seconds: roundSeconds(r),
     endSide: sideLetter(r.finalSide),
@@ -2158,6 +2214,7 @@ var ROUND_SHAPE = [
   { key: "agent",  re: /^(ask|none)$/ },
   { key: "claim",  re: /^(c[12])$/ },
   { key: "side",   re: /^pos([ad])$/ },
+  { key: "pick",   re: /^pick(\d+)$/ },
   { key: "opened", re: /^op(\d+)$/ },
   { key: "ids",    re: /^ids=(.*)$/ },
   { key: "secs",   re: /^s(\d+)$/ },
@@ -2179,6 +2236,7 @@ function parseRound(block){
     out[ROUND_SHAPE[i].key] = m[1];
   }
   out.round = Number(out.round);
+  out.pick = Number(out.pick);
   out.opened = Number(out.opened);
   out.secs = Number(out.secs);
   out.tlx = Number(out.tlx);
@@ -2211,7 +2269,7 @@ function parseLine(raw){
 
   var vm = f[0].match(/^v(\d+)$/);
   if (!vm) return { error: "does not start with a version token" };
-  if (Number(vm[1]) !== 1) return { error: "was written by version " + vm[1] + " of the tool; this reader knows v1" };
+  if (Number(vm[1]) !== LINE_VERSION) return { error: "was written by version " + vm[1] + " of the tool; this reader knows v" + LINE_VERSION };
 
   if (!/^[^|:,]{1,20}$/.test(f[1])) return { error: "the code “" + f[1] + "” is empty or holds a separator" };
   var tm = f[2].match(/^t([1-8])$/);
@@ -2480,6 +2538,118 @@ function kappa2x2(a, b, c, d){
   return { n: n, po: po, pe: pe, kappa: (po - pe) / (1 - pe) };
 }
 
+/* ---------------- the pilot audit ---------------- */
+/* The first session is also the pilot for its two claims: the positions
+   people lock before reading are the pilot's split, and the seconds until
+   they chose a side are its timing. This turns them, and two coders'
+   independent codebooks, into the phase 0 criteria of the build plan.
+
+   Each criterion is met, missed, or not yet measurable — never guessed.
+   What it reports is a fact about the instrument, not a finding about
+   the question the session asks, so AN-3 is not in play here. The
+   thresholds are the blueprint's, and live in one place. */
+var PILOT = {
+  minPeople: 10,      // CL-1: a pilot of at least ten
+  maxSide: 0.70,      // CL-1: neither side above 70%
+  maxGap: 15,         // CL-7: splits within 15 percentage points
+  pickWithin: 60,     // CL-10: a side inside 60 seconds...
+  pickShare: 0.9,     // ...by at least 9 in 10
+  stanceAgreed: 15    // CL-5: 2 coders agree on at least 15 of 16 stances
+};
+
+function claimSplit(records, claim){
+  var n = 0, agree = 0, quick = 0;
+  records.forEach(function(rec){
+    rec.rounds.forEach(function(r){
+      if (r.claim !== claim) return;
+      n++;
+      if (r.side === "agree") agree++;
+      if (r.pick <= PILOT.pickWithin) quick++;
+    });
+  });
+  return { n: n, agree: agree, disagree: n - agree,
+           larger: n ? Math.max(agree, n - agree) / n : null,
+           quick: quick, quickShare: n ? quick / n : null };
+}
+
+/* Stance only for the kappa, because stance is the axis CL-5 is about;
+   quality agreement is counted beside it, since a card the coders place
+   in different cells is worth knowing about either way. */
+function compareCoders(one, two){
+  var out = {};
+  ["c1", "c2"].forEach(function(claim){
+    var m = { a: 0, b: 0, c: 0, d: 0 }, missing = [], quality = 0, coded = 0;
+    for (var i = 1; i <= 16; i++){
+      var id = claim + "-" + (i < 10 ? "0" : "") + i;
+      var x = one[id], y = two[id];
+      if (!x || !y){ missing.push(id); continue; }
+      coded++;
+      if (x.stance === "A" && y.stance === "A") m.a++;
+      else if (x.stance === "A") m.b++;
+      else if (y.stance === "A") m.c++;
+      else m.d++;
+      if (x.quality === y.quality) quality++;
+    }
+    out[claim] = { coded: coded, missing: missing, matrix: m, agreed: m.a + m.d,
+                   quality: quality, k: coded ? kappa2x2(m.a, m.b, m.c, m.d) : null };
+  });
+  return out;
+}
+
+function pilotAudit(records, coders){
+  var rows = [];
+  var split = { c1: claimSplit(records || [], "c1"), c2: claimSplit(records || [], "c2") };
+  function row(rule, bar, value, verdict){ rows.push({ rule: rule, bar: bar, value: value, verdict: verdict }); }
+  function few(s){ return s.n + (s.n === 1 ? " person" : " people") + " so far, and the pilot needs " + PILOT.minPeople; }
+
+  ["c1", "c2"].forEach(function(claim, i){
+    var s = split[claim];
+    var bar = "Claim " + (i + 1) + ": neither side above " + Math.round(PILOT.maxSide * 100) + "%, over at least " + PILOT.minPeople + " people";
+    if (s.n < PILOT.minPeople){ row("CL-1", bar, few(s), "open"); return; }
+    row("CL-1", bar, s.agree + " agreed and " + s.disagree + " disagreed, of " + s.n + ": the larger side is " + pct(s.larger),
+        s.larger <= PILOT.maxSide + 1e-9 ? "met" : "missed");
+  });
+
+  var barGap = "The two claims' larger sides within " + PILOT.maxGap + " percentage points of each other";
+  if (split.c1.n < PILOT.minPeople || split.c2.n < PILOT.minPeople){
+    row("CL-7", barGap, "Needs both claims measured first", "open");
+  } else {
+    var gap = Math.abs(split.c1.larger - split.c2.larger) * 100;
+    row("CL-7", barGap, pct(split.c1.larger) + " and " + pct(split.c2.larger) + ": " + fmt(gap, 1) + " points apart",
+        gap <= PILOT.maxGap + 1e-9 ? "met" : "missed");
+  }
+
+  ["c1", "c2"].forEach(function(claim, i){
+    var s = split[claim];
+    var bar = "Claim " + (i + 1) + ": at least " + Math.round(PILOT.pickShare * 10) + " in 10 choose a side within " + PILOT.pickWithin + " seconds";
+    if (s.n < PILOT.minPeople){ row("CL-10", bar, few(s), "open"); return; }
+    row("CL-10", bar, s.quick + " of " + s.n + " did, which is " + pct(s.quickShare),
+        s.quickShare >= PILOT.pickShare - 1e-9 ? "met" : "missed");
+  });
+
+  ["c1", "c2"].forEach(function(claim, i){
+    var bar = "Deck " + (i + 1) + ": two coders, working apart, agree on at least " + PILOT.stanceAgreed + " of 16 stances";
+    var c = coders && coders[claim];
+    if (!c){ row("CL-5", bar, "The two codebooks are not in yet", "open"); return; }
+    if (c.missing.length){
+      row("CL-5", bar, c.missing.length + " of 16 cards are not coded by both: " + c.missing.join(", "), "open");
+      return;
+    }
+    var m = c.matrix;
+    var kappaText = c.k.kappa === null ? c.k.note : "kappa " + fmt(c.k.kappa, 3);
+    row("CL-5", bar,
+        c.agreed + " of 16 stances agreed. Both supporting " + m.a + ", both opposing " + m.d +
+        ", coder 1 supporting and coder 2 opposing " + m.b + ", the reverse " + m.c +
+        ". Observed agreement " + fmt(c.k.po, 3) + ", by chance " + fmt(c.k.pe, 3) + ", " + kappaText +
+        ". Same quality on " + c.quality + " of 16.",
+        c.agreed >= PILOT.stanceAgreed ? "met" : "missed");
+  });
+
+  var tally = { met: 0, missed: 0, open: 0 };
+  rows.forEach(function(r){ tally[r.verdict]++; });
+  return { rows: rows, tally: tally, split: split };
+}
+
 /* Exposed so the fixtures can be run against this exact code from
    outside a browser. Nothing here is a codebook and nothing here is
    state; it is arithmetic. */
@@ -2492,6 +2662,7 @@ window.BXP = {
   governingNumbers: governingNumbers, recordFromRow: recordFromRow,
   get FIXTURES(){ return FIXTURES; },
   pairUp: pairUp, summarise: summarise, kappa2x2: kappa2x2,
+  PILOT: PILOT, claimSplit: claimSplit, compareCoders: compareCoders, pilotAudit: pilotAudit,
   detectableEffect: detectableEffect, pairedPower: pairedPower,
   nctCdf: nctCdf, normCdf: normCdf, tinv: tinv, tcdf: tcdf,
   mean: mean, sd: sd, agentPrompt: agentPrompt, tlxTotal: tlxTotal,
@@ -2663,6 +2834,8 @@ function readCodebook(){
    there is one implementation, and the paste box and the live feed are two
    ways of filling its argument. */
 function renderAnalysis(accepted, rejected, book){
+  AUDIT.records = accepted;
+  renderAudit();
   var up = pairUp(accepted, book.map);
   up.dropped.forEach(function(d){ rejected.push({ n: null, why: d.why, text: d.code }); });
 
@@ -2763,6 +2936,7 @@ function recordFromRow(row){
         agent: !!r.agent,
         claim: "c" + r.claim,
         side: side(r.side),
+        pick: r.pick,
         opened: r.opened.length,
         ids: r.opened.slice(),
         secs: r.seconds,
@@ -2899,6 +3073,61 @@ $("b-kappa").addEventListener("click", function(){
   $("k-out").hidden = false;
 });
 
+/* ---------------- the pilot audit ---------------- */
+/* Fed by whichever route last filled the analysis — live feed, paste box
+   or fixture — so it always describes the records on screen, and by the
+   two coders' codebooks when they are compared. Every accepted record
+   counts, including one the comparison drops for opening nothing: that
+   student still took a side before reading, which is all the split asks. */
+var AUDIT = { records: null, coders: null };
+var VERDICT_WORDS = { met: "Met", missed: "Not met", open: "Not yet measurable" };
+
+function renderAudit(){
+  var a = pilotAudit(AUDIT.records || [], AUDIT.coders);
+  $("au-met").textContent = String(a.tally.met);
+  $("au-missed").textContent = String(a.tally.missed);
+  $("au-open").textContent = String(a.tally.open);
+  var body = $("au-rows");
+  body.textContent = "";
+  a.rows.forEach(function(r){
+    var tr = document.createElement("tr");
+    var th = document.createElement("th");
+    th.textContent = r.rule + " · " + r.bar;
+    var td = document.createElement("td");
+    var verdict = document.createElement("strong");
+    verdict.textContent = VERDICT_WORDS[r.verdict] + ". ";
+    var value = document.createElement("span");
+    value.textContent = r.value;
+    td.appendChild(verdict);
+    td.appendChild(value);
+    tr.appendChild(th);
+    tr.appendChild(td);
+    body.appendChild(tr);
+  });
+  return a;
+}
+
+$("b-coders").addEventListener("click", function(){
+  clearFail("e-audit");
+  var one = parseCodebook($("f-coder1").value);
+  var two = parseCodebook($("f-coder2").value);
+  if (one.n === 0 || two.n === 0){
+    fail("e-audit", "Both codebooks are needed, each with a card id and its cell code on every row it codes. " +
+         (one.n === 0 ? "Coder 1's" : "Coder 2's") + " has none that can be read.");
+    AUDIT.coders = null;
+    renderAudit();
+    return;
+  }
+  var dup = one.duplicates.concat(two.duplicates);
+  if (dup.length){
+    fail("e-audit", "These cards are coded more than once in one codebook, and the last one wins: " + dup.join(", ") + ".");
+  }
+  AUDIT.coders = compareCoders(one.map, two.map);
+  renderAudit();
+});
+
+renderAudit();
+
 /* ---------------- fixtures, for a dry run ---------------- */
 /* Four rooms, one per region of the interval, so an owner can rehearse the
    ten minutes between the last student finishing and the comparison going
@@ -2958,6 +3187,10 @@ function fixtureCards(deck, book, side, p, k, rnd){
 
 function fixtureLines(spec, book){
   var rnd = seeded(spec.seed);
+  /* The seconds to a side come from a stream of their own, so adding them
+     did not move a single card choice — and with it the region each room
+     lands in — away from where the fixtures were checked. */
+  var rndPick = seeded(spec.seed + 1);
   var words = ["kite","pumice","bramble","gannet","quartz","lintel","mallow","osprey","tundra","verger",
                "willow","yarrow","zephyr","alder","birch","cedar","damson","elder","fennel","gorse",
                "hazel","ilex","juniper","kelp","larch","medlar","nettle","oleander","privet","quince",
@@ -2984,6 +3217,7 @@ function fixtureLines(spec, book){
         agentRound === n ? "ask" : "none",
         "c" + n,
         "pos" + sideLetter(side),
+        "pick" + (8 + Math.floor(rndPick() * 56)),
         "op" + opened.length,
         "ids=" + opened.join(","),
         "s" + (90 + Math.floor(rnd() * 200)),
@@ -2993,7 +3227,7 @@ function fixtureLines(spec, book){
         "q" + (4 + Math.floor(rnd() * 9))
       ].join(":"));
     }
-    lines.push(["v1", words[i], "t" + team, blocks[0], blocks[1]].join("|"));
+    lines.push(["v" + LINE_VERSION, words[i], "t" + team, blocks[0], blocks[1]].join("|"));
   }
   return lines;
 }

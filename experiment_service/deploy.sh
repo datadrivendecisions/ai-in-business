@@ -9,21 +9,34 @@
 # second one. Nothing here touches the Socratic gate's service, and a bad
 # deploy of this cannot take that down.
 set -euo pipefail
+cd "$(dirname "$0")"          # --source . below means this directory, wherever it is run from
 
 PROJECT="${PROJECT:?set PROJECT to the course cloud project}"
 REGION="${REGION:-europe-west4}"          # EU, per ADR-0016
 SERVICE="${SERVICE:-experiment-service}"
 PAGES_ORIGIN="${PAGES_ORIGIN:-https://datadrivendecisions.github.io}"
+DATABASE="${DATABASE:-experiment}"      # its own, never the project's (default)
 
 say() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
 
 say "APIs"
 gcloud services enable run.googleapis.com firestore.googleapis.com \
-  cloudscheduler.googleapis.com secretmanager.googleapis.com --project "$PROJECT"
+  cloudscheduler.googleapis.com secretmanager.googleapis.com \
+  cloudbuild.googleapis.com artifactregistry.googleapis.com --project "$PROJECT"
 
-say "Firestore, in the same EU region"
-gcloud firestore databases create --location="$REGION" --project "$PROJECT" 2>/dev/null \
-  || echo "   a database already exists; leaving it alone"
+say "Firestore: a database of its own, in the same EU region"
+# Not the project's (default). In the course project that one holds the
+# Socratic gate's owner_reports/, which ADR-0015 keeps from anything a student
+# can reach -- and this service answers every browser. A named database, and
+# a role bound to it alone, make that a permission rather than a habit.
+# Named databases are billed from the first read; for one day of thirty-two
+# rows that is cents.
+if gcloud firestore databases describe --database="$DATABASE" --project "$PROJECT" >/dev/null 2>&1; then
+  echo "   $DATABASE already exists; leaving it alone"
+else
+  gcloud firestore databases create --database="$DATABASE" --location="$REGION" \
+    --type=firestore-native --project "$PROJECT"
+fi
 
 say "Three secrets"
 # The owners' token opens the dashboard and the delete route. The scheduler's
@@ -40,12 +53,23 @@ for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
   fi
 done
 
-say "A service account that may read and write one collection"
+say "A service account that may read and write one database, and no other"
 SA="experiment-service@${PROJECT}.iam.gserviceaccount.com"
 gcloud iam service-accounts create experiment-service \
   --display-name "Week 3 experiment service" --project "$PROJECT" 2>/dev/null || true
-gcloud projects add-iam-policy-binding "$PROJECT" \
-  --member "serviceAccount:$SA" --role roles/datastore.user --condition=None >/dev/null
+# A new account takes a little while to become visible to IAM, and binding
+# it too soon fails with "does not exist". Try for about a minute.
+for attempt in 1 2 3 4 5 6; do
+  if gcloud projects add-iam-policy-binding "$PROJECT" \
+       --member "serviceAccount:$SA" --role roles/datastore.user \
+       --condition="expression=resource.name == 'projects/${PROJECT}/databases/${DATABASE}',title=experiment-database-only,description=The week 3 experiment database and nothing else" \
+       >/dev/null; then
+    break
+  fi
+  [ "$attempt" = 6 ] && { echo "   the account never became visible to IAM; run this script again"; exit 1; }
+  echo "   the new account is not visible to IAM yet; trying again in 10 seconds"
+  sleep 10
+done
 for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
   gcloud secrets add-iam-policy-binding "$name" --project "$PROJECT" \
     --member "serviceAccount:$SA" --role roles/secretmanager.secretAccessor >/dev/null
@@ -64,7 +88,7 @@ gcloud run deploy "$SERVICE" \
   --min-instances 0 \
   --max-instances 4 \
   --memory 256Mi \
-  --set-env-vars "FIRESTORE_PROJECT=${PROJECT},ALLOWED_ORIGINS=${PAGES_ORIGIN}" \
+  --set-env-vars "FIRESTORE_PROJECT=${PROJECT},FIRESTORE_DATABASE=${DATABASE},ALLOWED_ORIGINS=${PAGES_ORIGIN}" \
   --set-secrets "OWNER_TOKEN=experiment-owner-token:latest,PURGE_TOKEN=experiment-purge-token:latest,ID_SALT=experiment-id-salt:latest"
 
 URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')"
@@ -87,7 +111,7 @@ gcloud scheduler jobs create http experiment-purge \
        --headers "Authorization=Bearer ${PURGE_TOKEN}"
 
 say "A TTL policy, for the night the scheduler does not fire"
-gcloud firestore fields ttls update expiresAt \
+gcloud firestore fields ttls update expiresAt --database="$DATABASE" \
   --collection-group=submissions --enable-ttl --project "$PROJECT" --quiet \
   || echo "   set the TTL on submissions.expiresAt by hand in the console"
 
