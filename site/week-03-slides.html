@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Week 3 slides — AI in Business</title>
+<meta name="description" content="The slides from the week-2 session of AI in Business, as one readable page." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Slide decks as pages: one card per slide, in reading order. */
+.deck-nav { columns: 2; column-gap: var(--space-6); font-size: var(--text-sm); margin: 0 0 var(--space-8); padding-left: 1.4em; }
+.deck-nav li { break-inside: avoid; margin-bottom: var(--space-1); }
+.slide { border: 1px solid var(--border); border-radius: var(--radius-md); background: #fff; padding: var(--space-6) var(--space-6) var(--space-6); margin: 0 0 var(--space-6); }
+.slide-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); margin: 0 0 var(--space-2); }
+.slide-kicker { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--supporting); margin: 0; }
+.slide h2 { font-size: var(--text-2xl); line-height: 1.2; margin: 0 0 var(--space-4); }
+.slide-no { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.slide ul { margin: 0; padding-left: 1.2em; }
+.slide li { margin-bottom: var(--space-2); }
+.slide li strong { color: var(--text-primary); }
+.slide p { margin: 0 0 var(--space-3); }
+.slide > :last-child { margin-bottom: 0; }
+.slide.is-title { background: var(--bg-cream); border-color: var(--border-strong); }
+.slide.is-title h2 { font-size: var(--text-4xl); }
+.slide.is-title p { color: var(--text-secondary); }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-6); }
+.cols h3 { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); margin: 0 0 var(--space-2); }
+.slide .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--space-2); margin: var(--space-3) 0; padding: 0; list-style: none; }
+.slide .roles li { background: var(--bg-cream); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); font-weight: 700; text-align: center; margin: 0; }
+@media (max-width: 640px) { .deck-nav { columns: 1; } .slide { padding: var(--space-6) var(--space-4); } }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="index.html#programme">Week map</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · week 3 · slides</div>
+    <h1 class="bds-h1">Trust and AI safety</h1>
+    <p class="lead">What an agent is, what the harness around it does, and where an SME can trust one.</p>
+    <p>The slides shown in the week-3 session, one card per slide, in order. Same content as on the screen, readable on a phone, nothing to download. To present them, open the <a href="week-03-deck.html">full-screen deck</a>: one slide at a time, arrow keys or a clicker. <span class="tpl">The rest of the session&rsquo;s cards are added before Monday.</span></p>
+  </header>
+
+  <nav aria-label="Slides">
+    <ol class="deck-nav"><li><a href="#s1">Trust and AI safety</a></li><li><a href="#s2">The experiment, debriefed</a></li><li><a href="#s3">You have used an agent since week&nbsp;1</a></li><li><a href="#s4">The model is rented; the harness is the part you own</a></li><li><a href="#s5">Trusting an agent splits three ways: data, output, people</a></li></ol>
+  </nav>
+
+  <section class="slide is-title" id="s1">
+    <div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 5</span></div>
+    <h2>Trust and AI safety</h2>
+    <p>Week 3.</p>
+  </section>
+  <section class="slide" id="s2">
+    <div class="slide-head"><div class="slide-kicker">Debrief</div><span class="slide-no">2 / 5</span></div>
+    <h2>The experiment, debriefed</h2>
+    <p class="tpl">Added with the rest of the week 3 deck.</p>
+  </section>
+  <section class="slide" id="s3">
+    <div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">3 / 5</span></div>
+    <h2>You have used an agent since week&nbsp;1</h2>
+    <p><strong><a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-agents" target="_blank" rel="noopener">Agent</a>:</strong> an LLM (large language model) using tools in a loop, towards a goal.</p><ul><li><strong>Workflow or agent?</strong> Code or model: who picks the next step?</li><li><strong>The loop:</strong> reason, act, observe (ReAct).</li><li><strong>The week 1 intern:</strong> capable, needs oversight.</li></ul>
+  </section>
+  <section class="slide" id="s4">
+    <div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">4 / 5</span></div>
+    <h2>The model is rented; the harness is the part you own</h2>
+    <ul><li><strong>Harness:</strong> the software around the model. Model as CPU, harness as <a href="https://businessdatasolutions.github.io/architecture-of-scale/harness-is-os-en.html" target="_blank" rel="noopener">operating system</a>.</li><li><strong>This week&rsquo;s choice:</strong> where knowledge lives. RAG retrieves, LLM Wiki compiles, Fat Skills act &mdash; <a href="https://businessdatasolutions.github.io/architecture-of-scale/architecture-of-scale-en.html" target="_blank" rel="noopener">one question, four ways</a>.</li><li><strong>Still ahead:</strong> Contracts, Constraints, Compounding.</li></ul>
+  </section>
+  <section class="slide" id="s5">
+    <div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">5 / 5</span></div>
+    <h2>Trusting an agent splits three ways: data, output, people</h2>
+    <ul><li><strong>Data.</strong> Rent the model, or run a small one in-house.</li><li><strong>Output.</strong> Users regret an agent that <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/agent-oversight-and-delegation" target="_blank" rel="noopener">acted beyond what they authorised</a> &mdash; even when it was right.</li><li><strong>People.</strong> Hiding AI use: <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-knowledge-hiding" target="_blank" rel="noopener">14&nbsp;% where trust is highest, 47&nbsp;% where lowest</a>.</li></ul>
+  </section>
+
+  <section id="where">
+    <p class="chapter-meta">Session of Monday 21 September 2026. Back to the <a href="index.html#programme">week map</a>.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

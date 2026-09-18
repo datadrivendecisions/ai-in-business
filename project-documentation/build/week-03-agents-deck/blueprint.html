@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blueprint: the AI agents segment — AI in Business</title>
+<meta name="description" content="Blueprint for the three-card segment on AI agents in the week 3 session — target state, rules and the checks behind them." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+
+/* Additions for this page: a folder tree, a boxed aside, and a departure
+   marker in the trace table. prd-criteria.html uses .cards and .callout
+   without a rule for either; this page defines what it uses. */
+pre.tree {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm); line-height: 1.5;
+  background: var(--bg-cream-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+  overflow-x: auto; margin: var(--space-4) 0;
+}
+.aside {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.aside p:last-child { margin-bottom: 0; }
+.departs { font-weight: 600; color: var(--supporting); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="https://datadrivendecisions.github.io/ai-in-business/index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html">Course</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/week-01.html">Week 1</a>
+      <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">Week 3 &middot; blueprint &middot; target state</div>
+    <h1 class="bds-h1">Blueprint: the AI agents segment</h1>
+    <blockquote class="lead-quote"><em>Three cards, three notes, one provenance table &mdash; and the line the segment may not cross before the experiment has run.</em></blockquote>
+    <p class="lead">The three-card segment on AI agents in the week&nbsp;3 session: what goes on each card, what the lecturer says over it, where every claim comes from, and the two skill checks every card passes.</p>
+    <p class="tpl-notice"><strong>This document describes the finished segment only.</strong> The order of work and the record of what exists belong to the <a href="buildplan.html">build plan</a>, which is the state. When the two disagree, this document is the intent and the card page is the backlog.</p>
+  </header>
+
+  <section id="provenance">
+    <h2 class="bds-part">1 &middot; Header and provenance</h2>
+    <div class="tbl-wrap"><table><tbody>
+      <tr><th>Document</th><td>Blueprint &mdash; the AI agents segment of week&nbsp;3</td></tr>
+      <tr><th>Version</th><td>0.1, 18 September 2026</td></tr>
+      <tr><th>Implements</th><td><a href="prd.html">PRD &mdash; the AI agents segment</a></td></tr>
+      <tr><th>Rests on</th><td>The integrated LRD, Part&nbsp;8; the <code>slide-deck</code> and <code>strip-ai-language</code> skills; the instructor-material rule in <code>CLAUDE.md</code></td></tr>
+      <tr><th>Checked by</th><td><a href="check-agents-deck.py"><code>check-agents-deck.py</code></a> beside this document &mdash; every rule whose method is <em>Test</em></td></tr>
+      <tr><th>Owner</th><td>The AEL owner</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="goal">
+    <h2 class="bds-part">2 &middot; The goal</h2>
+    <p><strong>Three cards introduce AI agents to the 32 students of week&nbsp;3 in at most 15 minutes, after the experiment debrief, each card inside the slide-deck limits, every factual claim traced to an AI Wiki page, no AI-language finding left unreviewed, and the presenter deck, PDF and PPTX produced by one command.</strong></p>
+    <p>Every rule below serves a part of that sentence, and every part of it is covered by a rule. The trace is in &sect;8.</p>
+  </section>
+
+  <section id="parts">
+    <h2 class="bds-part">3 &middot; The parts</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Part</th><th>Lives in</th><th>Does</th><th>Knows nothing about</th></tr></thead>
+      <tbody>
+        <tr><th>The three cards</th><td><code>site/week-03-slides.html</code>, kicker <em>AI agents</em></td><td>Carry what the voice cannot: the headline, a phrase per point, the links.</td><td>The argument, which belongs to the lecturer.</td></tr>
+        <tr><th>The three notes</th><td><code>project-documentation/slides/week-03-notes.md</code>, one <code>## sN</code> block per card</td><td>Hold the talk track, the module-week links and the tie-in to the room&rsquo;s own experiment round.</td><td>Anything whose worth depends on a student not having read it.</td></tr>
+        <tr><th>The provenance table</th><td><code>provenance.md</code> beside this document</td><td>Maps every factual claim on a card or in a note to one AI Wiki page.</td><td>Wording.</td></tr>
+        <tr><th>The presenter build</th><td><code>site/week-03-deck.html</code>, <code>week-03-deck.pdf</code>, <code>week-03-deck.pptx</code></td><td>Generated from cards and notes by <code>build_deck.py 3</code>.</td><td>Hand edits. None are made.</td></tr>
+        <tr><th>The two visualisations</th><td><code>businessdatasolutions.github.io/architecture-of-scale/</code></td><td>Show the harness as an operating system, and four knowledge architectures answering one question.</td><td>This course. They are linked, never copied.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="flow">
+    <h2 class="bds-part">4 &middot; Where the segment sits in the session</h2>
+<pre>experiment round 1 ─ experiment round 2 ─ DEBRIEF ─┬─ card 1  an agent is what you already use
+                                                   ├─ card 2  the harness is the part you own
+                                                   └─ card 3  trust splits three ways
+                                                        │
+                                                   team work on the week-3 page</pre>
+    <p>The order is load-bearing. The experiment measures how an agent shapes what a student reads, and its protocol keeps the hypothesis direction out of the room until the debrief. A segment on agents placed before it would be a treatment nobody randomised. Placed after, card&nbsp;3 can point at the round every student has just done.</p>
+  </section>
+
+  <section id="contracts">
+    <h2 class="bds-part">5 &middot; Contracts</h2>
+    <h3>The card</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Element</th><th>Shape</th></tr></thead>
+      <tbody>
+        <tr><th>section</th><td><code>&lt;section class="slide" id="sN"&gt;</code> &mdash; no further attributes, because <code>build_deck.py</code> parses exactly this</td></tr>
+        <tr><th>kicker</th><td><code>AI agents</code> on all three; the segment is found by it</td></tr>
+        <tr><th>h2</th><td>An assertion a student could repeat</td></tr>
+        <tr><th>body</th><td>Fragments; at most one paragraph and one list</td></tr>
+        <tr><th>evidence</th><td>A link, a number, a quote or a name</td></tr>
+      </tbody>
+    </table></div>
+    <h3>The provenance row</h3>
+    <p><code>| card | claim, in eight words or fewer | wiki slug | section heading |</code> &mdash; the slug is the path under <code>ai-wiki/wiki/</code> without <code>.md</code>, so a checker can open it.</p>
+  </section>
+
+  <section id="rules">
+    <h2 class="bds-part">6 &middot; Rules</h2>
+    <p>Obligation is the product&rsquo;s obligation. Every criterion carries a number and a unit; every rule names how it is shown to hold. New rules are appended to their group so that an identifier never changes meaning.</p>
+
+    <h3>SE &mdash; session placement</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="se-1"><th>SE-1</th><td>The segment shall follow the experiment debrief card in the week&nbsp;3 card order.</td><td>Must</td><td>0 segment cards precede the card whose kicker is <em>Debrief</em>.</td><td>Test</td></tr>
+        <tr id="se-2"><th>SE-2</th><td>No card or note shall state the predicted direction of the experiment&rsquo;s agent effect.</td><td>Must</td><td>0 matches of the direction patterns in <code>check-agents-deck.py</code>.</td><td>Test</td></tr>
+        <tr id="se-3"><th>SE-3</th><td>The segment shall run within its time slot.</td><td>Should</td><td>&le; 15 minutes, stopwatch, one dry run.</td><td>Demonstration</td></tr>
+        <tr id="se-4"><th>SE-4</th><td>The note for card&nbsp;3 should connect the output dimension to the room&rsquo;s own agent round.</td><td>Could</td><td>&ge; 1 sentence in the card&nbsp;3 note.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>SL &mdash; slide form (<code>slide-deck</code> skill)</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="sl-1"><th>SL-1</th><td>The segment shall consist of three consecutive cards.</td><td>Must</td><td>Exactly 3 cards with kicker <em>AI agents</em>, 0 other cards between them.</td><td>Test</td></tr>
+        <tr id="sl-2"><th>SL-2</th><td>Each headline shall be short enough to repeat.</td><td>Must</td><td>&le; 12 words per headline.</td><td>Test</td></tr>
+        <tr id="sl-3"><th>SL-3</th><td>Each card body shall stay within the listening limit.</td><td>Must</td><td>&le; 40 words per body.</td><td>Test</td></tr>
+        <tr id="sl-4"><th>SL-4</th><td>Each card shall limit its bullets.</td><td>Must</td><td>&le; 3 bullets per card.</td><td>Test</td></tr>
+        <tr id="sl-5"><th>SL-5</th><td>Each sentence on a card shall be readable in one glance.</td><td>Must</td><td>&le; 20 words in the longest sentence.</td><td>Test</td></tr>
+        <tr id="sl-6"><th>SL-6</th><td>The three headlines read alone should state the segment&rsquo;s argument.</td><td>Should</td><td>3 of 3 headlines judged assertions by a reader who did not write them.</td><td>Inspection</td></tr>
+        <tr id="sl-7"><th>SL-7</th><td>Each card shall carry an evidence element.</td><td>Must</td><td>&ge; 1 link, number, quote or name per card.</td><td>Inspection</td></tr>
+        <tr id="sl-8"><th>SL-8</th><td>Each card should fit the projected screen.</td><td>Should</td><td>0 of 3 cards overflow at 1280 &times; 720 pixels in the presenter deck.</td><td>Demonstration</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>PR &mdash; prose (<code>strip-ai-language</code> skill)</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="pr-1"><th>PR-1</th><td>Every antithesis finding on the cards shall be rewritten or kept with a recorded reason.</td><td>Must</td><td>0 A1 findings without a row in the worklog checks register.</td><td>Inspection</td></tr>
+        <tr id="pr-2"><th>PR-2</th><td>The cards shall carry no empty-emphasis form.</td><td>Must</td><td>0 findings for codes A2, A3, A5, A7, A8 and A9.</td><td>Test</td></tr>
+        <tr id="pr-3"><th>PR-3</th><td>Every technical term on a card shall be explained where it appears.</td><td>Must</td><td>0 unexplained terms on the cards: D3 findings plus the segment&rsquo;s own agent terms at their first card.</td><td>Test</td></tr>
+        <tr id="pr-4"><th>PR-4</th><td>The notes should carry no empty-emphasis form.</td><td>Should</td><td>0 findings for codes A3, A7, A8 and A9 in the three note blocks.</td><td>Test</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>CT &mdash; content</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="ct-1"><th>CT-1</th><td>Card&nbsp;1 shall give the definition of an agent as a model using tools in a loop towards a goal.</td><td>Must</td><td>4 of 4 terms present on card&nbsp;1: model or LLM, tools, loop, goal.</td><td>Test</td></tr>
+        <tr id="ct-2"><th>CT-2</th><td>Card&nbsp;1 shall name who decides the next step as the line between a workflow and an agent.</td><td>Must</td><td>1 statement on card&nbsp;1 naming workflow and agent.</td><td>Inspection</td></tr>
+        <tr id="ct-3"><th>CT-3</th><td>Card&nbsp;2 shall link the <em>Harness is the OS</em> visualisation.</td><td>Must</td><td>1 link to <code>harness-is-os-en.html</code> on card&nbsp;2.</td><td>Test</td></tr>
+        <tr id="ct-4"><th>CT-4</th><td>Card&nbsp;2 should link the <em>Four ways to answer one question</em> visualisation.</td><td>Should</td><td>1 link to <code>architecture-of-scale-en.html</code> on card&nbsp;2.</td><td>Test</td></tr>
+        <tr id="ct-5"><th>CT-5</th><td>No card shall describe what the Contracts, Constraints or Compounding layers contain.</td><td>Must</td><td>0 sentences about those 3 layers beyond their names.</td><td>Inspection</td></tr>
+        <tr id="ct-6"><th>CT-6</th><td>Card&nbsp;3 shall name the three trust dimensions of the week&nbsp;3 brief.</td><td>Must</td><td>3 of 3 words present on card&nbsp;3: data, output, people.</td><td>Test</td></tr>
+        <tr id="ct-7"><th>CT-7</th><td>Every factual claim in the segment shall trace to an AI Wiki page.</td><td>Must</td><td>100&nbsp;% of claims have a provenance row; 0 rows name a slug missing from the wiki.</td><td>Test</td></tr>
+        <tr id="ct-8"><th>CT-8</th><td>Each note should name the module week its card connects to.</td><td>Should</td><td>&ge; 1 week reference in each of 3 note blocks.</td><td>Test</td></tr>
+        <tr id="ct-9"><th>CT-9</th><td>Card&nbsp;1 could carry the intern analogy from week&nbsp;1.</td><td>Could</td><td>1 mention of <em>intern</em> on card&nbsp;1.</td><td>Test</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>ST &mdash; the student-facing boundary</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="st-1"><th>ST-1</th><td>Every link on the three cards shall resolve.</td><td>Must</td><td>100&nbsp;% of card links answer HTTP 2xx or pass <code>check-links.sh</code>.</td><td>Test</td></tr>
+        <tr id="st-2"><th>ST-2</th><td>A card link that leaves <code>site/</code> shall be absolute.</td><td>Must</td><td>0 relative links from the 3 cards that resolve outside <code>site/</code>.</td><td>Test</td></tr>
+        <tr id="st-3"><th>ST-3</th><td>The notes shall hold no material whose worth depends on a student not having read it.</td><td>Must</td><td>0 items of that kind across 3 note blocks: no codebook, no verdict-agent prompt, no hypothesis direction.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>BD &mdash; the presenter build</h3>
+    <div class="tbl-wrap"><table class="rules">
+      <thead><tr><th>ID</th><th>Rule</th><th>Level</th><th>Pass/fail criterion</th><th>Method</th></tr></thead>
+      <tbody>
+        <tr id="bd-1"><th>BD-1</th><td>One command shall produce the presenter deck, the PDF and the PPTX.</td><td>Must</td><td>3 files written by <code>build_deck.py 3</code>, exit code 0.</td><td>Test</td></tr>
+        <tr id="bd-2"><th>BD-2</th><td>The notes file shall hold one block per segment card.</td><td>Must</td><td>3 of 3 segment ids have a <code>## sN</code> block.</td><td>Test</td></tr>
+        <tr id="bd-3"><th>BD-3</th><td>The PDF should print each note under its card.</td><td>Should</td><td>3 of 3 segment pages show their note.</td><td>Inspection</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="enforced">
+    <h2 class="bds-part">7 &middot; What the checks enforce</h2>
+    <p><code>check-agents-deck.py --spec</code> checks this document: the ten sections in order, an anchor for every rule, a level, a criterion with a number and a unit, a method from the four allowed, one <em>shall</em> per rule, no vague terms, and not every rule a Must. <code>check-agents-deck.py --deck</code> checks every rule whose method is <em>Test</em> against the card page, the notes and the provenance table. It runs <code>slidewords.py</code>&rsquo;s measurement for SL-2 to SL-5 and <code>aiprose.py</code> for PR-2 to PR-4, so the two skills are the checks and not a copy of them.</p>
+    <p><strong>Two additions to the skills, both local to this check.</strong> The skill&rsquo;s <code>JARGON</code> list carries business terms and none of this segment&rsquo;s, so PR-3 adds its own: <em>harness</em>, <em>LLM</em>, <em>RAG</em>, <em>SLM</em>, <em>MCP</em>, <em>LLM Wiki</em>, <em>Fat Skills</em>, <em>agentic</em>, <em>context window</em>, <em>ReAct</em>. Each counts as explained when the skill&rsquo;s own <code>is_explained()</code> accepts a line on the card where it first appears; the card is the unit because a headline has no room for a gloss. And the check ends every headline, bullet and paragraph with a full stop before handing it to <code>aiprose.py</code>. The script marks a block boundary with the character <code>\x1e</code>, which Python&rsquo;s <code>\s</code> matches, so without the full stop a headline ending <em>&hellip;the harness</em> runs into a bullet starting <em>The harness</em> and A5 reports <em>harness the</em>.</p>
+    <p>The <em>Inspection</em> and <em>Demonstration</em> rules have no script. They are performed by a person as part of the build plan&rsquo;s tester steps, and recorded in the worklog checks register.</p>
+  </section>
+
+  <section id="trace">
+    <h2 class="bds-part">8 &middot; Trace to the goal</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Part of the goal</th><th>Rules</th></tr></thead>
+      <tbody>
+        <tr><td>three cards introduce AI agents</td><td>SL-1, CT-1, CT-2, CT-3, CT-4, CT-5, CT-6, CT-9</td></tr>
+        <tr><td>to the 32 students of week&nbsp;3</td><td>SL-6, SL-7, ST-1, ST-2, CT-8</td></tr>
+        <tr><td>in at most 15 minutes</td><td>SE-3</td></tr>
+        <tr><td>after the experiment debrief</td><td>SE-1, SE-2, SE-4, ST-3</td></tr>
+        <tr><td>each card inside the slide-deck limits</td><td>SL-2, SL-3, SL-4, SL-5, SL-8</td></tr>
+        <tr><td>every factual claim traced to an AI Wiki page</td><td>CT-7</td></tr>
+        <tr><td>no AI-language finding left unreviewed</td><td>PR-1, PR-2, PR-3, PR-4</td></tr>
+        <tr><td>deck, PDF and PPTX produced by one command</td><td>BD-1, BD-2, BD-3</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="exclusions">
+    <h2 class="bds-part">9 &middot; Deliberate exclusions</h2>
+    <ul>
+      <li><strong>Won&rsquo;t: embedded images.</strong> The decks have no image pipeline; the visualisations are opened live from their links.</li>
+      <li><strong>Won&rsquo;t: the three later harness layers explained.</strong> The LRD makes them debrief reading for weeks&nbsp;4 to 6.</li>
+      <li><strong>Won&rsquo;t: a rule on em-dash density (A10).</strong> Em dashes are house style in this repository.</li>
+      <li><strong>Won&rsquo;t: D-codes on the notes.</strong> The notes are read by the lecturer, and the D-codes encode a student reader.</li>
+      <li><strong>Won&rsquo;t: a Dutch version.</strong></li>
+    </ul>
+  </section>
+
+  <section id="open">
+    <h2 class="bds-part">10 &middot; Open questions</h2>
+    <ul>
+      <li><strong>The card order around the debrief.</strong> SE-1 needs a card whose kicker is <em>Debrief</em>. If the week&nbsp;3 deck marks the debrief differently, SE-1&rsquo;s criterion changes with it. <em>Owner: the AIBS owner.</em></li>
+      <li><strong>Whether the card page may show the segment before the session.</strong> SE-2 makes an early reader harmless; publishing the segment only after the session would make SE-2 redundant. <em>Owner: both module owners.</em></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="https://datadrivendecisions.github.io/ai-in-business/index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

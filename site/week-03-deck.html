@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trust and AI safety — week 3 presenter deck</title>
+<meta name="robots" content="noindex" />
+<style>
+:root{--primary:#d4db3e;--supporting:#1a1a1a;--bg-cream:#f5f0e6;--bg-yellow:#fafbf0;--bg-off-white:#f9f8f4;
+--text-primary:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--bg-page:#fff;--border:#e5e7eb;--border-strong:#d1d5db;}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#111;color:var(--text-primary);
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--primary);text-decoration-thickness:.12em;text-underline-offset:.15em}
+.app{display:grid;grid-template-columns:1fr;grid-template-rows:1fr auto;height:100%}
+.app.notes-on{grid-template-columns:1fr minmax(18rem,28vw)}
+.stagewrap{display:flex;align-items:center;justify-content:center;padding:1.5vmin;min-width:0}
+.stage{position:relative;width:min(100%,calc((100vh - 5rem) * 16 / 9));aspect-ratio:16/9;container-type:inline-size;background:var(--bg-page);
+box-shadow:0 8px 40px rgba(0,0,0,.5);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:5cqw 6cqw 6cqw;line-height:1.35}
+.slide.is-dense p,.slide.is-dense li{font-size:2.15cqw}.slide.is-dense li{margin-bottom:.9cqw}.slide.is-dense h2{font-size:4cqw;margin-bottom:2cqw}
+.slide.is-denser p,.slide.is-denser li{font-size:1.9cqw}.slide.is-denser li{margin-bottom:.7cqw}.slide.is-denser h2{font-size:3.6cqw;margin-bottom:1.6cqw}
+.slide.current{display:flex}
+.slide-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.2cqw}
+.slide-kicker{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--supporting)}
+.slide-kicker::before{content:"";display:inline-block;width:2.2cqw;height:.5cqw;background:var(--primary);border-radius:99px;margin-right:1cqw;vertical-align:middle}
+.slide-no{font-size:1.4cqw;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.slide h2{font-size:4.6cqw;line-height:1.15;margin:0 0 2.6cqw;font-weight:700}
+.slide p,.slide li{font-size:2.5cqw;color:var(--text-primary)}
+.slide p{margin:0 0 1.6cqw}
+.slide ul{margin:0;padding-left:1.1em}
+.slide li{margin-bottom:1.3cqw}
+.slide li strong{color:var(--text-primary)}
+.slide em{color:var(--text-secondary)}
+.slide > :last-child{margin-bottom:0}
+.slide.is-title{background:var(--bg-cream);justify-content:center}
+.slide.is-title h2{font-size:7cqw}
+.slide.is-title p{color:var(--text-secondary);font-size:3cqw}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw}
+.cols h3{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 1.2cqw}
+.slide .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5cqw;margin:1.5cqw 0 2cqw;padding:0;list-style:none}
+.slide .roles li{background:var(--bg-cream);border-radius:.8cqw;padding:1.4cqw 1cqw;font-weight:700;text-align:center;margin:0;font-size:2.2cqw}
+.tpl{color:var(--text-muted);font-style:italic;border-bottom:.15cqw dashed var(--border-strong)}
+li.tpl,p.tpl{display:block;border:.15cqw dashed var(--border-strong);border-radius:.6cqw;padding:1cqw 1.5cqw;background:var(--bg-off-white);list-style:none;margin-left:-1.1em}
+.foot{position:absolute;left:6cqw;right:6cqw;bottom:1.8cqw;display:flex;justify-content:space-between;font-size:1.3cqw;color:var(--text-muted)}
+.notes{background:#1c1c1c;color:#e5e7eb;padding:1.5rem 1.6rem;overflow:auto;font-size:1.05rem;line-height:1.5;border-left:1px solid #333;display:none}
+.notes-on .notes{display:block}
+.notes h3{margin:0 0 .8rem;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#a3a3a3}
+.notes p{margin:0 0 .8rem}.notes ul{margin:0 0 .8rem;padding-left:1.2em}.notes li{margin-bottom:.35rem}
+.notes .empty{color:#777;font-style:italic}
+.notes .iv{font-size:.85rem;color:#a3a3a3;border-left:3px solid #444;padding-left:.7rem}.notes .iv a{color:#ddd}.notes code{font-family:inherit;background:#333;padding:0 .3em;border-radius:3px}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:1rem;padding:.5rem 1rem;background:#000;color:#bbb;font-size:.85rem}
+.bar button{background:#222;color:#eee;border:1px solid #444;border-radius:6px;padding:.3rem .7rem;cursor:pointer;font:inherit}
+.bar button:hover{background:#333}
+.bar .counter{font-variant-numeric:tabular-nums;min-width:4.5rem;text-align:center}
+.bar .title{margin-left:auto;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar kbd{background:#222;border:1px solid #444;border-radius:4px;padding:0 .35em;font-family:inherit}
+.printonly{display:none}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  html,body{background:#fff;height:auto}
+  .app,.bar,.notes,.stagewrap{display:none!important}
+  .printonly{display:block}
+  .page{break-after:page;display:grid;grid-template-rows:auto 1fr;gap:4mm;min-height:calc(210mm - 24mm)}
+  .page:last-child{break-after:auto}
+  .page .stage{width:190mm;aspect-ratio:16/9;box-shadow:none;border:.3mm solid #999;margin:0 auto;container-type:inline-size;position:relative;background:#fff;overflow:hidden}
+  .page .slide{display:flex}
+  .page .pnotes{font-size:10pt;line-height:1.4;color:#111;column-count:2;column-gap:8mm}
+  .page .pnotes h3{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 2mm;column-span:all}
+  .page .pnotes p{margin:0 0 2.5mm}.page .pnotes ul{margin:0 0 2.5mm;padding-left:1.2em}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="stagewrap"><div class="stage">
+<section class="slide is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 5</span></div><h2>Trust and AI safety</h2><p>Week 3.</p><div class="foot"><span>AI in Business · week 3</span><span>1 / 5</span></div></section>
+<section class="slide" id="s2"><div class="slide-head"><div class="slide-kicker">Debrief</div><span class="slide-no">2 / 5</span></div><h2>The experiment, debriefed</h2><p class="tpl">Added with the rest of the week 3 deck.</p><div class="foot"><span>AI in Business · week 3</span><span>2 / 5</span></div></section>
+<section class="slide" id="s3"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">3 / 5</span></div><h2>You have used an agent since week&nbsp;1</h2><p><strong><a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-agents" target="_blank" rel="noopener">Agent</a>:</strong> an LLM (large language model) using tools in a loop, towards a goal.</p><ul><li><strong>Workflow or agent?</strong> Code or model: who picks the next step?</li><li><strong>The loop:</strong> reason, act, observe (ReAct).</li><li><strong>The week 1 intern:</strong> capable, needs oversight.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>3 / 5</span></div></section>
+<section class="slide" id="s4"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">4 / 5</span></div><h2>The model is rented; the harness is the part you own</h2><ul><li><strong>Harness:</strong> the software around the model. Model as CPU, harness as <a href="https://businessdatasolutions.github.io/architecture-of-scale/harness-is-os-en.html" target="_blank" rel="noopener">operating system</a>.</li><li><strong>This week&rsquo;s choice:</strong> where knowledge lives. RAG retrieves, LLM Wiki compiles, Fat Skills act &mdash; <a href="https://businessdatasolutions.github.io/architecture-of-scale/architecture-of-scale-en.html" target="_blank" rel="noopener">one question, four ways</a>.</li><li><strong>Still ahead:</strong> Contracts, Constraints, Compounding.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>4 / 5</span></div></section>
+<section class="slide" id="s5"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">5 / 5</span></div><h2>Trusting an agent splits three ways: data, output, people</h2><ul><li><strong>Data.</strong> Rent the model, or run a small one in-house.</li><li><strong>Output.</strong> Users regret an agent that <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/agent-oversight-and-delegation" target="_blank" rel="noopener">acted beyond what they authorised</a> &mdash; even when it was right.</li><li><strong>People.</strong> Hiding AI use: <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-knowledge-hiding" target="_blank" rel="noopener">14&nbsp;% where trust is highest, 47&nbsp;% where lowest</a>.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>5 / 5</span></div></section>
+  </div></div>
+  <aside class="notes" aria-label="Instructor notes" data-audience="instructor" hidden>
+    <p class="iv"><strong>Instructor view.</strong> The notes show because the address carried <code>?instructor</code>. <a href="week-03-deck.html?student">Leave the instructor view</a>.</p>
+    <h3>Instructor notes</h3>
+<div class="note" id="note-s1"><p>Session of Monday 21 September. AIBS theme: trust and AI safety. AEL decision: where the team's knowledge lives.</p></div>
+<div class="note" id="note-s2" hidden><p>Placeholder for the experiment debrief, which the rest of the deck supplies. The AI agents segment comes straight after it and never before: an agents segment ahead of the experiment would be a treatment nobody randomised.</p></div>
+<div class="note" id="note-s3" hidden><p>About five minutes. Connects to AEL week 1 (the spike) and AEL week 2 (the debrief that named ReAct).</p>
+<p>Every team has used an agent for two weeks: the agentic command line of the week 1 spike. This card gives that a name. The definition is the one Google and Anthropic developer material both use by mid-2026: an LLM with tools, running in a loop, towards a goal. Wooldridge's textbook definition from 2009 leaves the LLM out. A thermostat passes his test.</p>
+<p>The line between a workflow and an agent is who picks the next step. In a workflow, your code sets the path. In an agent, the model decides. Both can use tools and loop.</p>
+<p>The loop is the one they watched in the spike: reason, act, observe, and again. If the week 2 debrief did not name ReAct, introduce it here rather than recall it.</p>
+<p>The intern from week 1 still holds: capable, and still needs someone in charge of judgement and oversight — Karpathy's phrase for it is "intern entities".</p></div>
+<div class="note" id="note-s4" hidden><p>About five minutes. Connects to AEL week 3, this week's knowledge-architecture decision, and back to AIBS week 2 on vendor dependency.</p>
+<p>The harness is everything around the model: what it sees, which tools it may call, what happens after each step. Open the *Harness is the OS* visualisation: the model is the CPU, "powerful but inert" in the source's words; the context window is the RAM; the harness is the operating system that decides what the CPU sees and when.</p>
+<p>Why it matters to an SME: the model is rented from a vendor who will be overtaken within the year. The harness is what a company builds, owns and improves.</p>
+<p>This week's AEL decision is one part of that harness — where the team's knowledge lives. RAG retrieves passages from documents at the moment of the question. An LLM Wiki compiles sources into pages ahead of time. Fat Skills act on what is known without being asked. Open *one question, four ways* and let the room see the same question answered each way. The choice follows from what the agent's job is.</p>
+<p>Name Contracts, Constraints and Compounding and move on. They come in weeks 4 to 6, each after the failure it answers.</p></div>
+<div class="note" id="note-s5" hidden><p>About five minutes. Connects to AIBS week 3: the brief asks whether the SME can trust AI, and splits the answer three ways.</p>
+<p>Data. The model is rented and the harness owned, so the question is what leaves the building. A small language model is defined by the device it fits on, which turns "can we run it ourselves?" into a question with an answer.</p>
+<p>Output. People regret an agent that acted beyond what they would have authorised, even when the result was correct. The trigger is an action that cannot be recalled and that someone outside sees — sending an email is the example. Tie it to the room: in one of the two rounds everyone put their position to an assistant. By the definition on the first agents card that was not an agent — no tools, no loop, it could only reply. Nothing it did could be recalled or seen outside the room, which is the safe end of that scale. Where should an SME's first real agent sit?</p>
+<p>People. Whether employees admit to using AI follows trust. In a survey of 604 daily users, 14 % in the most-trusting quartile hid their AI use, against 47 % in the least-trusting.</p></div>
+  </aside>
+  <div class="bar">
+    <button id="prev" type="button" aria-label="Previous slide">◀</button>
+    <span class="counter" id="counter">1 / 5</span>
+    <button id="next" type="button" aria-label="Next slide">▶</button>
+    <button id="notesbtn" type="button" data-audience="instructor" hidden>Notes <kbd>N</kbd></button>
+    <button id="printbtn" type="button">Print <kbd>P</kbd></button>
+    <span><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> full screen</span>
+    <span class="title"><a href="week-03-slides.html">Trust and AI safety · week 3 · one card per slide</a> · <a href="index.html">course</a></span>
+  </div>
+</div>
+<div class="printonly">
+<div class="page"><div class="stage"><section class="slide current is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 5</span></div><h2>Trust and AI safety</h2><p>Week 3.</p><div class="foot"><span>AI in Business · week 3</span><span>1 / 5</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 1 / 5</h3><p>Session of Monday 21 September. AIBS theme: trust and AI safety. AEL decision: where the team's knowledge lives.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s2"><div class="slide-head"><div class="slide-kicker">Debrief</div><span class="slide-no">2 / 5</span></div><h2>The experiment, debriefed</h2><p class="tpl">Added with the rest of the week 3 deck.</p><div class="foot"><span>AI in Business · week 3</span><span>2 / 5</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 2 / 5</h3><p>Placeholder for the experiment debrief, which the rest of the deck supplies. The AI agents segment comes straight after it and never before: an agents segment ahead of the experiment would be a treatment nobody randomised.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s3"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">3 / 5</span></div><h2>You have used an agent since week&nbsp;1</h2><p><strong><a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-agents" target="_blank" rel="noopener">Agent</a>:</strong> an LLM (large language model) using tools in a loop, towards a goal.</p><ul><li><strong>Workflow or agent?</strong> Code or model: who picks the next step?</li><li><strong>The loop:</strong> reason, act, observe (ReAct).</li><li><strong>The week 1 intern:</strong> capable, needs oversight.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>3 / 5</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 3 / 5</h3><p>About five minutes. Connects to AEL week 1 (the spike) and AEL week 2 (the debrief that named ReAct).</p>
+<p>Every team has used an agent for two weeks: the agentic command line of the week 1 spike. This card gives that a name. The definition is the one Google and Anthropic developer material both use by mid-2026: an LLM with tools, running in a loop, towards a goal. Wooldridge's textbook definition from 2009 leaves the LLM out. A thermostat passes his test.</p>
+<p>The line between a workflow and an agent is who picks the next step. In a workflow, your code sets the path. In an agent, the model decides. Both can use tools and loop.</p>
+<p>The loop is the one they watched in the spike: reason, act, observe, and again. If the week 2 debrief did not name ReAct, introduce it here rather than recall it.</p>
+<p>The intern from week 1 still holds: capable, and still needs someone in charge of judgement and oversight — Karpathy's phrase for it is "intern entities".</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s4"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">4 / 5</span></div><h2>The model is rented; the harness is the part you own</h2><ul><li><strong>Harness:</strong> the software around the model. Model as CPU, harness as <a href="https://businessdatasolutions.github.io/architecture-of-scale/harness-is-os-en.html" target="_blank" rel="noopener">operating system</a>.</li><li><strong>This week&rsquo;s choice:</strong> where knowledge lives. RAG retrieves, LLM Wiki compiles, Fat Skills act &mdash; <a href="https://businessdatasolutions.github.io/architecture-of-scale/architecture-of-scale-en.html" target="_blank" rel="noopener">one question, four ways</a>.</li><li><strong>Still ahead:</strong> Contracts, Constraints, Compounding.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>4 / 5</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 4 / 5</h3><p>About five minutes. Connects to AEL week 3, this week's knowledge-architecture decision, and back to AIBS week 2 on vendor dependency.</p>
+<p>The harness is everything around the model: what it sees, which tools it may call, what happens after each step. Open the *Harness is the OS* visualisation: the model is the CPU, "powerful but inert" in the source's words; the context window is the RAM; the harness is the operating system that decides what the CPU sees and when.</p>
+<p>Why it matters to an SME: the model is rented from a vendor who will be overtaken within the year. The harness is what a company builds, owns and improves.</p>
+<p>This week's AEL decision is one part of that harness — where the team's knowledge lives. RAG retrieves passages from documents at the moment of the question. An LLM Wiki compiles sources into pages ahead of time. Fat Skills act on what is known without being asked. Open *one question, four ways* and let the room see the same question answered each way. The choice follows from what the agent's job is.</p>
+<p>Name Contracts, Constraints and Compounding and move on. They come in weeks 4 to 6, each after the failure it answers.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s5"><div class="slide-head"><div class="slide-kicker">AI agents</div><span class="slide-no">5 / 5</span></div><h2>Trusting an agent splits three ways: data, output, people</h2><ul><li><strong>Data.</strong> Rent the model, or run a small one in-house.</li><li><strong>Output.</strong> Users regret an agent that <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/agent-oversight-and-delegation" target="_blank" rel="noopener">acted beyond what they authorised</a> &mdash; even when it was right.</li><li><strong>People.</strong> Hiding AI use: <a href="https://businessdatasolutions.github.io/ai-wiki/concepts/ai-knowledge-hiding" target="_blank" rel="noopener">14&nbsp;% where trust is highest, 47&nbsp;% where lowest</a>.</li></ul><div class="foot"><span>AI in Business · week 3</span><span>5 / 5</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 5 / 5</h3><p>About five minutes. Connects to AIBS week 3: the brief asks whether the SME can trust AI, and splits the answer three ways.</p>
+<p>Data. The model is rented and the harness owned, so the question is what leaves the building. A small language model is defined by the device it fits on, which turns "can we run it ourselves?" into a question with an answer.</p>
+<p>Output. People regret an agent that acted beyond what they would have authorised, even when the result was correct. The trigger is an action that cannot be recalled and that someone outside sees — sending an email is the example. Tie it to the room: in one of the two rounds everyone put their position to an assistant. By the definition on the first agents card that was not an agent — no tools, no loop, it could only reply. Nothing it did could be recalled or seen outside the room, which is the safe end of that scale. Where should an SME's first real agent sit?</p>
+<p>People. Whether employees admit to using AI follows trust. In a survey of 604 daily users, 14 % in the most-trusting quartile hid their AI use, against 47 % in the least-trusting.</p></div></div>
+</div>
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('#app .stage > .slide'));
+  var app=document.getElementById('app'), counter=document.getElementById('counter');
+  var noteBoxes=[].slice.call(document.querySelectorAll('.notes .note'));
+  var i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('current',k===i)});
+    noteBoxes.forEach(function(b,k){b.hidden=(k!==i)});
+    counter.textContent=(i+1)+' / '+slides.length;
+    if(location.hash!=='#'+slides[i].id) history.replaceState(null,'','#'+slides[i].id);
+  }
+  function fromHash(){var k=slides.findIndex(function(s){return '#'+s.id===location.hash});go(k<0?0:k)}
+  var notesEl=document.querySelector('.notes');
+  function notesAllowed(){return notesEl&&!notesEl.hidden}
+  function toggleNotes(){if(!notesAllowed())return;app.classList.toggle('notes-on');try{localStorage.setItem('deck-notes',app.classList.contains('notes-on')?'1':'0')}catch(e){}}
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': go(i+1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': go(i-1); e.preventDefault(); break;
+      case 'Home': go(0); break; case 'End': go(slides.length-1); break;
+      case 'n': case 'N': toggleNotes(); break;
+      case 'f': case 'F': if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); break;
+      case 'p': case 'P': window.print(); break;
+    }
+  });
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.getElementById('notesbtn').onclick=toggleNotes;
+  document.getElementById('printbtn').onclick=function(){window.print()};
+  document.querySelector('#app .stage').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    var r=this.getBoundingClientRect(); go(e.clientX-r.left>r.width/2?i+1:i-1);
+  });
+  window.addEventListener('hashchange',fromHash);
+  var want=new URLSearchParams(location.search).get('notes');
+  try{ if(notesAllowed()&&(want==='1'||(want===null&&localStorage.getItem('deck-notes')==='1'))) app.classList.add('notes-on'); }catch(e){}
+  fromHash();
+})();
+</script>
+</body>
+</html>

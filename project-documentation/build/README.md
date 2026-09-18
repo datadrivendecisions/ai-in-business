@@ -10,6 +10,7 @@ machinery.
 | [`socratic-workflow/`](socratic-workflow/) | The Socratic gate and the document hand-in pipeline | [`prd.md`](socratic-workflow/prd.md) · [`design-note.md`](socratic-workflow/design-note.md) · [`blueprint.html`](socratic-workflow/blueprint.html) · [`buildplan.html`](socratic-workflow/buildplan.html) · [`agent-config.md`](socratic-workflow/agent-config.md) · [`pipeline-log.md`](socratic-workflow/pipeline-log.md) |
 | [`course-site/`](course-site/) | The course website | [`prd.md`](course-site/prd.md) · [`journeys.md`](course-site/journeys.md) · [`scorecard.md`](course-site/scorecard.md) |
 | [`information-seeking-experiment/`](information-seeking-experiment/) | The browser tool that runs the week 3 experiment on biased information seeking | [`prd.html`](information-seeking-experiment/prd.html) · [`blueprint.html`](information-seeking-experiment/blueprint.html) · [`buildplan.html`](information-seeking-experiment/buildplan.html) |
+| [`week-03-agents-deck/`](week-03-agents-deck/) | The three-card segment on AI agents in the week 3 session, after the experiment debrief | [`prd.html`](week-03-agents-deck/prd.html) · [`blueprint.html`](week-03-agents-deck/blueprint.html) · [`buildplan.html`](week-03-agents-deck/buildplan.html) · [`check-agents-deck.py`](week-03-agents-deck/check-agents-deck.py) |
 
 The code these describe stays beside the fixtures it is tested against:
 [`../socratic_agent/`](../socratic_agent/) and [`../test-fixtures/`](../test-fixtures/).
