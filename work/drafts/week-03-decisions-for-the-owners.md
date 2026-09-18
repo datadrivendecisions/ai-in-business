@@ -7,6 +7,10 @@ blueprint, the build plan and ADR-0016 did not settle. I made each one, built on
 it down here rather than stopping. **Every one of them is reversible**, and the cost of
 reversing is noted.
 
+> **Confirmed, 18 September 2026.** The owners confirmed all six decisions below as they stand.
+> On the same day they accepted ADR-0016 and made a seventh decision, recorded at the end:
+> the first session is the pilot.
+
 ---
 
 ## 1. The service lives in this repository, not its own
@@ -102,7 +106,7 @@ of that costs money on a project this build does not own. Read it before you run
 | 8 | The walk from two machines. |
 | 5 | Still open from before: `AN-3`, that nothing on the results screen states a finding, **inspected by someone who did not write it**. There is more on that screen now than there was, so this one is worth more than it was. |
 
-**Phase 0 is untouched and it is the risk.** The pilot (0.2–0.4), the two-coder kappa (0.8–0.9)
+**Phase 0 was untouched and it was the risk.** *(Answered on 18 September 2026 by decision 7 below.)* The pilot (0.2–0.4), the two-coder kappa (0.8–0.9)
 and the eight-card debrief set (0.11) are all still open, and none of them can be done from a
 desk. Everything above assumes two claims that divide a room, and **nobody has yet checked that
 either of them does**. The tool's own notice on the page now says *Not piloted* rather than *Not
@@ -115,3 +119,47 @@ calling. That header is not proof of anything — any caller can send it — and
 student wipe the room's data mid-session with one `curl`. The scheduler has its own bearer token
 now, and the spoof is a check in `check-service.py`. It is in the README too, because it is an
 easy mistake and the next person deserves the warning rather than the silence.
+
+---
+
+## 7. The first session is the pilot — decided by the owners, 18 September 2026
+
+There is no separate hands-up pilot before the session. The sides students lock before reading
+anything are the pilot's split (`CL-1`, `CL-7`), and the tool now records how many seconds each
+student took to choose a side (`CL-10`). The lecturer view has a **pilot audit** that reports each of
+these, and the two coders' agreement (`CL-5`), as *met*, *not met* or *not yet measurable*, with a
+tally. Phase 0 closes on what that audit says after the session.
+
+What this changed in the build:
+
+- **The result line is version 2.** It gained `pick`, the seconds to a side, and the submission
+  gained the same field. The service refuses a version 1 payload. Nothing had been run with version 1.
+- **The blueprint is version 0.4.** It gained `MS-7` (the timing) and `AN-8` (the audit), and says
+  that the pilot the CL rules name is the first session.
+- **Build plan subtask 0.4 is dropped.** It picked the two closest claims from a set of pilot
+  survivors. The claims are fixed, so there is nothing to pick from.
+
+**The cost:** a claim that fails is found out after the session, not before. That claim is replaced
+for the next run, and this run's comparison is reported with the miss written beside it.
+
+**Still yours, and none of it can be measured:** `CL-8` and `CL-9` before the session (build plan 0.2),
+two people coding all 32 cards on their own (0.8), and the eight-card debrief set (0.11).
+
+---
+
+## 8. The owners open the dashboard with one link — decided by the owners, 18 September 2026
+
+The owners asked that the person running the room see the results without pasting a codebook or
+typing a credential. Two changes do that:
+
+- **The codebook moves into Secret Manager**, beside the owners' credential. The service returns it
+  inside the owner-authenticated dashboard response and in no other response (`SV-13`). This
+  reverses the narrowing in decision 4: the codebook now *does* reach a server. It is still not in
+  anything published, which is what `SM-8` protects, and the service still computes nothing.
+- **The credential travels in a personal link**, after the `#`. That part never leaves the browser,
+  so GitHub never sees it. The page removes it from the address bar before the first request and
+  keeps it for that tab only (`SV-12`).
+
+**The cost:** the link is the key. Anyone who has it sees the live results, so it is bookmarked,
+not shared. Revoking it means adding a new version of `experiment-owner-token` and deploying again.
+
