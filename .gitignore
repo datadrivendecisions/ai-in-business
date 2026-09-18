@@ -6,6 +6,10 @@
 __pycache__/
 .pytest_cache/
 
+# Browser-driving scratch output — snapshots and console logs from checking a
+# page in a real browser. Evidence for one session, not content.
+.playwright-mcp/
+
 # Agent worktrees — checkouts of branches that are in the repository already
 .claude/worktrees/
 
@@ -20,3 +24,7 @@ __pycache__/
 # Local archive of old material, kept out of the public repo
 archive/
 archive-local/
+
+# Text extracted from the wiki's PDF captures, so check-deck.py can verify a
+# quotation against it. Derived from the wiki, regenerated on demand.
+.deck-pdf-text/
