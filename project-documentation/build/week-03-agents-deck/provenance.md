@@ -1,9 +1,11 @@
 # Provenance — the AI agents segment
 
-Every factual claim on the three cards (s3–s5 of `site/week-03-slides.html`) and in their note
+Every factual claim on the three cards (s8–s10 of `site/week-03-slides.html`) and in their note
 blocks (`project-documentation/slides/week-03-notes.md`), mapped to the one AI Wiki page it rests
 on. The slug is the path under `ai-wiki/wiki/` without `.md`; `check-agents-deck.py --deck` opens
-each one (CT-7). Card 1 is s3, card 2 is s4, card 3 is s5. Drawn from the query trace
+each one (CT-7). Card 1 is s8, card 2 is s9, card 3 is s10 — renumbered twice as the AIBS research
+methodology segment ahead of them grew, first to s3–s6 and now to s3–s7; the cards and their
+sourcing are unchanged. Drawn from the query trace
 `ai-wiki/inspiration/2026-09-18-ai-agents-intro-deck-outline-query-trace.json` and re-read
 against each page on 18 September 2026.
 
