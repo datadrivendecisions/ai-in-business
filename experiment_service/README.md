@@ -110,18 +110,27 @@ Secret Manager, and is separate from the scheduler's.
 
 If this outlives one afternoon, that is the thing to change first.
 
-## Three secrets, and why three
+## Four secrets, and why four
 
 | | |
 |---|---|
 | `experiment-owner-token` | the dashboard and the delete route |
 | `experiment-purge-token` | the purge, and nothing else |
 | `experiment-id-salt` | makes the dashboard's opaque ids unguessable |
+| `experiment-codebook` | the answer key, handed to the owners' dashboard and nowhere else |
 
 The purge has its own token so that a scheduler job configuration and a
 person's credential are never the same string. The salt matters more than it
 looks: without one, anyone who could read the dashboard could hash `kite`
 and find that row, and the hash would have bought nothing.
+
+The codebook is here so that the person running the room pastes nothing. It
+may not be in the published page (SM-8), so it lives beside the owners'
+credential and leaves the service only inside the owner-authenticated
+`/dashboard` response (SV-13). `deploy.sh` builds it from
+`work/drafts/week-03-codebook.md` — the 32 card-to-cell pairs, none of the
+file's prose — and adds a new version only when the file has changed. The
+service still computes nothing from it; the page does.
 
 An earlier draft of `/purge` accepted the `X-CloudScheduler: true` header as
 proof of who was calling. That header is not proof of anything — any caller

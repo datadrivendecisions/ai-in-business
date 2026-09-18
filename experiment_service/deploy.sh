@@ -53,6 +53,34 @@ for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
   fi
 done
 
+say "The codebook, as a secret"
+# The answer key must never be in the published page (SM-8), and the person
+# running the room should not have to paste it. So it sits here, beside the
+# owners' token, and the service returns it only inside an owner-authenticated
+# dashboard response. Only the card-to-cell pairs go in, not the file's prose.
+CODEBOOK_FILE="../work/drafts/week-03-codebook.md"
+CODEBOOK="$(python3 - "$CODEBOOK_FILE" <<'PY'
+import re, sys
+pairs = []
+for line in open(sys.argv[1], encoding="utf-8"):
+    m = re.search(r"`(c[12]-\d{2})`\s*\|\s*((?:NA|A)(?:S|W)\d*)\s*\|", line)
+    if m:
+        pairs.append(m.group(1) + " " + m.group(2))
+if len(pairs) != 32 or len(set(p.split()[0] for p in pairs)) != 32:
+    sys.exit("the codebook should hold 32 distinct cards; found %d" % len(pairs))
+print("\n".join(pairs))
+PY
+)"
+if ! gcloud secrets describe experiment-codebook --project "$PROJECT" >/dev/null 2>&1; then
+  printf '%s' "$CODEBOOK" | gcloud secrets create experiment-codebook --data-file=- --project "$PROJECT"
+  echo "   created experiment-codebook"
+elif [ "$(gcloud secrets versions access latest --secret experiment-codebook --project "$PROJECT")" != "$CODEBOOK" ]; then
+  printf '%s' "$CODEBOOK" | gcloud secrets versions add experiment-codebook --data-file=- --project "$PROJECT" >/dev/null
+  echo "   the codebook changed; added a new version"
+else
+  echo "   experiment-codebook is current; leaving it alone"
+fi
+
 say "A service account that may read and write one database, and no other"
 SA="experiment-service@${PROJECT}.iam.gserviceaccount.com"
 gcloud iam service-accounts create experiment-service \
@@ -70,7 +98,7 @@ for attempt in 1 2 3 4 5 6; do
   echo "   the new account is not visible to IAM yet; trying again in 10 seconds"
   sleep 10
 done
-for name in experiment-owner-token experiment-purge-token experiment-id-salt; do
+for name in experiment-owner-token experiment-purge-token experiment-id-salt experiment-codebook; do
   gcloud secrets add-iam-policy-binding "$name" --project "$PROJECT" \
     --member "serviceAccount:$SA" --role roles/secretmanager.secretAccessor >/dev/null
 done
@@ -89,7 +117,7 @@ gcloud run deploy "$SERVICE" \
   --max-instances 4 \
   --memory 256Mi \
   --set-env-vars "FIRESTORE_PROJECT=${PROJECT},FIRESTORE_DATABASE=${DATABASE},ALLOWED_ORIGINS=${PAGES_ORIGIN}" \
-  --set-secrets "OWNER_TOKEN=experiment-owner-token:latest,PURGE_TOKEN=experiment-purge-token:latest,ID_SALT=experiment-id-salt:latest"
+  --set-secrets "OWNER_TOKEN=experiment-owner-token:latest,PURGE_TOKEN=experiment-purge-token:latest,ID_SALT=experiment-id-salt:latest,CODEBOOK=experiment-codebook:latest"
 
 URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')"
 

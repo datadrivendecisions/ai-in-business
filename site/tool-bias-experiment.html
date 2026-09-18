@@ -862,52 +862,61 @@ input[type="number"] {
 
     <p class="aside"><strong>Instructor view.</strong> This section is hidden on the ordinary page and is showing because the address carries <code>?instructor</code>. <a href="tool-bias-experiment.html?student">Leave the instructor view</a>.</p>
 
-    <p>Paste the codebook and the class&rsquo;s result lines. Everything is computed here in this browser; nothing is sent anywhere, and nothing is stored.</p>
-
-    <div class="field">
-      <label for="f-codebook">The codebook
-        <span class="hint">Paste the two tables from <code>work/drafts/week-03-codebook.md</code> as they stand. Any line carrying a card id followed by its cell code is read. Every other line is ignored, and so is everything else on a line that has both. No worked example is given here, on purpose. A real card beside its real cell would be the answer key this page exists not to carry.</span>
-      </label>
-      <textarea id="f-codebook" spellcheck="false"></textarea>
-    </div>
-
-    <!-- The live feed. Since ADR-0016 this is the ordinary path and the
-         paste box below it is the fallback, which is why the paste box was
-         built first: it is the arithmetic both of them need, and it can be
-         tested with no infrastructure at all. -->
-    <h3>The live feed</h3>
-    <p class="note">Submissions as they land. The token is the owners&rsquo; one, out of Secret Manager; it is held in this tab for as long as the tab is open and written nowhere.</p>
-    <div class="field">
-      <label for="f-token">Owner token
-        <span class="hint">Nothing is fetched without it, and the service refuses an anonymous read.</span>
-      </label>
-      <input type="text" id="f-token" autocomplete="off" spellcheck="false" />
-    </div>
+    <!-- The live feed. Since ADR-0016 this is the ordinary path. The owners
+         open this page from their own link, which carries their credential
+         after the #; the page reads it, takes it out of the address bar at
+         once, and starts watching. The service sends the codebook along with
+         the rows, to the owners only, so nothing has to be pasted. -->
+    <h3>Live</h3>
+    <p class="note">Opens by itself from the owners&rsquo; link and refreshes every five seconds. Nothing to paste or type.</p>
     <div class="btn-row">
-      <button type="button" class="btn" id="b-live">Watch it fill up</button>
+      <span class="copied" id="m-live">Not watching.</span>
       <button type="button" class="btn btn-secondary" id="b-live-stop" hidden>Stop watching</button>
-      <span class="copied" id="m-live"></span>
     </div>
     <p class="note" id="m-live-detail" hidden></p>
 
-    <h3 style="margin-top:var(--space-8)">Or paste the lines</h3>
-    <p class="note">What to do when the service is down, and what to do if it never goes up. The arithmetic below is the same either way; only where the numbers came from differs.</p>
-    <div class="field">
-      <label for="f-lines">The result lines
-        <span class="hint">One per student, one per line. Blank lines are skipped; anything else that will not parse is listed back rather than dropped.</span>
-      </label>
-      <textarea id="f-lines" spellcheck="false"></textarea>
-    </div>
+    <!-- By hand: the route for the day the service is down, or for a laptop
+         without the owners' link. The paste box was built first, and it is
+         the same arithmetic as the live feed. -->
+    <details id="an-manual" style="margin-top:var(--space-6)">
+      <summary>No link, or the service is down? Do it by hand</summary>
+      <p class="note">The codebook is only needed here. On the live feed it comes with the data.</p>
+      <div class="field">
+        <label for="f-codebook">The codebook
+          <span class="hint">Paste the two tables from <code>work/drafts/week-03-codebook.md</code> as they stand. Any line carrying a card id followed by its cell code is read. Every other line is ignored, and so is everything else on a line that has both. No worked example is given here, on purpose. A real card beside its real cell would be the answer key this page exists not to carry.</span>
+        </label>
+        <textarea id="f-codebook" spellcheck="false"></textarea>
+      </div>
 
-    <div class="btn-row">
-      <button type="button" class="btn" id="b-analyse">Work it out</button>
-      <select id="f-demo" aria-label="Which fixture">
-        <option value="below">Fixture: interval below zero</option>
-        <option value="above">Fixture: interval above zero</option>
-        <option value="spanning">Fixture: interval spanning zero</option>
-      </select>
-      <button type="button" class="btn btn-secondary" id="b-demo">Load it</button>
-    </div>
+      <div class="field">
+        <label for="f-token">Owner token
+          <span class="hint">Nothing is fetched without it, and the service refuses an anonymous read.</span>
+        </label>
+        <input type="text" id="f-token" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn" id="b-live">Watch it fill up</button>
+      </div>
+
+      <h4 style="margin-top:var(--space-6)">Or paste the lines</h4>
+      <p class="note">What to do when the service is down. The arithmetic is the same either way; only where the numbers came from differs.</p>
+      <div class="field">
+        <label for="f-lines">The result lines
+          <span class="hint">One per student, one per line. Blank lines are skipped; anything else that will not parse is listed back rather than dropped.</span>
+        </label>
+        <textarea id="f-lines" spellcheck="false"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn" id="b-analyse">Work it out</button>
+        <select id="f-demo" aria-label="Which fixture">
+          <option value="below">Fixture: interval below zero</option>
+          <option value="above">Fixture: interval above zero</option>
+          <option value="spanning">Fixture: interval spanning zero</option>
+        </select>
+        <button type="button" class="btn btn-secondary" id="b-demo">Load it</button>
+      </div>
+    </details>
 
     <p class="err" id="e-an" role="alert" hidden></p>
 
@@ -2816,6 +2825,7 @@ function renderInterpretation(st){
    records arrived. */
 function readCodebook(){
   var book = parseCodebook($("f-codebook").value);
+  if (book.n === 0 && LIVE.book) return LIVE.book;
   if (book.n === 0){
     /* No worked example here either: naming a card beside a cell would be
        the answer key, on the one page that must not hold it. */
@@ -2917,7 +2927,8 @@ function renderAnalysis(accepted, rejected, book){
    put in localStorage: a token that outlives the session is a token
    somebody finds on a shared laptop in December.
    ================================================================ */
-var LIVE = { timer: null, token: "", lastCount: -1, failures: 0 };
+var LIVE = { timer: null, token: "", lastCount: -1, failures: 0, book: null };
+var OWNER_KEY = "bxp-owner";     // sessionStorage: this tab, this visit, nothing longer
 var LIVE_EVERY_MS = 5000;        // SV-7 asks for 10 seconds; this is half
 var LIVE_GIVE_UP_AFTER = 5;      // consecutive failures
 
@@ -2962,7 +2973,7 @@ function stopLive(why){
   if (why) liveSay("Not watching.", why);
 }
 
-function pollOnce(book){
+function pollOnce(pastedBook){
   if (typeof window.fetch !== "function"){
     stopLive("This browser cannot fetch. Use the paste box.");
     return;
@@ -2988,6 +2999,14 @@ function pollOnce(book){
   }).then(function(body){
     if (!body) return;
     LIVE.failures = 0;
+    /* The answer key arrives with the rows, to the owners only. A pasted
+       codebook is the fallback for a service that was deployed without one. */
+    var book = body.codebook ? parseCodebook(body.codebook) : pastedBook;
+    if (!book || book.n === 0){
+      stopLive("The service sent no codebook. Open “Do it by hand”, paste the codebook, and press Watch it fill up.");
+      return;
+    }
+    LIVE.book = book;
     var accepted = [], rejected = [];
     body.rows.forEach(function(row){
       try { accepted.push(recordFromRow(row)); }
@@ -3009,6 +3028,17 @@ function pollOnce(book){
   });
 }
 
+function startLive(token, pastedBook){
+  LIVE.token = token;
+  LIVE.failures = 0;
+  LIVE.lastCount = -1;
+  $("b-live").hidden = true;
+  $("b-live-stop").hidden = false;
+  liveSay("Watching.", "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
+  pollOnce(pastedBook);
+  LIVE.timer = window.setInterval(function(){ pollOnce(pastedBook); }, LIVE_EVERY_MS);
+}
+
 $("b-live").addEventListener("click", function(){
   clearFail("e-an");
   if (!serviceOn()){
@@ -3021,22 +3051,46 @@ $("b-live").addEventListener("click", function(){
     $("f-token").focus();
     return;
   }
-  var book = readCodebook();
-  if (!book){ $("f-codebook").focus(); return; }
-
-  LIVE.token = token;
-  LIVE.failures = 0;
-  LIVE.lastCount = -1;
-  $("b-live").hidden = true;
-  $("b-live-stop").hidden = false;
-  liveSay("Watching.", "Refreshed every " + (LIVE_EVERY_MS / 1000) + " seconds.");
-  pollOnce(book);
-  LIVE.timer = window.setInterval(function(){ pollOnce(book); }, LIVE_EVERY_MS);
+  /* Optional here: the service sends the codebook. A pasted one is used
+     only if it does not. */
+  var pasted = parseCodebook($("f-codebook").value);
+  startLive(token, pasted.n ? pasted : null);
 });
 
 $("b-live-stop").addEventListener("click", function(){
-  stopLive("Stopped. What is on screen is the last look.");
+  try { sessionStorage.removeItem(OWNER_KEY); } catch (e) {}
+  stopLive("Stopped, and this tab has forgotten the owners' link. Open the link again to go on watching.");
 });
+
+/* ---------------- the owners' link ---------------- */
+/* The owners open this page from a link of their own:
+     tool-bias-experiment.html?instructor#owner=<their credential>
+   The part after # never leaves the browser, so GitHub never sees it. The
+   page takes it out of the address bar at once, so it is not on the
+   projector, keeps it for this tab only so a reload goes on watching, and
+   starts the live feed. Closing the tab forgets it. */
+function ownerFromLink(){
+  var token = "";
+  try {
+    var m = /(?:^#|&)owner=([^&]+)/.exec(window.location.hash || "");
+    if (m){
+      token = decodeURIComponent(m[1]);
+      if (window.history && window.history.replaceState){
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+      try { sessionStorage.setItem(OWNER_KEY, token); } catch (e) {}
+    } else {
+      token = sessionStorage.getItem(OWNER_KEY) || "";
+    }
+  } catch (e) { token = token || ""; }
+  return token;
+}
+
+(function watchIfOwner(){
+  if (!serviceOn()) return;
+  var token = ownerFromLink();
+  if (token) startLive(token, null);
+})();
 
 $("b-analyse").addEventListener("click", function(){
   clearFail("e-an");

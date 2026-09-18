@@ -740,6 +740,7 @@ pre.tree {
       <li>&#9745; 8.5 Bind each sentence to its two numbers so neither can be shown without the other (<code>SV-10</code>).</li>
       <li>&#9745; 8.6 Show which template was selected, and out of how many.</li>
       <li>&#9745; 8.7 Three fixture datasets, one per region of the interval.</li>
+      <li>&#9745; 8.8 The owners&rsquo; link (<code>SV-12</code>, <code>SV-13</code>). Asked for by the owners on 18 September: the person running the room should see the results with nothing to paste or type. The codebook moves to Secret Manager and arrives with the rows, to the owners only; the credential rides in the link after the <code>#</code>, which never leaves the browser, and the page takes it out of the address bar before the first request and keeps it for the tab alone. The token box, codebook box and paste box fold away under <em>Do it by hand</em> for the day the service is down. Checked in <code>check-service.py</code> (the codebook reaches the owners and 6 other responses carry none of it) and <code>check-session.mjs</code> (one request on opening the link, the credential decoded into the header and out of the address bar, a reload goes on watching, Stop forgets, no link means no request); removing the address-bar step was seen to fail. Needs one more deploy to put the codebook secret in place.</li>
     </ul>
     <p><strong>Where this stands.</strong> Built, machine-checked, and driven in a real browser
       against a running service.

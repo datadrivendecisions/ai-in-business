@@ -66,10 +66,10 @@ block can run at all.
       session once on a laptop and once on a phone, with your own assistant, and time it. The
       build plan expects under 25 minutes. This also closes the tester lines in build plan
       phases 1, 3, 4 and 6.
-- [ ] **Rehearse the instructor view.** Open the page with `?instructor`. Paste the whole of
-      [`week-03-codebook.md`](../work/drafts/week-03-codebook.md) into the codebook box. Load each
-      fixture and watch the comparison and the sentence under it change. **The codebook box is
-      the answer key: never project it.**
+- [ ] **Rehearse the instructor view.** Open your owners' link (below). Then open *No link, or
+      the service is down? Do it by hand*, load each fixture, and watch the comparison and the
+      sentence under it change. The fixtures use the codebook the live feed received, so there is
+      nothing to paste.
 
 ### Should be done
 
@@ -99,13 +99,26 @@ block can run at all.
 - [x] **Redeployed with the preflight fix** (revision `experiment-service-00002`). A full session
       in a real browser, served under the Pages address, submitted to the live service and appeared
       on the owners' dashboard. The test row was deleted.
+- [ ] **Redeploy once more, so the service holds the codebook.** Run
+      `PROJECT=ai-in-business-507819 experiment_service/deploy.sh`. It stores the 32 card-to-cell
+      pairs from `work/drafts/week-03-codebook.md` in Secret Manager and gives them to the service,
+      which hands them only to the owners' dashboard. Until then the live view stops and asks for a
+      pasted codebook.
 - [ ] **Test the Submit button on the published page**, not a local copy. The service answers
       `https://datadrivendecisions.github.io` and nothing else, so a page opened from your own
       laptop falls back to "copy your line". Take one session on the live page, press Submit, and
       watch it appear in the instructor view. Then delete it by its code.
-- [ ] **Have the owners' credential ready**, and keep it off any shared screen. It is in Secret
-      Manager as `experiment-owner-token`; `experiment_service/deploy.sh` prints the command that
-      reads it.
+- [ ] **Make your owners' link and bookmark it.** Each owner, on their own laptop, runs this once
+      and bookmarks the address it prints:
+
+      ```bash
+      echo "https://datadrivendecisions.github.io/ai-in-business/tool-bias-experiment.html?instructor#owner=$(gcloud secrets versions access latest --secret experiment-owner-token --project ai-in-business-507819)"
+      ```
+
+      Opening the bookmark is all it takes on Monday: the results appear and refresh every five
+      seconds, with nothing to paste or type. The page removes the credential from the address bar
+      as soon as it loads, so it is not on the projector. **The link is the key.** Anyone who has it
+      sees the live results, so do not paste it in a chat or share the bookmark.
 
 ---
 
@@ -150,8 +163,8 @@ to."* You do not need to hold anyone there. The rounds are individual.
 or whether their position is right, say *"Whatever you think it means"* and move on. The gates work
 the same way.
 
-**Data lecturer.** In live mode, open the instructor view, paste the codebook, enter the owners'
-credential and press *Watch it fill up*. Keep your screen to yourself.
+**Data lecturer.** In live mode, open your owners' link. The results start filling in by
+themselves. Keep your screen to yourself.
 
 ### 0:45–0:50 — Hand in
 
@@ -207,7 +220,8 @@ plainly and in this order:
 
 ### 1:25–1:50 — The result
 
-Scroll the projected instructor view to the comparison. **Keep the codebook box off the screen.**
+Open the owners' link on the projected laptop and scroll to the comparison. Keep the *Do it by
+hand* fold-out closed: if a codebook was pasted into it, that is the answer key.
 
 Show the two bars, the interval and the detectable effect. The page puts a question where a
 conclusion would go, and one sentence that says what the interval allows. Read both out. Then hand
@@ -304,7 +318,7 @@ and questions weaken it. The course's gates ask questions and never give a verdi
 | A student entered the wrong team number | Let them carry on. The line records which round had the assistant, so the data stays usable. |
 | Submitting fails | The page shows the line and says what to do. The student copies it and sends it by private message. |
 | The count on the dashboard is higher than the room | Someone used two codes. Each code counts once (the last submission wins), but two codes look like two people. Ask the room. |
-| The dashboard refuses the owners' credential | Read it again from Secret Manager. Until then, switch to the paste box. |
+| The dashboard says the service refused the credential | Make the owners' link again (see *Before Monday*). Until then, use the paste box under *Do it by hand*. |
 | The service is down | The dashboard gives up after five failed attempts and says so. Switch to by hand. This is the ten minutes ADR-0016 accepted as the fallback. |
 | A student wants out mid-session | They stop. The *erase* button removes everything from their browser. |
 | A student wants their row deleted after submitting | See *Deleting one student's row* below. |
@@ -323,8 +337,8 @@ The service deletes everything at 19:00 (Amsterdam time). What you want to keep,
    or CL-10 is replaced before the next run, and this run's result is reported with the miss
    beside it.
 3. **Delete any rows students asked to withdraw** (next section).
-4. **Stop the live feed** and close the tab. The page keeps the owners' credential only while
-   the tab is open.
+4. **Press *Stop watching*** and close the tab. Stop makes the tab forget the owners' link; so
+   does closing it.
 
 ### Deleting one student's row
 

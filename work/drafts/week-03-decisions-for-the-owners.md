@@ -145,3 +145,21 @@ for the next run, and this run's comparison is reported with the miss written be
 **Still yours, and none of it can be measured:** `CL-8` and `CL-9` before the session (build plan 0.2),
 two people coding all 32 cards on their own (0.8), and the eight-card debrief set (0.11).
 
+---
+
+## 8. The owners open the dashboard with one link — decided by the owners, 18 September 2026
+
+The owners asked that the person running the room see the results without pasting a codebook or
+typing a credential. Two changes do that:
+
+- **The codebook moves into Secret Manager**, beside the owners' credential. The service returns it
+  inside the owner-authenticated dashboard response and in no other response (`SV-13`). This
+  reverses the narrowing in decision 4: the codebook now *does* reach a server. It is still not in
+  anything published, which is what `SM-8` protects, and the service still computes nothing.
+- **The credential travels in a personal link**, after the `#`. That part never leaves the browser,
+  so GitHub never sees it. The page removes it from the address bar before the first request and
+  keeps it for that tab only (`SV-12`).
+
+**The cost:** the link is the key. Anyone who has it sees the live results, so it is bookmarked,
+not shared. Revoking it means adding a new version of `experiment-owner-token` and deploying again.
+

@@ -226,6 +226,32 @@ def sv3_sv8():
           len({r["id"] for r in rows}) == 3)
 
 
+# ------------------------------------------------------- the codebook ---
+
+def codebook():
+    print("\nSM-8 beside the service  the answer key reaches the owners and nobody else")
+    key = "c1-01 NAS3\nc1-02 AS3\nc2-01 AW1"
+    app = App(store=MemoryStore(salt="gate"), owner_token=TOKEN, purge_token=PURGE_TOKEN,
+              origins=(ORIGIN,), clock=Clock(), codebook=key)
+    ok = call(app, "POST", "/submit", submission())
+    owner = call(app, "GET", "/dashboard", token=TOKEN)
+    check("the owners' dashboard carries the codebook", owner["json"].get("codebook") == key,
+          repr(owner["json"].get("codebook")))
+    others = [
+        ("the submit response", ok),
+        ("an anonymous dashboard read", call(app, "GET", "/dashboard")),
+        ("a wrong token", call(app, "GET", "/dashboard", token="wrong")),
+        ("the health route", call(app, "GET", "/health")),
+        ("an unknown route, with the owners' token", call(app, "GET", "/codebook", token=TOKEN)),
+        ("the preflight", call(app, "OPTIONS", "/dashboard")),
+    ]
+    leaked = [label for label, r in others if b"NAS3" in r["raw"] or b"c1-01" in r["raw"]]
+    check("%d other responses, 0 carrying any of it" % len(others), not leaked, ", ".join(leaked))
+    bare, _ = fresh()
+    check("with no codebook configured the dashboard says so rather than inventing one",
+          call(bare, "GET", "/dashboard", token=TOKEN)["json"].get("codebook") is None)
+
+
 # ------------------------------------------------------------------ SV-5 ---
 
 def sv5():
@@ -355,6 +381,7 @@ def main():
     sv5()
     sv4()
     ag1()
+    codebook()
     flood()
     print("\n%d passed, %d failed." % (len(PASSES), len(FAILURES)))
     if FAILURES:

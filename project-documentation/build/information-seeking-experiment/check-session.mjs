@@ -32,7 +32,7 @@ if (!ORIGIN_LINE.test(source)) throw new Error("cannot find SERVICE.origin in th
 const SHIPPED_ORIGIN = source.match(ORIGIN_LINE)[0].match(/"([^"]*)"$/)[1];
 const blankedSource = source.replace(ORIGIN_LINE, '$1""');
 
-function makePage(initialStorage, { shipped = false } = {}) {
+function makePage(initialStorage, { shipped = false, hash = "", session = null, fetch = null } = {}) {
   const handlers = new Map();
   const nodes = new Map();
   const radios = new Map();
@@ -108,9 +108,16 @@ function makePage(initialStorage, { shipped = false } = {}) {
       removeItem: (k) => store.delete(k),
     },
     navigator: {},
-    location: { search: "", reload() { reloaded = true; } },
+    location: { search: "", hash, pathname: "/ai-in-business/tool-bias-experiment.html",
+                reload() { reloaded = true; } },
+    history: {
+      replaced: [],
+      replaceState(state, title, url) { this.replaced.push(url); windowObj.location.hash = ""; },
+    },
     setTimeout: () => 0,
     clearTimeout: () => {},
+    setInterval: () => 1,
+    clearInterval: () => {},
     confirm: () => true,
     scrollTo() {},
     /* No fetch by default. A page that reaches for one without a test
@@ -118,6 +125,7 @@ function makePage(initialStorage, { shipped = false } = {}) {
        nothing, because "nothing happened" is also what a pass looks like. */
   };
   windowObj.window = windowObj;
+  if (fetch) windowObj.fetch = fetch;
 
   const sandbox = {
     window: windowObj, document, localStorage: windowObj.localStorage,
@@ -126,6 +134,13 @@ function makePage(initialStorage, { shipped = false } = {}) {
     parseInt, parseFloat, setTimeout: () => 0, clearTimeout: () => {},
     Promise, AbortController,
   };
+  if (session) {
+    sandbox.sessionStorage = {
+      getItem: (k) => (session.has(k) ? session.get(k) : null),
+      setItem: (k, v) => session.set(k, String(v)),
+      removeItem: (k) => session.delete(k),
+    };
+  }
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
   vm.runInContext(shipped ? source : blankedSource, sandbox, { filename: "tool-bias-experiment.html" });
@@ -846,6 +861,69 @@ function answerQuestions(p, v) {
   p.click("b-coders");
   ok("an empty second codebook is refused, and CL-5 goes back to open",
      !p.nodes.get("e-audit").hidden && p.text("au-open") === "2", p.text("au-open"));
+}
+
+/* ---- the owners' link: one click, nothing to paste or type ---- */
+{
+  console.log("\nThe owners' link — the live view starts by itself, with the codebook from the service");
+  const cells = [["A", "S"], ["A", "W"], ["NA", "S"], ["NA", "W"]];
+  const key = [];
+  for (const claim of [1, 2]) for (let i = 1; i <= 16; i++) {
+    const [st, q] = cells[(i - 1) % 4];
+    key.push(`c${claim}-${String(i).padStart(2, "0")} ${st}${q}`);
+  }
+  // Three submissions in the service's own row shape.
+  const row = (id, team, agentFirst) => ({ id, team, at: 1, rounds: [
+    { n: 1, agent: agentFirst, claim: 1, side: "a", pick: 20, opened: ["c1-01", "c1-02", "c1-03"], seconds: 90, endSide: "a", moved: false, tlx: 40, q: 9 },
+    { n: 2, agent: !agentFirst, claim: 2, side: "d", pick: 30, opened: ["c2-03", "c2-04"], seconds: 80, endSide: "d", moved: true, tlx: 45, q: 8 },
+  ]});
+  const body = { count: 3, rows: [row("a1", 1, false), row("b2", 5, true), row("c3", 6, true)], codebook: key.join("\n") };
+
+  const calls = [];
+  const session = new Map();
+  const fetch = (url, opts) => { calls.push({ url, opts }); return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) }); };
+  const p = makePage(undefined, { shipped: true, hash: "#owner=s3cr%2Bet", session, fetch });
+  await new Promise((r) => setTimeout(r, 0));
+  await new Promise((r) => setTimeout(r, 0));
+
+  ok("opening the link starts watching: 1 request, to the dashboard", calls.length === 1 && /\/dashboard$/.test(calls[0].url),
+     calls.map((c) => c.url).join(" | "));
+  ok("the credential goes in the Authorization header, decoded",
+     calls[0] && calls[0].opts.headers.Authorization === "Bearer s3cr+et", calls[0] && JSON.stringify(calls[0].opts.headers));
+  ok("it is taken out of the address bar at once",
+     p.sandbox.window.history.replaced.length === 1 && !/owner=/.test(p.sandbox.window.history.replaced[0])
+     && p.sandbox.window.location.hash === "", JSON.stringify(p.sandbox.window.history.replaced));
+  ok("it is kept for this tab only, so a reload goes on watching", session.get("bxp-owner") === "s3cr+et");
+  ok("nothing was pasted, and the results filled from the service's codebook: 3 lines, 32 cards",
+     p.text("an-ok") === "3" && p.text("an-cards") === "32", `${p.text("an-ok")} / ${p.text("an-cards")}`);
+  // Three people are under the pilot's floor of ten, so every verdict stays
+  // open; what must hold is that the audit was handed the same three records.
+  ok("the pilot audit was fed the same 3 records, and keeps its verdicts open under 10 people",
+     p.sandbox.AUDIT.records.length === 3 && p.text("au-open") === "7",
+     `${p.sandbox.AUDIT.records && p.sandbox.AUDIT.records.length} / ${p.text("au-open")}`);
+
+  // A reload: no # any more, but the tab remembers.
+  const again = [];
+  makePage(undefined, { shipped: true, session, fetch: (u, o) => { again.push(o); return new Promise(() => {}); } });
+  ok("a reload in the same tab goes on watching without the link", again.length === 1
+     && again[0].headers.Authorization === "Bearer s3cr+et");
+
+  // Stop forgets.
+  p.click("b-live-stop");
+  ok("Stop watching forgets the credential", !session.has("bxp-owner"));
+
+  // Nobody else starts anything.
+  const stray = [];
+  makePage(undefined, { shipped: true, session: new Map(), fetch: (u) => { stray.push(u); return new Promise(() => {}); } });
+  ok("a page opened without the link makes 0 requests", stray.length === 0, stray.join(" | "));
+
+  // A service deployed without a codebook says so rather than drawing nothing.
+  const noKey = makePage(undefined, { shipped: true, hash: "#owner=x", session: new Map(),
+    fetch: () => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ count: 0, rows: [], codebook: null }) }) });
+  await new Promise((r) => setTimeout(r, 0));
+  await new Promise((r) => setTimeout(r, 0));
+  ok("no codebook from the service: it stops and says where to paste one",
+     /sent no codebook/.test(noKey.text("m-live-detail")), noKey.text("m-live-detail"));
 }
 
 console.log();

@@ -70,8 +70,15 @@ def _json(status, payload, origin=None, extra=None):
 
 class App:
     def __init__(self, store=None, owner_token=None, origins=None, clock=time.time,
-                 purge_token=None):
+                 purge_token=None, codebook=None):
         self.store = store if store is not None else MemoryStore()
+        # The answer key: which card sits in which cell. It may not be in the
+        # published page (SM-8), and pasting it into the instructor view at the
+        # start of a session was one step too many for the person running the
+        # room. So it lives beside the owners' token, in Secret Manager, and
+        # leaves this service only inside an owner-authenticated dashboard
+        # response -- never to a student, never from any other route.
+        self.codebook = codebook if codebook is not None else os.environ.get("CODEBOOK", "")
         self.owner_token = owner_token if owner_token is not None else os.environ.get("OWNER_TOKEN", "")
         self.purge_token = purge_token if purge_token is not None else os.environ.get("PURGE_TOKEN", "")
         env_origins = os.environ.get("ALLOWED_ORIGINS", "")
@@ -145,6 +152,7 @@ class App:
                          [("WWW-Authenticate", "Bearer")])
         rows = self.store.rows(now=self.clock())
         return _json(200, {"count": len(rows), "rows": rows,
+                           "codebook": self.codebook or None,
                            "servedAt": self.clock()}, origin)
 
     def delete(self, environ, body, origin):
