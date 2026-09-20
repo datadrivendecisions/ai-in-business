@@ -495,7 +495,7 @@ input[type="number"] {
 <main class="bds-page" id="top">
 
   <header class="bds-page-header">
-    <p class="bds-eyebrow">Week 3 &middot; in the session</p>
+    <p class="bds-eyebrow">Week 3 &middot; at home, before week 4</p>
     <h1 class="bds-h1">The source menu</h1>
     <p class="lead">Two rounds, two claims. In each one you write down where you stand, then you are shown sixteen sources one at a time and may open eight of them. In one of the two rounds an assistant asks you about your position first.</p>
   </header>
@@ -522,7 +522,7 @@ input[type="number"] {
 
     <div class="field">
       <label for="f-team">Your team number
-        <span class="hint">The number on your team&rsquo;s card. It decides which of your two rounds has the assistant in it &mdash; nothing else.</span>
+        <span class="hint">Your own team&rsquo;s number, 1 to 8. It decides which of your two rounds has the assistant in it &mdash; nothing else.</span>
       </label>
       <select id="f-team">
         <option value="">Choose&hellip;</option>
@@ -759,7 +759,7 @@ input[type="number"] {
   <section class="screen" id="s-bridge" aria-labelledby="h-bridge" hidden>
     <h2 id="h-bridge">That is round one</h2>
     <p>Round two works exactly the same way, on a different claim with a different sixteen sources. Nothing you did in round one carries over, and the two decks share no source.</p>
-    <p class="note">Wait here if your lecturer has asked you to.</p>
+    <p class="note">Carry straight on. Both rounds want to be done in one sitting.</p>
     <div class="btn-row">
       <button type="button" class="btn" id="b-bridge">Start round two</button>
     </div>
@@ -772,9 +772,9 @@ input[type="number"] {
        one page; keeping the exception narrow is what this screen is for.
        ============================================================ -->
   <section class="screen" id="s-submit" aria-labelledby="h-submit" hidden>
-    <h2 id="h-submit">Send your numbers to the room?</h2>
+    <h2 id="h-submit">Send your numbers in?</h2>
 
-    <p>Both rounds are done. Your lecturer needs everyone&rsquo;s numbers in one place to draw the comparison the session ends on. You can send yours with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
+    <p>Both rounds are done. In week 4 the whole cohort&rsquo;s numbers go on one screen, and yours are in that picture only if they arrive. You can send them with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
 
     <div class="warn">
       <p><strong>What goes, if you press it:</strong></p>
@@ -785,7 +785,7 @@ input[type="number"] {
         <li>Seconds spent, and your answers to the eight closing questions.</li>
       </ul>
       <p><strong>What stays here:</strong> everything you wrote, and everything an assistant replied. Those are never sent, and there is no field in the message that could carry them.</p>
-      <p>What is sent carries your code and no name. It is deleted at the end of the teaching day. Give your code to a lecturer at any point and your row goes sooner.</p>
+      <p>What is sent carries your code and no name. It is deleted after the week 4 debrief, on the evening of Monday 28 September. Give your code to a lecturer at any point and your row goes sooner.</p>
     </div>
 
     <details>
@@ -808,7 +808,7 @@ input[type="number"] {
 
     <div class="status" id="d-status" hidden><p id="d-status-text"></p></div>
 
-    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks.</p>
+    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks. Then leave it there until week 4: comparing notes with your team now costs them the exercise.</p>
 
     <div class="line-box" id="d-line" tabindex="0" role="region" aria-label="Your result line"></div>
 
@@ -868,7 +868,7 @@ input[type="number"] {
          once, and starts watching. The service sends the codebook along with
          the rows, to the owners only, so nothing has to be pasted. -->
     <h3>Live</h3>
-    <p class="note">Opens by itself from the owners&rsquo; link and refreshes every five seconds. Nothing to paste or type.</p>
+    <p class="note">Opens by itself from the owners&rsquo; link and refreshes every five seconds. Nothing to paste or type. Rows now arrive across the week rather than inside one block, so this is a page to reopen, not to watch.</p>
     <div class="btn-row">
       <span class="copied" id="m-live">Not watching.</span>
       <button type="button" class="btn btn-secondary" id="b-live-stop" hidden>Stop watching</button>
@@ -1019,7 +1019,7 @@ input[type="number"] {
          the question the session asks, which is why it can say "met"
          where the section above may only ask. -->
     <h3 style="margin-top:var(--space-8)">Pilot audit: do the two claims hold?</h3>
-    <p class="note">This session is also the pilot for its two claims. The sides people locked before reading are the pilot&rsquo;s split, and the seconds until they chose one are its timing. Both arrive with the lines above, so this table fills in when they do. The one input the room cannot supply is the coders&rsquo; agreement: two people code all 32 cards, each on their own, and paste the result here.</p>
+    <p class="note">This cohort&rsquo;s run is also the pilot for its two claims. The sides people locked before reading are the pilot&rsquo;s split, and the seconds until they chose one are its timing. Both arrive with the lines above, so this table fills in when they do. The one input the students cannot supply is the coders&rsquo; agreement: two people code all 32 cards, each on their own, and paste the result here.</p>
     <div class="field">
       <label for="f-coder1">Coder 1&rsquo;s codebook
         <span class="hint">The same shape as the codebook above: any line carrying a card id followed by its cell code.</span>
@@ -2113,13 +2113,13 @@ function toSubmit(){
    say what to do next, because on a failure the student is the recovery
    mechanism and being told "an error occurred" is no help to them. */
 var OUTCOMES = {
-  sent: "Your numbers are with the room. Your code is on them and your name is not, and they are deleted at the end of the day. Keep the line below anyway, in case a lecturer asks for it.",
+  sent: "Your numbers are in. Your code is on them and your name is not, and they are deleted after the week 4 debrief. Keep the line below anyway, in case a lecturer asks for it.",
   skipped: "Nothing was sent. Hand the line below in the way your lecturer asks.",
-  "not-configured": "There is nothing to send to yet — this session is being run by hand. Copy the line below and hand it in the way your lecturer asks.",
+  "not-configured": "There is nothing to send to yet — this one is being collected by hand. Copy the line below and hand it in the way your lecturer asks.",
   "no-fetch": "This browser cannot send it. Copy the line below and hand it in the way your lecturer asks.",
-  timeout: "The room’s service did not answer in time, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
-  unreachable: "The room’s service could not be reached, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
-  refused: "The room’s service refused the message, so nothing was sent. That costs you nothing: copy the line below and hand it in, and tell a lecturer it was refused."
+  timeout: "The service did not answer in time, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  unreachable: "The service could not be reached, so nothing was sent. That costs you nothing: copy the line below and hand it in, which is what everyone did before there was a button.",
+  refused: "The service refused the message, so nothing was sent. That costs you nothing: copy the line below and hand it in, and tell a lecturer it was refused."
 };
 
 function toDone(outcome){
