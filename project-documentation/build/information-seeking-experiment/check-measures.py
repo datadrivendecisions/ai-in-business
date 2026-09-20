@@ -186,25 +186,32 @@ KAPPAS = [
 
 
 def line(code, team, rounds):
-    return "|".join([f"v1", code, f"t{team}"] + rounds)
+    return "|".join([f"v2", code, f"t{team}"] + rounds)
 
 
-def block(n, agent, claim, side, ids, secs, end, moved, tlx, q):
+def block(n, agent, claim, side, pick, ids, secs, end, moved, tlx, q):
     return ":".join([
         f"r{n}", "ask" if agent else "none", claim,
-        "pos" + ("a" if side == "agree" else "d"),
+        "pos" + ("a" if side == "agree" else "d"), f"pick{pick}",
         f"op{len(ids)}", "ids=" + ",".join(ids), f"s{secs}",
         "end" + ("a" if end == "agree" else "d"),
         f"moved{1 if moved else 0}", f"tlx{tlx}", f"q{q}",
     ])
 
 
-def make_dataset(name, n, seed, malformed=()):
+def make_dataset(name, n, seed, malformed=(), lean=None, pick_span=64):
     """A class of n students. Every choice comes from a plain linear
     congruential generator so the same fixture is produced on any machine and
-    the reference and the tool are fed exactly the same room."""
+    the reference and the tool are fed exactly the same room.
+
+    `lean` is the chance in ten of agreeing, for a room that does not divide;
+    left out, a side is a coin toss exactly as before. The seconds to a side
+    are a sweep over `pick_span` rather than a draw, so adding them left every
+    other number in the older rooms where it was."""
     state = seed
     ask, none = [], []
+    sides = {"c1": [], "c2": []}
+    picks = {"c1": [], "c2": []}
 
     def rnd(k):
         nonlocal state
@@ -217,7 +224,13 @@ def make_dataset(name, n, seed, malformed=()):
         agent_round = 2 if team <= 4 else 1
         blocks, per = [], {}
         for r in (1, 2):
-            side = "agree" if rnd(2) == 0 else "disagree"
+            if lean is None:
+                side = "agree" if rnd(2) == 0 else "disagree"
+            else:
+                side = "agree" if rnd(10) < lean else "disagree"
+            pick_s = (7 * i + 13 * r + seed) % pick_span
+            sides[f"c{r}"].append(side)
+            picks[f"c{r}"].append(pick_s)
             pool = ids_of(r)
             opened = []
             for _ in range(6 + rnd(3)):
@@ -226,7 +239,7 @@ def make_dataset(name, n, seed, malformed=()):
                     opened.append(pick)
             end = side if rnd(10) else ("disagree" if side == "agree" else "agree")
             secs, tlx, q = 90 + rnd(200), 25 + rnd(45), 4 + rnd(9)
-            blocks.append(block(r, agent_round == r, f"c{r}", side, opened, secs, end, rnd(2) == 0, tlx, q))
+            blocks.append(block(r, agent_round == r, f"c{r}", side, pick_s, opened, secs, end, rnd(2) == 0, tlx, q))
             per["ask" if agent_round == r else "none"] = measure(opened, side)
         lines.append(line(f"s{i:02d}", team, blocks))
         expected.append(per["ask"]["index"] - per["none"]["index"])
@@ -234,19 +247,90 @@ def make_dataset(name, n, seed, malformed=()):
         none.append(per["none"]["index"])
     lines.extend(malformed)
     return dict(name=name, n=n, lines=lines, diffs=expected,
-                ask=ask, none=none, bad=len(malformed))
+                ask=ask, none=none, bad=len(malformed), sides=sides, picks=picks)
 
 
 DATASETS = [
     make_dataset("a full room of 32", 32, 7),
     make_dataset("32 plus two that will not parse", 32, 11, malformed=[
-        "v1|broken|t3|r1:ask:c1:posa:op3:ids=c1-01,c1-02:s100:enda:moved0:tlx40:q8|r2:none:c2:posd:op8:ids=c2-01,c2-02,c2-03,c2-04,c2-05,c2-06,c2-07,c2-08:s100:endd:moved0:tlx40:q8",
-        "v2|future|t1|r1:ask:c1:posa:op1:ids=c1-01:s10:enda:moved0:tlx1:q2|r2:none:c2:posd:op1:ids=c2-01:s10:endd:moved0:tlx1:q2",
+        "v2|broken|t3|r1:ask:c1:posa:pick20:op3:ids=c1-01,c1-02:s100:enda:moved0:tlx40:q8|r2:none:c2:posd:pick20:op8:ids=c2-01,c2-02,c2-03,c2-04,c2-05,c2-06,c2-07,c2-08:s100:endd:moved0:tlx40:q8",
+        "v3|future|t1|r1:ask:c1:posa:pick20:op1:ids=c1-01:s10:enda:moved0:tlx1:q2|r2:none:c2:posd:pick20:op1:ids=c2-01:s10:endd:moved0:tlx1:q2",
     ]),
-    make_dataset("an afternoon half-group of 14", 14, 23),
+    make_dataset("an afternoon half-group of 14", 14, 23, pick_span=80),
     make_dataset("the smallest run worth reading, 6", 6, 41),
-    make_dataset("two cohorts together, 61", 61, 97),
+    make_dataset("two cohorts together, 61", 61, 97, pick_span=75),
+    make_dataset("a room that leans, 20", 20, 53, lean=9),
 ]
+
+
+# ------------------------------------------------------------ the pilot audit
+# Phase 0's data criteria, computed from the fixture rooms' own sides and
+# seconds rather than from the page's parse of them. Thresholds are the
+# blueprint's CL-1, CL-7, CL-10 and CL-5, written out again here on purpose.
+
+def pilot_reference(sides, picks):
+    rows = []
+    larger = {}
+    for claim in ("c1", "c2"):
+        n = len(sides[claim])
+        agree = sum(1 for s in sides[claim] if s == "agree")
+        larger[claim] = max(agree, n - agree) / n if n else None
+        if n < 10:
+            rows.append(("CL-1", "open"))
+        else:
+            rows.append(("CL-1", "met" if larger[claim] <= 0.70 else "missed"))
+    if len(sides["c1"]) < 10 or len(sides["c2"]) < 10:
+        rows.append(("CL-7", "open"))
+    else:
+        gap = abs(larger["c1"] - larger["c2"]) * 100
+        rows.append(("CL-7", "met" if gap <= 15 else "missed"))
+    for claim in ("c1", "c2"):
+        n = len(picks[claim])
+        quick = sum(1 for p in picks[claim] if p <= 60)
+        if n < 10:
+            rows.append(("CL-10", "open"))
+        else:
+            rows.append(("CL-10", "met" if quick / n >= 0.9 else "missed"))
+    rows.extend([("CL-5", "open"), ("CL-5", "open")])
+    return rows, larger
+
+
+def codebook_text(book):
+    return "\n".join(f"| `{cid}` | {st}{q} |" for cid, (st, q) in sorted(book.items()))
+
+
+def flipped(book, ids):
+    out = dict(book)
+    for cid in ids:
+        st, q = out[cid]
+        out[cid] = ("NA" if st == "A" else "A", q)
+    return out
+
+
+CODERS = [
+    dict(name="two coders who agree on every card", two=dict(BOOK)),
+    dict(name="one stance apart in each deck", two=flipped(BOOK, ["c1-03", "c2-11"])),
+    dict(name="two apart in deck 1, none in deck 2", two=flipped(BOOK, ["c1-02", "c1-09"])),
+    dict(name="a card coder 2 left out", two={k: v for k, v in BOOK.items() if k != "c2-05"}),
+]
+
+
+def coder_reference(one, two):
+    out = []
+    for claim in ("c1", "c2"):
+        ids = [f"{claim}-{i:02d}" for i in range(1, 17)]
+        missing = [c for c in ids if c not in one or c not in two]
+        if missing:
+            out.append(dict(verdict="open", missing=len(missing)))
+            continue
+        a = sum(1 for c in ids if one[c][0] == "A" and two[c][0] == "A")
+        b = sum(1 for c in ids if one[c][0] == "A" and two[c][0] == "NA")
+        cc = sum(1 for c in ids if one[c][0] == "NA" and two[c][0] == "A")
+        d = sum(1 for c in ids if one[c][0] == "NA" and two[c][0] == "NA")
+        k = kappa(a, b, cc, d)
+        out.append(dict(verdict="met" if a + d >= 15 else "missed", agreed=a + d,
+                        matrix=(a, b, cc, d), kappa=k["kappa"], po=k["po"], pe=k["pe"], missing=0))
+    return out
 
 
 # ---------------------------------------------------------------------- driver
@@ -272,6 +356,8 @@ def main():
         "totals": TOTALS,
         "datasets": [{"name": d["name"], "lines": d["lines"]} for d in DATASETS],
         "kappas": KAPPAS,
+        "coders": [{"name": c["name"], "one": codebook_text(BOOK), "two": codebook_text(c["two"])}
+                   for c in CODERS],
         "promptClaim": "An SME should run its AI on small models it controls rather than on frontier models it rents.",
         "promptSide": "agree",
         "promptLocked": "Renting means the price and the model can both change under you.",
@@ -321,7 +407,7 @@ def main():
         if not 2 <= have["q"] <= 14:
             fails.append(f"  {want['name']}: perception {have['q']} outside 2-14")
 
-    print(f"\nAN-1, AN-2, AN-4, AN-6 — five classes")
+    print(f"\nAN-1, AN-2, AN-4, AN-6 — {len(DATASETS)} classes")
     for ds, have in zip(DATASETS, got["datasets"]):
         n = ds["name"]
         check(f"  {n}: lines accepted", ds["n"], have["accepted"])
@@ -361,6 +447,32 @@ def main():
         check(f"  {want['name']}: observed agreement", ref["po"], have["po"])
         check(f"  {want['name']}: chance agreement", ref["pe"], have["pe"])
         check(f"  {want['name']}: kappa", ref["kappa"], have["kappa"])
+
+    print(f"\nPhase 0 — the pilot audit over six rooms")
+    for ds, have in zip(DATASETS, got["datasets"]):
+        n = ds["name"]
+        ref_rows, larger = pilot_reference(ds["sides"], ds["picks"])
+        have_rows = [(r["rule"], r["verdict"]) for r in have["audit"]["rows"]]
+        check(f"  {n}: seven criteria, in order, each with its verdict", ref_rows, have_rows)
+        for claim in ("c1", "c2"):
+            check(f"  {n}: larger side, {claim}", larger[claim], have["audit"]["split"][claim]["larger"])
+    verdicts = {v for ds in DATASETS for _, v in pilot_reference(ds["sides"], ds["picks"])[0][:5]}
+    if verdicts != {"met", "missed", "open"}:
+        fails.append(f"  the rooms only ever produce {sorted(verdicts)}; each of met, missed and open must appear")
+
+    print(f"\nPhase 0 — CL-5, two coders over {len(CODERS)} pairs of codebooks")
+    for want, have in zip(CODERS, got["coders"]):
+        n = want["name"]
+        ref = coder_reference(BOOK, want["two"])
+        for i, (r, h) in enumerate(zip(ref, have["decks"])):
+            check(f"  {n}: deck {i + 1} verdict", r["verdict"], h["verdict"])
+            check(f"  {n}: deck {i + 1} cards missing", r["missing"], h["missing"])
+            if r["verdict"] != "open":
+                check(f"  {n}: deck {i + 1} stances agreed", r["agreed"], h["agreed"])
+                check(f"  {n}: deck {i + 1} matrix", list(r["matrix"]), h["matrix"])
+                check(f"  {n}: deck {i + 1} observed agreement", r["po"], h["po"])
+                check(f"  {n}: deck {i + 1} chance agreement", r["pe"], h["pe"])
+                check(f"  {n}: deck {i + 1} kappa", r["kappa"], h["kappa"])
 
     print()
     if fails:
