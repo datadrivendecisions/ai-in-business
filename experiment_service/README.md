@@ -19,12 +19,15 @@ never transmitted — not stripped on arrival, but never sent, because
 name. The day someone adds a sentence to the tool's payload, the service
 rejects the submission instead of storing it.
 
-Retention is the teaching day, enforced three times over:
+Retention is the exercise, enforced three times over. Since ADR-0017 the
+experiment is homework: rows arrive across a week and all die on the evening of
+the debrief they were collected for, which is the date `RETENTION_UNTIL` holds
+and the date the student read before pressing the button.
 
 | Mechanism | Catches |
 |---|---|
-| `POST /purge`, on a 19:00 schedule | the ordinary case |
-| a Firestore TTL policy on `expiresAt` | the night the scheduler does not fire |
+| `POST /purge`, scheduled on the debrief evening | the ordinary case |
+| a Firestore TTL policy on `expiresAt` | the evening the scheduler does not fire |
 | every read drops an expired row before returning it | the hours between the two |
 
 A retention rule resting on one cron job is an intention. This is three
@@ -37,7 +40,7 @@ independent mechanisms, and the cheapest of them cannot be skipped.
 | `POST /submit` | the tool, once, on a button press | anonymous |
 | `GET /dashboard` | the tool's instructor view, polling | owners |
 | `POST /delete` | a student changed their mind | owners |
-| `POST /purge` | the end of the day | the scheduler, or owners |
+| `POST /purge` | the end of the retention window | the scheduler, or owners |
 | `GET /health` | Cloud Run wants one | anonymous |
 
 There is **no route that takes a code and returns a row.** `/delete` takes a
