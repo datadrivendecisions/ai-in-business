@@ -54,10 +54,10 @@ The protocol left them open, and a run sheet cannot. Each one can be changed.
       `RETENTION_UNTIL=2026-09-28T19:00:00+02:00 PROJECT=ai-in-business-507819 experiment_service/deploy.sh`
       sets the row expiry, the TTL and the scheduled purge to the debrief evening, all from that
       one value. **Until this is run, the page's promise to students is false.**
-- [ ] **Merge the week 3 page and the homework wording** (PR #22), and open
-      `https://datadrivendecisions.github.io/ai-in-business/week-03.html` to check that the
-      exercise is there, and `tool-bias-experiment.html` to check the finish screen's line starts
-      with `v2`.
+- [x] **The week 3 page and the homework wording are published** (PR #29, 20 September). Open
+      `https://datadrivendecisions.github.io/ai-in-business/week-03.html` and check that the
+      exercise is there under *The exercise, at home*, and `tool-bias-experiment.html` to check
+      the finish screen's line starts with `v2`.
 - [ ] **Fix the team numbers.** Teams 1–4 meet the assistant in round 2. Teams 5–8 meet it in
       round 1. With fewer than eight teams, number them so the two halves stay equal. For six
       teams, use 1, 2, 3, 5, 6, 7. Students need to know their own number at home, so put it

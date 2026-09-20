@@ -1,15 +1,16 @@
 # Week 3 — instructor notes
 
 Speaker notes for `site/week-03-slides.html`, one block per card, keyed by the card's id.
-`build_deck.py` folds them into the presenter deck. The page now holds the AIBS research
-methodology segment (s3–s7), the AI agents segment (s8–s10) and one placeholder still open —
-the experiment debrief at s2, which has to wait for the session's own result. The folder is
-public, so nothing that only works if a student has not read it goes here — no hypothesis
-direction for the experiment, no codebook, no agent prompt. That material stays in
+`build_deck.py` folds them into the presenter deck. The page holds the AIBS research
+methodology segment (s2–s6), the card that sets the homework exercise (s7) and the rulebook
+(s8). The folder is public, so nothing that only works if a student has not read it goes here —
+no hypothesis direction for the experiment, no codebook, no agent prompt. That material stays in
 `work/drafts/week-03-information-seeking-experiment.md`.
 
-The AI agents segment's spec is in `project-documentation/build/week-03-agents-deck/`; every
-claim in s8–s10 below has a row in its `provenance.md`.
+The AI agents cards left this deck when the experiment became homework done after the session
+(ADR-0017): an agents segment ahead of the run is a treatment nobody randomised. They are parked
+for week 4 in `work/drafts/week-04-agents-segment.md`, and their spec and provenance are
+unchanged in `project-documentation/build/week-03-agents-deck/`.
 
 ## s1
 
