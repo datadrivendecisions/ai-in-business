@@ -15,6 +15,7 @@ sweep notices. A retention rule that depends on one cron job firing is an
 intention, and the record was explicit that this is not one.
 """
 
+import os
 import threading
 import time
 
@@ -102,6 +103,21 @@ class MemoryStore(Store):
             return n
 
 
+def _as_time(seconds):
+    from datetime import datetime, timezone
+    return datetime.fromtimestamp(seconds, tz=timezone.utc)
+
+
+def _seconds(value):
+    """An expiry as epoch seconds, whether it was stored as a timestamp or,
+    by an older version of this file, as a number. Missing means expired."""
+    if value is None:
+        return 0
+    if hasattr(value, "timestamp"):
+        return value.timestamp()
+    return float(value)
+
+
 class FirestoreStore(Store):
     """submissions/, keyed by code. The import is here rather than at the top
     so the gates, and anyone reading this on a laptop, need nothing installed."""
@@ -111,7 +127,14 @@ class FirestoreStore(Store):
     def __init__(self, salt, client=None):
         if client is None:
             from google.cloud import firestore      # noqa: F401
-            client = firestore.Client()
+            # A database of its own, not the project's default. The default
+            # holds the Socratic gate's owner_reports/, and ADR-0015 keeps
+            # those from anything a student can reach. This service is open
+            # to every browser, so its account is granted this database and
+            # nothing else -- deploy.sh binds the role with that condition.
+            client = firestore.Client(
+                project=os.environ.get("FIRESTORE_PROJECT") or None,
+                database=os.environ.get("FIRESTORE_DATABASE", "experiment"))
         self._db = client
         self.salt = salt
 
@@ -122,7 +145,11 @@ class FirestoreStore(Store):
         now = time.time() if now is None else now
         doc = dict(submission)
         doc["at"] = now
-        doc["expiresAt"] = now + RETENTION_SECONDS
+        # A timestamp, not a number of seconds: Firestore's TTL policy only
+        # acts on a date-and-time field and silently ignores anything else,
+        # so a float here would leave the second of the three retention
+        # mechanisms switched on and doing nothing.
+        doc["expiresAt"] = _as_time(now + RETENTION_SECONDS)
         self._col().document(submission["code"]).set(doc)
         return doc
 
@@ -131,7 +158,7 @@ class FirestoreStore(Store):
         out = []
         for snap in self._col().stream():
             d = snap.to_dict()
-            if d.get("expiresAt", 0) <= now:
+            if _seconds(d.get("expiresAt")) <= now:
                 snap.reference.delete()
                 continue
             out.append(public_row(d, self.salt))
