@@ -300,3 +300,41 @@ PASSED
 $ python3 project-documentation/socratic_agent/gates.py 1
 PASSED
 ```
+
+## Live run — week 2 — 18 September 2026 — blueprints, revised PRDs
+
+Four of eight teams had handed in by Friday evening (deadline Monday 21 September): teams 3, 5
+and 7 a blueprint and a revised PRD, team 4 a blueprint. Seven documents filed, seven scored,
+coherence over two documents for each of the four teams, and a message for each. Exit 1 on the
+first run, 0 after the steps below. Nothing sent yet.
+
+What had to be handled by hand, and why:
+
+- **Two links in one link file** (team 3). Intake takes one document per link file, and rightly
+  keeps such a file in the inbox. Split into `prd-wk2.md` and `blueprint-wk2.md`; the original is
+  in `archive/team-03/` and the move is in `log.tsv`.
+- **Link files that name no document** (teams 4 and 5, `assignment-wk2.md`). Renamed to say which
+  document they hold, which intake reads when the fetched file's name says nothing.
+- **One PDF holding the research proposal, the PRD and the blueprint** (team 5). Filed twice, as
+  `prd` and `blueprint`, so the register could be read against the revised PRD. `part_hint`
+  finds the blueprint in it but not the PRD: the title page reads "Research Proposal & PRD", so
+  the PRD hint pointed at 247 words of front matter. Both text files were cut to their own
+  section by hand; the full text is in `attempts/`, the PDF untouched.
+- **Invariant reason taken from the wrong clause** (team 5, blueprint). V1 failed on length —
+  fair, about four and a half pages — but the reason quoted V1's second clause, "mostly code, or
+  an implementation manual", which the document is not. Replaced in the message with the length.
+  For the sheet's author: V1 carries two tests, and its reason can come from the one that did
+  not fail.
+- **More than five questions open** (team 4, three runs: 8, 9, 7; team 5, once: 6). A team that
+  does not return to its week-1 questions starts the week at the cap, so every new question needs
+  a withdrawal first, and the questioner kept adding without withdrawing although its
+  instructions say to. Team 5 came right on a plain re-run. Team 4 was run through
+  `step_question` with one paragraph added to the instructions for that call only, spelling the
+  count out; everything else — register, snapshot, frame, lint — was the pipeline's. Worth a
+  change to `instructions-documents.txt` or to the input, which could state the count.
+- **Procedure notes.** Teams 4, 5 and 7 did not include the section returning to the week-1
+  questions that the brief asks for; team 3's revised PRD carries no version or date, team 5's
+  no date or reason, and team 5 bundled three documents in one file. Each got a plain note in the
+  frame's notice block, added after the run and linted with `lint_message`; the pipeline's own
+  message is kept as `owners/message-pipeline.md`. The pipeline has no door for a lecturer's
+  note yet, so a `--redo question` would drop these.
