@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -103,9 +103,11 @@ Seven things are decided here rather than left to implementation.
    purpose requires.
 6. **The dashboard is instructor-only, and its interpretation is chosen from a
    fixed set of sentences rather than written by a model.** Which sentence
-   appears is determined by where the confidence interval sits relative to zero
-   and to the smallest effect the sample could have detected, and the sentence
-   cannot render unless both of those numbers are on screen beside it. A
+   appears is determined by where the confidence interval sits relative to
+   zero, and the sentence cannot render unless the interval and the smallest
+   effect the sample could have detected are both on screen beside it. A
+   region for an interval narrower than that effect is not offered, because
+   none exists: a 95% interval is always about 1.4 times as wide. A
    generated narrative may be added on top of that; it may never replace it.
 7. **It is a separate service from the gate.** A teaching experiment must not be
    able to take down the thing that runs every week.
