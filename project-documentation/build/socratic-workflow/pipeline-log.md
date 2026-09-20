@@ -338,3 +338,22 @@ What had to be handled by hand, and why:
   frame's notice block, added after the run and linted with `lint_message`; the pipeline's own
   message is kept as `owners/message-pipeline.md`. The pipeline has no door for a lecturer's
   note yet, so a `--redo question` would drop these.
+
+## Live run — week 2 — 20 September 2026 — team 1, late hand-in
+
+Team 1 posted its blueprint and revised PRD on Saturday, a day before the Monday deadline. Run
+with `--team team-01`, so the four teams already done were left untouched. Two documents filed,
+two scored, coherence over both, one message. Exit 0 in one run; the PRD's V1 failed on length
+(1479 words) and rides along as a notice in the message. Nothing sent yet.
+
+What had to be handled by hand, and why:
+
+- **Two links in one link file** (team 1, `assignment-wk2.md`), as with team 3 on 18 September.
+  Split into `prd-wk2.md` and `blueprint-wk2.md`; the original is in `archive/team-01/` and the
+  move is in `log.tsv`. Second occurrence in two runs: teams read "put the link in a file" as
+  "put the links in a file", and the fix is a line in the brief, not in the code.
+- **Parentheses in the URL** (team 1, PRD). The document's GitHub path ends in
+  `...Document%20(week%202).docx` — the spaces encoded, the parentheses not. `URL_RE` excludes
+  `()` so a link file holds the URL truncated at the first bracket, and the fetch would have
+  missed. Percent-encoded to `%28`/`%29` by hand when splitting. Worth a change to `URL_RE`:
+  parentheses are legal in a URL and GitHub's own copy button hands them out unencoded.
