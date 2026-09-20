@@ -47,13 +47,23 @@ done
 
 ## The roster
 
-One document per team in `teams`, id as you want the team named in reports:
+One document per team in `teams`, id as you want the team named in reports. `gcloud` has no
+command that writes a Firestore document (`gcloud firestore documents` does not exist — an earlier
+version of this file said otherwise), so this goes through the REST API with your own token. A
+`PATCH` on a document path creates it or replaces it, so running it twice is safe:
 
 ```bash
-gcloud firestore documents create teams/team-01 \
-  --data='{"url":{"stringValue":"https://<team-01 page>"},
-           "name":{"stringValue":"Team 1"},
-           "active":{"booleanValue":true}}'
+T=$(gcloud auth print-access-token)
+BASE="https://firestore.googleapis.com/v1/projects/$PROJECT/databases/(default)/documents"
+
+curl -s -X PATCH "$BASE/teams/team-01" \
+  -H "Authorization: Bearer $T" -H "Content-Type: application/json" \
+  -d '{"fields":{"url":{"stringValue":"https://<team-01 page>"},
+                 "name":{"stringValue":"Team 1"},
+                 "active":{"booleanValue":true}}}'
+
+curl -s -H "Authorization: Bearer $T" "$BASE/teams"          # read the roster back
+curl -s -X DELETE -H "Authorization: Bearer $T" "$BASE/teams/team-01"   # remove one
 ```
 
 A team that renames its page silently stops being read, so the roster needs an owner and a check
@@ -102,9 +112,15 @@ half reaching a student.
 Point the roster at the test fixtures and run week 2 by hand:
 
 ```bash
-gcloud run services proxy socratic-gate --region "$REGION" &
-curl -X POST "http://localhost:8080/run?week=2"
+URL=$(gcloud run services describe socratic-gate --region "$REGION" --format='value(status.url)')
+curl -X POST --max-time 900 \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  "$URL/run?week=2"
 ```
+
+An earlier version started `gcloud run services proxy … &` and called `localhost:8080` on the next
+line. The call lands before the proxy is listening and fails with *couldn't connect*, which looks
+like a broken service and is not. Calling the service with your own identity token needs no proxy.
 
 Expect team 03 to score low with a NOT-FOUND in its ledger, team 07 to score 2–3 with everything
 confirmed. `../../test-fixtures/README.md` holds what each fixture should produce.

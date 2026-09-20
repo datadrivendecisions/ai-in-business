@@ -122,6 +122,29 @@ for (const d of fixtures.datasets) {
     diff: st.diff ?? null, sdDiff: st.sdDiff ?? null,
     lo: st.lo ?? null, hi: st.hi ?? null, tcrit: st.tcrit ?? null,
     dz: st.dz ?? null, mdeUnits: st.mdeUnits ?? null,
+    audit: (() => {
+      const au = BXP.pilotAudit(accepted, null);
+      return { rows: au.rows.map((r) => ({ rule: r.rule, verdict: r.verdict })), split: au.split };
+    })(),
+  });
+}
+
+/* Phase 0, CL-5: two coders' codebooks, compared by the page. */
+out.coders = [];
+for (const c of fixtures.coders || []) {
+  const cmp = BXP.compareCoders(BXP.parseCodebook(c.one).map, BXP.parseCodebook(c.two).map);
+  const rows = BXP.pilotAudit([], cmp).rows.filter((r) => r.rule === "CL-5");
+  out.coders.push({
+    name: c.name,
+    decks: ["c1", "c2"].map((claim, i) => {
+      const d = cmp[claim];
+      return {
+        verdict: rows[i].verdict, missing: d.missing.length, agreed: d.agreed,
+        matrix: [d.matrix.a, d.matrix.b, d.matrix.c, d.matrix.d],
+        po: d.k ? d.k.po : null, pe: d.k ? d.k.pe : null,
+        kappa: d.k && d.k.kappa !== null ? d.k.kappa : null,
+      };
+    }),
   });
 }
 

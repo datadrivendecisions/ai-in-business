@@ -333,7 +333,7 @@ pre.tree {
       runs both rounds, the assistant step, the closing questions and the lecturer view.
       <em>This line replaced &ldquo;no such file exists&rdquo;, which is what it said when the plan
       was written.</em></li>
-      <li><strong>Five checks, beside this plan.</strong> <code>check-service.py</code> (every
+      <li><strong>Six checks, beside this plan</strong> &mdash; the five below and <code>check-deck.py</code>, which holds the decks to their sources. <code>check-service.py</code> (every
       route of the service, driven through WSGI with an injected clock), <code>check-measures.py</code> (the
       arithmetic, against a scipy reference), <code>check-session.mjs</code> (whole sessions
       driven through the page's own code), <code>check-prompt.py</code> (the assistant prompt
@@ -351,18 +351,25 @@ pre.tree {
     <h2 class="bds-part">Phase 0 &mdash; The deck and the codebook</h2>
     <p><strong>Goal.</strong> Two claims survive the CL rules, and thirty-two real sources exist, each with a stance and a quality settled by two people who agreed.</p>
     <p class="aside"><strong>Most of the risk in this whole build is here.</strong> A claim that fails cannot be rescued by better cards, and the failure usually shows up as difficulty finding the fourth source in a cell. When that happens the difficulty is the evidence telling you the claim is lopsided &mdash; discard the claim rather than lowering the bar for the card.</p>
+    <p class="aside"><strong>The pilot is the first session.</strong> Decided by the owners on
+    18 September 2026. There is no separate hands-up pilot before the session: the sides students lock
+    before reading are the pilot&rsquo;s split, the seconds until they choose one are its timing, and
+    the pilot audit in the lecturer view (<code>AN-8</code>) reports every criterion the data can
+    settle. Phase 0 closes on what that audit says after the session. The cost is that a claim which
+    fails is found out afterwards rather than before: it is replaced for the next run, and this run&rsquo;s
+    comparison is reported with the miss written beside it.</p>
     <p><strong>What the tester does.</strong> Opens a plain listing of all 32 cards, counts four in every cell, follows three links at random and finds the quoted extract actually in the document.</p>
-    <p><strong>Spec.</strong> <code>CL-1</code>&ndash;<code>CL-10</code>, <code>SM-5</code>, <code>SM-6</code>, <code>SM-7</code>, <code>SM-10</code>, <code>SM-11</code></p>
+    <p><strong>Spec.</strong> <code>CL-1</code>&ndash;<code>CL-10</code>, <code>SM-5</code>, <code>SM-6</code>, <code>SM-7</code>, <code>SM-10</code>, <code>SM-11</code>, <code>MS-7</code>, <code>AN-8</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
       <li>&#9745; 0.1 Draft 3&ndash;4 candidate claims &mdash; <strong>four drawn from the AI Wiki are already written up in <code>work/drafts/week-03-candidate-claims.md</code>, with what is settled and what the pilot must settle</strong> &mdash; each in the form <em>&ldquo;an SME should do X before Y&rdquo;</em> rather than <em>&ldquo;an SME should do X&rdquo;</em>. The comparison form is what makes <code>CL-3</code> satisfiable: almost nobody publishes marketing material arguing against buying software, so a proposition has an easy weak-supporting cell and a near-impossible weak-opposing one, while X and Y each have their own vendors selling against the other.</li>
-      <li>&#9744; 0.2 Check each candidate against <code>CL-8</code> (not a team&rsquo;s own handbook topic) and <code>CL-9</code> (professional judgement, not personal values). Discard failures now; they get more expensive later.</li>
-      <li>&#9744; 0.3 Pilot each survivor on &ge; 10 people: read the claim, commit to a side, hands up. Record the split and how long people took. Discard anything that splits worse than 70/30 (<code>CL-1</code>) or that people cannot answer inside a minute (<code>CL-10</code>).</li>
-      <li>&#9744; 0.4 Of what is left, pick the two whose splits are closest to each other (<code>CL-7</code>) and which share no subject matter (<code>CL-6</code>).</li>
+      <li>&#9744; 0.2 Check both claims against <code>CL-8</code> (not a team&rsquo;s own handbook topic) and <code>CL-9</code> (both owners, working apart, class it as professional judgement). The two checks the audit cannot make, because they are judgements rather than counts. <em>Before the session, since a claim that fails either should not be run at all.</em></li>
+      <li>&#9744; 0.3 Pilot both claims <strong>in the first session</strong>, which is at least 10 people. After it, read the pilot audit: <code>CL-1</code> (no side above 70%) and <code>CL-10</code> (9 in 10 choose a side inside a minute) per claim. Record the audit&rsquo;s table here, verdicts and figures both.</li>
+      <li>&#9746; 0.4 <em>Dropped 18 September 2026.</em> Picking the two closest splits from a set of survivors assumed a pilot before the decks were built. The two claims are fixed, so there is nothing to choose between; <code>CL-7</code> is measured by the audit instead, and <code>CL-6</code> by <code>check-deck.py</code>.</li>
       <li>&#9745; 0.5 Write the codebook rules: what makes a source count as supporting, and what makes it strong. One paragraph each, in <code>work/drafts/</code>. &mdash; <em>Done: &ldquo;How S and W were coded&rdquo; in <code>week-03-candidate-claims.md</code>, resting on the denominator rule rather than on genre.</em></li>
       <li>&#9745; 0.6 Find 16 real sources for claim 1: 4 per cell. Every one openable, free, readable in 3 minutes. <strong>Start with the hardest cell</strong> &mdash; usually the weak sources opposing the claim. If the fourth one will not come, go back to 0.4 and take the next claim.</li>
       <li>&#9745; 0.7 For each, record title, outlet, year, teaser (&le; 25 words), extract (&le; 150 words, quoted), link.</li>
-      <li>&#9744; 0.8 Two people code all 16 independently against 0.5. Compute Cohen&rsquo;s kappa. This is the instrument kappa &mdash; the data rests on it. Disagreement on more than one card in sixteen means the claim has more than one axis (<code>CL-5</code>), not that the coders were careless.</li>
+      <li>&#9744; 0.8 Two people code all 16 independently against 0.5, and paste their two codebooks into the pilot audit&rsquo;s coder boxes, which computes the agreement, the 2&times;2 and kappa. This is the instrument kappa &mdash; the data rests on it. Disagreement on more than one card in sixteen means the claim has more than one axis (<code>CL-5</code>), not that the coders were careless.</li>
       <li>&#9744; 0.9 Replace any card the two coders could not agree on. Do not negotiate it into a cell.</li>
       <li>&#9744; 0.10 Repeat 0.6&ndash;0.9 for claim 2.</li>
       <li><strong>Where this stands.</strong> Deck&nbsp;1 is candidate claim&nbsp;2 (<em>own or rent</em>)
@@ -371,19 +378,33 @@ pre.tree {
       checked back against the wiki's own capture of its source by
       <code>check-deck.py</code> beside this plan. All 32 links were opened and resolve, so 0.6 is closed:
       the five that refuse an automated fetch do so by bot challenge rather than by paywall, and each is
-      open access under a stated licence. Still open in this phase, and none of it can be done from a desk:
-      the pilot (0.2&ndash;0.4), the two-coder kappa (0.8&ndash;0.9) and the eight-card debrief set (0.11).</li>
+      open access under a stated licence.
+      <br><br>The pilot audit is built and machine-checked. <code>check-measures.py</code> recomputes every
+      verdict in Python for six fixture rooms &mdash; one that leans 90/10, one under the ten-person floor,
+      and rooms whose seconds to a side pass and fail CL-10 &mdash; and compares the stance matrix, observed and
+      chance agreement and kappa for four pairs of codebooks, one of them with a card left out.
+      <code>check-session.mjs</code> drives the panel through the page&rsquo;s own buttons and checks that
+      the clock stops at the choice rather than the lock. Each was sabotaged and seen to fail. The panel
+      states verdicts about the instrument, not about the question the session asks, so <code>AN-3</code>
+      does not reach it; it sits below the debrief kappa box, away from the comparison the room is shown.
+      <br><br>Still open, and none of it can be done from a desk: <code>CL-8</code> and <code>CL-9</code> before
+      the session (0.2), the session itself as the pilot (0.3), the two coders (0.8&ndash;0.9) and the
+      eight-card debrief set (0.11).</li>
       <li>&#9744; 0.11 Pick 8 cards from a coded deck, balanced 4 supporting / 4 opposing, as the set students code in the debrief.</li>
+      <li>&#9745; 0.12 Build the pilot audit. The tool records <code>pick</code>, the seconds from the claim appearing to the side being chosen (<code>MS-7</code>), in the line (now <code>v2</code>) and in the submission; the service refuses a version 1 payload. The lecturer view gains a panel that reports <code>CL-1</code>, <code>CL-5</code>, <code>CL-7</code> and <code>CL-10</code> as met, not met or not yet measurable, with a tally of each, from whichever records are on screen &mdash; live feed, paste box or fixture &mdash; and from two coders&rsquo; codebooks (<code>AN-8</code>).</li>
     </ul>
     <h3>Test gate</h3>
     <ul class="checks">
-      <li>&#9744; Pilot split recorded for both claims, neither worse than 70/30 (<code>CL-1</code>, demonstration)</li>
-      <li>&#9744; The two splits within 15 points of each other (<code>CL-7</code>, demonstration)</li>
-      <li>&#9744; 0 sources shared between the two decks (<code>CL-6</code>, inspection)</li>
+      <li>&#9744; Pilot split recorded for both claims, neither worse than 70/30 (<code>CL-1</code>, demonstration &mdash; the first session, read off the pilot audit)</li>
+      <li>&#9744; The two splits within 15 points of each other (<code>CL-7</code>, demonstration &mdash; the same)</li>
+      <li>&#9744; &ge; 9 in 10 choose a side within 60 seconds, both claims (<code>CL-10</code>, demonstration &mdash; the same)</li>
+      <li>&#9745; 0 sources shared between the two decks (<code>CL-6</code>, inspection &mdash; by <code>check-deck.py</code>)</li>
       <li>&#9744; Neither claim is a team&rsquo;s topic, checked against all 8 (<code>CL-8</code>, inspection)</li>
       <li>&#9745; 4 cards in each of 4 cells, both decks (<code>SM-6</code>, <code>CL-2</code>, <code>CL-3</code>, by test against the codebook)</li>
       <li>&#9745; Every link resolves; every extract found verbatim in its source (<code>SM-7</code>, by inspection)</li>
-      <li>&#9744; Kappa recorded for both decks, with the matrix, not just the number; &ge; 15 of 16 stances agreed (<code>CL-5</code>, test)</li>
+      <li>&#9744; Kappa recorded for both decks, with the matrix, not just the number; &ge; 15 of 16 stances agreed (<code>CL-5</code>, test &mdash; through the pilot audit&rsquo;s coder boxes)</li>
+      <li>&#9745; The pilot audit&rsquo;s 7 verdicts match a reference on 6 rooms and 4 pairs of codebooks; 0 verdicts below 10 people or with a card coded once (<code>AN-8</code>, test)</li>
+      <li>&#9745; The seconds to a side stop at the last choice, not at the lock (<code>MS-7</code>, test &mdash; 700 ms chosen, 2100 ms locked, recorded as the first)</li>
       <li>&#9744; Tester steps above completed by someone who did not build the deck</li>
     </ul>
     <h3>Closing</h3>
@@ -640,7 +661,7 @@ pre.tree {
     <p><strong>Spec.</strong> <code>SV-1</code>&ndash;<code>SV-6</code>, <code>SV-11</code>, <code>AG-1</code></p>
     <h3>Subtasks</h3>
     <ul class="checks">
-      <li>&#9744; 7.1 A Cloud Run service in the course project, EU region, separate deployment from the gate (<code>SV-11</code>). &mdash; <strong>Written, not deployed.</strong> <code>experiment_service/</code> holds the container and <code>deploy.sh</code> holds the one command; standing it up spends money on a project this build does not own, so it is an owner&rsquo;s decision rather than a step here.</li>
+      <li>&#9745; 7.1 A Cloud Run service in the course project, EU region, separate deployment from the gate (<code>SV-11</code>). &mdash; <strong>Deployed 18 September 2026</strong> by an owner, with <code>deploy.sh</code>: <code>experiment-service</code> in <code>europe-west4</code>, on a Firestore database of its own (<code>experiment</code>) that its account alone may use, so it cannot read the gate&rsquo;s <code>owner_reports/</code>. The first live test found the CORS preflight answered 502: a 204 carried a body, which the local server allowed and Cloud Run&rsquo;s front end does not. Fixed in <code>app.py</code>, with a check; it needs one more deploy.</li>
       <li>&#9745; 7.2 <code>POST /submit</code>: accepts one submission, rejects any payload containing a string field that is not the code or the team (<code>SV-1</code>).</li>
       <li>&#9745; 7.3 Firestore <code>submissions/</code>, keyed by session and code. Last write wins for a repeated code.</li>
       <li>&#9745; 7.4 An owner-only delete route, by code (<code>SV-5</code>).</li>
@@ -699,7 +720,7 @@ pre.tree {
       <li>&#9745; The morning after a test run, 0 rows remain (<code>SV-4</code>, test &mdash; with the scheduler deliberately never firing)</li>
       <li>&#9745; Network panel shows 0 requests to any other origin across a full session (<code>AG-1</code>, test)</li>
       <li>&#9744; Tester steps above, including the unplugged run</li>
-      <li>&#9744; <code>SV-11</code>, 2 deployments and 0 shared containers &mdash; only 1 of the 2 exists, and neither is deployed</li>
+      <li>&#9745; <code>SV-11</code>, 2 deployments and 0 shared containers &mdash; <code>socratic-gate</code> and <code>experiment-service</code>, each its own image, and since 18 September its own database too (inspection)</li>
     </ul>
     <h3>Closing</h3>
     <ul class="checks"><li>&#9745; commit</li><li>&#9745; push</li><li>&#9744; tick the overview</li></ul>
@@ -719,6 +740,7 @@ pre.tree {
       <li>&#9745; 8.5 Bind each sentence to its two numbers so neither can be shown without the other (<code>SV-10</code>).</li>
       <li>&#9745; 8.6 Show which template was selected, and out of how many.</li>
       <li>&#9745; 8.7 Three fixture datasets, one per region of the interval.</li>
+      <li>&#9745; 8.8 The owners&rsquo; link (<code>SV-12</code>, <code>SV-13</code>). Asked for by the owners on 18 September: the person running the room should see the results with nothing to paste or type. The codebook moves to Secret Manager and arrives with the rows, to the owners only; the credential rides in the link after the <code>#</code>, which never leaves the browser, and the page takes it out of the address bar before the first request and keeps it for the tab alone. The token box, codebook box and paste box fold away under <em>Do it by hand</em> for the day the service is down. Checked in <code>check-service.py</code> (the codebook reaches the owners and 6 other responses carry none of it) and <code>check-session.mjs</code> (one request on opening the link, the credential decoded into the header and out of the address bar, a reload goes on watching, Stop forgets, no link means no request); removing the address-bar step was seen to fail. Needs one more deploy to put the codebook secret in place.</li>
     </ul>
     <p><strong>Where this stands.</strong> Built, machine-checked, and driven in a real browser
       against a running service.
@@ -787,7 +809,7 @@ pre.tree {
   <section id="notdoing">
     <h2 class="bds-part">What this plan does not do</h2>
     <ul>
-      <li><strong>It does not write the session plan.</strong> How the 150 minutes are run is <code>project-documentation/session-plan-week-03.md</code>, which does not exist yet.</li>
+      <li><strong>It does not write the session plan.</strong> How the 150 minutes are run is in <code>project-documentation/week-03-experiment-manual.md</code>: the preparation, the run sheet, what goes wrong and what to keep before the 19:00 purge. Where the block sits in the day is <code>project-documentation/session-plan-week-03.md</code>, which does not exist yet.</li>
       <li><strong>It does not obtain consent.</strong> The tool shows a consent screen; the agreement covering the experiment is the owners&rsquo; business, not the code&rsquo;s.</li>
       <li><strong>It does not analyse the results.</strong> The tool computes and displays; the conclusion is written by people in the room.</li>
       <li><strong>It does not build an agent.</strong> The prompt is supplied; the assistant is the student&rsquo;s own.</li>
