@@ -134,6 +134,10 @@ say "The purge, on the evening of the debrief"
 # so the deadline lives in one place. This is not the only mechanism -- store.py
 # drops an expired row on read and a TTL policy sweeps the rest -- because a
 # retention rule that depends on one cron job firing is an intention.
+# create takes --headers and update takes --update-headers. The first run
+# creates, every later one updates, so a script that only knows --headers
+# works once and then fails on the line that matters -- which is how the
+# purge stayed on its old schedule through a successful-looking deploy.
 PURGE_TOKEN="$(gcloud secrets versions access latest --secret experiment-purge-token --project "$PROJECT")"
 # "0 19 28 9 *" from 2026-09-28T19:00:00+02:00: the minute, hour, day and month
 # of the deadline, every year. A yearly repeat is harmless -- by then the
@@ -155,7 +159,7 @@ gcloud scheduler jobs create http experiment-purge \
        --project "$PROJECT" --location "$REGION" \
        --schedule "$PURGE_CRON" --time-zone "$PURGE_TZ" \
        --uri "${URL}/purge" --http-method POST \
-       --headers "Authorization=Bearer ${PURGE_TOKEN}"
+       --update-headers "Authorization=Bearer ${PURGE_TOKEN}"
 
 say "A TTL policy, for the night the scheduler does not fire"
 gcloud firestore fields ttls update expiresAt --database="$DATABASE" \
