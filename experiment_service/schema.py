@@ -15,7 +15,7 @@ sentence: twenty characters of lowercase, and a card id out of thirty-two.
 
 import re
 
-LINE_VERSION = 1
+LINE_VERSION = 2            # 2 added `pick`, the seconds to choosing a side
 
 CODE = re.compile(r"^[a-z0-9][a-z0-9-]{0,19}$")
 CARD_ID = re.compile(r"^c[12]-(?:0[1-9]|1[0-6])$")
@@ -66,7 +66,7 @@ def _member(value, allowed, where):
 
 def clean_round(raw, expected_n):
     _require(isinstance(raw, dict), "each round must be an object")
-    fields = ("n", "agent", "claim", "side", "opened", "seconds",
+    fields = ("n", "agent", "claim", "side", "pick", "opened", "seconds",
               "endSide", "moved", "tlx", "q")
     _only(raw, fields, "round %d" % expected_n)
     for field in fields:
@@ -92,6 +92,7 @@ def clean_round(raw, expected_n):
         "agent": _bool(raw["agent"], "%s: agent" % where),
         "claim": claim,
         "side": _member(raw["side"], SIDES, "%s: side" % where),
+        "pick": _int(raw["pick"], 0, MAX_SECONDS, "%s: pick" % where),
         "opened": list(opened),
         "seconds": _int(raw["seconds"], 0, MAX_SECONDS, "%s: seconds" % where),
         "endSide": _member(raw["endSide"], SIDES, "%s: endSide" % where),
