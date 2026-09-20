@@ -16,6 +16,12 @@ REGION="${REGION:-europe-west4}"          # EU, per ADR-0016
 SERVICE="${SERVICE:-experiment-service}"
 PAGES_ORIGIN="${PAGES_ORIGIN:-https://datadrivendecisions.github.io}"
 DATABASE="${DATABASE:-experiment}"      # its own, never the project's (default)
+# The instant every row dies, and the instant the scheduled purge fires: the
+# evening of the debrief the data was collected for (ADR-0017). The experiment
+# is homework, so rows arrive across a week; they still all go together, and
+# this is the date the student read on the page before pressing the button.
+# Set it for the cohort you are deploying for, in Amsterdam time.
+RETENTION_UNTIL="${RETENTION_UNTIL:-2026-09-28T19:00:00+02:00}"
 
 say() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
 
@@ -116,25 +122,38 @@ gcloud run deploy "$SERVICE" \
   --min-instances 0 \
   --max-instances 4 \
   --memory 256Mi \
-  --set-env-vars "FIRESTORE_PROJECT=${PROJECT},FIRESTORE_DATABASE=${DATABASE},ALLOWED_ORIGINS=${PAGES_ORIGIN}" \
+  --set-env-vars "FIRESTORE_PROJECT=${PROJECT},FIRESTORE_DATABASE=${DATABASE},ALLOWED_ORIGINS=${PAGES_ORIGIN},RETENTION_UNTIL=${RETENTION_UNTIL}" \
   --set-secrets "OWNER_TOKEN=experiment-owner-token:latest,PURGE_TOKEN=experiment-purge-token:latest,ID_SALT=experiment-id-salt:latest,CODEBOOK=experiment-codebook:latest"
 
 URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format='value(status.url)')"
 
-say "The purge, at the end of the teaching day"
-# 19:00 Amsterdam. Retention is the session; this is the mechanism ADR-0016
-# names for it. It is not the only one -- store.py drops an expired row on
-# read and a TTL policy sweeps the rest -- because a retention rule that
-# depends on one cron job firing is an intention rather than a rule.
+say "The purge, on the evening of the debrief"
+# Retention is the exercise, not the teaching day (ADR-0017): the experiment is
+# homework now, so the rows have to outlive the evening they were sent and die
+# on the evening they are shown. The schedule is derived from RETENTION_UNTIL,
+# so the deadline lives in one place. This is not the only mechanism -- store.py
+# drops an expired row on read and a TTL policy sweeps the rest -- because a
+# retention rule that depends on one cron job firing is an intention.
 PURGE_TOKEN="$(gcloud secrets versions access latest --secret experiment-purge-token --project "$PROJECT")"
+# "0 19 28 9 *" from 2026-09-28T19:00:00+02:00: the minute, hour, day and month
+# of the deadline, every year. A yearly repeat is harmless -- by then the
+# collection it belongs to has been purged once already -- and it keeps the job
+# declarative rather than something an owner has to remember to delete.
+PURGE_CRON="$(python3 -c "
+import datetime, sys
+w = datetime.datetime.fromisoformat('${RETENTION_UNTIL}')
+print(f'{w.minute} {w.hour} {w.day} {w.month} *')")"
+# The scheduler wants a zone name, RETENTION_UNTIL carries an offset. Keep the
+# two in step by hand: +02:00 is Amsterdam in September, +01:00 after October.
+PURGE_TZ="${PURGE_TZ:-Europe/Amsterdam}"
 gcloud scheduler jobs create http experiment-purge \
   --project "$PROJECT" --location "$REGION" \
-  --schedule "0 19 * * *" --time-zone "Europe/Amsterdam" \
+  --schedule "$PURGE_CRON" --time-zone "$PURGE_TZ" \
   --uri "${URL}/purge" --http-method POST \
   --headers "Authorization=Bearer ${PURGE_TOKEN}" 2>/dev/null \
   || gcloud scheduler jobs update http experiment-purge \
        --project "$PROJECT" --location "$REGION" \
-       --schedule "0 19 * * *" --time-zone "Europe/Amsterdam" \
+       --schedule "$PURGE_CRON" --time-zone "$PURGE_TZ" \
        --uri "${URL}/purge" --http-method POST \
        --headers "Authorization=Bearer ${PURGE_TOKEN}"
 

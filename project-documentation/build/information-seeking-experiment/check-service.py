@@ -3,7 +3,7 @@
 
 SV-1   the submission carries no free text
 SV-3   no route returns one student's row
-SV-4   nothing survives the teaching day
+SV-4   nothing survives the retention window
 SV-5   a student's row goes on request, by their code
 SV-8   the dashboard refuses an anonymous read
 SV-11  its own deployment, nothing shared with the gate
@@ -280,7 +280,7 @@ def sv5():
 # ------------------------------------------------------------------ SV-4 ---
 
 def sv4():
-    print("\nSV-4  nothing survives the teaching day")
+    print("\nSV-4  nothing survives the retention window")
     app, clock = fresh()
     for code in ("kite", "anvil", "reed"):
         call(app, "POST", "/submit", submission(code=code))
@@ -306,6 +306,26 @@ def sv4():
     clock3.advance(23 * 60 * 60)
     check("23 hours in, the row is still there for the owners",
           call(app3, "GET", "/dashboard", token=TOKEN)["json"]["count"] == 1)
+
+    # ADR-0017: the experiment is homework, so the window is the exercise and
+    # not the day. With a deadline set, a row written on the Tuesday has to be
+    # alive on the Friday and gone the moment the debrief evening passes --
+    # which is what the student was told on the page they sent it from.
+    import store as store_mod
+    was = store_mod.RETENTION_UNTIL
+    try:
+        app4, clock4 = fresh()
+        deadline = clock4() + 7 * 24 * 60 * 60
+        store_mod.RETENTION_UNTIL = deadline
+        call(app4, "POST", "/submit", submission())
+        clock4.advance(5 * 24 * 60 * 60)
+        check("five days after the homework was sent, the row is still there",
+              call(app4, "GET", "/dashboard", token=TOKEN)["json"]["count"] == 1)
+        clock4.advance(2 * 24 * 60 * 60 + 1)
+        check("the debrief evening passes and the row is gone",
+              call(app4, "GET", "/dashboard", token=TOKEN)["json"]["count"] == 0)
+    finally:
+        store_mod.RETENTION_UNTIL = was
 
     scheduled = call(app3, "POST", "/purge", token=PURGE_TOKEN)
     check("the scheduler's own token purges, without being an owner",

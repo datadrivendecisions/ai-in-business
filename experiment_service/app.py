@@ -6,7 +6,7 @@ choice here exists to keep that exception as narrow as it was argued to be.
     POST /submit      the tool, once, on a button press        anonymous
     GET  /dashboard   the tool's instructor view, polling      owners
     POST /delete      a student changed their mind             owners
-    POST /purge       the end of the teaching day              owners, or the scheduler
+    POST /purge       the end of the retention window          owners, or the scheduler
     GET  /health      Cloud Run wants one                      anonymous
 
 There is no route that takes a code and returns a row. /delete takes a code
@@ -170,7 +170,7 @@ class App:
                            "count": len(self.store.rows(now=self.clock()))}, origin)
 
     def purge(self, environ, origin):
-        """The end of the teaching day, by the scheduler or by an owner.
+        """The end of the retention window, by the scheduler or by an owner.
 
         Cloud Scheduler sets X-CloudScheduler: true on its requests, and an
         earlier draft of this route accepted that as proof of who was calling.

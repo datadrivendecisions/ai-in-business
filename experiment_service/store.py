@@ -10,9 +10,17 @@ Retention (SV-4) is enforced three times over, which is deliberate. The
 scheduled purge is the mechanism the record names; a Firestore TTL policy on
 expiresAt is the one that still runs when the scheduler does not; and every
 read here drops anything past its expiry before returning, so a missed purge
-cannot leak into the next teaching day even for the minutes before the TTL
-sweep notices. A retention rule that depends on one cron job firing is an
+cannot leak past the deadline even for the minutes before the TTL sweep
+notices. A retention rule that depends on one cron job firing is an
 intention, and the record was explicit that this is not one.
+
+Since ADR-0017 the window is the exercise rather than the teaching day: the
+experiment is homework, so rows arrive across a week and all die together on
+the evening of the debrief they were collected for. RETENTION_UNTIL holds that
+instant, and every row gets it as its expiry, so the three mechanisms and the
+sentence the student read before pressing the button all name one moment. With
+no deadline set -- a local run, a gate -- it falls back to a day from the write,
+which is what a store with no course calendar can honestly promise.
 """
 
 import os
@@ -20,6 +28,37 @@ import threading
 import time
 
 RETENTION_SECONDS = 24 * 60 * 60
+
+
+def _retention_until():
+    """The instant every row expires, from RETENTION_UNTIL, or None.
+
+    An ISO 8601 date-time with an offset: "2026-09-28T19:00:00+02:00". A value
+    that cannot be read is refused at import rather than silently ignored,
+    because the failure mode of a mistyped deadline is data that outlives the
+    promise made to the student who sent it.
+    """
+    raw = os.environ.get("RETENTION_UNTIL", "").strip()
+    if not raw:
+        return None
+    from datetime import datetime
+    try:
+        when = datetime.fromisoformat(raw)
+    except ValueError:
+        raise SystemExit(f"RETENTION_UNTIL is not an ISO 8601 date-time: {raw!r}")
+    if when.tzinfo is None:
+        raise SystemExit(f"RETENTION_UNTIL needs a timezone offset: {raw!r}")
+    return when.timestamp()
+
+
+RETENTION_UNTIL = _retention_until()
+
+
+def expiry(now):
+    """When a row written at `now` dies: the fixed deadline, or a day."""
+    if RETENTION_UNTIL is not None:
+        return RETENTION_UNTIL
+    return now + RETENTION_SECONDS
 
 
 def _hash_code(code, salt):
@@ -75,7 +114,7 @@ class MemoryStore(Store):
         now = time.time() if now is None else now
         doc = dict(submission)
         doc["at"] = now
-        doc["expiresAt"] = now + RETENTION_SECONDS
+        doc["expiresAt"] = expiry(now)
         with self._lock:
             self._docs[submission["code"]] = doc      # last write wins
         return doc
@@ -149,7 +188,7 @@ class FirestoreStore(Store):
         # acts on a date-and-time field and silently ignores anything else,
         # so a float here would leave the second of the three retention
         # mechanisms switched on and doing nothing.
-        doc["expiresAt"] = _as_time(now + RETENTION_SECONDS)
+        doc["expiresAt"] = _as_time(expiry(now))
         self._col().document(submission["code"]).set(doc)
         return doc
 
