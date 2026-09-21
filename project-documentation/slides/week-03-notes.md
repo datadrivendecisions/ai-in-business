@@ -42,5 +42,9 @@ The exercise students do at home this week, alone, before the week 4 session. Sa
 
 ## s8
 
+The team assignment for the field visit, due Friday morning rather than before week 4 -- say the earlier date out loud, because it sits beside the exercise and the two deadlines differ. The three rounds are the point: round 1 has to exist before AI sees it, or round 2 has nothing honest to react to. Say that the green light is a readiness check and not a mark, and that it does not replace signed consent.
+
+## s9
+
 The rulebook, not the recap: read Rule 1 and Rule 2 as fixed and Rule 3 as the one the room writes today, the way week 2 wrote Rule 2. If nobody proposes one, offer a candidate rather than close the slide empty.
 
