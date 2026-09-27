@@ -21,15 +21,25 @@ Two kinds of hand-in reach the teaching team, and they arrive by different doors
 - **The weekly handbook page, weeks 2–6**, is handed in by being published (ADR-0013 route 2).
   The gate pulls it from its URL on a schedule (ADR-0014, ADR-0015) and there is no submission
   step. `run_week.py` is that path, and this note does not change it.
-- **Documents** — the AEL process artefacts, a different one each week — cannot be pulled,
-  because there is nothing to pull. They arrive in the team's Teams channel (route 3) and a
-  lecturer moves them into an inbox. This note is the path from that inbox onwards, **and it
-  runs every week of the module.**
+- **Documents** — the AEL process artefacts, a different one each week — arrive in the team's
+  Teams channel (route 3) and a lecturer moves them into an inbox. This note is the path from
+  that inbox onwards, **and it runs every week of the module.**
 
 The inbox is therefore not a fifth hand-in route and gives the student nothing new to do. The
 student's action is still "post it in the channel". If the inbox is ever wanted for the weekly
 pages as well, that partly supersedes ADR-0014 and needs a record of its own; it is not decided
 here.
+
+**Since 27 September 2026 the document can also be pulled.** Every team keeps its work in a
+GitHub repository, and `roster.tsv` now holds the eight URLs, so the week's document can be
+found where the team already put it (§3, step 0). What that changes is small and worth stating:
+the *lecturer's* first action becomes a command rather than eight downloads, and a document that
+was never posted in the channel can still be read. What it does not change is the student's
+action — the channel post remains the hand-in, and a pulled document is the same document. It
+also does not make the pipeline a reader of repositories at large: one tree listing per team,
+one file per document, nothing cloned, and a link file a person looks at before anything is
+filed. Whether a repository becomes a hand-in *route* in its own right — so that a team which
+posts nothing has still handed in — touches ADR-0013's route 3 and needs a record of its own.
 
 ### 1.1 What comes in, week by week
 
@@ -41,7 +51,7 @@ everything handed in before it:
 | 1 | PRD v0 | `prd` | — |
 | 2 | Technical blueprint | `blueprint` | PRD |
 | 3 | Knowledge architecture — where sources, drafts and pages live | `knowledge` | blueprint (the components it serves), PRD B4 (sources and data) |
-| 4 | Build plan — phases, tasks, test gates | `buildplan` | blueprint (every component built), knowledge (built where the sources are), PRD C1–C3 (every gate tests a named quality) |
+| 4 | Build plan — phases, tasks, a test gate, a commit gate and a push gate, kept as the team's memory of where the build stands | `buildplan` | blueprint (every component built), knowledge (built where the sources are), PRD C1–C3 (every gate tests a named quality) |
 | 5 | Evaluation of the first artefact the platform produced, **with the decision log** | `eval`, `decisions` | eval: PRD C1–C3 and the build plan's gates — measured against the bar the team set itself; decisions: every entry answers a failure, a gate, or a change to an earlier document, and every change to an earlier document has an entry |
 | 6 | Evaluation of the second artefact | `eval` (v2) | eval v1 (same criteria, and what moved), PRD, and the decision log for what changed between the two |
 
@@ -134,10 +144,15 @@ and the register need, and moving to it is part of building step 1.
 
 ## 3. The steps
 
-One script, four steps, each of which skips work whose output already exists. That makes the
-whole run restartable: a step that fails is re-run, and nothing before it is repeated. The
-"signal" from one step to the next is the existence of the file the previous step writes —
+One script, four steps in a run, each of which skips work whose output already exists. That
+makes the whole run restartable: a step that fails is re-run, and nothing before it is repeated.
+The "signal" from one step to the next is the existence of the file the previous step writes —
 there is no queue and no status to keep anywhere else.
+
+A fifth step, `fetch`, stands before the four and is **not** part of `--step all`. It fills the
+inbox from the teams' repositories, and it is left out of the run on purpose: its output is a
+list of guesses about which file is this week's document, and a guess should be read by a person
+before it becomes a filed hand-in. Two commands on a Saturday morning, not one.
 
 The week is given explicitly (`--week 2`). Deriving it from the date against the module
 calendar would save an argument and cost a wrong week now and then, which is worse.
@@ -147,6 +162,40 @@ deletes anything: `--withdraw` moves a team's week to `archive/` and restores th
 `--redo score|coherence|question` moves a step's outputs to `week-NN/attempts/` so the run
 makes them again, restoring the register for a redone question step; `--status` shows where
 every team stands; `--sent` records that the message went out.
+
+### Step 0 — fetch: the team's repository → a link file in the inbox
+
+`--step fetch`, on its own. For each team in `roster.tsv` with a `repo` URL, one tree listing of
+the repository, and then, for each document the week asks for:
+
+1. **What the week asks for** is a table in the script, `WEEK_HAND_INS`, holding the same six
+   rows as §1.1. It is the only place the pipeline knows a week by its hand-in rather than by
+   what happens to be in the inbox. A week that moves moves there.
+2. **Candidates** are the files whose path names the document — `knowledge`, `build plan`,
+   `blueprint` — scored up for saying this week's number and down for saying another week's, for
+   reading as somebody's portfolio or the AIBS half of the week, and out altogether for being a
+   kind of file nothing here can convert. A file that is merely inside this week's folder is not
+   a candidate: it is one of several and says nothing about which.
+3. **One clear winner** gets a link file, `inbox/team-NN/<id>-wk<N>.md`, holding that file's
+   GitHub URL and nothing else. Everything else is *named, not guessed*: a tie, a weak best
+   match or an empty result is printed as a line for the lecturer, with what the week's folder
+   does hold, and nothing is written.
+
+The link file is the existing route, not a new one: step 1 already fetches what a link file
+points at and files the link beside the original as provenance (§3, step 1). So a pulled
+document is filed exactly as a hand-placed one is, keeps its URL in the team's folder, and can
+be withdrawn the same way. The step writes nothing outside the inbox, files nothing, and skips a
+document already filed for the week or already waiting as a link file — so running it twice is
+safe.
+
+Measured against week 2, which was done by hand: the step picked the same file as the lecturer
+for seven of eight teams and said "cannot tell" for the eighth, which was the one the lecturer
+had also had to look at.
+
+**The check that goes with the table.** Because the pipeline now knows what a week asked for, the
+run ends with what it did not get: one line per team whose week holds none of the week's
+documents. The steps are driven by the files that exist, so a team that handed nothing in was
+previously silent in every step and invisible in the exit code.
 
 ### Step 1 — intake: inbox → the team's week folder
 
@@ -354,6 +403,11 @@ Two things were decided on 11 September 2026 as *for now*, and both are reversib
 The criteria page is published *before* the hand-in, as `index.html` promises and as
 `prd-criteria.html` was, and is linked from the week page beside the assignment. The
 assignment text for each week has to exist before its criteria can be mapped to it.
+
+Weeks 3 and 4 were written on 27 September 2026, both pairs at once: week 3's because the
+hand-ins were already in the teams' repositories and unscorable without a sheet, week 4's
+because the build plan is set in that week's session. Week 5's two pairs are the next ones owed,
+and they are two rather than one.
 
 Still open, and not decided here:
 

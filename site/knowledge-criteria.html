@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>What a good knowledge architecture looks like — AI in Business</title>
+<meta name="description" content="The criteria your team's knowledge architecture is read against: what the platform has to know, where it lives, how a question reaches a passage, why that way, and the line kept." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Cards and callout. The PRD criteria page uses these classes without styling them. */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin: var(--space-6) 0; }
+.card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-6); background: var(--bg-page); }
+.card h3 { margin-top: 0; font-size: var(--text-lg); }
+.card p:last-child { margin-bottom: 0; }
+.callout { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-4) var(--space-6); border-radius: var(--radius-sm); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="week-03.html">Week 3</a>
+      <a href="platform-documents.html">Six documents</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">AEL &middot; week 3 &middot; knowledge architecture</div>
+    <h1 class="bds-h1">What a good knowledge architecture looks like</h1>
+    <blockquote class="lead-quote"><em>A reader can tell where your sources and drafts live, how the platform finds them again, and why you chose that way.</em></blockquote>
+    <p class="lead">That sentence is the bar the <a href="week-03.html#assignments">week 3 assignment</a> sets. This page unpacks it into the twenty things a reader looks for. Hold your own draft against them before anyone else does.</p>
+    <p>The criteria come from three places. The first is the five things the assignment asks for. The second is your blueprint, which this document extends rather than replaces. The third is how practitioners judge a store of documents a machine has to search. Each criterion says where it comes from.</p>
+    <p class="tpl-notice"><strong>Posted already?</strong> Nothing is lost. If you post a second version before the deadline, the latest one is read. The feedback on your knowledge architecture uses these criteria and nothing else. Your marks are given later, against <a href="#where">separate criteria</a>.</p>
+  </header>
+
+  <section id="departures">
+    <h2 class="bds-part">Three things that are different here</h2>
+    <p>This is the document that decides what your platform can honestly say. Three things follow from that, and they are not obvious.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>A choice, not a tool</h3>
+        <p>Naming a database is not an architecture. The choice is <em>how a question reaches the passage that answers it</em>. Look up the passage when the question is asked, or write the pages in advance: both work, and each costs you something.</p>
+      </div>
+      <div class="card">
+        <h3>A store can be a folder</h3>
+        <p>A named folder of files with a naming rule is a real answer, and for a platform this size often the right one. What is read against you is whether a reader can find one passage in it, not how modern it sounds.</p>
+      </div>
+      <div class="card">
+        <h3>Where a claim came from</h3>
+        <p>Your handbook page has to show its sources. That is only possible if the source travelled with the text from the moment it entered. This document is where that either happens or quietly does not.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="criteria">
+    <h2 class="bds-part">The twenty criteria</h2>
+    <p>Group A is what the platform has to know. B is where it lives and how it is found. C is why this way and not another. D is the line from your blueprint, kept. E is the trace back to your earlier documents, and F and G are about the document itself.</p>
+
+    <div class="theme">
+      <h3>A &middot; What the platform has to know</h3>
+      <ul class="angles">
+        <li><strong>A1 &mdash; Every kind of material, listed.</strong> Sources, your own drafts, the context file from week 2, interview material, anything else the platform reads. One line each, and a reader can tell them apart. <span class="src">Assignment ask 1</span></li>
+        <li><strong>A2 &mdash; Where each kind comes in.</strong> For each kind: who or what puts it there, and in what form. A source someone pastes in by hand is a fine answer, stated. <span class="src">Assignment ask 1; blueprint A1</span></li>
+        <li><strong>A3 &mdash; What travels with a source from the start.</strong> The fields kept beside each source: where it came from, when it was read, who chose it. Enough to write a reference on your page from the store alone. <span class="src">Week 2: every claim needs a source you would defend; data lineage practice</span></li>
+        <li><strong>A4 &mdash; What the platform does not keep.</strong> One sentence on what stays outside the store, so the reader can tell a gap from a decision. Interview recordings are the obvious case. <span class="src">Assignment ask 4; ADR-0013 on field material</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>B &middot; Where it lives, and how it is found again</h3>
+      <ul class="angles">
+        <li><strong>B1 &mdash; The store, named.</strong> The place the material sits: a folder, a repository, a database, a spreadsheet. Named well enough that a team member could open it today. <span class="src">Assignment ask 2</span></li>
+        <li><strong>B2 &mdash; How a thing is named and found.</strong> The rule that makes one file findable among two hundred: the naming pattern, the folders, the index, or the field that is searched. <span class="src">Rosenfeld &amp; Morville, <em>Information Architecture</em></span></li>
+        <li><strong>B3 &mdash; The path from a question to the passage.</strong> Trace one real question your platform will be asked, from the question to the passage or page that answers it. Every step named, including who or what does the looking. <span class="src">Assignment ask 2</span></li>
+        <li><strong>B4 &mdash; What happens when the material changes.</strong> A source is replaced, a draft is revised, a page is republished. Say what is updated and what is left alone, so nobody reads a stale passage without knowing. <span class="src">Records management practice; week 5 evaluation</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>C &middot; Why this, and not the alternative</h3>
+      <ul class="angles">
+        <li><strong>C1 &mdash; One alternative, weighed.</strong> The other way you could have done it, and what it would have cost or saved. An alternative set up to lose has not been weighed. <span class="src">Assignment ask 3; architecture decision records</span></li>
+        <li><strong>C2 &mdash; The promise it serves.</strong> The choice follows from the job your platform has. Point to the promise in your PRD that this architecture is for. <span class="src">Assignment ask 3</span></li>
+        <li><strong>C3 &mdash; What would make you switch.</strong> The thing you would see &mdash; a size, a wrong answer, a week lost &mdash; that would send you back to the alternative. <span class="src">Assignment ask 3</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>D &middot; The line, kept</h3>
+      <ul class="angles">
+        <li><strong>D1 &mdash; Where the protected material sits.</strong> Your blueprint names a line nothing may cross. Say where the material on the protected side is stored, and that it is a different place from the rest. <span class="src">Assignment ask 4; blueprint C1</span></li>
+        <li><strong>D2 &mdash; What stops it being read out.</strong> The thing that keeps protected material out of a call to a model service: a person who carries it by hand, a folder nothing reads, a check at the door. A rule nobody applies is not a stop. <span class="src">Assignment ask 4; blueprint C2</span></li>
+        <li><strong>D3 &mdash; Text from the web is material, never an instruction.</strong> A fetched page can contain sentences written to steer a model. Say where web text enters your store and what stops it from giving orders. <span class="src">OWASP Top 10 for LLM applications, on prompt injection</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>E &middot; The trace to your earlier documents</h3>
+      <ul class="angles">
+        <li><strong>E1 &mdash; Which parts read and write the store.</strong> The parts from your blueprint, named, with what each one reads and what it writes. A store nothing writes to stays empty. <span class="src">Assignment; blueprint A1 and B1</span></li>
+        <li><strong>E2 &mdash; Departures recorded.</strong> Where this document changes something the blueprint or the PRD said, it says so, and the earlier document gets a new version with a date and one line of reason. <span class="src">Platform documents: they change, and they are meant to</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>F &middot; Decisions and open questions</h3>
+      <ul class="angles">
+        <li><strong>F1 &mdash; The decision log's first entry.</strong> This architecture is entry one: the choice, what it rules out, and what would reopen it. The log then runs to week 5. <span class="src">Assignment; week 3 page; ADR-0010</span></li>
+        <li><strong>F2 &mdash; The tutor's questions, answered.</strong> The questions your team was sent about the blueprint, each with a short answer: what you changed, or why you left it. A question you reject with a reason is closed. <span class="src">Assignment ask 5</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>G &middot; The document as a working instrument</h3>
+      <ul class="angles">
+        <li><strong>G1 &mdash; Header and provenance.</strong> The platform's name; the team; who held the pen; a version and a date; and which versions of your PRD and blueprint it extends. <span class="src">Platform documents</span></li>
+        <li><strong>G2 &mdash; The three-question test.</strong> From the document alone, in a minute each: where does the material live, how is one passage found, and why this way? This is the assignment's own bar and the only item read as a whole. <span class="src">Assignment</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="not-scored">
+    <h2 class="bds-part">What is not read against you</h2>
+    <div class="callout">
+      <p>Not read against you: which tool you chose, how modern it is, length within the one to three pages, drawing style, prose quality, and any code. <strong>A named folder with a naming rule, traced end to end, beats a vector database nobody can search by hand.</strong></p>
+      <p>A drawing inside a PDF or Word file may not survive being turned into text. If your drawing matters to a criterion, say in words what it shows as well. Every drawing is also looked at by a lecturer.</p>
+      <p>Two things are worth doing already, though nobody asks for them this week. They come back in week 5, when you evaluate what the platform produced:</p>
+      <ul>
+        <li><strong>A record of each lookup.</strong> Which question, which passages came back, which one was used. Without it you cannot tell why a sentence on your page is wrong.</li>
+        <li><strong>A check that a quoted passage is really in the source.</strong> A model can produce a quotation that was never written. Matching it back to the stored text is a check a script can do.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="where">
+    <h2 class="bds-part">Where this comes from</h2>
+    <p>The assignment itself is on the <a href="week-03.html#assignments">week 3 page</a>. The knowledge architecture is the third of <a href="platform-documents.html">six weekly documents</a>; that page says what happens to it after you post it. The two before it have their own criteria: <a href="prd-criteria.html">What a good PRD looks like</a> and <a href="blueprint-criteria.html">What a good blueprint looks like</a>.</p>
+    <p>Group B draws on how libraries and information architects judge findability, and on the practice of keeping a record of where each fact came from. Group D follows the same threat-modelling habit as the blueprint's line, plus <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noopener">OWASP's Top 10 for LLM applications</a> on text that arrives from outside. C1 follows the decision-record habit the blueprint's F1 introduced.</p>
+    <p>These criteria are formative: they shape the draft and the conversation about it. Your two marks are given against separate criteria: <a href="index.html#assessment">one set per module</a>, published before any work is marked.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

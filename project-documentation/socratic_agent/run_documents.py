@@ -1,14 +1,21 @@
 """One command a week: take a team's hand-ins from the inbox to a message the team can be sent.
 
-    python3 run_documents.py --week 2
-    python3 run_documents.py --week 2 --step intake
-    python3 run_documents.py --week 2 --team team-03 --root /some/other/place
+    python3 run_documents.py --week 4 --step fetch   # the week's hand-in, out of the teams' repositories
+    python3 run_documents.py --week 4
+    python3 run_documents.py --week 4 --step intake
+    python3 run_documents.py --week 4 --team team-03 --root /some/other/place
 
 Four steps, in order: intake → score → coherence (from week 2) → question, then a
 lint on the message. Each step runs where its input exists and its output does
 not, so a run that stops can be started again and picks up where it broke — the
 presence of a file is the signal from one step to the next. There is no queue,
 no status and no clock kept anywhere else.
+
+A fifth step comes before those four and is not part of `--step all`: `fetch`
+reads each team's repository from roster.tsv, looks for what this week asks for
+(WEEK_HAND_INS), and writes one link file per document it is sure of into the
+inbox. It names everything it is unsure of instead of guessing, so the list is
+read by a person before the intake step turns a link into a filed hand-in.
 
 Everything this writes goes to the intake root, a sibling of the repository and
 never inside it: the repository is public and student work is not. The design is
@@ -52,6 +59,7 @@ CONVERTERS = {
     ".html": "html", ".htm": "html",
 }
 
+ROSTER_HEADER = ["team", "names", "channel", "repo"]
 MANIFEST_HEADER = ["team", "deliverable", "file", "note"]
 DOCUMENTS_HEADER = ["deliverable", "week", "version", "original", "text"]
 LOG_HEADER = ["when", "team", "week", "deliverable", "from", "to", "sha256"]
@@ -105,6 +113,226 @@ def sha256(path):
 
 def now():
     return dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+# ----------------------------------------------------------------------------
+# step 0 — fetch: this week's hand-in, out of each team's own repository
+#
+# Not part of --step all, deliberately. It writes one link file per document it
+# is confident about and names everything it is not, so the lecturer reads that
+# list before the intake step turns a link into a filed hand-in. Two commands on
+# a Saturday morning, not one: --step fetch, then the run.
+# ----------------------------------------------------------------------------
+
+# What each week asks for — the design note's table (§1.1), and the only place
+# the pipeline knows a week by its hand-in rather than by what happens to be in
+# the inbox. A week that moves moves here.
+WEEK_HAND_INS = {
+    1: ["prd"],
+    2: ["blueprint"],
+    3: ["knowledge"],
+    4: ["buildplan"],
+    5: ["eval", "decisions"],
+    6: ["eval"],
+}
+
+# Words in a path that say this file is not the AEL document, whatever else its
+# name matches: the AIBS half of the week, the individual portfolios, and the
+# team's own scaffolding.
+NOT_THE_DOCUMENT = [
+    "portfolio", "research proposal", "handbook", "interview", "readme",
+    "license", "template", "feedback", "message", "slides", "presentation",
+    "meeting", "minutes", "notes", "questions", "gate", "peer review",
+]
+
+# A file the converters cannot read is not a candidate, however well it matches.
+# A name with no extension at all still is: teams commit documents that way, and
+# the intake step settles the kind from what the server says it served.
+FETCHABLE = tuple(CONVERTERS)
+
+
+def readable(path):
+    name = path.rsplit("/", 1)[-1].lower()
+    return name.endswith(FETCHABLE) or "." not in name
+
+
+def week_words(week):
+    """The ways a team writes this week's number into a file or folder name."""
+    return [rf"week[\s_-]*0?{week}\b", rf"wk[\s_-]*0?{week}\b", rf"\bw0?{week}\b",
+            rf"\bsprint[\s_-]*0?{week}\b"]
+
+
+def gh_json(path):
+    """A GitHub API document, through gh when it is installed (5000 calls an
+    hour, and private repositories the owner can read) and plain HTTPS when it
+    is not (60 an hour, public only). Returns (data, "") or (None, reason)."""
+    import json
+    import urllib.request
+    if shutil.which("gh"):
+        r = subprocess.run(["gh", "api", path], capture_output=True, text=True, timeout=60)
+        if r.returncode:
+            return None, (r.stderr or "gh api failed").strip().splitlines()[-1][:160]
+        try:
+            return json.loads(r.stdout), ""
+        except ValueError as e:
+            return None, f"gh api returned no JSON: {e}"
+    req = urllib.request.Request(f"https://api.github.com/{path}",
+                                 headers={"User-Agent": "ai-in-business-intake",
+                                          "Accept": "application/vnd.github+json"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read()), ""
+    except Exception as e:  # noqa: BLE001 — the reason is what matters
+        return None, f"{type(e).__name__}: {e}"
+
+
+def repo_files(repo_url):
+    """(owner/name, branch, [paths]) for a team's repository, or (None, None,
+    reason). One tree call: no clone, and nothing written to disk."""
+    m = re.match(r"https?://github\.com/([^/]+)/([^/#?]+?)(?:\.git)?/?$", repo_url.strip())
+    if not m:
+        return None, None, f"not a GitHub repository URL: {repo_url}"
+    slug = f"{m.group(1)}/{m.group(2)}"
+    meta, reason = gh_json(f"repos/{slug}")
+    if reason:
+        return None, None, f"{slug}: {reason}"
+    branch = meta.get("default_branch") or "main"
+    tree, reason = gh_json(f"repos/{slug}/git/trees/{branch}?recursive=1")
+    if reason:
+        return None, None, f"{slug}: {reason}"
+    paths = [e["path"] for e in tree.get("tree", []) if e.get("type") == "blob"]
+    if tree.get("truncated"):
+        paths = paths[:2000]
+    return slug, branch, paths
+
+
+def rank_candidates(paths, deliv, week):
+    """Every file that could be this week's `deliv`, best first, as
+    (score, path, why). A candidate has to name the deliverable somewhere in its
+    path: a file that is merely in this week's folder is one of several and says
+    nothing about which. The score is a sum of reasons, so the report can say
+    what a pick rests on and a near miss can be shown rather than dropped."""
+    out = []
+    for path in paths:
+        low = path.lower().replace("_", " ")
+        name = low.rsplit("/", 1)[-1]
+        if not readable(path):
+            continue
+        score, why = 0, []
+        alias = max((a for a in DELIVERABLES[deliv] if a in name), key=len, default="")
+        in_path = max((a for a in DELIVERABLES[deliv] if a in low), key=len, default="")
+        if alias:
+            score += 4
+            why.append(f"name says {alias}")
+        elif in_path:
+            score += 2
+            why.append(f"folder says {in_path}")
+        else:
+            continue  # nothing in the path names this document
+        if any(re.search(w, name) for w in week_words(week)):
+            score += 3
+            why.append(f"name says week {week}")
+        elif any(re.search(w, low) for w in week_words(week)):
+            score += 3
+            why.append(f"folder says week {week}")
+        else:
+            other = [n for n in range(1, 7) if n != week
+                     and any(re.search(w, low) for w in week_words(n))]
+            if other:
+                score -= 3
+                why.append(f"says week {other[0]}, not {week}")
+        if any(w in low for w in NOT_THE_DOCUMENT):
+            score -= 4
+            why.append("reads as other work")
+        if score > 0:
+            out.append((score, path, ", ".join(why)))
+    return sorted(out, key=lambda c: (-c[0], len(c[1]), c[1]))
+
+
+def week_folder_files(paths, week, limit=6):
+    """What this week's folder holds, for a report that found no candidate: the
+    lecturer needs to see what the team did post before writing a link by hand."""
+    hit = [p for p in paths if any(re.search(w, p.lower().replace("_", " ")) for w in week_words(week))
+           and readable(p)]
+    return hit[:limit], max(0, len(hit) - limit)
+
+
+def blob_url(slug, branch, path):
+    import urllib.parse
+    quoted = "/".join(urllib.parse.quote(part) for part in path.split("/"))
+    return f"https://github.com/{slug}/blob/{branch}/{quoted}"
+
+
+def step_fetch(root, week, only_team=None, deliverables=None):
+    """Each team's repository → one link file per document, in inbox/team-NN/.
+    Nothing is downloaded here: the intake step fetches what the link points at,
+    so a document arrives by the route it already had and keeps its provenance."""
+    wanted = deliverables or WEEK_HAND_INS.get(week)
+    if not wanted:
+        return [], [f"week {week} has no hand-in in WEEK_HAND_INS; pass --deliverable to fetch anyway"]
+    inbox = root / "inbox"
+    if not inbox.is_dir():
+        return [], [f"no inbox at {inbox}"]
+    roster = roster_teams(root, only_team)
+    if not roster:
+        return [], [f"no teams in {root / 'roster.tsv'}"]
+    done, problems = [], []
+    for team, row in roster.items():
+        repo_url = row.get("repo", "").strip()
+        if not repo_url:
+            problems.append(f"{team}: no repo in roster.tsv — add the team's repository URL")
+            continue
+        slug, branch, paths = repo_files(repo_url)
+        if slug is None:
+            problems.append(f"{team}: {paths}")
+            continue
+        for deliv in wanted:
+            week_dir = root / "teams" / team / f"week-{week:02d}"
+            if list(week_dir.glob(f"*-{deliv}-original.*")):
+                continue  # filed already; the fetch step never files twice
+            link = inbox / team / f"{deliv}-wk{week}.md"
+            if link.exists():
+                continue  # waiting in the inbox from an earlier run
+            ranked = rank_candidates(paths, deliv, week)
+            if not ranked:
+                hit, more = week_folder_files(paths, week)
+                where = (f"; week {week} holds " + ", ".join(hit) + (f" and {more} more" if more else "")) if hit else ""
+                problems.append(f"{team}: nothing in {slug} names the {deliv}{where}")
+                continue
+            top = ranked[0]
+            close = [c for c in ranked[1:] if c[0] >= top[0] - 1]
+            if top[0] < 4 or close:
+                shown = "; ".join(f"{p} ({w})" for _, p, w in ranked[:4])
+                problems.append(f"{team}: cannot tell which file is the {deliv} — {shown}. "
+                                f"Write inbox/{team}/{deliv}-wk{week}.md with the one link yourself")
+                continue
+            url = blob_url(slug, branch, top[1])
+            link.parent.mkdir(parents=True, exist_ok=True)
+            link.write_text(f"# {deliv} week {week}\n\n{url}\n", encoding="utf-8")
+            done.append(f"{team}: {deliv} ← {top[1]} ({top[2]}) → inbox/{team}/{link.name}")
+    return done, problems
+
+
+def roster_teams(root, only_team=None):
+    """{team: row} from roster.tsv, in file order. The roster is who exists: a
+    team with no folder under teams/ has still been given the week's work."""
+    return {r["team"].strip(): r for r in read_tsv(root / "roster.tsv", ROSTER_HEADER)
+            if re.fullmatch(r"team-\d{2}", r["team"].strip())
+            and (not only_team or r["team"].strip() == only_team)}
+
+
+def check_hand_ins(root, week, only_team=None):
+    """What the week asked for and did not get. The steps are driven by the
+    files that exist, so a team that handed nothing in is otherwise silent."""
+    wanted = WEEK_HAND_INS.get(week, [])
+    missing = []
+    for team in roster_teams(root, only_team) or teams_in(root, only_team):
+        week_dir = root / "teams" / team / f"week-{week:02d}"
+        have = set(latest_texts(week_dir, team, week)) if week_dir.is_dir() else set()
+        short = [d for d in wanted if d not in have]
+        if short:
+            missing.append(f"{team}: week {week} asked for {', '.join(short)} and none is filed")
+    return missing
 
 
 # ----------------------------------------------------------------------------
@@ -272,7 +500,7 @@ def step_intake(root, week, only_team=None):
 
     # one folder per roster team, always present, so a file dropped into it
     # needs nothing else to say whose it is; recreated if one goes missing
-    for r in read_tsv(root / "roster.tsv", ["team", "names", "channel"]):
+    for r in read_tsv(root / "roster.tsv", ROSTER_HEADER):
         if re.fullmatch(r"team-\d{2}", r["team"].strip()):
             (inbox / r["team"].strip()).mkdir(exist_ok=True)
 
@@ -1048,7 +1276,10 @@ def main():
     ap.add_argument("--week", type=int, required=True)
     ap.add_argument("--root", type=pathlib.Path, default=DEFAULT_ROOT)
     ap.add_argument("--team", help="only this team, e.g. team-03")
-    ap.add_argument("--step", choices=[n for n, _ in STEPS] + ["all"], default="all")
+    ap.add_argument("--step", choices=[n for n, _ in STEPS] + ["fetch", "all"], default="all",
+                    help="one step only; fetch is never part of all")
+    ap.add_argument("--deliverable", action="append",
+                    help="with --step fetch: look for this deliverable instead of the week's own")
     ap.add_argument("--status", action="store_true", help="show where every team stands this week, then stop")
     ap.add_argument("--sent", action="store_true", help="with --team: record that this week's message was sent")
     ap.add_argument("--withdraw", action="store_true", help="with --team: move this week's folder to archive/, reversibly, then stop")
@@ -1076,6 +1307,24 @@ def main():
         for line in redo(a.root, a.week, a.redo, a.team):
             print(f"  {line}")
 
+    if a.step == "fetch":
+        print(f"step fetch — week {a.week}: "
+              f"{', '.join(a.deliverable or WEEK_HAND_INS.get(a.week, ['(nothing in the table)']))}")
+        done, problems = step_fetch(a.root, a.week, a.team, a.deliverable)
+        for line in done:
+            print(f"  {line}")
+        for line in problems:
+            print(f"  ! {line}")
+        print()
+        if problems:
+            print(f"{len(done)} link file(s) written, {len(problems)} left for you above.")
+            return 1
+        if not done:
+            print("Nothing to fetch.")
+            return 2
+        print(f"{len(done)} link file(s) written. Read them, then run the week.")
+        return 0
+
     all_done, all_problems = [], []
     for name, fn in STEPS:
         if a.step not in ("all", name):
@@ -1088,6 +1337,14 @@ def main():
             print(f"  ! {line}")
         all_done += done
         all_problems += problems
+
+    if a.step == "all":
+        short = check_hand_ins(a.root, a.week, a.team)
+        if short:
+            print("hand-ins")
+            for line in short:
+                print(f"  ! {line}")
+            all_problems += short
 
     print()
     if all_problems:

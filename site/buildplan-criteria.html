@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>What a good build plan looks like — AI in Business</title>
+<meta name="description" content="The criteria your team's build plan is read against: the phases, the tasks in each, the test gate, the commit gate, the push gate, and the plan as the team's memory of where the build stands." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+.bds-nav-links a:hover { color: var(--text-primary); }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus. handbook.html, whose stylesheet this page copies, carries
+   neither — so the link was rendering as visible text at the top of the page.
+   A skip link is also useless without a visible focus ring to follow it. */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Cards and callout. The PRD criteria page uses these classes without styling them. */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin: var(--space-6) 0; }
+.card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-6); background: var(--bg-page); }
+.card h3 { margin-top: 0; font-size: var(--text-lg); }
+.card p:last-child { margin-bottom: 0; }
+.callout { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-4) var(--space-6); border-radius: var(--radius-sm); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="platform-documents.html">Six documents</a>
+      <a href="index.html#work">What you make</a>
+    </span>
+  </div>
+</nav>
+
+<main class="bds-page" id="top">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow">AEL &middot; week 4 &middot; build plan</div>
+    <h1 class="bds-h1">What a good build plan looks like</h1>
+    <blockquote class="lead-quote"><em>A reader can tell what gets built first, what a change must pass before it is kept, and where the team is now.</em></blockquote>
+    <p class="lead">Week 4 is where your platform starts to exist. The build plan is how you get there on purpose. It sets out the phases, the tasks inside each one, the tests that let a task count as done, and the two gates that decide when work is kept. This page unpacks the bar into the twenty things a reader looks for.</p>
+    <p>One thing makes this document unlike the three before it. <strong>You work from it, and you write in it.</strong> Its boxes are ticked as you go, so at any moment it says where the build stands. It is also what your AI assistant reads when it picks the work up again. The rules therefore belong in the document rather than in one person's head.</p>
+    <p class="tpl-notice"><strong>Posted already?</strong> Nothing is lost. If you post a second version before the deadline, the latest one is read. The feedback on your build plan uses these criteria and nothing else. Your marks are given later, against <a href="#where">separate criteria</a>.</p>
+  </header>
+
+  <section id="departures">
+    <h2 class="bds-part">Three things that are different here</h2>
+    <p>Your PRD said what to build. Your blueprint said what the parts are. This document is the first one that has to survive contact with the work, and three things follow from that.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>It is memory, not a forecast</h3>
+        <p>A plan that is only a forecast is wrong by Wednesday and nobody opens it again. This one carries the state: a ticked box, the date, the commit, the test that failed. Anyone &mdash; a team mate, a lecturer, an assistant &mdash; can read where the build is from the document alone.</p>
+      </div>
+      <div class="card">
+        <h3>The gates are the content</h3>
+        <p>Phases and tasks are the easy half. What makes a plan worth following is what a change must pass before it is kept: the tests, then the commit, then the merge. Without those the plan is a wish list.</p>
+      </div>
+      <div class="card">
+        <h3>A phase ends in something that works</h3>
+        <p>Not "the retrieval layer is written" but "a question comes in and a passage comes back". Each phase ends in something you can show, however thin. A phase that ends in code nobody can run has not ended.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="criteria">
+    <h2 class="bds-part">The twenty criteria</h2>
+    <p>Group A is the phases. B is the tasks inside them. C is the three gates. D is the document as memory. E is the trace back to your PRD and blueprint, and F and G are about the document itself.</p>
+
+    <div class="theme">
+      <h3>A &middot; The phases</h3>
+      <ul class="angles">
+        <li><strong>A1 &mdash; Each phase ends in something that works.</strong> One sentence per phase, saying what a person can do at the end of it that they could not do before. A phase named after a component ("the store") has no end; a phase named after a capability has one. <span class="src">Cockburn, the walking skeleton; vertical slices</span></li>
+        <li><strong>A2 &mdash; The order, and what each phase needs.</strong> The phases are in the order you will do them, and each says what it needs from the one before. If two phases do not depend on each other, say so: they can run in parallel across roles. <span class="src">Assignment; blueprint B2</span></li>
+        <li><strong>A3 &mdash; A phase is small enough to finish.</strong> A phase fits the time your team actually has &mdash; a session, a week &mdash; and says which. A phase you cannot finish is two phases that have not been separated. <span class="src">Small batches: Forsgren, Humble &amp; Kim, <em>Accelerate</em></span></li>
+        <li><strong>A4 &mdash; What is built first, and why that.</strong> The first phase is the one that would hurt most if it turned out to be impossible. Say why you chose it: the thinnest end-to-end path, the riskiest part, or the thing everything else waits for. <span class="src">Walking skeleton; risk-first planning</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>B &middot; The tasks inside a phase</h3>
+      <ul class="angles">
+        <li><strong>B1 &mdash; One task, one change.</strong> Each task is a single change someone can make and then test. "Build the agent" is a phase pretending to be a task. A task that needs two people at once is two tasks. <span class="src">Assignment; trunk-based development</span></li>
+        <li><strong>B2 &mdash; Who does it, by role.</strong> Every task carries one of your build roles &mdash; product manager, developer, tester, deployer &mdash; and one name. A task owned by "the team" is owned by nobody. <span class="src">Course constraint: one build role per student</span></li>
+        <li><strong>B3 &mdash; What it touches.</strong> Each task names the thing it changes: the file, the part from your blueprint, the prompt, the folder in your store. Enough that two people do not edit the same thing without knowing. <span class="src">Blueprint A1; week 3 knowledge architecture</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>C &middot; The gates &mdash; what a change must pass</h3>
+      <ul class="angles">
+        <li><strong>C1 &mdash; The test gate: what is tested, and what counts as passing.</strong> Per task or per phase: what you run or do, and the result that means it works. A test can be a person following three steps and writing down what they saw. "We test it" is not a gate. <span class="src">Assignment; the definition of done</span></li>
+        <li><strong>C2 &mdash; The commit gate: nothing is committed until its tests pass.</strong> Written as a rule in the document, in those words or your own. Say what happens to a change whose test fails: it is fixed, or it goes back, and it is not committed either way. <span class="src">Fowler, <em>Continuous Integration</em>; Humble &amp; Farley, <em>Continuous Delivery</em></span></li>
+        <li><strong>C3 &mdash; The push gate: the next phase starts after a successful merge and push.</strong> The phase is not done when the code works on one laptop. It is done when it is merged, pushed, and the others have it. Say who merges, and what a failed merge means for the next phase. <span class="src">Assignment; trunk-based development</span></li>
+        <li><strong>C4 &mdash; What happens when a gate does not open.</strong> The test fails twice, the merge conflicts, the deploy breaks. Say where the work goes: back a task, back a phase, or to a person, and after how many tries. A plan with no failure path plans on never failing. <span class="src">Blueprint D3</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>D &middot; The document as memory</h3>
+      <ul class="angles">
+        <li><strong>D1 &mdash; A box per task and per gate, kept current by someone.</strong> Every task and every gate has a checkbox, and the ticks match reality on the day you hand it in. One person is named as the one who ticks them, and the moment they do it: at the end of a working session, at each merge. An unticked box is information; a plan of all-unticked boxes written the night before is not. <span class="src">Assignment; platform documents: they change, and they are meant to</span></li>
+        <li><strong>D2 &mdash; What happened, beside the box.</strong> One line per ticked item: the date, the commit or the pull request, and what the test showed. Where something failed first, that stays in: it is the evidence of the week. <span class="src">Assignment; ADR-0010's failure log</span></li>
+        <li><strong>D3 &mdash; The rules are in the document.</strong> The gates are written as instructions a newcomer could follow without asking anyone: what to run, when to commit, when to push, what to do when it fails. Your assistant reads this document too. <span class="src">Assignment; the rulebook</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>E &middot; The trace to your PRD and blueprint</h3>
+      <ul class="angles">
+        <li><strong>E1 &mdash; Every part is built by some phase.</strong> Each part in your blueprint appears in a phase, or is named as not built yet with a reason. A part nobody builds is how a platform arrives half-finished without anyone deciding that. <span class="src">Assignment; blueprint E1</span></li>
+        <li><strong>E2 &mdash; Every test gate tests a quality your PRD names.</strong> The PRD said how you would know the platform works. Those are the qualities the gates check. A gate that tests only that the code ran tests nothing the PRD asked for. <span class="src">Assignment; PRD group C</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>F &middot; Decisions and open questions</h3>
+      <ul class="angles">
+        <li><strong>F1 &mdash; A decision with the option you turned down.</strong> What you are deliberately not building first, and what that costs you. The decision log started in week 3; this is one of its entries. <span class="src">Week 3 decision log; architecture decision records</span></li>
+        <li><strong>F2 &mdash; Open questions, each with an owner and a week.</strong> What you do not know yet and cannot plan around: a tool you have not tried, a limit you have not hit. Naming one counts in your favour. <span class="src">Blueprint F2</span></li>
+      </ul>
+    </div>
+
+    <div class="theme">
+      <h3>G &middot; The document as a working instrument</h3>
+      <ul class="angles">
+        <li><strong>G1 &mdash; Header and provenance.</strong> The platform's name; the team; who holds the pen; a version and a date; and which versions of your PRD, blueprint and knowledge architecture it builds. <span class="src">Platform documents</span></li>
+        <li><strong>G2 &mdash; The three-question test.</strong> From the document alone, in a minute each: what gets built first, what a change must pass before it is kept, and where is the build now? This is the bar at the top of this page and the only item read as a whole. <span class="src">Assignment</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="shape">
+    <h2 class="bds-part">One shape that satisfies most of this</h2>
+    <p>You do not have to use it. It is here because the fastest way to see what the twenty items ask for is to see them in one place.</p>
+    <div class="callout">
+      <p><strong>Phase 2 &mdash; a question returns a sourced passage</strong> (developer + tester, one session)<br />
+      Needs: phase 1's store, filled with five sources.</p>
+      <ul>
+        <li>&#9745; Write the lookup that takes a question and returns three passages &mdash; <em>Dev, file <code>lookup.py</code></em> &middot; 24 Sep, commit <code>a1c4e9</code></li>
+        <li>&#9745; <strong>Test gate:</strong> five questions in, every passage traceable to a source in the store &mdash; <em>Tester</em> &middot; 24 Sep, 4 of 5 passed; the fifth returned a passage with no source, fixed in <code>e77b21</code></li>
+        <li>&#9745; <strong>Commit gate:</strong> committed after the retest passed &middot; 24 Sep</li>
+        <li>&#9744; <strong>Push gate:</strong> merged to main and pushed, everyone has pulled &mdash; <em>Deploy</em> &middot; waiting on review</li>
+      </ul>
+      <p><strong>Rules for this plan.</strong> Nothing is committed before its test gate passes. The next phase starts only when the previous phase is merged and pushed. A test that fails twice goes to the whole team, not to a third attempt. The tester ticks the boxes at the end of each working session.</p>
+    </div>
+  </section>
+
+  <section id="not-scored">
+    <h2 class="bds-part">What is not read against you</h2>
+    <div class="callout">
+      <p>Not read against you: how many phases you have, which tools or languages you chose, the format of the plan, prose quality, and any code. <strong>A plan with four phases and real gates beats twelve phases with none.</strong></p>
+      <p>Also not read against you: a phase that did not finish. An honest unticked box with a line saying what stopped it is worth more than a tick you cannot show.</p>
+      <p>Two things are worth doing already, though nobody asks for them this week:</p>
+      <ul>
+        <li><strong>A record of each run.</strong> What went into the platform and what came out. Week 5 asks you to evaluate what it produced, and that is easier with a record than from memory.</li>
+        <li><strong>The test as a script.</strong> A check you can run again in one command is a check you will actually run again.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="where">
+    <h2 class="bds-part">Where this comes from</h2>
+    <p>The assignment itself is set in the week 4 session and stated on the week 4 page. The build plan is the fourth of <a href="platform-documents.html">six weekly documents</a>; that page says what happens to it after you post it. The three before it have their own criteria: <a href="prd-criteria.html">What a good PRD looks like</a>, <a href="blueprint-criteria.html">What a good blueprint looks like</a> and <a href="knowledge-criteria.html">What a good knowledge architecture looks like</a>.</p>
+    <p>Groups A and B draw on the habit of building the thinnest working path first, which Alistair Cockburn calls a <em>walking skeleton</em>. They also draw on Forsgren, Humble and Kim's <em>Accelerate</em> (IT Revolution, 2018), which found that small batches and frequent merges beat long branches. Group C follows <a href="https://martinfowler.com/articles/continuousIntegration.html" target="_blank" rel="noopener">Martin Fowler on continuous integration</a> and Humble and Farley's <em>Continuous Delivery</em> (Addison-Wesley, 2010): the mainline stays working, and a change earns its place by passing its tests. C1's bar is what agile teams call a <em>definition of done</em>: the checklist a team agrees on before work starts, so that &ldquo;finished&rdquo; is not decided afterwards.</p>
+    <p>These criteria are formative: they shape the draft and the conversation about it. Your two marks are given against separate criteria: <a href="index.html#assessment">one set per module</a>, published before any work is marked.</p>
+  </section>
+
+</main>
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
