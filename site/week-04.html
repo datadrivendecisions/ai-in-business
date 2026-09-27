@@ -707,8 +707,20 @@ ol.steps.steps-quiet > li::before {
 
     <div class="callout">
       <h3>AEL — the build plan</h3>
-      <p>The fourth of the <a href="platform-documents.html">six documents</a>: the phases, the tasks in each, the tests, and what a change must pass before it is kept.</p>
-      <p class="tpl">What it must contain, and the criteria it is read against, are published here after the session.</p>
+      <p>The fourth of the <a href="platform-documents.html">six documents</a>. This is the week the platform starts to exist. You build the first working slice of it, from your <a href="prd-criteria.html">PRD</a> and your <a href="blueprint-criteria.html">blueprint</a>. The build plan is how you get there on purpose.</p>
+      <p>Unlike the three documents before it, <strong>you work from this one and you write in it</strong>. It is your team's memory of the build: the boxes are ticked as you go, so at any moment it says where you are. Your AI assistant reads it too, which is why the rules go in the document and not in one person's head.</p>
+      <ol>
+        <li><strong>Phases, each ending in something that works.</strong> One sentence per phase, saying what a person can do at the end of it that they could not do before. Say what each phase needs from the one before, and which one you build first and why.</li>
+        <li><strong>Subtasks inside each phase.</strong> One change each, small enough to test. Every subtask carries one build role and one name, and says what it touches: the file, the part from your blueprint, the prompt, the folder.</li>
+        <li><strong>A test gate.</strong> Per subtask or per phase: what you run or do, and the result that counts as passing. A person following three steps and writing down what they saw is a test. &ldquo;We test it&rdquo; is not.</li>
+        <li><strong>A commit gate.</strong> Nothing is committed until its tests pass. Write it as a rule, and say what happens to a change whose test fails.</li>
+        <li><strong>A push gate.</strong> The next phase starts only after a successful merge and push. Say who merges, and what a failed merge means for the phase that was waiting.</li>
+        <li><strong>Boxes, and what happened beside them.</strong> A checkbox per subtask and per gate. Beside each ticked one: the date, the commit or pull request, and what the test showed. A failure stays in &mdash; it is the evidence of your week. Name who ticks the boxes and when.</li>
+        <li><strong>The rules, written out.</strong> The three gates as instructions someone new could follow without asking: what to run, when to commit, when to push. Say what happens when a gate does not open, and after how many tries.</li>
+      </ol>
+      <p><strong>Two traces back.</strong> Every part in your blueprint is built in some phase, or is named as not built yet with a reason. Every test gate tests a quality your PRD names: the gates are how you keep the promise you made in week 1.</p>
+      <p>The criteria the build plan is read against: <a href="buildplan-criteria.html">What a good build plan looks like</a>. Hold your draft against them before you post it.</p>
+      <p><strong>Done when a reader can tell:</strong> what gets built first, what a change must pass before it is kept, and where the build is now.</p>
     </div>
   </section>
 
