@@ -21,7 +21,8 @@ DATABASE="${DATABASE:-experiment}"      # its own, never the project's (default)
 # is homework, so rows arrive across a week; they still all go together, and
 # this is the date the student read on the page before pressing the button.
 # Set it for the cohort you are deploying for, in Amsterdam time.
-RETENTION_UNTIL="${RETENTION_UNTIL:-2026-09-28T19:00:00+02:00}"
+# ADR-0019 moved the 2026 cohort's deadline to 31 October, after the debrief left week 4.
+RETENTION_UNTIL="${RETENTION_UNTIL:-2026-10-31T19:00:00+01:00}"
 
 say() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
 
