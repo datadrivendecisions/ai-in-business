@@ -774,7 +774,7 @@ input[type="number"] {
   <section class="screen" id="s-submit" aria-labelledby="h-submit" hidden>
     <h2 id="h-submit">Send your numbers in?</h2>
 
-    <p>Both rounds are done. In week 4 the whole cohort&rsquo;s numbers go on one screen, and yours are in that picture only if they arrive. You can send them with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
+    <p>Both rounds are done. In the debrief the whole cohort&rsquo;s numbers go on one screen, and yours are in that picture only if they arrive. You can send them with the button, or take the line away and hand it in yourself. <strong>Nothing has been sent yet.</strong></p>
 
     <div class="warn">
       <p><strong>What goes, if you press it:</strong></p>
@@ -785,7 +785,7 @@ input[type="number"] {
         <li>Seconds spent, and your answers to the eight closing questions.</li>
       </ul>
       <p><strong>What stays here:</strong> everything you wrote, and everything an assistant replied. Those are never sent, and there is no field in the message that could carry them.</p>
-      <p>What is sent carries your code and no name. It is deleted after the week 4 debrief, on the evening of Monday 28 September. Give your code to a lecturer at any point and your row goes sooner.</p>
+      <p>What is sent carries your code and no name. It is deleted after the debrief, and by the evening of Saturday 31 October 2026 at the latest. Give your code to a lecturer at any point and your row goes sooner.</p>
     </div>
 
     <details>
@@ -808,7 +808,7 @@ input[type="number"] {
 
     <div class="status" id="d-status" hidden><p id="d-status-text"></p></div>
 
-    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks. Then leave it there until week 4: comparing notes with your team now costs them the exercise.</p>
+    <p>You opened <strong id="d-opened">0</strong> sources across the two rounds. Below is your result line. Copy it and hand it in the way your lecturer asks. Then leave it there until the debrief: comparing notes with your team now costs them the exercise.</p>
 
     <div class="line-box" id="d-line" tabindex="0" role="region" aria-label="Your result line"></div>
 
@@ -2113,7 +2113,7 @@ function toSubmit(){
    say what to do next, because on a failure the student is the recovery
    mechanism and being told "an error occurred" is no help to them. */
 var OUTCOMES = {
-  sent: "Your numbers are in. Your code is on them and your name is not, and they are deleted after the week 4 debrief. Keep the line below anyway, in case a lecturer asks for it.",
+  sent: "Your numbers are in. Your code is on them and your name is not, and they are deleted after the debrief, by 31 October at the latest. Keep the line below anyway, in case a lecturer asks for it.",
   skipped: "Nothing was sent. Hand the line below in the way your lecturer asks.",
   "not-configured": "There is nothing to send to yet — this one is being collected by hand. Copy the line below and hand it in the way your lecturer asks.",
   "no-fetch": "This browser cannot send it. Copy the line below and hand it in the way your lecturer asks.",
