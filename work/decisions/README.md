@@ -48,7 +48,9 @@ decision — the point is to force a yes or a no, not to host an open question.
 | 0014 | [How the Socratic gate runs — the platform, and what carries the traffic](0014-socratic-gate-architecture.md) | Proposed |
 | 0015 | [What the Socratic gate runs on — the no-code canvas or a service we own](0015-gate-runtime.md) | Proposed |
 | 0016 | [How the week 3 experiment collects results — the browser, or a service we own](0016-experiment-service.md) | Superseded by ADR-0017 |
-| 0017 | [When the week 3 experiment runs — in the session, or alone at home before week 4](0017-experiment-as-homework.md) | Accepted |
+| 0017 | [When the week 3 experiment runs — in the session, or alone at home before week 4](0017-experiment-as-homework.md) | Superseded by ADR-0019 |
+| 0018 | [What the weekly reading weighs — the quality of the document, or the evidence of learning](0018-learning-above-results.md) | Proposed |
+| 0019 | [How long the week 3 experiment's data is kept, once the debrief leaves week 4](0019-experiment-retention-extended.md) | Accepted |
 
 ADR-0001 is the keystone. ADR-0002, ADR-0003 and ADR-0006 follow from it and
 should not be accepted before it is.
