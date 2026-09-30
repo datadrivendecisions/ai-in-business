@@ -21,9 +21,18 @@ AIBS segment. To be filled in by the AIBS lecturer before Monday.
 
 ## s3
 
-Most of what the teams built in week 4 looks things up when a question is asked: files uploaded to a chat, a folder the assistant searches, a vector store. That works, and it forgets. Ask twice and it does the work twice; a contradiction between two sources is found only if a question happens to touch both. Karpathy: the LLM "is rediscovering knowledge from scratch on every question". The week 3 visualisation (one question, four ways) is the reminder that this is one of four options.
+The diagram fills the slide; tell it left to right, then bottom.
 
-Then the three folders, three owners. raw/ is the evidence and nobody edits it, the assistant included. wiki/ belongs to the assistant; the team reads and asks for changes. AGENTS.md is the contract, and the team changes it. All six assistants the students use read AGENTS.md; CLAUDE.md and GEMINI.md point to it.
+- **Start at the bottom row, the comparison.** Query-time RAG: question, search raw, synthesise on the spot, and only the answer remains. That is what most teams built in week 4: it works, and it forgets. Karpathy: the LLM "is rediscovering knowledge from scratch on every question". The wiki row ends differently: artifacts remain, and are reused and improved.
+- **Raw sources, top left.** The source of truth. The model reads them and never modifies them.
+- **Ingest, the orange box.** Two stages: analysis (entities, concepts, links to what is already in the wiki, contradictions and open questions), then generation (the source summary, entity and concept pages, index and log). This is the step the demo shows.
+- **The red boxes are the honest part.** The same source ingested twice will not give identical pages. A summary drops details. A wrong summary stays as markdown and gets built on: error cementing. This is why the template pauses before writing, checks every quotation against the raw file, and keeps a log.
+- **LLM wiki, top right.** Plain markdown files a person can read. The review queue (contradictions, duplicates, missing pages) is what the lint reports.
+- **Query loop, the purple row.** A question searches the wiki pages and, where needed, the raw sources, fills the context window, and a good answer is saved back to the wiki. Retrieval does not disappear; it gets a better index.
+
+Where the template differs from the diagram: `syntheses/` instead of `queries/`, `AGENTS.md` instead of `schema.md`, no `overview.md`. And "meeting notes" as a raw source is fine for a company, never for our field research: no interview material in the wiki.
+
+All six assistants the students use read `AGENTS.md`; `CLAUDE.md` and `GEMINI.md` in the template point to it. Week 3's visualisation (one question, four ways) is the reminder that this is one of four options.
 
 ## s4
 

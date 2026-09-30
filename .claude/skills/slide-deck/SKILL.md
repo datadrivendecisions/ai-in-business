@@ -68,6 +68,10 @@ screen, readable on a phone". The card *is* the projected slide, so the rule app
 
 - A slide is a `.slide` section with a `.slide-head` (kicker and `N / M`), an `h2`, then the body.
   `.cols` gives two columns, `.roles` a row of names, `is-title` a section marker.
+- `is-figure` makes a card one image: a `<figure>` with the `<img>` (file in `site/img/`, with
+  `alt` text) and a `<figcaption>` crediting its source. The deck and the PPTX show the image
+  alone, filling the slide; the `h2` stays for the slide list and is hidden on the card. The story
+  the image tells goes in the notes.
 - Adding a slide means renumbering every `N / M` after it and adding it to the `deck-nav` list.
 - No speaker notes on the page. Notes live in `project-documentation/slides/week-NN-notes.md`,
   one `## sN` block per card, and the lecturer's *ask, never comment* prompts stay out of even
