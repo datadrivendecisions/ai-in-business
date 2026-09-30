@@ -29,20 +29,24 @@ Then the three folders, three owners. raw/ is the evidence and nobody edits it, 
 
 The demo. Leave this card up and switch to the terminal and Obsidian.
 
-Acquire, one command per format:
+**Before class (the day before).** Create the demo repository from the template, install the helpers, and acquire and ingest the video and the report. They are too long to run live: in the dry run on 30 September (headless, no pause) the video took 10½ minutes and the report 17. Commit after each. The article stays in `raw/` un-ingested, or is fetched live.
+
+Acquire, one command per format (show at least the article live; the other two take seconds):
 
 - Article: `python3 tools/fetch_article.py https://oecdcogito.blog/2025/09/16/agentic-ai-for-small-business-growth/` — about 1,800 words, word for word.
 - Video: `python3 tools/fetch_youtube.py https://www.youtube.com/watch?v=51lXx4wBuHE` — captions only; 64 minutes, about 7,600 words of automatic captions.
 - Report: save the PDF in raw/reports/, then `markitdown raw/reports/oecd-empowering-smes-in-the-age-of-ai.pdf > raw/reports/oecd-empowering-smes-in-the-age-of-ai.md` — 36 pages, about 13,000 words, four seconds. The PDF itself is not committed (.gitignore).
 
-Process: `/ingest raw/articles/agentic-ai-for-small-business-growth.md — added by Witek`. Let the pause happen; read the takeaways aloud before saying go. Dry run on 30 September, headless, no pause: the article took just under five minutes and wrote twelve pages. With the pause and talking, budget eight. If time is short, ingest the video and the report while talking.
+**Live: the article.** `/ingest raw/articles/agentic-ai-for-small-business-growth.md — added by Witek`. Let the pause happen and read the takeaways aloud before saying go. On an empty wiki it took just under five minutes; on top of the report and the video expect longer, so budget ten with the pause and talk. Because the survey is already in, the disagreement appears live.
 
 Four things to show:
 
 1. The pause: the place to catch a misreading before it lands on ten pages.
 2. The source page's caveats. In the dry run it found that the author heads PayPal's government relations, that PayPal is a partner of the survey the article cites, that the "72%" figure links back to the article itself, and that the two business owners are invented examples.
-3. The disagreement, once the report is in: the article's assistant "negotiates with suppliers"; the OECD finds 61% of SMEs use AI and 76% of those are "AI novices". Show the Debates section and the confidence number that went down. The OECD calls its own sample non-representative, and the source page should say so.
+3. The disagreement. In the dry run it landed on the `agentic-ai` concept page under Debates: the article writes in the present tense about agents that reorder stock and negotiate with suppliers; the OECD survey counts 3.6% of AI users running agentic AI, in a sample it says is not representative and skews to the digitally mature. The page says what the disagreement turns on (partly tense, partly being found by other people's agents versus running your own) and the page's confidence dropped to 0.65.
 4. Query and lint. Ask: *Which AI uses pay off first for a small manufacturer, according to the wiki?* Show the citations, then the query entry in the log with the pages it read. Then `/lint`, and dwell on the quote check: every quotation on a wiki page is compared with the raw file, so an invented quotation fails. These are the two habits the knowledge architecture criteria said would come back in week 5.
+
+**Fallback.** The dry-run wiki, all three sources ingested and lint clean (52 pages), is on the lecturer's laptop outside the repositories. Open it in Obsidian if the network or the model fails.
 
 ## s5
 
