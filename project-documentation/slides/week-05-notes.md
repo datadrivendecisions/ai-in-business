@@ -2,8 +2,9 @@
 
 Speaker notes for `site/week-05-slides.html`, one block per card, keyed by the card's id.
 `build_deck.py` folds them into the presenter deck. The page holds a placeholder for the AIBS
-segment (s2), the AEL segment on the LLM wiki with its live demo (s3–s10), and the homework
-card (s11). The folder is public: run-sheet material only.
+segment (s2), the AEL segment on the LLM wiki (s3–s5), and the homework card (s6). The wiki
+segment has three cards on purpose: the demo on screen is the evidence, the cards only carry
+what the voice cannot (the shape, the three sources, the template's address). The folder is public: run-sheet material only.
 
 The template the demo starts from is `datadrivendecisions/llm-wiki-template`. It is a lean,
 assistant-neutral version of the schema behind the AI Wiki (`businessdatasolutions/ai-wiki`):
@@ -20,44 +21,35 @@ AIBS segment. To be filled in by the AIBS lecturer before Monday.
 
 ## s3
 
-Most of what the teams built in week 4 looks things up at the moment a question is asked: files uploaded to a chat, a folder the assistant searches, a vector store. That works, and it forgets. Ask the same question twice and it does the work twice; a contradiction between two sources is found only if a question happens to touch both. Karpathy's point is that nothing accumulates. The week 3 visualisation is the reminder that this is one of four options, not the new default.
+Most of what the teams built in week 4 looks things up when a question is asked: files uploaded to a chat, a folder the assistant searches, a vector store. That works, and it forgets. Ask twice and it does the work twice; a contradiction between two sources is found only if a question happens to touch both. Karpathy: the LLM "is rediscovering knowledge from scratch on every question". The week 3 visualisation (one question, four ways) is the reminder that this is one of four options.
+
+Then the three folders, three owners. raw/ is the evidence and nobody edits it, the assistant included. wiki/ belongs to the assistant; the team reads and asks for changes. AGENTS.md is the contract, and the team changes it. All six assistants the students use read AGENTS.md; CLAUDE.md and GEMINI.md point to it.
 
 ## s4
 
-Three folders, three owners. raw/ is the evidence and is never edited, the assistant included. wiki/ belongs to the assistant: the team reads it and asks for changes. AGENTS.md is the contract, and the team changes it when it does not fit. All six assistants the students use read AGENTS.md; CLAUDE.md and GEMINI.md in the template point to it.
+The demo. Leave this card up and switch to the terminal and Obsidian.
+
+Acquire, one command per format:
+
+- Article: `python3 tools/fetch_article.py https://oecdcogito.blog/2025/09/16/agentic-ai-for-small-business-growth/` — about 1,800 words, word for word.
+- Video: `python3 tools/fetch_youtube.py https://www.youtube.com/watch?v=51lXx4wBuHE` — captions only; 64 minutes, about 7,600 words of automatic captions.
+- Report: save the PDF in raw/reports/, then `markitdown raw/reports/oecd-empowering-smes-in-the-age-of-ai.pdf > raw/reports/oecd-empowering-smes-in-the-age-of-ai.md` — 36 pages, about 13,000 words, four seconds. The PDF itself is not committed (.gitignore).
+
+Process: `/ingest raw/articles/agentic-ai-for-small-business-growth.md — added by Witek`. Let the pause happen; read the takeaways aloud before saying go. Dry run on 30 September, headless, no pause: the article took just under five minutes and wrote twelve pages. With the pause and talking, budget eight. If time is short, ingest the video and the report while talking.
+
+Four things to show:
+
+1. The pause: the place to catch a misreading before it lands on ten pages.
+2. The source page's caveats. In the dry run it found that the author heads PayPal's government relations, that PayPal is a partner of the survey the article cites, that the "72%" figure links back to the article itself, and that the two business owners are invented examples.
+3. The disagreement, once the report is in: the article's assistant "negotiates with suppliers"; the OECD finds 61% of SMEs use AI and 76% of those are "AI novices". Show the Debates section and the confidence number that went down. The OECD calls its own sample non-representative, and the source page should say so.
+4. Query and lint. Ask: *Which AI uses pay off first for a small manufacturer, according to the wiki?* Show the citations, then the query entry in the log with the pages it read. Then `/lint`, and dwell on the quote check: every quotation on a wiki page is compared with the raw file, so an invented quotation fails. These are the two habits the knowledge architecture criteria said would come back in week 5.
 
 ## s5
 
-Demo, part 1 (acquire). One command per format, each lands a markdown file in raw/:
+Teams make their copy now if they did not before the session; the README has the steps. Walk the room: the usual problems are Python on Windows (`python`, not `python3`) and a venv that is not activated. Each team ingests one published source of its own and reads the source page back. Never interview material, private repository or not: what the assistant reads goes to a model service.
 
-- Article: `python3 tools/fetch_article.py https://oecdcogito.blog/2025/09/16/agentic-ai-for-small-business-growth/` — about 1,800 words, verbatim.
-- Video: `python3 tools/fetch_youtube.py https://www.youtube.com/watch?v=51lXx4wBuHE` — captions only, the video is not downloaded; 64 minutes, about 7,600 words of automatic captions.
-- Report: save the PDF in raw/reports/, then `markitdown raw/reports/oecd-empowering-smes-in-the-age-of-ai.pdf > raw/reports/oecd-empowering-smes-in-the-age-of-ai.md` — 36 pages, about 13,000 words, four seconds.
-
-Point out that the PDF itself is not committed (.gitignore): the text is, and the source page says where the original lives.
+Nobody has to switch. A folder with a naming rule, traced end to end, is still a good answer. What the wiki costs: every source is read when it arrives, whether anyone asks or not; a misreading lands on several pages at once; past a few hundred pages the index is not enough and you need search. A team that adopts it writes a decision-log entry and versions its knowledge architecture.
 
 ## s6
 
-Demo, part 2 (process). In Claude Code: `/ingest raw/articles/agentic-ai-for-small-business-growth.md — added by Witek`. Let the pause happen and read the takeaways out loud before saying go. On the source page, show the byline: a PayPal author on the OECD's blog, and the two business owners in it are invented examples. Then open wiki/index.md and wiki/log.md.
-
-Dry run on 30 September, headless, no pause: the article took just under five minutes and wrote twelve pages. With the pause and talking, budget eight. Ingest the article live; if time is short, run the video and the report while talking over s7.
-
-## s7
-
-The disagreement the wiki should surface once both are in: the article describes an assistant that runs inventory and negotiates with suppliers; the OECD's own survey finds most SME users are novices using off-the-shelf tools. Show where it lands — the Debates section of the concept page, and the confidence number that went down. Also worth a sentence: the OECD calls its own sample non-representative, and the source page should say so.
-
-## s8
-
-Demo, part 3 (query and lint). Ask: *Which AI uses pay off first for a small manufacturer, according to the wiki?* Show the citations, then the query entry in the log with the pages it read. Then `/lint`. The quote check is the one to dwell on: it compares every quotation on a wiki page with the raw file, so an invented quotation fails. These are the two habits the knowledge architecture criteria said would come back in week 5.
-
-## s9
-
-Teams make their copy now, if they did not before the session. The README has the steps. Walk the room: the usual problems are Python not on the PATH on Windows (`python` instead of `python3`) and the venv not activated. Each team ingests one published source of its own and reads the source page back.
-
-## s10
-
-Nobody has to switch. A folder with a naming rule, traced end to end, is still a good answer. What the wiki costs: every source is read when it arrives whether anyone asks or not; a misreading lands on several pages at once; past a few hundred pages the index is not enough. A team that adopts it writes a decision-log entry and versions its knowledge architecture.
-
-## s11
-
-The first evaluation is held against the PRD's own criteria. The decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
+The first evaluation is held against the PRD's own criteria, and the decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
