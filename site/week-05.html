@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Week 4 — AI in Business</title>
-<meta name="description" content="Week 4 of AI in Business: the mini-CBI — the questions each team is asked about its desk research tool, handbook page and interview guide, and the week-4 assignments." />
+<title>Week 5 — AI in Business</title>
+<meta name="description" content="Week 5 of AI in Business: AI use cases at SMEs — an LLM wiki built live as a knowledge architecture, the template your team can copy, and the week-5 assignments: the handbook page and the first evaluation with the decision log." />
 <style>
 /* ================================================================
    Business Data Solutions — brand system (palette C "strict minimal")
@@ -641,19 +641,22 @@ ol.steps.steps-quiet > li::before {
 </nav>
 
 
+
+
 <main class="bds-page" id="top" tabindex="-1">
 
   <header class="bds-page-header">
-    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · week 4</div>
-    <h1 class="bds-h1">Week 4 — show us what you built</h1>
-    <blockquote class="lead-quote"><em>Content is easy to produce with AI. We want to see what you did with it: what you tried and tested, what went wrong, and what you changed.</em></blockquote>
-    <p class="lead">Week 4's session is a mini-CBI: a short version of the criterion-based interview that ends the course. Your team shows the work of the past week and answers our questions about it. The questions are below, so you can prepare.</p>
+    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · week 5</div>
+    <h1 class="bds-h1">Week 5 — AI use cases at SMEs</h1>
+    <blockquote class="lead-quote"><em>Your platform can read a source once and keep what it read. Then every answer can show where it came from.</em></blockquote>
+    <p class="lead">Week 5's theme is what regional SMEs actually use AI for. In the AEL part of the session we build one kind of knowledge architecture live: an <strong>LLM wiki</strong>, filled from three sources in three formats. You leave with a template your team can use the same afternoon.</p>
     <ul class="toc" aria-label="On this page">
       <li><a href="#prepare">Before you come</a></li>
-      <li><a href="#session">The mini-CBI</a></li>
+      <li><a href="#session">In the session</a></li>
+      <li><a href="#wiki">The LLM wiki</a></li>
       <li><a href="#assignments">The assignments</a></li>
       <li><a href="#handin">Hand-in</a></li>
-      <li><a href="#after">After week 4</a></li>
+      <li><a href="#after">After week 5</a></li>
     </ul>
   </header>
 
@@ -663,35 +666,122 @@ ol.steps.steps-quiet > li::before {
     <div class="handin">
       <dl>
         <dt>When and where</dt>
-        <dd><strong>Monday 28 September 2026.</strong> Room and start time are in your timetable, as in the first three weeks. This is the fourth of <a href="index.html#practical">six Mondays</a>. <span class="tpl">Your team's slot is confirmed in your Teams channel.</span></dd>
+        <dd><strong>Monday 5 October 2026.</strong> Room and start time are in your timetable. This is the fifth of <a href="index.html#practical">six Mondays</a>.</dd>
         <dt>Bring</dt>
-        <dd>A charged laptop with <strong>your desk research tool running</strong>, so the demo starts without setup. Have your team's new handbook page and your interview guide open as well.</dd>
-        <dt>Read</dt>
-        <dd><a href="#session">The five questions below</a>. They are the ones we ask.</dd>
-        <dt>Do</dt>
-        <dd>Hand in <a href="week-03.html#handin">week 3's work</a> before the session starts, and write your <a href="week-03.html#handin">third portfolio entry</a>.</dd>
+        <dd>A charged laptop with <strong>git</strong>, <strong>Python&nbsp;3.9 or later</strong>, and the <strong>AI assistant your team builds with</strong>. Claude Code, Cursor, Copilot in agent mode, Codex, Gemini CLI and Antigravity all work. You also need your GitHub account.</dd>
+        <dt>Do, ten minutes</dt>
+        <dd>Make your team's copy of the <a href="#template">wiki template</a> and run its check once, so you can follow the demo on your own screen. The steps are <a href="#template">below</a>. If it does not work, come anyway: we fix it in the session.</dd>
+        <dt>Hand in</dt>
+        <dd><a href="week-04.html#handin">Week 4's work</a> before the session starts: the page, the build plan and your fourth portfolio entry.</dd>
       </dl>
     </div>
 
-    <p>Week 4's theme on the <a href="index.html#programme">week map</a> is <strong>SME knowledge gaps</strong>. What does a regional SME not yet know about AI, and what would it need to know to decide well? It is the theme of the assignments set in this session.</p>
+    <p>Week 5's theme on the <a href="index.html#programme">week map</a> is <strong>AI use cases at SMEs</strong>. What do small and medium-sized firms really use AI for, and which uses pay off? It is the theme of this week's handbook page.</p>
   </section>
 
   <section id="session">
-    <h2 class="bds-part">The mini-CBI</h2>
+    <h2 class="bds-part">In the session</h2>
 
-    <p>Each team has a short interview with the lecturers. It covers three things from the past week: <strong>the first version of your desk research tool</strong> (your V0 build), <strong>your team's new handbook page</strong>, and <strong>your interview guide</strong>.</p>
-    <p class="tpl">The length of each slot, and whether the mini-CBI counts towards your mark, are confirmed in the session.</p>
+    <div class="callout">
+      <h3>AIBS — AI use cases at SMEs</h3>
+      <p class="tpl">The AIBS part of the session is described here before Monday.</p>
+    </div>
 
-    <div class="callout" id="questions">
-      <h3>The questions we will ask</h3>
+    <div class="callout">
+      <h3>AEL — a knowledge architecture, built live</h3>
+      <p>In week 3 your team chose where its sources live and how the platform finds them again. On Monday we show one way to do it, from an empty folder. Three sources on this week's theme go in, each in a different format:</p>
       <ol>
-        <li><strong>Demo.</strong> Give a short demo of your desk research tool, and show us the handbook page you wrote for it. What does the tool do, and where does it still fall short?</li>
-        <li><strong>Why it's agentic.</strong> Explain what makes your tool agentic, using the concepts from class: the LLM, its skills, its tools, and the context you give it (PRD, research proposal, blueprint, build plan). Which of these made the biggest difference?</li>
-        <li><strong>From question to interview.</strong> How did you turn your research question and sub-questions into interview questions? Did writing the interview guide make you change your research proposal? What changed, and why?</li>
-        <li><strong>What you learned by getting it wrong.</strong> Tell us about something that didn't work this week: an approach, a prompt, or an output from the AI that you rejected. How did you find out, and what did you do about it?</li>
-        <li><strong>Field research → tool.</strong> How do you expect your interviews to help you improve your desk research tool?</li>
+        <li><strong>An article</strong> from a web page: <a href="https://oecdcogito.blog/2025/09/16/agentic-ai-for-small-business-growth/" target="_blank" rel="noopener">Agentic AI for small business growth</a>, on the OECD's Cogito blog.</li>
+        <li><strong>A video</strong> from YouTube: <a href="https://www.youtube.com/watch?v=51lXx4wBuHE" target="_blank" rel="noopener">Leveraging AI for smart manufacturing in SMEs</a>, a talk from the Asian Productivity Organization.</li>
+        <li><strong>A report</strong> as a PDF: <a href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2026/04/empowering-smes-in-the-age-of-ai_7f58652c/bf5a9816-en.pdf" target="_blank" rel="noopener">Empowering SMEs in the age of AI</a>, the OECD's 2026 survey of more than 2,000 SMEs.</li>
       </ol>
-      <p>If you read this too late to fit it into your presentation, don't worry. If you've worked seriously on this week's assignments, you'll have plenty to tell us. Honest answers about what didn't work count as much as polished ones about what did.</p>
+      <p>Four things to watch for:</p>
+      <ul>
+        <li><strong>The pause.</strong> The assistant reads the source, says what it found, and waits for a go-ahead before it writes. A wrong reading costs least when it is caught here.</li>
+        <li><strong>The source page.</strong> Who wrote it, who paid for it, what was actually read. Look at who wrote the article.</li>
+        <li><strong>A disagreement, written down.</strong> The article and the report paint different pictures of AI at small firms. Watch where the wiki records that.</li>
+        <li><strong>A question, and its trail.</strong> We ask the wiki a question. The answer cites a page after every claim, and the log lists every page it read.</li>
+      </ul>
+      <p>Then your team tries it with one published source of its own. <strong>Never with interview material</strong>: see <a href="#rules">the rules</a>.</p>
+    </div>
+
+    <p>The slides for the session: <a href="week-05-slides.html">week 5 slides</a>.</p>
+  </section>
+
+  <section id="wiki">
+    <h2 class="bds-part">The LLM wiki</h2>
+
+    <p>A <strong>knowledge architecture</strong> answers one question: how does a question reach the passage that answers it? In week 3 you saw the main options. An <strong>LLM wiki</strong> is the one that does its reading in advance. The pattern was described by Andrej Karpathy in April 2026, in a <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">one-page idea file</a>.</p>
+
+    <div class="cards">
+      <div class="card">
+        <p class="card-kicker">Look it up when asked</p>
+        <h3>RAG</h3>
+        <p>RAG stands for retrieval-augmented generation. The tool searches your files at the moment a question comes in. It pastes the passages it finds into the model's prompt, and answers. Next time, it searches again from scratch.</p>
+      </div>
+      <div class="card">
+        <p class="card-kicker">Read it once, keep what you read</p>
+        <h3>LLM wiki</h3>
+        <p>An LLM (large language model) reads each source when it arrives. It writes what it found into linked pages: one per source, per organisation, per idea. A question is answered from those pages. Where two sources disagree, that is noted on arrival.</p>
+      </div>
+    </div>
+
+    <h3>Three layers</h3>
+    <table>
+      <thead><tr><th>Folder</th><th>What is in it</th><th>Who writes it</th></tr></thead>
+      <tbody>
+        <tr><td><code>raw/</code></td><td>The sources, turned into text files: the article, the video's transcript, the report.</td><td>Your team adds them. <strong>Nobody edits them afterwards</strong>, because they are the evidence.</td></tr>
+        <tr><td><code>wiki/</code></td><td>The pages: a summary per source, a page per organisation and per idea, an index of every page, and a log of everything that happened.</td><td>The assistant. You read and check it.</td></tr>
+        <tr><td><code>AGENTS.md</code></td><td>The rules the assistant follows: the page types, the steps for adding a source, what it may never do.</td><td>Your team, with the assistant. Change it when it does not fit.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Three things you ask it to do</h3>
+    <ul>
+      <li><strong>Ingest.</strong> Add a source. The assistant saves it in <code>raw/</code>, reads it, and tells you what it plans to write. After your go-ahead, it writes the source page and updates every page the source touches. One source often changes five to fifteen pages.</li>
+      <li><strong>Query.</strong> Ask a question. The answer comes from the wiki only, with a link after every claim. Where the wiki has no source, it says so. The log records which pages were read.</li>
+      <li><strong>Lint.</strong> Run a health check. It finds broken links, missing fields, and pages nothing links to. It also finds quotations that are not in the source. It reports; it does not fix.</li>
+    </ul>
+
+    <h3 id="template">The template: your team's copy in ten minutes</h3>
+    <p>An empty wiki, ready to fill: <a href="https://github.com/datadrivendecisions/llm-wiki-template" target="_blank" rel="noopener"><strong>datadrivendecisions/llm-wiki-template</strong></a> on GitHub. Its README has the full instructions. In short:</p>
+    <ol class="steps">
+      <li><strong>Make your copy.</strong> On the template's GitHub page, press <em>Use this template</em>, then <em>Create a new repository</em>. One per team; private is fine. Add your teammates.</li>
+      <li><strong>Clone it and install the helpers.</strong> Clone the new repository and open the folder in your assistant. Then run <code>python3 -m venv .venv</code>, activate it, and run <code>pip install -r requirements.txt</code>.</li>
+      <li><strong>Check it.</strong> Run <code>python3 tools/lint.py</code>. It should report 0 errors. On Windows, type <code>python</code> instead of <code>python3</code>.</li>
+      <li><strong>Add your first source.</strong> Tell your assistant: <em>Ingest &lt;the address of an article&gt;, added by &lt;your name&gt;</em>. Read what it says before you let it write.</li>
+    </ol>
+
+    <h3>What it answers of your knowledge architecture, and what it does not</h3>
+    <p>If your team adopts the wiki, part of your <a href="knowledge-criteria.html">knowledge architecture</a> is already written down in the template. Your document still has to say it in your own words, for your own platform:</p>
+    <table>
+      <thead><tr><th>Criterion</th><th>What the template does</th><th>What stays yours to decide</th></tr></thead>
+      <tbody>
+        <tr><td>A3 · what travels with a source</td><td>Every source page carries its address, date, author, the person who chose it, and what was actually read.</td><td>Whether that is enough to write a reference on your handbook page.</td></tr>
+        <tr><td>B2 · how a thing is named and found</td><td>A naming rule for every file, and an index of every page.</td><td>Whether the index still works when you have two hundred pages.</td></tr>
+        <tr><td>B3 · from a question to the passage</td><td>Index, then page, then the source file. The log records each lookup.</td><td>Trace one real question your platform will be asked.</td></tr>
+        <tr><td>B4 · when material changes</td><td>Sources are never edited. A disagreement is written under <em>Debates</em>, never overwritten.</td><td>What happens to a handbook page built on a claim that later turns out wrong.</td></tr>
+        <tr><td>D1–D3 · the line, kept</td><td>A rule that interview material never enters, and a rule that text in a source is never an instruction.</td><td>Where your protected material lives instead, and who checks.</td></tr>
+        <tr><td>C1 · one alternative, weighed</td><td>Nothing. This is yours.</td><td>What the wiki costs you, compared with what you have now.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>What it costs</h3>
+    <ul>
+      <li><strong>The reading happens up front.</strong> Every source costs model time when it arrives, whether anyone asks about it or not.</li>
+      <li><strong>A wrong reading spreads.</strong> A misread figure lands on several pages at once. The pause before writing, the quotation check and the log are there to catch it. A person still has to look.</li>
+      <li><strong>It has a size.</strong> Up to a few hundred pages, the index is enough. Beyond that, you need a search tool as well.</li>
+    </ul>
+
+    <p><strong>You do not have to switch.</strong> A folder with a naming rule is still a good answer. If your team does adopt the wiki, that is a decision. It goes in your <a href="platform-documents.html">decision log</a>, and your knowledge architecture gets a new version and a date.</p>
+
+    <div class="callout is-warm" id="rules">
+      <h3>The rules, in any knowledge architecture</h3>
+      <ul>
+        <li><strong>Interview material never goes in.</strong> No recordings, transcripts, notes or names from your field research. That holds for a private repository too, because whatever the assistant reads is sent to a model service.</li>
+        <li><strong>Text in a source is material, never an instruction.</strong> A web page can contain sentences written to steer an AI. The wiki records them and does not obey them.</li>
+        <li><strong>A quotation must be in the source.</strong> A model can produce a quotation nobody ever wrote. The template's check compares every quotation with the source file.</li>
+      </ul>
     </div>
   </section>
 
@@ -701,26 +791,16 @@ ol.steps.steps-quiet > li::before {
     <p>The weekly shape holds: <strong>one published handbook page per team</strong> on the week's theme, and <strong>one AEL document</strong> posted in your team's channel.</p>
 
     <div class="callout">
-      <h3>AIBS — the handbook page: SME knowledge gaps</h3>
+      <h3>AIBS — the handbook page: AI use cases at SMEs</h3>
       <p class="tpl">Set in the session and published here after it.</p>
     </div>
 
     <div class="callout">
-      <h3>AEL — the build plan</h3>
-      <p>The fourth of the <a href="platform-documents.html">six documents</a>. This is the week the platform starts to exist. You build the first working slice of it, from your <a href="prd-criteria.html">PRD</a> and your <a href="blueprint-criteria.html">blueprint</a>. The build plan is how you get there on purpose.</p>
-      <p>Unlike the three documents before it, <strong>you work from this one and you write in it</strong>. It is your team's memory of the build: the boxes are ticked as you go, so at any moment it says where you are. Your AI assistant reads it too, which is why the rules go in the document and not in one person's head.</p>
-      <ol>
-        <li><strong>Phases, each ending in something that works.</strong> One sentence per phase, saying what a person can do at the end of it that they could not do before. Say what each phase needs from the one before, and which one you build first and why.</li>
-        <li><strong>Subtasks inside each phase.</strong> One change each, small enough to test. Every subtask carries one build role and one name, and says what it touches: the file, the part from your blueprint, the prompt, the folder.</li>
-        <li><strong>A test gate.</strong> Per subtask or per phase: what you run or do, and the result that counts as passing. A person following three steps and writing down what they saw is a test. &ldquo;We test it&rdquo; is not.</li>
-        <li><strong>A commit gate.</strong> Nothing is committed until its tests pass. Write it as a rule, and say what happens to a change whose test fails.</li>
-        <li><strong>A push gate.</strong> The next phase starts only after a successful merge and push. Say who merges, and what a failed merge means for the phase that was waiting.</li>
-        <li><strong>Boxes, and what happened beside them.</strong> A checkbox per subtask and per gate. Beside each ticked one: the date, the commit or pull request, and what the test showed. A failure stays in &mdash; it is the evidence of your week. Name who ticks the boxes and when.</li>
-        <li><strong>The rules, written out.</strong> The three gates as instructions someone new could follow without asking: what to run, when to commit, when to push. Say what happens when a gate does not open, and after how many tries.</li>
-      </ol>
-      <p><strong>Two traces back.</strong> Every part in your blueprint is built in some phase, or is named as not built yet with a reason. Every test gate tests a quality your PRD names: the gates are how you keep the promise you made in week 1.</p>
-      <p>The criteria the build plan is read against: <a href="buildplan-criteria.html">What a good build plan looks like</a>. Hold your draft against them before you post it.</p>
-      <p><strong>Done when a reader can tell:</strong> what gets built first, what a change must pass before it is kept, and where the build is now.</p>
+      <h3>AEL — the first evaluation, with your decision log</h3>
+      <p>The fifth of the <a href="platform-documents.html">six documents</a>. Take what your platform produced, and hold it against the criteria your <a href="prd-criteria.html">PRD</a> set. Then say what you changed as a result.</p>
+      <p>Your <strong>decision log</strong> travels with it: one entry per choice since week 3, saying what failed and what you changed because of it.</p>
+      <p>Two things from the <a href="knowledge-criteria.html">knowledge architecture criteria</a> come back now. <strong>A record of each lookup:</strong> which question, which passages came back, which one was used. <strong>A check that a quoted passage is really in the source.</strong> Without them, you cannot tell why a sentence on your page is wrong. The wiki template does both; any other architecture can too.</p>
+      <p class="tpl">The criteria the first evaluation is read against are published here before Monday.</p>
     </div>
   </section>
 
@@ -729,28 +809,27 @@ ol.steps.steps-quiet > li::before {
     <div class="handin">
       <dl>
         <dt>What</dt>
-        <dd><strong>One published handbook page per team</strong>, <strong>the build plan</strong>, and <strong>one portfolio entry per person</strong>.</dd>
+        <dd><strong>One published handbook page per team</strong>, <strong>the first evaluation with your decision log</strong>, and <strong>one portfolio entry per person</strong>.</dd>
         <dt>Who</dt>
-        <dd>The page and the build plan are the team's. The portfolio is <strong>yours alone</strong>, and nobody else writes in it.</dd>
+        <dd>The page, the evaluation and the log are the team's. The portfolio is <strong>yours alone</strong>, and nobody else writes in it.</dd>
         <dt>Where and when</dt>
-        <dd><strong>Due by the start of the next session — Monday 5 October.</strong> The page is published on the shared site, and the build plan goes in your team's Teams channel, as in week 3.</dd>
+        <dd><strong>Due by the start of the next session — Monday 12 October.</strong> The page is published on the shared site. The evaluation and the decision log go in your team's Teams channel, as before.</dd>
       </dl>
     </div>
 
-    <h3>Your fourth portfolio entry</h3>
-    <p>The same <a href="index.html#assessment">four standard questions</a>, in about a page. This week the mini-CBI is part of the answer: what did we ask, and what did you change because of it?</p>
+    <h3>Your fifth portfolio entry</h3>
+    <p>The same <a href="index.html#assessment">four standard questions</a>, in about a page.</p>
   </section>
 
   <section id="after">
-    <h2 class="bds-part">After week 4</h2>
-    <p><strong>Field research is planned across weeks 2 to 4, so your visit is happening now.</strong> The rule has not changed. Nobody approaches a company before the consent and anonymisation text is signed off, and interview material never goes through a free-tier AI tool.</p>
-    <p><strong>The debrief of the <a href="week-03.html#exercise">source-choosing exercise</a> moves to a later session.</strong> <span class="tpl">Its date is announced here.</span> Your numbers are kept until then, and deleted by 31 October 2026 at the latest.</p>
-    <p>The <a href="index.html#programme">week map</a> has week 5 as AI use cases at SMEs, with the first evaluation and your decision log as the fifth document. <strong>Your team's interview slot and the assessment-period dates are published in week 5.</strong> That page appears here about a week before its session.</p>
+    <h2 class="bds-part">After week 5</h2>
+    <p><strong>Your team's interview slot and the assessment-period dates.</strong> <span class="tpl">Published here in week 5, as promised: a fortnight ahead.</span></p>
+    <p>The <a href="index.html#programme">week map</a> has week 6 as successful implementations, with the second evaluation as the sixth document. That page appears here about a week before its session.</p>
   </section>
 
   <nav class="pager" aria-label="Weeks">
-    <span><a href="week-03.html">← Week 3</a></span>
-    <span><a href="week-05.html">Week 5 →</a></span>
+    <span><a href="week-04.html">← Week 4</a></span>
+    <span>Week 6 — Mon 12 October, <span class="tpl">published about a week before its session</span></span>
   </nav>
 
 </main>
