@@ -1,8 +1,9 @@
 # Week 5 — instructor notes
 
 Speaker notes for `site/week-05-slides.html`, one block per card, keyed by the card's id.
-`build_deck.py` folds them into the presenter deck. The page holds a placeholder for the AIBS
-segment (s2), the AEL segment on the LLM wiki (s3–s5), and the homework card (s6). The wiki
+`build_deck.py` folds them into the presenter deck. The page holds the AIBS segment on the two
+handbook pages (s2–s6), the AEL segment on the LLM wiki (s7–s9), the homework card (s10) and the
+rulebook (s11). The wiki
 segment has three cards on purpose: the demo on screen is the evidence, the cards only carry
 what the voice cannot (the shape, the three sources, the template's address). The folder is public: run-sheet material only.
 
@@ -17,9 +18,27 @@ Session of Monday 5 October. AIBS theme: AI use cases at SMEs. AEL: one way to k
 
 ## s2
 
-AIBS segment. To be filled in by the AIBS lecturer before Monday.
+AIBS segment. Two pages this week: week 4's theme (SME knowledge gaps) and week 5's (AI use cases). They are one argument: page 1 finds the gap, page 2 picks a use case that answers it. Both follow the chapter template and its four criteria. The full brief is on the week page under the assignments.
+
+Fieldwork is behind across the cohort: several interview guides are not final yet. Keep the tone positive. The point of this segment is that no team waits on a firm to start writing.
 
 ## s3
+
+Takeaway. Learning outcome 2: what the company says it needs is one piece of evidence, and where it differs from what the rest of the evidence shows, that difference is often the finding. Ask the room for an example from their own guide or visit.
+
+## s4
+
+Plan A. Two groups in the room. Teams with a green light: plan the visit this week, and check the guide asks about both themes (what the firm knows and lacks; what it uses, tried or dropped). Teams without one: finish the guide first. The green light and signed consent still come before any contact. They start plan B alongside, so the pages move while they wait.
+
+## s5
+
+Plan B, in order of closeness to the firm. Step 1 (another SME in the sector, a sector association, a regional development agency, an innovation hub, an advisor) is still field research: green light and consent apply. Step 2: owners in public (trade press, podcasts, webinars). Step 3: surveys of SMEs (Eurostat, CBS, the OECD report from the demo), which say what is common and not what this firm does. Step 4: documented cases; recall the week 2 rule that a vendor's story shows a product exists, not that it works.
+
+## s6
+
+Takeaway. Each page says which claims rest on field research and which on desk research. With plan B, the page also says what it cannot tell the owner. This sets up the final CBI's research question: what did you find out, and how do you know?
+
+## s7
 
 The diagram fills the slide; tell it left to right, then bottom.
 
@@ -34,7 +53,7 @@ Where the template differs from the diagram: `syntheses/` instead of `queries/`,
 
 All six assistants the students use read `AGENTS.md`; `CLAUDE.md` and `GEMINI.md` in the template point to it. Week 3's visualisation (one question, four ways) is the reminder that this is one of four options.
 
-## s4
+## s8
 
 The demo. Leave this card up and switch to the terminal and Obsidian.
 
@@ -57,12 +76,16 @@ Four things to show:
 
 **Fallback.** The dry-run wiki, all three sources ingested and lint clean (52 pages), is on the lecturer's laptop outside the repositories. Open it in Obsidian if the network or the model fails.
 
-## s5
+## s9
 
 Teams make their copy now if they did not before the session; the README has the steps. Walk the room: the usual problems are Python on Windows (`python`, not `python3`) and a venv that is not activated. Each team ingests one published source of its own and reads the source page back. Never interview material, private repository or not: what the assistant reads goes to a model service.
 
 Nobody has to switch. A folder with a naming rule, traced end to end, is still a good answer. What the wiki costs: every source is read when it arrives, whether anyone asks or not; a misreading lands on several pages at once; past a few hundred pages the index is not enough and you need search. A team that adopts it writes a decision-log entry and versions its knowledge architecture.
 
-## s6
+## s10
 
-The first evaluation is held against the PRD's own criteria, and the decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
+Two handbook pages and the first evaluation are due at the start of the session on 12 October; it is the last session and the last feedback moment, and teams may keep improving the two pages afterwards. The first evaluation is held against the PRD's own criteria, and the decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
+
+## s11
+
+The rulebook grows by one rule a week. Rule 3 came from week 3; week 4 had none because of the mini-CBIs. Rule 4 is phrased together with the class at the end of this session: ask what habit from today is worth keeping.
