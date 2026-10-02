@@ -2,8 +2,8 @@
 
 Speaker notes for `site/week-05-slides.html`, one block per card, keyed by the card's id.
 `build_deck.py` folds them into the presenter deck. The page holds the AIBS segment on the two
-handbook pages (s2–s6), the AEL segment on the LLM wiki (s7–s9), the homework card (s10) and the
-rulebook (s11). The wiki
+handbook pages (s2–s6), the in-class assignment on three economies (s7–s10), the AEL segment on the LLM wiki
+(s11–s13), the homework card (s14) and the rulebook (s15). The wiki
 segment has three cards on purpose: the demo on screen is the evidence, the cards only carry
 what the voice cannot (the shape, the three sources, the template's address). The folder is public: run-sheet material only.
 
@@ -40,6 +40,22 @@ Takeaway. Each page says which claims rest on field research and which on desk r
 
 ## s7
 
+In-class assignment, about 60 minutes; what does not get finished becomes homework (photo of cards and postcard in the Teams channel before 12 October). The big question is open on purpose: strategies, whether this is what we want, alignment, who benefits. The aim is that students take part in that discussion, starting from their own sector. Split: China 5, 6, 8; US 1, 2, 4; Europe 3, 7. The industry teams (1, 5, 6, 7) are spread over all three regions, so the wall can compare the same sector across regions.
+
+## s8
+
+Walk through the four steps quickly; the full text is on the week page. Keep time visible. If the session runs short, stop after step 2 or 3 and move the rest to homework; the wall then opens the 12 October session.
+
+## s9
+
+The five card questions. Questions 2 to 4 carry the geopolitics: whose model and data, who gains and who pays, and what the state provides or steers. Remind them that front-runner stories mostly come from the company, a vendor or a government: appraise them as in week 2.
+
+## s10
+
+Takeaway, at the wall. Let the room answer before the lecturers do. Push on three points: one sentence per region on what it is building; who is left out; and whether Europe is behind or on a route of its own, and what that route means for their SME. Connect to Draghi from week 1, and to CBI guiding questions 3a and 3b. Ask them to write one line in the portfolio on what surprised them.
+
+## s11
+
 The diagram fills the slide; tell it left to right, then bottom.
 
 - **Start at the bottom row, the comparison.** Query-time RAG: question, search raw, synthesise on the spot, and only the answer remains. That is what most teams built in week 4: it works, and it forgets. Karpathy: the LLM "is rediscovering knowledge from scratch on every question". The wiki row ends differently: artifacts remain, and are reused and improved.
@@ -53,7 +69,7 @@ Where the template differs from the diagram: `syntheses/` instead of `queries/`,
 
 All six assistants the students use read `AGENTS.md`; `CLAUDE.md` and `GEMINI.md` in the template point to it. Week 3's visualisation (one question, four ways) is the reminder that this is one of four options.
 
-## s8
+## s12
 
 The demo. Leave this card up and switch to the terminal and Obsidian.
 
@@ -76,16 +92,16 @@ Four things to show:
 
 **Fallback.** The dry-run wiki, all three sources ingested and lint clean (52 pages), is on the lecturer's laptop outside the repositories. Open it in Obsidian if the network or the model fails.
 
-## s9
+## s13
 
 Teams make their copy now if they did not before the session; the README has the steps. Walk the room: the usual problems are Python on Windows (`python`, not `python3`) and a venv that is not activated. Each team ingests one published source of its own and reads the source page back. Never interview material, private repository or not: what the assistant reads goes to a model service.
 
 Nobody has to switch. A folder with a naming rule, traced end to end, is still a good answer. What the wiki costs: every source is read when it arrives, whether anyone asks or not; a misreading lands on several pages at once; past a few hundred pages the index is not enough and you need search. A team that adopts it writes a decision-log entry and versions its knowledge architecture.
 
-## s10
+## s14
 
 Two handbook pages and the first evaluation are due at the start of the session on 12 October; it is the last session and the last feedback moment, and teams may keep improving the two pages afterwards. The first evaluation is held against the PRD's own criteria, and the decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
 
-## s11
+## s15
 
 The rulebook grows by one rule a week. Rule 3 came from week 3; week 4 had none because of the mini-CBIs. Rule 4 is phrased together with the class at the end of this session: ask what habit from today is worth keeping.
