@@ -2,8 +2,8 @@
 
 Speaker notes for `site/week-05-slides.html`, one block per card, keyed by the card's id.
 `build_deck.py` folds them into the presenter deck. The page holds the AIBS segment on the two
-handbook pages (s2–s6), the in-class assignment on three economies (s7–s10), the AEL segment on the LLM wiki
-(s11–s13), the homework card (s14) and the rulebook (s15). The wiki
+handbook pages (s2–s4), the in-class assignment on three economies (s5–s8), the AEL segment on the LLM wiki
+(s9–s11), the homework card (s12) and the rulebook (s13). The AIBS lecturer works mainly from the week page this time; the cards are the outline. The wiki
 segment has three cards on purpose: the demo on screen is the evidence, the cards only carry
 what the voice cannot (the shape, the three sources, the template's address). The folder is public: run-sheet material only.
 
@@ -24,37 +24,29 @@ Fieldwork is behind across the cohort: several interview guides are not final ye
 
 ## s3
 
-Takeaway. Learning outcome 2: what the company says it needs is one piece of evidence, and where it differs from what the rest of the evidence shows, that difference is often the finding. Ask the room for an example from their own guide or visit.
+Plan A. Two groups in the room. Teams with a green light: plan the visit this week, and check the guide asks about both themes (what the firm knows and lacks; what it uses, tried or dropped). Teams without one: finish the guide first. The green light and signed consent still come before any contact. They start plan B alongside, so the pages move while they wait.
 
 ## s4
 
-Plan A. Two groups in the room. Teams with a green light: plan the visit this week, and check the guide asks about both themes (what the firm knows and lacks; what it uses, tried or dropped). Teams without one: finish the guide first. The green light and signed consent still come before any contact. They start plan B alongside, so the pages move while they wait.
+Plan B, in order of closeness to the firm. Step 1 (another SME in the sector, a sector association, a regional development agency, an innovation hub, an advisor) is still field research: green light and consent apply. Step 2: owners in public (trade press, podcasts, webinars). Step 3: surveys of SMEs (Eurostat, CBS, the OECD report from the demo), which say what is common and not what this firm does. Step 4: documented cases; recall the week 2 rule that a vendor's story shows a product exists, not that it works.
 
 ## s5
 
-Plan B, in order of closeness to the firm. Step 1 (another SME in the sector, a sector association, a regional development agency, an innovation hub, an advisor) is still field research: green light and consent apply. Step 2: owners in public (trade press, podcasts, webinars). Step 3: surveys of SMEs (Eurostat, CBS, the OECD report from the demo), which say what is common and not what this firm does. Step 4: documented cases; recall the week 2 rule that a vendor's story shows a product exists, not that it works.
+In-class assignment, about 60 minutes; what does not get finished becomes homework (photo of cards and postcard in the Teams channel before 12 October). The big question is open on purpose: strategies, whether this is what we want, alignment, who benefits. The aim is that students take part in that discussion, starting from their own sector. Split: China 5, 6, 8; US 1, 2, 4; Europe 3, 7. The industry teams (1, 5, 6, 7) are spread over all three regions, so the wall can compare the same sector across regions.
 
 ## s6
 
-Takeaway. Each page says which claims rest on field research and which on desk research. With plan B, the page also says what it cannot tell the owner. This sets up the final CBI's research question: what did you find out, and how do you know?
+Walk through the four steps quickly; the full text is on the week page. Keep time visible. If the session runs short, stop after step 2 or 3 and move the rest to homework; the wall then opens the 12 October session.
 
 ## s7
 
-In-class assignment, about 60 minutes; what does not get finished becomes homework (photo of cards and postcard in the Teams channel before 12 October). The big question is open on purpose: strategies, whether this is what we want, alignment, who benefits. The aim is that students take part in that discussion, starting from their own sector. Split: China 5, 6, 8; US 1, 2, 4; Europe 3, 7. The industry teams (1, 5, 6, 7) are spread over all three regions, so the wall can compare the same sector across regions.
+The five card questions. Questions 2 to 4 carry the geopolitics: whose model and data, who gains and who pays, and what the state provides or steers. Remind them that front-runner stories mostly come from the company, a vendor or a government: appraise them as in week 2.
 
 ## s8
 
-Walk through the four steps quickly; the full text is on the week page. Keep time visible. If the session runs short, stop after step 2 or 3 and move the rest to homework; the wall then opens the 12 October session.
-
-## s9
-
-The five card questions. Questions 2 to 4 carry the geopolitics: whose model and data, who gains and who pays, and what the state provides or steers. Remind them that front-runner stories mostly come from the company, a vendor or a government: appraise them as in week 2.
-
-## s10
-
 Takeaway, at the wall. Let the room answer before the lecturers do. Push on three points: one sentence per region on what it is building; who is left out; and whether Europe is behind or on a route of its own, and what that route means for their SME. Connect to Draghi from week 1, and to CBI guiding questions 3a and 3b. Ask them to write one line in the portfolio on what surprised them.
 
-## s11
+## s9
 
 The diagram fills the slide; tell it left to right, then bottom.
 
@@ -69,7 +61,7 @@ Where the template differs from the diagram: `syntheses/` instead of `queries/`,
 
 All six assistants the students use read `AGENTS.md`; `CLAUDE.md` and `GEMINI.md` in the template point to it. Week 3's visualisation (one question, four ways) is the reminder that this is one of four options.
 
-## s12
+## s10
 
 The demo. Leave this card up and switch to the terminal and Obsidian.
 
@@ -92,16 +84,16 @@ Four things to show:
 
 **Fallback.** The dry-run wiki, all three sources ingested and lint clean (52 pages), is on the lecturer's laptop outside the repositories. Open it in Obsidian if the network or the model fails.
 
-## s13
+## s11
 
 Teams make their copy now if they did not before the session; the README has the steps. Walk the room: the usual problems are Python on Windows (`python`, not `python3`) and a venv that is not activated. Each team ingests one published source of its own and reads the source page back. Never interview material, private repository or not: what the assistant reads goes to a model service.
 
 Nobody has to switch. A folder with a naming rule, traced end to end, is still a good answer. What the wiki costs: every source is read when it arrives, whether anyone asks or not; a misreading lands on several pages at once; past a few hundred pages the index is not enough and you need search. A team that adopts it writes a decision-log entry and versions its knowledge architecture.
 
-## s14
+## s12
 
 Two handbook pages and the first evaluation are due at the start of the session on 12 October; it is the last session and the last feedback moment, and teams may keep improving the two pages afterwards. The first evaluation is held against the PRD's own criteria, and the decision log travels with it. The lookup record and the quotation check are what let a team explain a wrong sentence on its page instead of guessing.
 
-## s15
+## s13
 
 The rulebook grows by one rule a week. Rule 3 came from week 3; week 4 had none because of the mini-CBIs. Rule 4 is phrased together with the class at the end of this session: ask what habit from today is worth keeping.
