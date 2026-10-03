@@ -51,6 +51,7 @@ def read_cards(week):
         cards.append({
             "id": sid,
             "title_slide": "is-title" in classes,
+            "figure": "is-figure" in classes,
             "kicker": kicker,
             "heading": h2,
             "body": rest,
@@ -147,6 +148,11 @@ box-shadow:0 8px 40px rgba(0,0,0,.5);overflow:hidden}
 .slide em{color:var(--text-secondary)}
 .slide > :last-child{margin-bottom:0}
 .slide.is-title{background:var(--bg-cream);justify-content:center}
+.slide.is-figure{padding:0;background:#fff}
+.slide.is-figure .slide-head,.slide.is-figure h2,.slide.is-figure .foot{display:none}
+.slide.is-figure figure{margin:0;width:100%;height:100%;display:flex;flex-direction:column}
+.slide.is-figure img{display:block;flex:1;min-height:0;width:100%;object-fit:contain}
+.slide.is-figure figcaption{flex:none;text-align:right;padding:.2cqw 1.2cqw .5cqw;font-size:1.05cqw;color:var(--text-muted)}
 .slide.is-title h2{font-size:7cqw}
 .slide.is-title p{color:var(--text-secondary);font-size:3cqw}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw}
@@ -237,7 +243,11 @@ DECK_JS = """
 def slide_html(card, n, total, course_line):
     cls = "slide is-title" if card["title_slide"] else "slide"
     words = len(html.unescape(re.sub(r"<[^>]+>", " ", card["body"])).split())
-    cls += " is-denser" if words > 85 else (" is-dense" if words > 55 else "")
+    if card.get("figure"):
+        # A figure card is the image alone, filling the slide; the headline stays for the nav.
+        cls = "slide is-figure"
+    else:
+        cls += " is-denser" if words > 85 else (" is-dense" if words > 55 else "")
     return (
         f'<section class="{cls}" id="{card["id"]}">'
         f'<div class="slide-head"><div class="slide-kicker">{card["kicker"]}</div><span class="slide-no">{n} / {total}</span></div>'
@@ -399,6 +409,22 @@ def build_pptx(week, title, cards, notes, out):
 
     for k, card in enumerate(cards):
         s = prs.slides.add_slide(blank)
+        if card.get("figure"):
+            # The image fills the slide height, centred; a one-line credit sits under its corner.
+            src = re.search(r'<img[^>]*src="([^"]+)"', card["body"]).group(1)
+            from PIL import Image
+            with Image.open(SITE / src) as im:
+                ratio = im.width / im.height
+            room = H - Inches(0.35)  # a strip under the image for the credit
+            pw = min(W, int(room * ratio)); ph = int(pw / ratio)
+            s.shapes.add_picture(str(SITE / src), int((W - pw) / 2), 0, pw, ph)
+            credit = html.unescape(re.sub(r"<[^>]+>", "", (re.search(r"<figcaption>(.*?)</figcaption>", card["body"], re.S) or [None, ""])[1])).strip()
+            if credit:
+                tf = textbox(s, W - Inches(5.2), H - Inches(0.36), Inches(5.0), Inches(0.3))
+                p = tf.paragraphs[0]; p.alignment = PP_ALIGN.RIGHT; r = p.add_run(); r.text = credit
+                r.font.size = Pt(8); r.font.color.rgb = MUTED
+            s.notes_slide.notes_text_frame.text = md_to_text(notes.get(card["id"], ""))
+            continue
         if card["title_slide"]:
             bg = s.background.fill; bg.solid(); bg.fore_color.rgb = CREAM
         # brand mark + kicker
