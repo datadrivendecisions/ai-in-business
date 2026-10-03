@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The final interview — AI in Business</title>
+<meta name="description" content="The final criterion-based interview of AI in Business on Monday 26 October 2026: your team's time slot, what to hand in beforehand, and the guiding questions to prepare." />
+<style>
+/* ================================================================
+   Business Data Solutions — brand system (palette C "strict minimal")
+   Inlined from stylebook/shared.css + handbook-specific additions.
+   ================================================================ */
+:root {
+  --primary: #d4db3e;
+  --supporting: #1a1a1a;
+  --cream: #f5f0e6;
+  --bg-yellow: #fafbf0;
+  --bg-cream: #f5f0e6;
+  --bg-cream-2: #f0ebe0;
+  --bg-off-white: #f9f8f4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --bg-page: #ffffff;
+  --bg-section: #f9fafb;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem;  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem; --text-4xl: 2.25rem; --text-5xl: 3rem;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem; --space-16: 4rem;
+  --space-20: 5rem;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,.06), 0 8px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08);
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { background: var(--bg-yellow); }
+
+/* NAV */
+.bds-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-4) var(--space-8);
+}
+.bds-nav-inner {
+  max-width: 1024px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-6); flex-wrap: wrap;
+}
+.bds-wordmark {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  text-decoration: none; color: var(--text-primary);
+}
+.bds-wordmark svg { width: 28px; height: 28px; flex-shrink: 0; }
+.bds-wordmark:hover { background: transparent; }
+.bds-wordmark-name { display: block; font-weight: 700; font-size: var(--text-xl); line-height: 1.2; }
+.bds-wordmark-sub { display: block; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.3; }
+.bds-nav-tag {
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+
+/* PAGE LAYOUT */
+.bds-page {
+  max-width: 880px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+}
+.bds-page-header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border);
+}
+.bds-eyebrow {
+  font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  font-weight: 600; margin-bottom: var(--space-2);
+}
+h1.bds-h1 { font-size: var(--text-4xl); font-weight: 700; margin: 0 0 var(--space-6); line-height: 1.15; }
+
+.lead-quote {
+  margin: 0 0 var(--space-6); padding: var(--space-4) var(--space-6);
+  border-left: 4px solid var(--primary);
+  background: var(--bg-yellow);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg); color: var(--text-secondary);
+}
+.lead-quote em { font-style: italic; }
+
+/* Part headers (markdown level-1 "# Part …" / "# Appendix …") */
+h2.bds-part {
+  font-size: var(--text-3xl); font-weight: 700; line-height: 1.2;
+  margin: var(--space-20) 0 var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 2px solid var(--supporting);
+}
+/* The page header and the first part heading both drew a rule; keep only the
+   part's, so the page opens on one divider instead of two. */
+.bds-page-header { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+main > section:first-of-type > h2.bds-part { margin-top: var(--space-12); }
+h2.bds-part::before {
+  content: ""; display: block;
+  width: 48px; height: 5px; background: var(--primary);
+  border-radius: var(--radius-full); margin-bottom: var(--space-4);
+}
+
+/* Sub-sections (markdown level-2 "## …") */
+h3 {
+  font-size: var(--text-xl); font-weight: 700;
+  margin: var(--space-12) 0 var(--space-3); line-height: 1.3;
+}
+h4 {
+  font-size: var(--text-lg); font-weight: 700;
+  margin: var(--space-6) 0 var(--space-2); line-height: 1.35;
+}
+
+p { margin: 0 0 var(--space-4); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: var(--space-6); }
+li { margin: 0 0 var(--space-2); }
+li > ul, li > ol { margin-top: var(--space-2); }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+/* Inline blockquote separators (the leading ── rules become breathing room) */
+hr { border: none; border-top: 1px solid var(--border); margin: var(--space-12) 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: var(--space-6) 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+}
+thead th {
+  background: var(--bg-cream);
+  text-align: left; font-weight: 700;
+  border-bottom: 2px solid var(--border-strong);
+}
+th, td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top; line-height: 1.5;
+}
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--bg-off-white); }
+td a { word-break: break-word; }
+
+/* Theme cards (Part 4) */
+.theme {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+.theme h3 { margin-top: 0; }
+.theme-help { color: var(--text-secondary); }
+.theme .angles { list-style: none; padding-left: 0; }
+.theme .angles > li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.theme .angles > li:first-child { border-top: none; }
+.src {
+  display: block; margin-top: var(--space-2);
+  font-size: var(--text-sm); color: var(--text-secondary);
+}
+.illus { margin-top: var(--space-4); margin-bottom: 0; color: var(--text-muted); font-size: var(--text-sm); }
+
+/* Code */
+code {
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9em; background: var(--bg-section);
+  padding: 0.15em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+}
+
+/* Footer */
+.bds-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-8); background: var(--bg-section);
+  text-align: center; color: var(--text-muted); font-size: var(--text-sm);
+}
+.bds-footer-inner { max-width: 1024px; margin: 0 auto; }
+.bds-footer-inner > p { margin: 0 0 var(--space-2); }
+.bds-footer-inner > p:last-child { margin-bottom: 0; }
+.bds-credit { font-size: var(--text-xs); }
+
+/* Template placeholders */
+.tpl { color: var(--text-muted); font-style: italic; border-bottom: 1px dashed var(--border-strong); }
+p.tpl, li.tpl { display: block; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--bg-section); }
+.tpl-notice { border-left: 4px solid var(--primary); background: var(--bg-yellow); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); }
+.chapter-meta { font-size: var(--text-sm); color: var(--text-muted); margin-top: calc(-1 * var(--space-2)); }
+
+/* Skip link + focus */
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--supporting); color: #fff; padding: var(--space-3) var(--space-4);
+  text-decoration: none; border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus { left: 0; background: var(--supporting); }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--supporting); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Nav links */
+.bds-nav-links { display: flex; gap: var(--space-4); font-size: var(--text-sm); flex-wrap: wrap; }
+.bds-nav-links a { color: var(--text-secondary); }
+
+/* Lead paragraph under the H1 */
+.lead { font-size: var(--text-lg); color: var(--text-secondary); }
+
+/* On-page contents */
+.toc { margin: 0 0 var(--space-4); padding: 0; list-style: none;
+  display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.toc a { color: var(--text-secondary); }
+
+/* Callout — a framed aside that is not a placeholder */
+.callout {
+  border: 1px solid var(--border); border-left: 4px solid var(--primary);
+  background: var(--bg-off-white); border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6); margin: var(--space-6) 0;
+}
+.callout > :last-child { margin-bottom: 0; }
+.callout h3 { margin-top: 0; font-size: var(--text-lg); }
+
+/* Table caption */
+table caption {
+  caption-side: bottom; text-align: left;
+  font-size: var(--text-sm); color: var(--text-muted);
+  padding: var(--space-2) 0 0;
+}
+
+/* Two-column card grid */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin: var(--space-6) 0; }
+.card {
+  border: 1px solid var(--border); border-top: 5px solid var(--primary);
+  border-radius: var(--radius-md); padding: var(--space-6);
+  background: var(--bg-page); box-shadow: var(--shadow-sm);
+}
+.card h3, .card h4 { margin-top: 0; }
+.card > :last-child { margin-bottom: 0; }
+.card-kicker { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-muted); font-weight: 600; margin-bottom: var(--space-1); }
+
+/* Fixed / provisional badges */
+.badge {
+  display: inline-block; font-size: var(--text-xs); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 0.15em 0.6em; border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong); color: var(--text-secondary);
+  background: var(--bg-section); vertical-align: 0.15em;
+}
+.badge-fixed { background: var(--primary); border-color: var(--primary); color: var(--supporting); }
+.badge-open { background: var(--bg-cream-2); border-color: var(--border-strong); }
+
+/* Numbered step list */
+ol.steps { list-style: none; padding-left: 0; counter-reset: step; }
+ol.steps > li {
+  counter-increment: step; position: relative;
+  padding: 0 0 var(--space-4) var(--space-12); margin: 0;
+}
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0;
+  width: 2rem; height: 2rem; border-radius: var(--radius-full);
+  background: var(--primary); color: var(--supporting);
+  font-weight: 700; font-size: var(--text-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Agenda (time-stamped run of a session) */
+.agenda { list-style: none; padding-left: 0; margin: var(--space-6) 0; }
+.agenda > li { border-top: 1px solid var(--border); padding: var(--space-4) 0; }
+.agenda > li:first-child { border-top: none; }
+.agenda .clock {
+  display: inline-block; min-width: 6.5rem;
+  font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+.agenda h3 { display: inline; font-size: var(--text-lg); margin: 0; }
+.agenda .agenda-body { margin-top: var(--space-2); }
+.agenda .agenda-body ul { list-style: disc; }
+.agenda .agenda-body > :last-child { margin-bottom: 0; }
+
+/* Native disclosure — no JavaScript */
+details {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4); margin: var(--space-4) 0;
+  background: var(--bg-off-white);
+}
+details[open] { background: var(--bg-page); }
+summary { cursor: pointer; font-weight: 700; }
+details > :last-child { margin-bottom: 0; }
+
+/* Week table */
+td .badge { white-space: nowrap; }
+tbody th { text-align: left; font-weight: 700; background: var(--bg-off-white); }
+
+/* Deadline / hand-in strip */
+.handin {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  background: var(--bg-cream); padding: var(--space-4) var(--space-6); margin: var(--space-6) 0;
+}
+.handin > :last-child { margin-bottom: 0; }
+.handin .tpl { color: var(--text-secondary); }
+.handin dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-6); }
+.handin dt { font-weight: 700; }
+.handin dd { margin: 0; }
+
+/* Prev/next week strip */
+.pager { display: flex; justify-content: space-between; gap: var(--space-4);
+  margin-top: var(--space-16); padding-top: var(--space-6); border-top: 1px solid var(--border);
+  font-size: var(--text-sm); flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .bds-nav { padding: var(--space-3) var(--space-4); }
+  .bds-page { padding: var(--space-8) var(--space-4) var(--space-12); }
+  h1.bds-h1 { font-size: var(--text-3xl); }
+  h2.bds-part { font-size: var(--text-2xl); }
+  .theme { padding: var(--space-4) var(--space-4); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: var(--space-4); }
+  .callout { padding: var(--space-4); }
+  .agenda .clock { display: block; min-width: 0; margin-bottom: var(--space-1); }
+  .agenda h3 { display: block; }
+  .handin { padding: var(--space-4); }
+  .handin dl { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .handin dd { margin-bottom: var(--space-3); }
+  ol.steps > li { padding-left: var(--space-8); }
+  ol.steps > li::before { width: 1.6rem; height: 1.6rem; font-size: var(--text-xs); }
+}
+/* --- cycle 1: dates, orientation facts, week-map state --- */
+.hero-facts {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-cream);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.hero-facts strong { color: var(--text-primary); }
+.wk-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.wk-now { background: var(--bg-yellow); }
+.wk-badge {
+  display: inline-block; margin-left: var(--space-2);
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; vertical-align: middle;
+  background: var(--supporting); color: #fff;
+  padding: 1px 6px; border-radius: var(--radius-sm);
+}
+.wk-pager {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  justify-content: space-between; align-items: baseline;
+  margin-top: var(--space-6); padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.wk-pager .tpl { font-style: normal; }
+.worked-eg {
+  margin: var(--space-3) 0 var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-off-white);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.worked-eg p { margin: 0 0 var(--space-2); font-size: var(--text-sm); }
+.worked-eg p:last-child { margin-bottom: 0; }
+.worked-eg-kicker {
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-secondary);
+}
+.aside {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-section);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.aside strong { color: var(--text-primary); }
+/* --- cycle 2: the now board — status strip, do-now panel, orientation rail --- */
+
+/* Status strip: what is live and what is next, directly under the nav */
+.status-strip {
+  background: var(--supporting); color: var(--bg-page);
+  padding: var(--space-3) var(--space-8);
+  font-size: var(--text-sm); line-height: 1.5;
+}
+.status-strip-inner {
+  max-width: 1180px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-2) var(--space-6);
+}
+.status-now {
+  background: var(--primary); color: var(--supporting);
+  font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--text-xs); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.status-strip strong { color: var(--primary); }
+.status-quiet { color: var(--border-strong); }
+/* The standing note is not a "now" fact, so it sits a step down in size and
+   weight. It is never pushed right: an auto margin survives the wrap, and the
+   moment the strip breaks — it clears its container by 8px, so it breaks
+   often — that strands the note alone on a right-aligned second line. */
+.status-note {
+  color: var(--cream); font-size: var(--text-xs);
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--radius-full);
+  padding: 2px var(--space-3);
+}
+/* A lime dot rather than a lime fill: the note should catch the eye without
+   competing with the live badge, which is the one thing on the bar that is
+   allowed to shout. */
+.status-note::before {
+  content: ""; display: inline-block;
+  width: 6px; height: 6px; border-radius: var(--radius-full);
+  background: var(--primary); margin-right: var(--space-2);
+  vertical-align: 1px;
+}
+
+/* Two-column layout: the page, and a rail that stays with it */
+.bds-layout {
+  max-width: 1180px; margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-20);
+  display: grid; grid-template-columns: minmax(0, 1fr) 288px;
+  gap: var(--space-12); align-items: start;
+}
+.bds-layout > main { min-width: 0; }
+/* The rail itself does not stick. Pinning all 1104px of it put the last cards
+   permanently below the fold, and capping it into its own scroller only hid
+   them behind a second scrollbar nobody knows to look for. Instead the
+   orientation cards scroll away with the page — a reader meets every one of
+   them on the way past — and only the contents list stays pinned.
+   It stretches to the full row so the sticky child has a tall containing
+   block; without this the list would come unstuck after ~1100px. */
+.bds-rail {
+  align-self: stretch;
+  min-width: 0; display: flex; flex-direction: column; gap: var(--space-4);
+}
+.rail-toc {
+  position: sticky; top: calc(var(--space-16) + var(--space-6));
+  z-index: 1;  /* the cards below it in the source slide behind, not over */
+  /* .rail-card declares no background, so a pinned one is transparent and the
+     cards passing behind it read straight through. It has to be opaque. */
+  background: var(--bg-page);
+  /* Only bites if the contents list ever outgrows the screen; at nine
+     entries it is 331px and no scrollbar appears. */
+  max-height: calc(100vh - var(--space-16) - var(--space-6) - var(--space-4));
+  overflow-y: auto;
+}
+.rail-card {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6);
+}
+.rail-card.is-cream { background: var(--bg-cream); border-color: var(--border-strong); }
+.rail-card > :last-child { margin-bottom: 0; }
+.rail-card p { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.rail-card p strong { color: var(--text-primary); }
+.rail-h {
+  margin: 0 0 var(--space-3); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-secondary); font-weight: 700;
+}
+.rail-facts {
+  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4); font-size: var(--text-sm);
+}
+.rail-facts dt { color: var(--text-secondary); }
+.rail-facts dd { margin: 0; font-weight: 700; }
+.rail-links { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-sm); }
+.rail-links a { color: var(--text-secondary); }
+.rail-note {
+  border-left: 4px solid var(--primary); background: var(--bg-yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: var(--space-3) var(--space-4);
+}
+.rail-note p { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* "Do this now" — the three things the first session needs */
+.do-now {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  overflow: hidden; margin: var(--space-8) 0;
+}
+.do-now-head {
+  background: var(--bg-cream); border-bottom: 1px solid var(--border-strong);
+  padding: var(--space-3) var(--space-6);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3);
+}
+.do-now-head h2 { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+.do-now-head span { font-size: var(--text-sm); color: var(--text-secondary); }
+.do-now ol { list-style: none; margin: 0; padding: 0; counter-reset: donow; }
+.do-now li {
+  counter-increment: donow; margin: 0;
+  display: flex; gap: var(--space-4); align-items: flex-start;
+  padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border);
+}
+.do-now li:first-child { border-top: none; }
+.do-now li::before {
+  content: counter(donow); flex: 0 0 1.75rem; height: 1.75rem;
+  border-radius: var(--radius-full); background: var(--primary); color: var(--supporting);
+  font-weight: 700; font-size: var(--text-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.do-now li > div { min-width: 0; }
+.do-now li p { margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Week map: one card a week, the live one marked */
+.wk-map {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--space-3); margin: var(--space-6) 0;
+}
+.wk-card {
+  border: 1px solid var(--border); border-top: 5px solid var(--border);
+  border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4);
+}
+.wk-card.is-now {
+  border-color: var(--border-strong); border-top-color: var(--primary);
+  background: var(--bg-yellow);
+}
+.wk-card-date { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.wk-card h3 { margin: var(--space-1) 0 var(--space-2); font-size: var(--text-base); line-height: 1.3; }
+.wk-card p { margin: 0 0 var(--space-2); font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.55; }
+.wk-card p strong { color: var(--text-primary); }
+.wk-card > :last-child { margin-bottom: 0; }
+.wk-card .wk-more { font-size: var(--text-sm); font-weight: 700; }
+.wk-card .tpl { font-size: var(--text-xs); }
+
+/* The two things that carry the mark */
+.marks { display: flex; flex-wrap: wrap; gap: var(--space-4); margin: var(--space-6) 0; }
+.mark {
+  flex: 1 1 240px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md); padding: var(--space-4) var(--space-6);
+}
+.mark.is-dark { background: var(--supporting); border-color: var(--supporting); color: var(--bg-page); }
+.mark.is-dark p { color: var(--cream); }
+.mark.is-dark .mark-figure { color: var(--primary); }
+.mark-figure { font-size: var(--text-3xl); font-weight: 700; line-height: 1; }
+.mark-what { font-weight: 700; margin: var(--space-2) 0 var(--space-1); }
+.mark p { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Plain tiles — the build roles */
+.tiles {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3); margin: var(--space-4) 0 var(--space-6);
+}
+.tile { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); }
+.tile.is-quiet { background: var(--bg-off-white); }
+.tile > :last-child { margin-bottom: 0; }
+.tile p { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.tile p strong { color: var(--text-primary); }
+.tile-name { font-weight: 700; margin-bottom: var(--space-1); }
+.tile p.card-kicker { font-size: var(--text-xs); margin-bottom: var(--space-1); }
+
+/* Variants of existing blocks the now board needs */
+.cards.cards-auto { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.callout.is-warm { background: var(--bg-yellow); }
+ol.steps.steps-quiet > li::before {
+  background: var(--bg-cream); border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  .bds-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  /* Stacked below the page, the rail is just another block: no pinning, no cap. */
+  .bds-rail { align-self: auto; }
+  .rail-toc { position: static; max-height: none; overflow: visible; }
+}
+@media (max-width: 640px) {
+  .status-strip { padding: var(--space-3) var(--space-4); }
+  .bds-layout { padding: var(--space-8) var(--space-4) var(--space-12); }
+  .do-now-head { padding: var(--space-3) var(--space-4); }
+  .do-now li { padding: var(--space-3) var(--space-4); }
+  .rail-card { padding: var(--space-4); }
+  .rail-facts { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .rail-facts dd { margin-bottom: var(--space-2); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<nav class="bds-nav" aria-label="Site">
+  <div class="bds-nav-inner">
+    <a href="index.html" class="bds-wordmark" aria-label="AI in Business — course home">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Business Data Solutions">
+        <g fill="#1a1a1a">
+          <polygon points="9,29 11,10 17,10 19,29"/>
+          <polygon points="8,8.5 20,8.5 19,10 9,10"/>
+          <rect x="11" y="5" width="6" height="3.5"/>
+          <path d="M10.5 5 Q10.5 1.5 14 1.5 Q17.5 1.5 17.5 5 Z"/>
+          <rect x="13.5" y="0" width="1" height="1.8"/>
+        </g>
+        <rect x="13" y="6" width="2" height="2" fill="#d4db3e"/>
+        <g stroke="#d4db3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M21 4 L26 7 L21 10"/>
+          <path d="M26 4 L31 7 L26 10"/>
+        </g>
+      </svg>
+      <span class="bds-wordmark-text">
+        <span class="bds-wordmark-name">AI in Business</span>
+        <span class="bds-wordmark-sub">HAN &middot; minor Data Driven Decision Making in Business</span>
+      </span>
+    </a>
+    <span class="bds-nav-links">
+      <a href="index.html">Course</a>
+      <a href="handbook.html">Handbook</a>
+      <a href="index.html#programme">Assignments</a>
+      <a href="index.html#assessment">Assessment</a>
+      <a href="index.html#practical">Dates</a>
+    </span>
+  </div>
+</nav>
+
+
+
+<main class="bds-page" id="top" tabindex="-1">
+
+  <header class="bds-page-header">
+    <div class="bds-eyebrow"><a href="index.html">AI in Business</a> · assessment</div>
+    <h1 class="bds-h1">The final interview — Monday 26 October</h1>
+    <blockquote class="lead-quote"><em>We have seen your tool. Now tell us what you found out, how far you trust it, and what it means.</em></blockquote>
+    <p class="lead">The course ends with a criterion-based interview (CBI): one conversation per team, with both lecturers, in English. You had a short version of it in week 4, the mini-CBI. This page gives your team's time slot, what you hand in beforehand, and the questions to prepare.</p>
+    <ul class="toc" aria-label="On this page">
+      <li><a href="#slots">Your time slot</a></li>
+      <li><a href="#before">Before the interview</a></li>
+      <li><a href="#day">On the day</a></li>
+      <li><a href="#questions">The guiding questions</a></li>
+    </ul>
+  </header>
+
+  <section id="slots">
+    <h2 class="bds-part">Your time slot</h2>
+    <p><strong>Monday 26 October 2026.</strong> Each team has 20 minutes. You do not sign up: come at your team's time. Room: <span class="tpl">to be confirmed</span>.</p>
+    <table>
+      <caption>Time slots per team, Monday 26 October 2026</caption>
+      <thead><tr><th scope="col">Round</th><th scope="col">Time</th><th scope="col">Team</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">1</td><td>10:45–11:05</td><td>Team 1</td></tr>
+        <tr><td>11:05–11:25</td><td>Team 2</td></tr>
+        <tr><td>11:25–11:45</td><td>Team 3</td></tr>
+        <tr><td colspan="3"><em>Break, 11:45–12:00</em></td></tr>
+        <tr><td rowspan="3">2</td><td>12:00–12:20</td><td>Team 4</td></tr>
+        <tr><td>12:20–12:40</td><td>Team 5</td></tr>
+        <tr><td>12:40–13:00</td><td>Team 6</td></tr>
+        <tr><td colspan="3"><em>Break, 13:00–13:15</em></td></tr>
+        <tr><td rowspan="2">3</td><td>13:15–13:35</td><td>Team 7</td></tr>
+        <tr><td>13:35–13:55</td><td>Team 8</td></tr>
+      </tbody>
+    </table>
+    <p>Be there five minutes early. If a hard constraint makes your slot impossible, tell us as soon as you know.</p>
+  </section>
+
+  <section id="before">
+    <h2 class="bds-part">Before the interview</h2>
+    <div class="handin">
+      <dl>
+        <dt>A demo video, per team</dt>
+        <dd><strong>Five minutes</strong>, showing your tool at work. We assess the tool from the video before the interview. That leaves the interview for your research and what it means for the firm. Deadline and where to hand it in: <span class="tpl">to be confirmed</span>.</dd>
+        <dt>Your portfolio, per person</dt>
+        <dd>With your team's handbook pages, a link to your team's GitHub repository, and the demo video. Deadline and where to hand it in: <span class="tpl">to be confirmed</span>.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="day">
+    <h2 class="bds-part">On the day</h2>
+    <ul>
+      <li><strong>A pitch of about five minutes.</strong> Built around the guiding questions below. Keep it short: most of the 20 minutes is for our questions.</li>
+      <li><strong>Then our questions, to each of you.</strong> We ask each of you in turn. Know what is in your own portfolio: if it says you did something, expect to be asked how.</li>
+    </ul>
+    <p>The mini-CBI in week 4 did not count towards your mark. It showed us where you stand, and you where to go next.</p>
+  </section>
+
+  <section id="questions">
+    <h2 class="bds-part">The guiding questions</h2>
+    <p>Prepare all of them. Your pitch can pick its focus; our questions will come back to every one.</p>
+
+    <div class="callout">
+      <h3>1 · Research</h3>
+      <p>Take us from your SME's problem to your answer. What did you want to know, and what did you find out? Based on your desk and field research, what would you recommend to SMEs in the field you explored?</p>
+    </div>
+
+    <div class="callout">
+      <h3>2 · Judgement</h3>
+      <p>This was the first time you did research with AI. What changed? Did it change how you engage with your research data, for better, for worse, or both?</p>
+      <p>And concretely: how much do you trust what your tool produced? What did you do to monitor and improve the quality of its output?</p>
+    </div>
+
+    <div class="callout">
+      <h3>3 · Perspective</h3>
+      <p><strong>a.</strong> What have you learned about the business context your SME, or sector of SMEs, operates in? And especially: how is AI changing that context?</p>
+      <p><strong>b.</strong> Look at what you found in your research, and at how you worked in this course. How do you see your own future job, and your role as a business professional? How might AI change the business field, and individual jobs?</p>
+    </div>
+
+    <div class="callout">
+      <h3>4 · Growth</h3>
+      <p>What can you do now that you could not do in week 1? Which feedback changed your work most — the AI tutor, your peer team, or the mini-CBI — and how?</p>
+    </div>
+  </section>
+
+</main>
+
+
+<footer class="bds-footer">
+  <div class="bds-footer-inner">
+    <p>AI in Business — HAN, minor Data Driven Decision Making in Business · <em>educational, not consultancy</em></p>
+    <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
