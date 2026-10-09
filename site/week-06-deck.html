@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Last session. Next stop: the final assessment — week 6 presenter deck</title>
+<meta name="robots" content="noindex" />
+<style>
+:root{--primary:#d4db3e;--supporting:#1a1a1a;--bg-cream:#f5f0e6;--bg-yellow:#fafbf0;--bg-off-white:#f9f8f4;
+--text-primary:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--bg-page:#fff;--border:#e5e7eb;--border-strong:#d1d5db;}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#111;color:var(--text-primary);
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--primary);text-decoration-thickness:.12em;text-underline-offset:.15em}
+.app{display:grid;grid-template-columns:1fr;grid-template-rows:1fr auto;height:100%}
+.app.notes-on{grid-template-columns:1fr minmax(18rem,28vw)}
+.stagewrap{display:flex;align-items:center;justify-content:center;padding:1.5vmin;min-width:0}
+.stage{position:relative;width:min(100%,calc((100vh - 5rem) * 16 / 9));aspect-ratio:16/9;container-type:inline-size;background:var(--bg-page);
+box-shadow:0 8px 40px rgba(0,0,0,.5);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:5cqw 6cqw 6cqw;line-height:1.35}
+.slide.is-dense p,.slide.is-dense li{font-size:2.15cqw}.slide.is-dense li{margin-bottom:.9cqw}.slide.is-dense h2{font-size:4cqw;margin-bottom:2cqw}
+.slide.is-denser p,.slide.is-denser li{font-size:1.9cqw}.slide.is-denser li{margin-bottom:.7cqw}.slide.is-denser h2{font-size:3.6cqw;margin-bottom:1.6cqw}
+.slide.current{display:flex}
+.slide-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.2cqw}
+.slide-kicker{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--supporting)}
+.slide-kicker::before{content:"";display:inline-block;width:2.2cqw;height:.5cqw;background:var(--primary);border-radius:99px;margin-right:1cqw;vertical-align:middle}
+.slide-no{font-size:1.4cqw;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.slide h2{font-size:4.6cqw;line-height:1.15;margin:0 0 2.6cqw;font-weight:700}
+.slide p,.slide li{font-size:2.5cqw;color:var(--text-primary)}
+.slide p{margin:0 0 1.6cqw}
+.slide ul{margin:0;padding-left:1.1em}
+.slide li{margin-bottom:1.3cqw}
+.slide li strong{color:var(--text-primary)}
+.slide em{color:var(--text-secondary)}
+.slide > :last-child{margin-bottom:0}
+.slide.is-title{background:var(--bg-cream);justify-content:center}
+.slide.is-figure{padding:0;background:#fff}
+.slide.is-figure .slide-head,.slide.is-figure h2,.slide.is-figure .foot{display:none}
+.slide.is-figure figure{margin:0;width:100%;height:100%;display:flex;flex-direction:column}
+.slide.is-figure img{display:block;flex:1;min-height:0;width:100%;object-fit:contain}
+.slide.is-figure figcaption{flex:none;text-align:right;padding:.2cqw 1.2cqw .5cqw;font-size:1.05cqw;color:var(--text-muted)}
+.slide.is-title h2{font-size:7cqw}
+.slide.is-title p{color:var(--text-secondary);font-size:3cqw}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw}
+.cols h3{font-size:1.5cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 1.2cqw}
+.slide .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5cqw;margin:1.5cqw 0 2cqw;padding:0;list-style:none}
+.slide .roles li{background:var(--bg-cream);border-radius:.8cqw;padding:1.4cqw 1cqw;font-weight:700;text-align:center;margin:0;font-size:2.2cqw}
+.tpl{color:var(--text-muted);font-style:italic;border-bottom:.15cqw dashed var(--border-strong)}
+li.tpl,p.tpl{display:block;border:.15cqw dashed var(--border-strong);border-radius:.6cqw;padding:1cqw 1.5cqw;background:var(--bg-off-white);list-style:none;margin-left:-1.1em}
+.foot{position:absolute;left:6cqw;right:6cqw;bottom:1.8cqw;display:flex;justify-content:space-between;font-size:1.3cqw;color:var(--text-muted)}
+.notes{background:#1c1c1c;color:#e5e7eb;padding:1.5rem 1.6rem;overflow:auto;font-size:1.05rem;line-height:1.5;border-left:1px solid #333;display:none}
+.notes-on .notes{display:block}
+.notes h3{margin:0 0 .8rem;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#a3a3a3}
+.notes p{margin:0 0 .8rem}.notes ul{margin:0 0 .8rem;padding-left:1.2em}.notes li{margin-bottom:.35rem}
+.notes .empty{color:#777;font-style:italic}
+.notes .iv{font-size:.85rem;color:#a3a3a3;border-left:3px solid #444;padding-left:.7rem}.notes .iv a{color:#ddd}.notes code{font-family:inherit;background:#333;padding:0 .3em;border-radius:3px}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:1rem;padding:.5rem 1rem;background:#000;color:#bbb;font-size:.85rem}
+.bar button{background:#222;color:#eee;border:1px solid #444;border-radius:6px;padding:.3rem .7rem;cursor:pointer;font:inherit}
+.bar button:hover{background:#333}
+.bar .counter{font-variant-numeric:tabular-nums;min-width:4.5rem;text-align:center}
+.bar .title{margin-left:auto;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar kbd{background:#222;border:1px solid #444;border-radius:4px;padding:0 .35em;font-family:inherit}
+.printonly{display:none}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  html,body{background:#fff;height:auto}
+  .app,.bar,.notes,.stagewrap{display:none!important}
+  .printonly{display:block}
+  .page{break-after:page;display:grid;grid-template-rows:auto 1fr;gap:4mm;min-height:calc(210mm - 24mm)}
+  .page:last-child{break-after:auto}
+  .page .stage{width:190mm;aspect-ratio:16/9;box-shadow:none;border:.3mm solid #999;margin:0 auto;container-type:inline-size;position:relative;background:#fff;overflow:hidden}
+  .page .slide{display:flex}
+  .page .pnotes{font-size:10pt;line-height:1.4;color:#111;column-count:2;column-gap:8mm}
+  .page .pnotes h3{font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#666;margin:0 0 2mm;column-span:all}
+  .page .pnotes p{margin:0 0 2.5mm}.page .pnotes ul{margin:0 0 2.5mm;padding-left:1.2em}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="stagewrap"><div class="stage">
+<section class="slide is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 28</span></div><h2>Last session. Next stop: the final assessment</h2><p>Week 6.</p><div class="foot"><span>AI in Business · week 6</span><span>1 / 28</span></div></section>
+<section class="slide" id="s2"><div class="slide-head"><div class="slide-kicker">Today</div><span class="slide-no">2 / 28</span></div><h2>Four things, then you are ready for the final round</h2><div class="cols"><div><h3>Your interviews</h3><p>What the firms told you</p></div><div><h3>AEL</h3><p>Evaluating the LLM wiki</p></div><div><h3>The final assessment</h3><p>What, when, where</p></div><div><h3>The economy we build</h3><p>Your postcards, then statements</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>2 / 28</span></div></section>
+<section class="slide" id="s3"><div class="slide-head"><div class="slide-kicker">Your field interviews</div><span class="slide-no">3 / 28</span></div><h2>What did the firm tell you that no source could?</h2><p>Teams with an interview behind them: <strong>two minutes</strong> each.</p><p>One surprise &middot; one thing you will use &middot; one question still open</p><div class="foot"><span>AI in Business · week 6</span><span>3 / 28</span></div></section>
+<section class="slide" id="s4"><div class="slide-head"><div class="slide-kicker">From interview to page</div><span class="slide-no">4 / 28</span></div><h2>Interview results go into your pages; the transcript into your portfolio</h2><div class="cols"><div><h3>Your handbook pages</h3><p>Weave in what you heard. Keep improving until <strong>25 October</strong>.</p></div><div><h3>Your portfolio</h3><p>The <strong>transcript</strong> of the interview.</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>4 / 28</span></div></section>
+<section class="slide" id="s5"><div class="slide-head"><div class="slide-kicker">AEL</div><span class="slide-no">5 / 28</span></div><h2>Evaluation of the LLM wiki</h2><p class="tpl">Filled in the session.</p><div class="foot"><span>AI in Business · week 6</span><span>5 / 28</span></div></section>
+<section class="slide" id="s6"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">6 / 28</span></div><h2>Two weeks to go: hand in on Sunday, the CBI on Monday</h2><div class="cols"><div><h3>Mon 12 Oct</h3><p>Last session</p></div><div><h3>Sun 25 Oct, 23:59</h3><p>Hand in</p></div><div><h3>Mon 26 Oct</h3><p>The final CBI</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>6 / 28</span></div></section>
+<section class="slide" id="s7"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">7 / 28</span></div><h2>Each of you uploads two things to HandIn</h2><div class="cols"><div><h3>Data Mining</h3><p>The <strong>demo video</strong>: five minutes, the same for the whole team. A file or a link.</p></div><div><h3>Business Intelligence</h3><p>Your <strong>portfolio</strong>.</p></div></div><p>Old module names, right places.</p><div class="foot"><span>AI in Business · week 6</span><span>7 / 28</span></div></section>
+<section class="slide" id="s8"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">8 / 28</span></div><h2>Your portfolio holds three things</h2><ul><li>Your team&rsquo;s <strong>four handbook pages</strong></li><li>The <strong>transcript</strong> of your interview</li><li>A link to your <strong>GitHub repo</strong>, with the video link in it</li></ul><div class="foot"><span>AI in Business · week 6</span><span>8 / 28</span></div></section>
+<section class="slide" id="s9"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">9 / 28</span></div><h2>Know your portfolio: the final CBI tests what it claims</h2><div class="foot"><span>AI in Business · week 6</span><span>9 / 28</span></div></section>
+<section class="slide" id="s10"><div class="slide-head"><div class="slide-kicker">The final CBI</div><span class="slide-no">10 / 28</span></div><h2>Twenty minutes per team: your pitch, then our questions</h2><div class="cols"><div><h3>5 minutes</h3><p>Your pitch</p></div><div><h3>15 minutes</h3><p>Questions, to <strong>each</strong> of you</p></div></div><p><a href="final-cbi.html#slots">Your time slot</a></p><div class="foot"><span>AI in Business · week 6</span><span>10 / 28</span></div></section>
+<section class="slide" id="s11"><div class="slide-head"><div class="slide-kicker">The final CBI</div><span class="slide-no">11 / 28</span></div><h2>Prepare all four questions; your pitch picks its focus</h2><div class="cols"><div><h3>Research</h3><p>From problem to advice</p></div><div><h3>Judgement</h3><p>How far you trust your tool</p></div><div><h3>Perspective</h3><p>Your sector, your future job</p></div><div><h3>Growth</h3><p>What you can do now</p></div></div><p><a href="final-cbi.html#questions">The questions in full</a></p><div class="foot"><span>AI in Business · week 6</span><span>11 / 28</span></div></section>
+<section class="slide" id="s12"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">12 / 28</span></div><h2>Two grades, one per module, built the same way</h2><div class="cols"><div><h3>70 %</h3><p>The final CBI</p></div><div><h3>30 %</h3><p>Your portfolio</p></div></div><p>The mini-CBI did not count.</p><div class="foot"><span>AI in Business · week 6</span><span>12 / 28</span></div></section>
+<section class="slide" id="s13"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">13 / 28</span></div><h2>No late hand-in: on Monday at 09:00 we press play</h2><div class="foot"><span>AI in Business · week 6</span><span>13 / 28</span></div></section>
+<section class="slide" id="s14"><div class="slide-head"><div class="slide-kicker">The economy we build</div><span class="slide-no">14 / 28</span></div><h2>Last week: front-runners in your sector, from three regions</h2><div class="cols"><div><h3>China</h3><p>Team 5 &middot; 6 &middot; 8</p></div><div><h3>United States</h3><p>Team 1 &middot; 2 &middot; 4</p></div><div><h3>Europe</h3><p>Team 3 &middot; 7</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>14 / 28</span></div></section>
+<section class="slide" id="s15"><div class="slide-head"><div class="slide-kicker">The economy we build</div><span class="slide-no">15 / 28</span></div><h2>Pitch your postcard from 2035 in two minutes</h2><p>What does it do? Whose AI is it? Who gains, who pays? What does it need from the country? What economy does it show?</p><div class="foot"><span>AI in Business · week 6</span><span>15 / 28</span></div></section>
+<section class="slide" id="s16"><div class="slide-head"><div class="slide-kicker">Discussion</div><span class="slide-no">16 / 28</span></div><h2>Our choices shape the economy, and the jobs in it</h2><p>Agree or disagree? Take a side, then give one reason from your case.</p><div class="foot"><span>AI in Business · week 6</span><span>16 / 28</span></div></section>
+<section class="slide" id="s17"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">17 / 28</span></div><h2>AI will make small firms stronger against big companies.</h2><div class="foot"><span>AI in Business · week 6</span><span>17 / 28</span></div></section>
+<section class="slide" id="s18"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">18 / 28</span></div><h2>Europe should accept slower AI adoption in exchange for stronger rules.</h2><div class="foot"><span>AI in Business · week 6</span><span>18 / 28</span></div></section>
+<section class="slide" id="s19"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">19 / 28</span></div><h2>By 2035, most SMEs will employ fewer people because of AI.</h2><div class="foot"><span>AI in Business · week 6</span><span>19 / 28</span></div></section>
+<section class="slide" id="s20"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">20 / 28</span></div><h2>Whoever owns the AI models will own the profits of the economy.</h2><div class="foot"><span>AI in Business · week 6</span><span>20 / 28</span></div></section>
+<section class="slide" id="s21"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">21 / 28</span></div><h2>Depending on American or Chinese AI is fine for a Dutch SME.</h2><div class="foot"><span>AI in Business · week 6</span><span>21 / 28</span></div></section>
+<section class="slide" id="s22"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">22 / 28</span></div><h2>Time saved by AI should become a shorter working week.</h2><div class="foot"><span>AI in Business · week 6</span><span>22 / 28</span></div></section>
+<section class="slide" id="s23"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">23 / 28</span></div><h2>AI hits entry-level jobs first, so your first job gets harder.</h2><div class="foot"><span>AI in Business · week 6</span><span>23 / 28</span></div></section>
+<section class="slide" id="s24"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">24 / 28</span></div><h2>Governments, not markets, should decide where AI may replace workers.</h2><div class="foot"><span>AI in Business · week 6</span><span>24 / 28</span></div></section>
+<section class="slide" id="s25"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">25 / 28</span></div><h2>An SME that does not use AI by 2030 will not survive.</h2><div class="foot"><span>AI in Business · week 6</span><span>25 / 28</span></div></section>
+<section class="slide" id="s26"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">26 / 28</span></div><h2>AI makes work more human: machines take the routine, people the rest.</h2><div class="foot"><span>AI in Business · week 6</span><span>26 / 28</span></div></section>
+<section class="slide" id="s27"><div class="slide-head"><div class="slide-kicker">Our rulebook</div><span class="slide-no">27 / 28</span></div><h2>The rules we keep, week by week</h2><div class="cols"><div><h3>Rule 1</h3><p>Before taking a break, <strong>always</strong> set AI to work.</p></div><div><h3>Rule 2</h3><p>Do something <strong>weird</strong>.</p></div><div><h3>Rule 3</h3><p><strong>Learning</strong> above results.</p></div><div><h3>Rule 4</h3><p>Technology is <strong>not</strong> the barrier.</p></div><div><h3>Rule 5</h3><p>Know your <strong>(un)known (un)knowns</strong>.</p></div><div><h3>Rule 6</h3><p class="tpl">Added together in the session.</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>27 / 28</span></div></section>
+<section class="slide is-title" id="s28"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">28 / 28</span></div><h2>See you on 26 October</h2><p>Good luck with the final round.</p><div class="foot"><span>AI in Business · week 6</span><span>28 / 28</span></div></section>
+  </div></div>
+  <aside class="notes" aria-label="Instructor notes" data-audience="instructor" hidden>
+    <p class="iv"><strong>Instructor view.</strong> The notes show because the address carried <code>?instructor</code>. <a href="week-06-deck.html?student">Leave the instructor view</a>.</p>
+    <h3>Instructor notes</h3>
+<div class="note" id="note-s1"><p>Session of Monday 12 October, the last of six. Interviews with the firms are still running for some teams, so avoid calling anything "the interview" without saying which one. The next stop is the final assessment: the hand-in on Sunday 25 October and the final CBI on Monday 26 October.</p></div>
+<div class="note" id="note-s2" hidden><p>Four parts. Start warm, with what the firms said. Then the AEL lecturer. Then the practical part: what goes where and when. Close with the discussion, which is the fun part and the first rehearsal for guiding question 3.</p></div>
+<div class="note" id="note-s3" hidden><p>Invite the teams that have held their interview with the firm to share. Two minutes each, three prompts on the card. Teams without an interview yet: listen for what they can still ask, or use for their plan B. Keep it positive; where fieldwork is still behind, the point is what each team can still do in two weeks.</p></div>
+<div class="note" id="note-s4" hidden><p>Two consequences of the interview. The results go into the handbook pages, which teams may keep improving until the hand-in on 25 October. The transcript goes into each student's portfolio. Consent and the rules on interview material still apply: the transcript goes to HandIn, not into the public repo and not into the LLM wiki.</p></div>
+<div class="note" id="note-s5" hidden><p>AEL slot: the evaluation of the LLM wiki. The AEL lecturer fills this card in, or uses it to take the floor.</p></div>
+<div class="note" id="note-s6" hidden><p>The timeline. Three dates, nothing else. The hand-in deadline is Sunday 25 October at 23:59.</p></div>
+<div class="note" id="note-s7" hidden><p>Two uploads on HandIn, by every student. HandIn still carries the old module names: the video goes under Data Mining, the portfolio under Business Intelligence. The video is one per team, and each member uploads the same file or a link to it. Full details: the final interview page, section "Before the interview".</p></div>
+<div class="note" id="note-s8" hidden><p>The portfolio: the team's four handbook pages, the interview transcript, and a link to the team's GitHub repository. The video does not go in the portfolio again, but the repo should link to it.</p></div>
+<div class="note" id="note-s9" hidden><p>Takeaway. Every student is questioned individually. If the portfolio says you did something, expect to be asked how.</p></div>
+<div class="note" id="note-s10" hidden><p>On 26 October: 20 minutes per team, both lecturers, in English. About five minutes of pitch, the rest is questions to each student in turn. Slots are on the final interview page; no sign-up; be there five minutes early.</p></div>
+<div class="note" id="note-s11" hidden><p>The four guiding questions, one line each. Prepare all four. The full wording is on the final interview page.</p></div>
+<div class="note" id="note-s12" hidden><p>Two grades, one per module. Each is 70 % final CBI and 30 % portfolio. The mini-CBI in week 4 was diagnostic and did not count.</p></div>
+<div class="note" id="note-s13" hidden><p>Takeaway. No late hand-in is possible: the lecturers start watching the videos on Monday morning at nine.</p></div>
+<div class="note" id="note-s14" hidden><p>Recap of last week's in-class assignment: front-runner AI use cases in each team's sector, in one of three regions. The postcards from 2035 became homework: each team posted its postcard in its Teams channel or GitHub repo before this session.</p></div>
+<div class="note" id="note-s15" hidden><p>Each team pitches its postcard and its strongest case in about two minutes, using the five questions from the assignment. Group the pitches by region so the differences show. This is the starting point of the discussion.</p></div>
+<div class="note" id="note-s16" hidden><p>From the cases to the choices: how do the choices we make now shape the economy, and the AI-powered jobs in it? Suggested format: agree on one side of the room, disagree on the other; one student per side gives a reason from their case; anyone may switch sides after hearing the other.</p>
+<p>Ten statements follow (s17–s26). Pick the ones that fit the room; there is no need to do all ten.</p></div>
+<div class="note" id="note-s17" hidden><p>Statement: AI will make small firms stronger against big companies.</p></div>
+<div class="note" id="note-s18" hidden><p>Statement: Europe should accept slower AI adoption in exchange for stronger rules.</p></div>
+<div class="note" id="note-s19" hidden><p>Statement: by 2035, most SMEs will employ fewer people because of AI.</p></div>
+<div class="note" id="note-s20" hidden><p>Statement: whoever owns the AI models will own the profits of the economy.</p></div>
+<div class="note" id="note-s21" hidden><p>Statement: depending on American or Chinese AI is fine for a Dutch SME.</p></div>
+<div class="note" id="note-s22" hidden><p>Statement: time saved by AI should become a shorter working week.</p></div>
+<div class="note" id="note-s23" hidden><p>Statement: AI hits entry-level jobs first, so your first job gets harder.</p></div>
+<div class="note" id="note-s24" hidden><p>Statement: governments, not markets, should decide where AI may replace workers.</p></div>
+<div class="note" id="note-s25" hidden><p>Statement: an SME that does not use AI by 2030 will not survive.</p></div>
+<div class="note" id="note-s26" hidden><p>Statement: AI makes work more human, with machines taking the routine and people the rest.</p></div>
+<div class="note" id="note-s27" hidden><p>The rulebook. Rules 1 to 3 from weeks 1 to 3; rule 4 from week 4, "Technology is not the barrier"; rule 5 from week 5, know your known and unknown knowns and unknowns. Rule 6 is added together in this session.</p></div>
+<div class="note" id="note-s28" hidden><p>Close. See you on 26 October.</p></div>
+  </aside>
+  <div class="bar">
+    <button id="prev" type="button" aria-label="Previous slide">◀</button>
+    <span class="counter" id="counter">1 / 28</span>
+    <button id="next" type="button" aria-label="Next slide">▶</button>
+    <button id="notesbtn" type="button" data-audience="instructor" hidden>Notes <kbd>N</kbd></button>
+    <button id="printbtn" type="button">Print <kbd>P</kbd></button>
+    <span><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> full screen</span>
+    <span class="title"><a href="week-06-slides.html">Last session. Next stop: the final assessment · week 6 · one card per slide</a> · <a href="index.html">course</a></span>
+  </div>
+</div>
+<div class="printonly">
+<div class="page"><div class="stage"><section class="slide current is-title" id="s1"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">1 / 28</span></div><h2>Last session. Next stop: the final assessment</h2><p>Week 6.</p><div class="foot"><span>AI in Business · week 6</span><span>1 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 1 / 28</h3><p>Session of Monday 12 October, the last of six. Interviews with the firms are still running for some teams, so avoid calling anything "the interview" without saying which one. The next stop is the final assessment: the hand-in on Sunday 25 October and the final CBI on Monday 26 October.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s2"><div class="slide-head"><div class="slide-kicker">Today</div><span class="slide-no">2 / 28</span></div><h2>Four things, then you are ready for the final round</h2><div class="cols"><div><h3>Your interviews</h3><p>What the firms told you</p></div><div><h3>AEL</h3><p>Evaluating the LLM wiki</p></div><div><h3>The final assessment</h3><p>What, when, where</p></div><div><h3>The economy we build</h3><p>Your postcards, then statements</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>2 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 2 / 28</h3><p>Four parts. Start warm, with what the firms said. Then the AEL lecturer. Then the practical part: what goes where and when. Close with the discussion, which is the fun part and the first rehearsal for guiding question 3.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s3"><div class="slide-head"><div class="slide-kicker">Your field interviews</div><span class="slide-no">3 / 28</span></div><h2>What did the firm tell you that no source could?</h2><p>Teams with an interview behind them: <strong>two minutes</strong> each.</p><p>One surprise &middot; one thing you will use &middot; one question still open</p><div class="foot"><span>AI in Business · week 6</span><span>3 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 3 / 28</h3><p>Invite the teams that have held their interview with the firm to share. Two minutes each, three prompts on the card. Teams without an interview yet: listen for what they can still ask, or use for their plan B. Keep it positive; where fieldwork is still behind, the point is what each team can still do in two weeks.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s4"><div class="slide-head"><div class="slide-kicker">From interview to page</div><span class="slide-no">4 / 28</span></div><h2>Interview results go into your pages; the transcript into your portfolio</h2><div class="cols"><div><h3>Your handbook pages</h3><p>Weave in what you heard. Keep improving until <strong>25 October</strong>.</p></div><div><h3>Your portfolio</h3><p>The <strong>transcript</strong> of the interview.</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>4 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 4 / 28</h3><p>Two consequences of the interview. The results go into the handbook pages, which teams may keep improving until the hand-in on 25 October. The transcript goes into each student's portfolio. Consent and the rules on interview material still apply: the transcript goes to HandIn, not into the public repo and not into the LLM wiki.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s5"><div class="slide-head"><div class="slide-kicker">AEL</div><span class="slide-no">5 / 28</span></div><h2>Evaluation of the LLM wiki</h2><p class="tpl">Filled in the session.</p><div class="foot"><span>AI in Business · week 6</span><span>5 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 5 / 28</h3><p>AEL slot: the evaluation of the LLM wiki. The AEL lecturer fills this card in, or uses it to take the floor.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s6"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">6 / 28</span></div><h2>Two weeks to go: hand in on Sunday, the CBI on Monday</h2><div class="cols"><div><h3>Mon 12 Oct</h3><p>Last session</p></div><div><h3>Sun 25 Oct, 23:59</h3><p>Hand in</p></div><div><h3>Mon 26 Oct</h3><p>The final CBI</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>6 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 6 / 28</h3><p>The timeline. Three dates, nothing else. The hand-in deadline is Sunday 25 October at 23:59.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s7"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">7 / 28</span></div><h2>Each of you uploads two things to HandIn</h2><div class="cols"><div><h3>Data Mining</h3><p>The <strong>demo video</strong>: five minutes, the same for the whole team. A file or a link.</p></div><div><h3>Business Intelligence</h3><p>Your <strong>portfolio</strong>.</p></div></div><p>Old module names, right places.</p><div class="foot"><span>AI in Business · week 6</span><span>7 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 7 / 28</h3><p>Two uploads on HandIn, by every student. HandIn still carries the old module names: the video goes under Data Mining, the portfolio under Business Intelligence. The video is one per team, and each member uploads the same file or a link to it. Full details: the final interview page, section "Before the interview".</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s8"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">8 / 28</span></div><h2>Your portfolio holds three things</h2><ul><li>Your team&rsquo;s <strong>four handbook pages</strong></li><li>The <strong>transcript</strong> of your interview</li><li>A link to your <strong>GitHub repo</strong>, with the video link in it</li></ul><div class="foot"><span>AI in Business · week 6</span><span>8 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 8 / 28</h3><p>The portfolio: the team's four handbook pages, the interview transcript, and a link to the team's GitHub repository. The video does not go in the portfolio again, but the repo should link to it.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s9"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">9 / 28</span></div><h2>Know your portfolio: the final CBI tests what it claims</h2><div class="foot"><span>AI in Business · week 6</span><span>9 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 9 / 28</h3><p>Takeaway. Every student is questioned individually. If the portfolio says you did something, expect to be asked how.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s10"><div class="slide-head"><div class="slide-kicker">The final CBI</div><span class="slide-no">10 / 28</span></div><h2>Twenty minutes per team: your pitch, then our questions</h2><div class="cols"><div><h3>5 minutes</h3><p>Your pitch</p></div><div><h3>15 minutes</h3><p>Questions, to <strong>each</strong> of you</p></div></div><p><a href="final-cbi.html#slots">Your time slot</a></p><div class="foot"><span>AI in Business · week 6</span><span>10 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 10 / 28</h3><p>On 26 October: 20 minutes per team, both lecturers, in English. About five minutes of pitch, the rest is questions to each student in turn. Slots are on the final interview page; no sign-up; be there five minutes early.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s11"><div class="slide-head"><div class="slide-kicker">The final CBI</div><span class="slide-no">11 / 28</span></div><h2>Prepare all four questions; your pitch picks its focus</h2><div class="cols"><div><h3>Research</h3><p>From problem to advice</p></div><div><h3>Judgement</h3><p>How far you trust your tool</p></div><div><h3>Perspective</h3><p>Your sector, your future job</p></div><div><h3>Growth</h3><p>What you can do now</p></div></div><p><a href="final-cbi.html#questions">The questions in full</a></p><div class="foot"><span>AI in Business · week 6</span><span>11 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 11 / 28</h3><p>The four guiding questions, one line each. Prepare all four. The full wording is on the final interview page.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s12"><div class="slide-head"><div class="slide-kicker">The final assessment</div><span class="slide-no">12 / 28</span></div><h2>Two grades, one per module, built the same way</h2><div class="cols"><div><h3>70 %</h3><p>The final CBI</p></div><div><h3>30 %</h3><p>Your portfolio</p></div></div><p>The mini-CBI did not count.</p><div class="foot"><span>AI in Business · week 6</span><span>12 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 12 / 28</h3><p>Two grades, one per module. Each is 70 % final CBI and 30 % portfolio. The mini-CBI in week 4 was diagnostic and did not count.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s13"><div class="slide-head"><div class="slide-kicker">Takeaway</div><span class="slide-no">13 / 28</span></div><h2>No late hand-in: on Monday at 09:00 we press play</h2><div class="foot"><span>AI in Business · week 6</span><span>13 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 13 / 28</h3><p>Takeaway. No late hand-in is possible: the lecturers start watching the videos on Monday morning at nine.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s14"><div class="slide-head"><div class="slide-kicker">The economy we build</div><span class="slide-no">14 / 28</span></div><h2>Last week: front-runners in your sector, from three regions</h2><div class="cols"><div><h3>China</h3><p>Team 5 &middot; 6 &middot; 8</p></div><div><h3>United States</h3><p>Team 1 &middot; 2 &middot; 4</p></div><div><h3>Europe</h3><p>Team 3 &middot; 7</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>14 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 14 / 28</h3><p>Recap of last week's in-class assignment: front-runner AI use cases in each team's sector, in one of three regions. The postcards from 2035 became homework: each team posted its postcard in its Teams channel or GitHub repo before this session.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s15"><div class="slide-head"><div class="slide-kicker">The economy we build</div><span class="slide-no">15 / 28</span></div><h2>Pitch your postcard from 2035 in two minutes</h2><p>What does it do? Whose AI is it? Who gains, who pays? What does it need from the country? What economy does it show?</p><div class="foot"><span>AI in Business · week 6</span><span>15 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 15 / 28</h3><p>Each team pitches its postcard and its strongest case in about two minutes, using the five questions from the assignment. Group the pitches by region so the differences show. This is the starting point of the discussion.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s16"><div class="slide-head"><div class="slide-kicker">Discussion</div><span class="slide-no">16 / 28</span></div><h2>Our choices shape the economy, and the jobs in it</h2><p>Agree or disagree? Take a side, then give one reason from your case.</p><div class="foot"><span>AI in Business · week 6</span><span>16 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 16 / 28</h3><p>From the cases to the choices: how do the choices we make now shape the economy, and the AI-powered jobs in it? Suggested format: agree on one side of the room, disagree on the other; one student per side gives a reason from their case; anyone may switch sides after hearing the other.</p>
+<p>Ten statements follow (s17–s26). Pick the ones that fit the room; there is no need to do all ten.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s17"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">17 / 28</span></div><h2>AI will make small firms stronger against big companies.</h2><div class="foot"><span>AI in Business · week 6</span><span>17 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 17 / 28</h3><p>Statement: AI will make small firms stronger against big companies.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s18"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">18 / 28</span></div><h2>Europe should accept slower AI adoption in exchange for stronger rules.</h2><div class="foot"><span>AI in Business · week 6</span><span>18 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 18 / 28</h3><p>Statement: Europe should accept slower AI adoption in exchange for stronger rules.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s19"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">19 / 28</span></div><h2>By 2035, most SMEs will employ fewer people because of AI.</h2><div class="foot"><span>AI in Business · week 6</span><span>19 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 19 / 28</h3><p>Statement: by 2035, most SMEs will employ fewer people because of AI.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s20"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">20 / 28</span></div><h2>Whoever owns the AI models will own the profits of the economy.</h2><div class="foot"><span>AI in Business · week 6</span><span>20 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 20 / 28</h3><p>Statement: whoever owns the AI models will own the profits of the economy.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s21"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">21 / 28</span></div><h2>Depending on American or Chinese AI is fine for a Dutch SME.</h2><div class="foot"><span>AI in Business · week 6</span><span>21 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 21 / 28</h3><p>Statement: depending on American or Chinese AI is fine for a Dutch SME.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s22"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">22 / 28</span></div><h2>Time saved by AI should become a shorter working week.</h2><div class="foot"><span>AI in Business · week 6</span><span>22 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 22 / 28</h3><p>Statement: time saved by AI should become a shorter working week.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s23"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">23 / 28</span></div><h2>AI hits entry-level jobs first, so your first job gets harder.</h2><div class="foot"><span>AI in Business · week 6</span><span>23 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 23 / 28</h3><p>Statement: AI hits entry-level jobs first, so your first job gets harder.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s24"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">24 / 28</span></div><h2>Governments, not markets, should decide where AI may replace workers.</h2><div class="foot"><span>AI in Business · week 6</span><span>24 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 24 / 28</h3><p>Statement: governments, not markets, should decide where AI may replace workers.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s25"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">25 / 28</span></div><h2>An SME that does not use AI by 2030 will not survive.</h2><div class="foot"><span>AI in Business · week 6</span><span>25 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 25 / 28</h3><p>Statement: an SME that does not use AI by 2030 will not survive.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s26"><div class="slide-head"><div class="slide-kicker">Agree or disagree?</div><span class="slide-no">26 / 28</span></div><h2>AI makes work more human: machines take the routine, people the rest.</h2><div class="foot"><span>AI in Business · week 6</span><span>26 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 26 / 28</h3><p>Statement: AI makes work more human, with machines taking the routine and people the rest.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current" id="s27"><div class="slide-head"><div class="slide-kicker">Our rulebook</div><span class="slide-no">27 / 28</span></div><h2>The rules we keep, week by week</h2><div class="cols"><div><h3>Rule 1</h3><p>Before taking a break, <strong>always</strong> set AI to work.</p></div><div><h3>Rule 2</h3><p>Do something <strong>weird</strong>.</p></div><div><h3>Rule 3</h3><p><strong>Learning</strong> above results.</p></div><div><h3>Rule 4</h3><p>Technology is <strong>not</strong> the barrier.</p></div><div><h3>Rule 5</h3><p>Know your <strong>(un)known (un)knowns</strong>.</p></div><div><h3>Rule 6</h3><p class="tpl">Added together in the session.</p></div></div><div class="foot"><span>AI in Business · week 6</span><span>27 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 27 / 28</h3><p>The rulebook. Rules 1 to 3 from weeks 1 to 3; rule 4 from week 4, "Technology is not the barrier"; rule 5 from week 5, know your known and unknown knowns and unknowns. Rule 6 is added together in this session.</p></div></div>
+<div class="page"><div class="stage"><section class="slide current is-title" id="s28"><div class="slide-head"><div class="slide-kicker">AI in Business</div><span class="slide-no">28 / 28</span></div><h2>See you on 26 October</h2><p>Good luck with the final round.</p><div class="foot"><span>AI in Business · week 6</span><span>28 / 28</span></div></section></div><div class="pnotes" data-audience="instructor" hidden><h3>Notes · 28 / 28</h3><p>Close. See you on 26 October.</p></div></div>
+</div>
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('#app .stage > .slide'));
+  var app=document.getElementById('app'), counter=document.getElementById('counter');
+  var noteBoxes=[].slice.call(document.querySelectorAll('.notes .note'));
+  var i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('current',k===i)});
+    noteBoxes.forEach(function(b,k){b.hidden=(k!==i)});
+    counter.textContent=(i+1)+' / '+slides.length;
+    if(location.hash!=='#'+slides[i].id) history.replaceState(null,'','#'+slides[i].id);
+  }
+  function fromHash(){var k=slides.findIndex(function(s){return '#'+s.id===location.hash});go(k<0?0:k)}
+  var notesEl=document.querySelector('.notes');
+  function notesAllowed(){return notesEl&&!notesEl.hidden}
+  function toggleNotes(){if(!notesAllowed())return;app.classList.toggle('notes-on');try{localStorage.setItem('deck-notes',app.classList.contains('notes-on')?'1':'0')}catch(e){}}
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': go(i+1); e.preventDefault(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': go(i-1); e.preventDefault(); break;
+      case 'Home': go(0); break; case 'End': go(slides.length-1); break;
+      case 'n': case 'N': toggleNotes(); break;
+      case 'f': case 'F': if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); break;
+      case 'p': case 'P': window.print(); break;
+    }
+  });
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.getElementById('notesbtn').onclick=toggleNotes;
+  document.getElementById('printbtn').onclick=function(){window.print()};
+  document.querySelector('#app .stage').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    var r=this.getBoundingClientRect(); go(e.clientX-r.left>r.width/2?i+1:i-1);
+  });
+  window.addEventListener('hashchange',fromHash);
+  var want=new URLSearchParams(location.search).get('notes');
+  try{ if(notesAllowed()&&(want==='1'||(want===null&&localStorage.getItem('deck-notes')==='1'))) app.classList.add('notes-on'); }catch(e){}
+  fromHash();
+})();
+</script>
+</body>
+</html>
