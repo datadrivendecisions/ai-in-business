@@ -23,7 +23,7 @@ We are **not** building all the materials in advance. We start the first class w
   Neither gate carries a mark. What a student *did* with a gate's questions is recorded in their portfolio, and that is assessable; the gate itself is not an instrument.
 - **An individual portfolio.** Each student keeps one document, added to every week, recording the team's published page, their own contribution to it, what the gates asked and what they changed as a result, and what their build role produced. It carries **30 % of each module's mark**. (ADR-0011.)
 - **Week 1 deliverables.** AEL: a first-draft Product Requirements Document. AIBS: a first-draft research proposal. Both teams also start the individual portfolios. (See `week-01/`.)
-- **The finish.** A consolidated handbook plus one joint criterion-based interview with both lecturers, two independent marks. **The interview carries 70 % of each mark and the individual portfolio 30 %.** Evidence base: the team's frozen submissions, its gate/iteration history, and each student's portfolio.
+- **The finish.** Every student hands in, by Sunday 25 October 23:59 on HandIn, the team's five-minute demo video of its platform (or a link to it; AEL) and their portfolio: the team's four handbook pages, a link to the team's GitHub repository, and the transcript of the field interview (AIBS). Then one joint criterion-based interview with both lecturers on Monday 26 October, two independent marks. **The interview carries 70 % of each mark and the individual portfolio 30 %.** Evidence base: the team's published pages, its demo video, its gate/iteration history, and each student's portfolio. The editorial merge into one handbook was dropped in October 2026.
 
 ### What we decide week by week
 
@@ -44,9 +44,9 @@ We are **not** building all the materials in advance. We start the first class w
 | 4 | SME knowledge gaps | Evaluation pipeline (contracts) |
 | 5 | AI use cases at SMEs | Monitoring hooks (constraints) |
 | 6 | Successful implementations | Skills & memory (compounding) |
-| — | **Assessment period** — consolidation / editorial merge into one handbook, then the joint interview | Ratchet retrospective |
+| — | **Assessment period** — demo video and portfolio handed in, then the joint interview | Ratchet retrospective |
 
-The LRD splits this over a 7th week; for us the consolidation and merge happen in the assessment period after week 6. Field research (one regional SME partner per team) is planned once, across weeks 2–4.
+The LRD splits this over a 7th week and ends it with an editorial merge into one handbook; we dropped the merge, so the assessment period holds only the hand-in and the interview. Field research (one regional SME partner per team) is planned once, across weeks 2–4.
 
 ---
 
