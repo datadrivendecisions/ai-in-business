@@ -24,7 +24,7 @@ Two consequences of the interview. The results go into the handbook pages, which
 
 ## s5
 
-AEL slot: the evaluation of the LLM wiki. The AEL lecturer fills this card in, or uses it to take the floor.
+AEL slot: a peer review of the LLM wikis, then one improvement built. Pair the teams. Each pair opens both wikis and compares them: what they hold, how they are organised, how well they answer a question. Each team then chooses its next improvement. It can come from what they saw in the other wiki, from the conversation, or from an idea they already had and tested on the other team. Then half an hour to build it. Teams that kept a different knowledge architecture compare that instead. Remind them that the change is a decision and goes in the decision log.
 
 ## s6
 
