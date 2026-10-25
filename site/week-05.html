@@ -587,6 +587,19 @@ ol.steps.steps-quiet > li::before {
   color: var(--text-primary);
 }
 
+/* Figure — the vector-space sketch from the whiteboard */
+figure { margin: var(--space-6) 0; }
+figure svg { display: block; width: 100%; height: auto; max-width: 420px; }
+figcaption { font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-3); }
+.vs-axis { stroke: var(--text-secondary); stroke-width: 1.5; fill: none; }
+.vs-tick { stroke: var(--text-secondary); stroke-width: 1; }
+.vs-dist { stroke: var(--text-primary); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+.vs-other { fill: var(--border-strong); }
+.vs-passage { fill: var(--supporting); }
+.vs-question { fill: var(--primary); stroke: var(--supporting); stroke-width: 2; }
+.vs-t { font-size: 13px; fill: var(--text-primary); font-family: inherit; }
+.vs-s { font-size: 11px; fill: var(--text-secondary); font-family: inherit; }
+
 @media (max-width: 900px) {
   .bds-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
   /* Stacked below the page, the rail is just another block: no pinning, no cap. */
@@ -654,6 +667,7 @@ ol.steps.steps-quiet > li::before {
       <li><a href="#prepare">Before you come</a></li>
       <li><a href="#session">In the session</a></li>
       <li><a href="#economies">Three economies</a></li>
+      <li><a href="#agent">What an agent is made of</a></li>
       <li><a href="#wiki">The LLM wiki</a></li>
       <li><a href="#assignments">The assignments</a></li>
       <li><a href="#handin">Hand-in</a></li>
@@ -759,7 +773,103 @@ ol.steps.steps-quiet > li::before {
       <p>Then your team tries it with one published source of its own. <strong>Never with interview material</strong>: see <a href="#rules">the rules</a>.</p>
     </div>
 
+    <div class="callout" id="knowns">
+      <h3>Research — four kinds of knowns and unknowns</h3>
+      <p>Research starts with sorting what you know from what you do not. On the whiteboard we split that four ways:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th scope="col">Kind</th><th scope="col">What it is</th><th scope="col">In your research</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Known knowns</strong></td><td>Things you heard or saw.</td><td>What the owner told you, what you saw at the firm, what your appraised sources say.</td></tr>
+            <tr><td><strong>Unknown knowns</strong></td><td>Knowledge you have, but are not aware of, or do not see is relevant.</td><td>A remark in your interview notes that you skipped over. What you know from a job or an internship. Read your notes again with your question in mind.</td></tr>
+            <tr><td><strong>Known unknowns</strong></td><td>Your limitations.</td><td>The questions you could not put to the firm, and the evidence you could not get. Say them on the page: what it cannot tell the owner.</td></tr>
+            <tr><td><strong>Unknown unknowns</strong></td><td>The final path to something.</td><td>You cannot list them in advance. They show up along the way, so leave room for them in your plan.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Page 1 of this week's assignment, <a href="#aibs-pages">SME knowledge gaps</a>, asks the same of the firm: what does it know, and what does it lack?</p>
+    </div>
+
+    <div class="callout" id="rule5">
+      <h3>Rule 5 — Never make someone else's problem yours</h3>
+      <p>The rule we wrote together in this session, the fifth in <a href="week-05-slides.html#s13">our rulebook</a>. It went on the whiteboard above the four kinds of knowns and unknowns.</p>
+    </div>
+
     <p>The slides for the session: <a href="week-05-slides.html">week 5 slides</a>.</p>
+  </section>
+
+  <section id="agent">
+    <h2 class="bds-part">What an agent is made of</h2>
+
+    <p>In the session we took an AI agent apart on the whiteboard. It has six parts. The LLM wiki <a href="#wiki">below</a> has all six, so the table shows where you meet each one in the template.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th scope="col">Part</th><th scope="col">What it does</th><th scope="col">In the wiki template</th></tr></thead>
+        <tbody>
+          <tr><td><strong>LLM</strong></td><td>The large language model. It reads what it is given and writes the answer. On its own, it knows only what it learned in training.</td><td>The model inside the assistant your team builds with.</td></tr>
+          <tr><td><strong>Context</strong></td><td>Everything the model is given for one task: the instructions, the question, the passages that answer it.</td><td><code>AGENTS.md</code>, the source being ingested, and the pages opened to answer a question.</td></tr>
+          <tr><td><strong>Memory</strong></td><td>What the agent keeps from one task to the next.</td><td><code>wiki/</code>: the pages, the index and the log.</td></tr>
+          <tr><td><strong>Skills</strong></td><td>Written steps for a task that comes back.</td><td>The steps in <code>AGENTS.md</code> for ingest, query and lint.</td></tr>
+          <tr><td><strong>Tools</strong></td><td>Programs the agent can run.</td><td>The scripts in <code>tools/</code> that fetch an article or a video's captions, and the lint check.</td></tr>
+          <tr><td><strong>Guardrails</strong></td><td>The limits it works within, and the points where a person checks.</td><td>The pause before writing, the quotation check, and <a href="#rules">the rules</a>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Context and memory</strong> decide how good the answers are. Get them right and you get two things you want from any agent. The first is <strong>consistent answers</strong>: the same question reaches the same sources. The second is an agent that says <strong>“I don't know”</strong> when no source answers the question. It can name its own known unknowns, the third of <a href="#knowns">the four kinds</a> on the whiteboard.</p>
+
+    <h3 id="vector">Memory as a vector database</h3>
+    <p>A common way to give an agent memory is a <strong>vector database</strong>. Most tools for retrieval-augmented generation, or RAG, use one to find the passages that answer a question. It works in three steps:</p>
+    <ol>
+      <li><strong>Every passage becomes a point.</strong> An embedding model turns each passage into a list of numbers, called a <strong>vector</strong>. Passages with similar meaning get similar numbers, so their points lie close together.</li>
+      <li><strong>The question becomes a point too,</strong> made in the same way.</li>
+      <li><strong>The nearest passages come back.</strong> The database returns the k passages closest to the question, where k is a number you choose. They go into the model's context, and the model answers from them.</li>
+    </ol>
+
+    <figure>
+      <svg viewBox="0 0 420 375" role="img" aria-labelledby="vs-title">
+        <title id="vs-title">Ten passages and one question as points on a grid. The question Q at (4, 9) lies 3.2 from passage T1 at (1, 10) and 6.0 from passage T10 at (10, 9). The other eight passages lie further away, near the bottom.</title>
+        <defs><marker id="vs-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#4b5563"/></marker></defs>
+        <path class="vs-axis" d="M50 330 H400" marker-end="url(#vs-ah)"/>
+        <path class="vs-axis" d="M50 330 V10" marker-end="url(#vs-ah)"/>
+        <path class="vs-tick" d="M80 330v5M110 330v5M140 330v5M170 330v5M200 330v5M230 330v5M260 330v5M290 330v5M320 330v5M350 330v5M45 300h5M45 270h5M45 240h5M45 210h5M45 180h5M45 150h5M45 120h5M45 90h5M45 60h5M45 30h5"/>
+        <text class="vs-s" x="50" y="350" text-anchor="middle">0</text>
+        <text class="vs-s" x="200" y="350" text-anchor="middle">5</text>
+        <text class="vs-s" x="350" y="350" text-anchor="middle">10</text>
+        <text class="vs-s" x="40" y="184" text-anchor="end">5</text>
+        <text class="vs-s" x="40" y="34" text-anchor="end">10</text>
+        <text class="vs-s" x="400" y="368" text-anchor="end">first number</text>
+        <text class="vs-s" transform="translate(18 180) rotate(-90)" text-anchor="middle">second number</text>
+
+        <circle class="vs-other" cx="80" cy="270" r="5"/>
+        <circle class="vs-other" cx="125" cy="300" r="5"/>
+        <circle class="vs-other" cx="170" cy="285" r="5"/>
+        <circle class="vs-other" cx="215" cy="300" r="5"/>
+        <circle class="vs-other" cx="260" cy="270" r="5"/>
+        <circle class="vs-other" cx="290" cy="240" r="5"/>
+        <circle class="vs-other" cx="320" cy="285" r="5"/>
+        <circle class="vs-other" cx="350" cy="255" r="5"/>
+
+        <path class="vs-dist" d="M170 60 L80 30"/>
+        <path class="vs-dist" d="M170 60 H350"/>
+        <text class="vs-t" x="118" y="64" text-anchor="middle">3.2</text>
+        <text class="vs-t" x="260" y="52" text-anchor="middle">6.0</text>
+
+        <circle class="vs-passage" cx="80" cy="30" r="6"/>
+        <circle class="vs-passage" cx="350" cy="60" r="6"/>
+        <circle class="vs-question" cx="170" cy="60" r="7"/>
+        <text class="vs-t" x="90" y="24" font-weight="700">T1 (1, 10)</text>
+        <text class="vs-t" x="170" y="84" text-anchor="middle" font-weight="700">Q (4, 9)</text>
+        <text class="vs-t" x="350" y="84" text-anchor="middle" font-weight="700">T10 (10, 9)</text>
+      </svg>
+      <figcaption>The whiteboard sketch, with two numbers per passage so it fits on a grid. Each passage is a point, and so is the question Q. The grey points are the other eight passages. T1 lies nearest, at a distance of 3.2, so it comes back first. Ask for the two nearest (k&nbsp;=&nbsp;2) and you get T1 and T10. A real vector has hundreds or thousands of numbers, and distance works the same way.</figcaption>
+    </figure>
+
+    <p><strong>You have seen this before.</strong> In the modelling part of the minor you met <strong>k-nearest neighbours</strong>. There, a new data point gets the label most common among the k points nearest to it. A vector database does the same search and skips the vote. The k nearest passages go to the model, and the model writes the answer.</p>
+
+    <p>A vector database searches again for every question. The LLM wiki is a different kind of memory: the model reads each source once and writes down what it found. The two are compared below.</p>
   </section>
 
   <section id="wiki">
@@ -771,7 +881,7 @@ ol.steps.steps-quiet > li::before {
       <div class="card">
         <p class="card-kicker">Look it up when asked</p>
         <h3>RAG</h3>
-        <p>RAG stands for retrieval-augmented generation. The tool searches your files at the moment a question comes in. It pastes the passages it finds into the model's prompt, and answers. Next time, it searches again from scratch.</p>
+        <p>RAG stands for retrieval-augmented generation. The tool searches your files at the moment a question comes in, often in a <a href="#vector">vector database</a>. It pastes the passages it finds into the model's prompt, and answers. Next time, it searches again from scratch.</p>
       </div>
       <div class="card">
         <p class="card-kicker">Read it once, keep what you read</p>

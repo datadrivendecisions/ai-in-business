@@ -96,4 +96,4 @@ Two handbook pages and the first evaluation are due at the start of the session 
 
 ## s13
 
-The rulebook grows by one rule a week. Rule 3 came from week 3; week 4 had none because of the mini-CBIs. Rule 4 is phrased together with the class at the end of this session: ask what habit from today is worth keeping.
+The rulebook grows by one rule a week. Rules 1 to 3 came from weeks 1 to 3; rule 4 from week 4, "Technology is not the barrier". Rule 5, "Never make someone else's problem yours", was written together in this session, on the whiteboard above the four kinds of knowns and unknowns.
