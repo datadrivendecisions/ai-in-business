@@ -114,7 +114,7 @@ Statement: AI makes work more human, with machines taking the routine and people
 
 ## s27
 
-The rulebook. Rules 1 to 3 from weeks 1 to 3; rule 4 from week 4, "Technology is not the barrier"; rule 5 from week 5, know your known and unknown knowns and unknowns. Rule 6 is added together in this session.
+The rulebook. Rules 1 to 3 from weeks 1 to 3; rule 4 from week 4, "Technology is not the barrier"; rule 5 from week 5, know your known and unknown knowns and unknowns. Rule 6, "It is never done", was written together in this session.
 
 ## s28
 
