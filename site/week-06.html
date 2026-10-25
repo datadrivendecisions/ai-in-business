@@ -690,16 +690,17 @@ ol.steps.steps-quiet > li::before {
       <p>Then you have <strong>half an hour</strong> to build it. A change to your wiki is a decision, so it goes in your <a href="platform-documents.html">decision log</a>.</p>
     </div>
 
-    <div class="callout" id="worktime">
-      <h3>Work time — a target, a definition of done, 20-minute slots</h3>
-      <p>The rest of the session was work time for your project, run to a schedule on the whiteboard:</p>
+    <div class="callout" id="worktime" data-audience="instructor" hidden>
+      <p class="aside"><strong>Instructor view.</strong> This section is hidden on the ordinary page and is showing because the address carries <code>?instructor</code>. <a href="week-06.html?student">Leave the instructor view</a>.</p>
+      <h3>Optional — work time in 20-minute slots</h3>
+      <p>A format for the team work time, first used in this session. Whether to use it, and how, is the lecturer's choice.</p>
       <ol>
-        <li><strong>Set a target.</strong> What does your team want to have reached by the end of the session?</li>
-        <li><strong>Define done.</strong> How will you know you have reached it?</li>
+        <li><strong>Set a target.</strong> Each team formulates what it wants to have reached by the end of the session.</li>
+        <li><strong>Define done.</strong> How will the team know it has reached it?</li>
         <li><strong>Split the target into subtasks</strong> small enough for one slot each.</li>
-        <li><strong>Work in 20-minute slots:</strong> 15 minutes of work, then 5 minutes to switch to the next subtask.</li>
+        <li><strong>Work in 20-minute slots</strong>, on a schedule on the whiteboard: 15 minutes of work, then 5 minutes to switch to the next subtask.</li>
       </ol>
-      <p>Each slot ends with something finished, so you can see your progress as you go. The same schedule works for the last stretch before the hand-in.</p>
+      <p>Students liked it: each slot ends with something finished, so they could see their progress.</p>
     </div>
 
     <div class="callout" id="rule6">
@@ -756,6 +757,26 @@ ol.steps.steps-quiet > li::before {
     <p class="bds-credit">Site designed and built by <a href="https://www.businessdatasolutions.nl/" target="_blank" rel="noopener">Business Data Solutions</a>, provided to the minor as a courtesy &mdash; <a href="index.html#colophon">colophon</a>.</p>
   </div>
 </footer>
+
+<!-- Instructor view. ?instructor reveals every [data-audience="instructor"] section and
+     sticks for the rest of the visit; ?student turns it off again. This is signposting, not
+     access control: the markup is public either way, so nothing whose worth depends on a
+     student not having read it belongs in site/ at all. See CLAUDE.md. -->
+<script>
+(function () {
+  var on;
+  try {
+    if (/[?&]instructor(=|&|$)/.test(location.search)) { on = true; sessionStorage.setItem('bds-instructor', '1'); }
+    else if (/[?&]student(=|&|$)/.test(location.search)) { on = false; sessionStorage.removeItem('bds-instructor'); }
+    else { on = sessionStorage.getItem('bds-instructor') === '1'; }
+  } catch (e) {
+    on = /[?&]instructor(=|&|$)/.test(location.search);
+  }
+  if (!on) return;
+  var marked = document.querySelectorAll('[data-audience="instructor"]');
+  for (var i = 0; i < marked.length; i++) marked[i].hidden = false;
+})();
+</script>
 
 </body>
 </html>
